@@ -8,13 +8,13 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 const config = {
   title: 'Nitcbase',
   tagline: 'Relational database project',
-  url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  url: 'https://nitcbase.github.io/',
+  baseUrl: '/nitcbase-documentation-v2/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'nitc', // Usually your GitHub org/user name.
-  projectName: 'nitcbase', // Usually your repo name.
+  organizationName: 'NITCbase', // Usually your GitHub org/user name.
+  projectName: 'nitcbase-documentation-v2', // Usually your repo name.
 
   presets: [
     [

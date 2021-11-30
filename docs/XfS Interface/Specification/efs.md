@@ -1,10 +1,11 @@
 ---
 sidebar_position: 2
-title: 'External Interface Commands'
+title: 'External File System Commands'
 tags:
   - External
   - Commands
-  - interface
+  - File
+  - System
   - fdisk
   - run
   - import
