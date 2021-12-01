@@ -155,7 +155,7 @@ exit
 
 ### Print B+ Tree
 #### Description
-This command is used to print the B+ tree corresponding to the index created on an attribute of a relation. If index does not exist then an error message of `Index does not exist` is returned.
+This command is used to print the `B+ tree`(in a level order manner) corresponding to the index created on an attribute of a relation. If index does not exist then an error message of `Index does not exist` is returned.
 #### Syntax
 ```bash
 print b+ tree relation_name.attribute_name
@@ -190,5 +190,108 @@ LEVEL 2
 :::
 
 :::caution
-In the above example, output is under the assumption that only 4 keys in the internal node and 3 keys in the leaf nodes are allowed. In NITCbase, 100 keys in the internal node and 63 keys in the leaf node are allowed by design.
+In the above example, output shown is for a B+ tree which allows that maximum `4` keys in the internal node and maximum `3` keys in the leaf nodes. In NITCbase B+ tree design, maximum `100` keys are allowed in the internal node and maximum `63` keys are allowed in the leaf node.
+:::
+
+### Print B+ Blocks
+#### Description
+This command is used to print the data stored in `index blocks`(`internal index blocks` and `leaf index blocks`) of the `B+ tree` corresponding to an attribute of a relation. If index does not exist then an error message of `Index does not exist` is returned.
+#### Syntax
+```bash
+print b+ blocks relation_name.attribute_name
+```
+:::note Example
+
+Consider the sample `numbers.csv` file:   
+```c title="/Files/numbers.csv"
+key
+10
+5
+75
+20
+.
+.
+.
+```
+Assume an index is created on the attribute `key`. Now to print the index blocks corresponding to that index the following command can be used:
+`print b+ blocks numbers.key`. This will give the following output:
+
+```c
+----- B+ TREE BLOCKS -----
+BLOCK 15
+Block Type: IND_INTERNAL
+Parent Block: -1
+No of entries: 1
+lchild: 9, key_val: 40, rchild: 14
+---------
+BLOCK 9
+Block Type: IND_INTERNAL
+Parent Block: 15
+No of entries: 2
+lchild: 7, key_val: 10, rchild: 8
+lchild: 8, key_val: 20, rchild: 11
+---------
+BLOCK 7
+Block Type: IND_LEAF
+Parent Block: 9
+No of entries: 2
+left node: -1, right node: 8
+key_val: 5
+key_val: 10
+---------
+BLOCK 8
+Block Type: IND_LEAF
+Parent Block: 9
+No of entries: 2
+left node: 7, right node: 11
+key_val: 15
+key_val: 20
+---------
+BLOCK 11
+Block Type: IND_LEAF
+Parent Block: 9
+No of entries: 3
+left node: 8, right node: 13
+key_val: 25
+key_val: 40
+key_val: 40
+---------
+BLOCK 14
+Block Type: IND_INTERNAL
+Parent Block: 15
+No of entries: 2
+lchild: 13, key_val: 55, rchild: 10
+lchild: 10, key_val: 65, rchild: 12
+---------
+BLOCK 13
+Block Type: IND_LEAF
+Parent Block: 14
+No of entries: 2
+left node: 11, right node: 10
+key_val: 45
+key_val: 55
+---------
+BLOCK 10
+Block Type: IND_LEAF
+Parent Block: 14
+No of entries: 2
+left node: 13, right node: 12
+key_val: 60
+key_val: 65
+---------
+BLOCK 12
+Block Type: IND_LEAF
+Parent Block: 14
+No of entries: 2
+left node: 10, right node: -1
+key_val: 70
+key_val: 75
+---------
+```
+
+> The b+ tree blocks is printed in a level-order manner.
+:::
+
+:::caution
+In the above example, output shown is for a B+ tree which allows that maximum `4` keys in the internal node and maximum `3` keys in the leaf nodes. In NITCbase B+ tree design, maximum `100` keys are allowed in the internal node and maximum `63` keys are allowed in the leaf node.
 :::
