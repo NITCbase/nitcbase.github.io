@@ -1,35 +1,18 @@
 ---
 sidebar_position: 1
+title: 'Introduction'
+tags:
+  - overall design
+  - introduction
+  - design
+  - diagram
 ---
 
-# Tutorial Intro
+## Overall Design/Architecture
+The following diagram gives an idea of the system that we are building and it's components on a higher level.
 
-Let's discover **Docusaurus in less than 5 minutes**.
 
-## Getting Started
+![Design Diagram](../../nitcbase-docusaurus/static/img/overall-design.png)
 
-Get started by **creating a new site**.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
-
-## Generate a new site
-
-Generate a new Docusaurus site using the **classic template**:
-
-```shell
-npm init docusaurus@latest my-website classic
-```
-
-## Start your site
-
-Run the development server:
-
-```shell
-cd my-website
-
-npx docusaurus start
-```
-
-Your site starts at `http://localhost:3000`.
-
-Open `docs/intro.md` and edit some lines: the site **reloads automatically** and displays your changes.
+There are two command line interfaces, a disk and the Seven Layers. Since NITCbase is a relational database, it supports execution of SQL-like queries on the commandline interfaces. Disk is the single storage unit for for all data present in NITCbase. 
