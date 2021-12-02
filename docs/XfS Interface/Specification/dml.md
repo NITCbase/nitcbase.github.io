@@ -32,7 +32,7 @@ Given below are the records of the relation `Students`.
 | 1      | Anu  | 9.01 |
 | 4      | Cody | 7    |
 
-Suppose that we need to insert a new record `"2, Amy, 9.5"` into the relation `Students`.
+Suppose that we need to insert a new record `2, Amy, 9.5` into the relation `Students`.
 
 The query for doing that will be the following:
 ```bash
@@ -98,11 +98,11 @@ SELECT * FROM Students INTO Target_Students
 
 ### SELECT Attrlist FROM TABLE
 #### Description
-This command creates a new target relation with the attributes specified in Attrlist, and inserts all records(only the values corresponding to the specified attributes) of the source relation, into the newly created target relation.
+This command creates a new target relation with the attributes specified in `Attrlist`, and inserts all records(only the values corresponding to the specified attributes) of the source relation, into the newly created target relation.
 
                                 OR
 
-Selects  all  records  but  only  with  the  attributes contained  in  the  Attrlist.  The  selection  is  inserted into  the  newly  created  target  relation.  For  project operation on tables.
+Selects  all  records  but  only  with  the  attributes contained  in  the  `Attrlist`.  The  selection  is  inserted into  the  newly  created  target  relation. For project operation on relations.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation
@@ -119,7 +119,7 @@ This command is used to retrieve all records of a given source relation, and ins
 
                                 OR
 
-Selects  all  records  satisfying  the  condition  on  the attribute of the relation, given after WHERE. The selection  is  inserted  into  the  newly  created  target relation. > is overloaded and it can be >=, <=, >, <, =.
+Selects  all  records  satisfying  the  condition (`OP`)  on  the attribute of the relation, given after `WHERE`. The selection  is  inserted  into  the  newly  created  target relation.
 #### Syntax
 ```bash
 SELECT * FROM source_relation INTO target_relation WHERE attrname OP value
@@ -135,11 +135,11 @@ SELECT * FROM Students INTO Target_Students WHERE CGPA > 8
 
 ### SELECT Attrlist FROM TABLE WHERE
 #### Description
-This command creates a new target relation with the attributes specified in `Attrlist`, and inserts those records(only the values corresponding to the attributes specified in the `Attrlist`) from the source relation which satisfy the given condition.
+This command creates a new target relation with the attributes specified in `Attrlist`, and inserts those records (only the values corresponding to the attributes specified in the `Attrlist`) from the source relation which satisfy the given condition.
 
                                 OR
 
-Selects all records satisfying the condition on the attribute of the relation, given after WHERE, with only those attributes contained in Attrlist. The selection is inserted into the newly created target relation.
+Selects all records satisfying the condition (`OP`) on the attribute of the relation, given after `WHERE`, with only those attributes contained in `Attrlist`. The selection is inserted into the newly created target relation.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation WHERE attrname OP value
@@ -155,19 +155,19 @@ SELECT Name, CGPA FROM Students INTO Target_Students WHERE CGPA > 8
 
 ### SELECT * FROM JOIN WHERE
 #### Description
-This command creates a new target relation with attributes constituting from both the source relations (excluding specified attribute from second source relation). It inserts the records obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for equi-join) into the target relation.
+This command creates a new target relation with attributes constituting from both the source relations (excluding specified attribute from second source relation). It inserts the records obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for `equi-join`) into the target relation.
 
                                 OR
 
-Selects all records of the relation resulting from the equi-join of two given relations on the given  attributes of both relations. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
+Selects all records of the relation resulting from the `equi-join` of two given relations on the given  attributes of both relations. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
 #### Syntax
 ```bash
 SELECT * FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2
 ```
 :::info Note
 * `attribute1` should belong to `source_relation1` and `attribute2` should belong to `source_relation2`.
-* The join attributes(ie `attribute1` and `attribute2`) can have the same name.
-* Excluding the join attributes, there should be no other attributes with the same name in these relations.
+* The join attributes (i.e., `attribute1` and `attribute2`) can have the same name.
+* **Excluding the join attributes, there should be no other attributes with the same name in these relations.**
 :::
 :::note Example
 Given below are the records of the relation `Student1`.
@@ -191,7 +191,7 @@ An example for a join query is:
 ```bash
 SELECT * FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = Students2.Rollno
 ```
-Equi-join on these two relations based on the attribute `Rollno` would result in the following target relation, `Students`.
+`Equi-join` on these two relations based on the attribute `Rollno` would result in the following target relation, `Students`.
 
 | Rollno | Name | Batch | Marks |
 |--------|------|-------|-------|
@@ -206,7 +206,7 @@ This command creates a new target relation with attributes given in `Attrlist`. 
 
                                 OR
 
-Selects all records of the relation resulting from the equi-join of two given relations on the given  attributes of both relations, with only those attributes contained in Attrlist. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
+Selects all records of the relation resulting from the `equi-join` of two given relations on the given  attributes of both relations, with only those attributes contained in `Attrlist`. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2
@@ -238,7 +238,7 @@ An example for a join query is:
 ```bash
 SELECT Rollno, Name, Marks FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = Students2.Rollno
 ```
-Equi-join on these two relations based on the attribute `Rollno` would result in the following target relation, `Students`.
+`Equi-join` on these two relations based on the attribute `Rollno` would result in the following target relation, `Students`.
 
 | Rollno | Name | Marks |
 |--------|------|-------|
