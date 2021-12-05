@@ -1,16 +1,15 @@
 ---
 sidebar_position: 2
-title: 'External File System Commands'
+title: 'Script Commands'
 tags:
-  - External
+  - Script
   - Commands
-  - File System
   - run
   - echo
   - front end interface
 ---
 
-The External File System commands supported by the Front-end interface are used for (1) batch execution from a file and (2) printing messages to the command line; This is a smaller subset of the external file system commands supported by XFS interface because idea of seperation of concern is being followed, i.e., Front-end interface is not concerned with the loading/copying/moving data and relations from/to the host system.
+The Script commands supported by the Front-end interface are used for (1) batch execution from a file and (2) printing messages to the command line; This is a smaller subset of the external file system commands supported by XFS interface because idea of seperation of concern is being followed, i.e., Front-end interface is not concerned with the loading/copying/moving data and relations from/to the host system.
 
 ### Batch Execution
 #### Description
