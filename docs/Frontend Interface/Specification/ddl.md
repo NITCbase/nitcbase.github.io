@@ -145,6 +145,7 @@ DROP INDEX ON tablename.attributename
 | SUCCESS        | Indicates successful deletion of B+ tree index                                                                          |
 | E_RELNOTOPEN   | If the relation is not open                                                                                             |
 | E_ATTRNOTEXIST | If the given attribute does not exist                                                                                   |
+| E_NOINDEX      | If index on the given attribute of the relation has not been created |
 | E_INVALID      | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e when the user tries to create an index for catalogs |
 
 :::note Example

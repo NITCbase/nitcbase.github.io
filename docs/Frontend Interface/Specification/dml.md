@@ -233,6 +233,7 @@ SELECT * FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE 
 | E_RELEXIST         | If a relation with name target_relation already exists                                                                |
 | E_ATTRNOTEXIST     | If attribute1 or attribute2does not exist                                                                             |
 | E_ATTRTYPEMISMATCH | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| E_DUPLICATEATTR | If one or more pairs of attributes(other than join attributes) in the source relations have the same name |
 | E_CACHEFULL        | If the `openRel()` fails because of no free slots in open relation table                                              |
 | E_DISKFULL         | If disk space is not sufficient for creating the new relation                                                         |
 | E_INVALID          | If the target relation is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e., when the user tries to select records into any of the catalogs |
@@ -292,6 +293,7 @@ SELECT Attribute1, Attribute2, ... FROM source_relation1 JOIN source_relation2 I
 | E_RELEXIST         | If a relation with name target_relation already exists                                                                |
 | E_ATTRNOTEXIST     | If attribute1 or attribute2does not exist                                                                             |
 | E_ATTRTYPEMISMATCH | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| E_DUPLICATEATTR | If one or more pairs of attributes(other than join attributes) in the source relations have the same name |
 | E_CACHEFULL        | If the `openRel()` fails because of no free slots in open relation table                                              |
 | E_DISKFULL         | If disk space is not sufficient for creating the new relation                                                         |
 | E_INVALID          | If the target relation is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e., when the user tries to select records into any of the catalogs |
