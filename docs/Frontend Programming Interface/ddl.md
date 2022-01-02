@@ -14,9 +14,18 @@ The Data Definition Language commands are used to define the database schema. Th
 Following are the method specification and algorithm for each of the DDL commands of the Frontend Class.
 Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io/constants.html). 
 
-### CREATE TABLE
+## Frontend::create_table()
 #### Description
 This command is used to create a relation of the given name, with given attribute names and types. The type of an attribute can only be `NUM` or `STR` for numbers and strings respectively.
+
+#### Arguments
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation/table to be created                               |
+| no_attrs   | `int`                       | Number of attributes of the relation to be created                     |
+| attributes | `char[no_attrs][ATTR_SIZE]` | Names of each attribute of the relation                                |
+| type_attrs | `int[no_attrs]`             | Data type of each attribute, in the same order as the attributes array |
+
 #### Return Values
 | Value           | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
@@ -25,12 +34,13 @@ This command is used to create a relation of the given name, with given attribut
 | E_DUPLICATEATTR | If two or more attributes of the relation have the same name                    |
 | E_DISKFULL      | If there is insufficient disk space to create the relation                      |
 | E MAXRELATIONS  | If maximum number of relations possible already exists; currently limited to 20 |
+
 #### Algorithm
 ```cpp
 int Frontend::create_table(char relname[ATTR_SIZE], 
                            int no_attrs, 
-                           char attribute[no_attrs][ATTR_SIZE],
-                           int type_attr[no_attrs]) {
+                           char attributes[no_attrs][ATTR_SIZE],
+                           int type_attrs[no_attrs]) {
 
     // TODO: Call createRel() method of the Schema Layer with correct arguments
 
@@ -56,13 +66,13 @@ CREATE TABLE sample(Rollno NUM, Name STR, CGPA NUM)
 
 :::
 
-### DROP TABLE
+## Frontend::drop_table()
 #### Description
 This command is used to delete the relation of the given name. It deletes all the record and index blocks corresponding to the relations, and also deletes the entries corresponding to the relation in the `Relation catalog` and `Attribute catalog`. The entries corresponding to the deleted blocks in the `Block allocation map` are also reset.
-#### Syntax
-```bash
-DROP TABLE tablename
-```
+
+#### Arguments
+
+
 #### Return Values
 | Value         | Description                                             |
 |---------------|---------------------------------------------------------|
@@ -70,6 +80,11 @@ DROP TABLE tablename
 | E_RELOPEN     | If the relation is open (SUBJECT TO CHANGE)             |
 | E_RELNOTEXIST | If the relation with the given name does not exist      |
 | E_INVALID     | If the relation name is `RELATIONCAT` or `ATTRIBUTECAT` |
+
+#### Algorithm
+```bash
+DROP TABLE tablename
+```
 
 :::note Example
 The following command will delete the relation called `sample`:
