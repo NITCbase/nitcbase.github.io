@@ -9,15 +9,14 @@ tags:
   - interface
 ---
 
-The Data Definition Language commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. The following are the DDL commands supported by Front-end interface of NITCBase.
+The Data Definition Language commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. 
+
+Following are the method specification and algorithm for each of the DDL commands of the Frontend Class.
+Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io/constants.html). 
 
 ### CREATE TABLE
 #### Description
 This command is used to create a relation of the given name, with given attribute names and types. The type of an attribute can only be `NUM` or `STR` for numbers and strings respectively.
-#### Syntax
-```bash
-CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
-```
 #### Return Values
 | Value           | Description                                                                     |
 |-----------------|---------------------------------------------------------------------------------|
@@ -26,7 +25,19 @@ CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 | E_DUPLICATEATTR | If two or more attributes of the relation have the same name                    |
 | E_DISKFULL      | If there is insufficient disk space to create the relation                      |
 | E MAXRELATIONS  | If maximum number of relations possible already exists; currently limited to 20 |
+#### Algorithm
+```cpp
+int Frontend::create_table(char relname[ATTR_SIZE], 
+                           int no_attrs, 
+                           char attribute[no_attrs][ATTR_SIZE],
+                           int type_attr[no_attrs]) {
 
+    // TODO: Call createRel() method of the Schema Layer with correct arguments
+
+    // TODO: Return Success or Error values appropriately
+    
+}
+```
 
 :::info
 * In NITCBase, the **maximum size of an attribute is 16 bytes**. 
