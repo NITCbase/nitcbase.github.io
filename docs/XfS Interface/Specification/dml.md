@@ -9,7 +9,7 @@ tags:
   - interface
 ---
 
-The Data Manipulation Language commands are used to manipulate the data stored in the relations of the database. The following are the DML commands supported by NITCBase:
+The Data Manipulation Language(DML) commands are used to manipulate the data stored in the relations of the database. The following are the DML commands supported by NITCBase:
 
 ### INSERT INTO TABLE VALUES
 #### Description
@@ -49,11 +49,7 @@ The records of the relation `Students` will now be:
 
 ### INSERT INTO TABLE FROM FILE
 #### Description
-This command is used to insert multiple records into an already existing relation, `tablename` from a CSV file, `filename.csv`.
-
-                                OR
-
-Used  to  insert  multiple  records  into  the  relation from  a  csv  file  containing  the  values  for  the  corresponding  attributes.  The  order  of  values  in  the csv  file  must  be  the  same  as  the  attributes  of  the relation.
+This command is used to insert multiple records into an already existing relation, `tablename` from a CSV file, `filename.csv` containing values for the attributes of the relation.
 #### Syntax
 ```bash
 INSERT INTO tablename VALUES FROM filename
@@ -82,10 +78,6 @@ INSERT INTO Students VALUES FROM students.csv
 ### SELECT * FROM TABLE
 #### Description
 This command creates a new target relation with the same attributes as that of source relation, and inserts into it all records from the source relation.
-
-                                OR
-
-Selects all records from the given table and inserts it into a newly target relation. For creating copy of a table.
 #### Syntax
 ```bash
 SELECT * FROM source_relation INTO target_relation
@@ -99,10 +91,6 @@ SELECT * FROM Students INTO Target_Students
 ### SELECT Attrlist FROM TABLE
 #### Description
 This command creates a new target relation with the attributes specified in `Attrlist`, and inserts all records(only the values corresponding to the specified attributes) of the source relation, into the newly created target relation.
-
-                                OR
-
-Selects  all  records  but  only  with  the  attributes contained  in  the  `Attrlist`.  The  selection  is  inserted into  the  newly  created  target  relation. For project operation on relations.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation
@@ -116,10 +104,6 @@ SELECT Name, CGPA FROM Students INTO Target_Students
 ### SELECT * FROM TABLE WHERE
 #### Description
 This command is used to retrieve all records of a given source relation, and insert them into a target relation, based on the the given condition. All records in the source relation that satisfy the condition, will be inserted into the newly created target relation.
-
-                                OR
-
-Selects  all  records  satisfying  the  condition (`OP`)  on  the attribute of the relation, given after `WHERE`. The selection  is  inserted  into  the  newly  created  target relation.
 #### Syntax
 ```bash
 SELECT * FROM source_relation INTO target_relation WHERE attrname OP value
@@ -136,10 +120,6 @@ SELECT * FROM Students INTO Target_Students WHERE CGPA > 8
 ### SELECT Attrlist FROM TABLE WHERE
 #### Description
 This command creates a new target relation with the attributes specified in `Attrlist`, and inserts those records (only the values corresponding to the attributes specified in the `Attrlist`) from the source relation which satisfy the given condition.
-
-                                OR
-
-Selects all records satisfying the condition (`OP`) on the attribute of the relation, given after `WHERE`, with only those attributes contained in `Attrlist`. The selection is inserted into the newly created target relation.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation WHERE attrname OP value
@@ -156,10 +136,6 @@ SELECT Name, CGPA FROM Students INTO Target_Students WHERE CGPA > 8
 ### SELECT * FROM JOIN WHERE
 #### Description
 This command creates a new target relation with attributes constituting from both the source relations (excluding specified attribute from second source relation). It inserts the records obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for `equi-join`) into the target relation.
-
-                                OR
-
-Selects all records of the relation resulting from the `equi-join` of two given relations on the given  attributes of both relations. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
 #### Syntax
 ```bash
 SELECT * FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2
@@ -203,10 +179,6 @@ SELECT * FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = St
 ### SELECT Attrlist FROM JOIN WHERE
 #### Description
 This command creates a new target relation with attributes given in `Attrlist`. It inserts the records (only the values of the specified attributes in `Attrlist` obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for equi-join) into the target relation.
-
-                                OR
-
-Selects all records of the relation resulting from the `equi-join` of two given relations on the given  attributes of both relations, with only those attributes contained in `Attrlist`. The selection is inserted into the newly created target relation which contains all attributes from both input relations except the joining attribute of the second relation.
 #### Syntax
 ```bash
 SELECT Attribute1, Attribute2, ... FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2

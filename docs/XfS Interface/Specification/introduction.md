@@ -12,5 +12,5 @@ The filesystem is simulated on a binary file (`disk`). This interface aims to pr
 There are **three** types of commands supported by the XFS interface:
 
 1. [External File System Commands](./efs.md)
-2. [Data Definition Language Commands ](./ddl.md)
-3. [Data Manipulation Language Commands](./dml.md)
+2. [Data Definition Language(DDL) Commands ](./ddl.md)
+3. [Data Manipulation Language(DML) Commands](./dml.md)

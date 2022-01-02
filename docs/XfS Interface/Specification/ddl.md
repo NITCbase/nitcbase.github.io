@@ -9,7 +9,7 @@ tags:
   - interface
 ---
 
-The Data Definition Language commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. The following are the DDL commands supported by NITCBase.
+The Data Definition Language(DDL) commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. The following are the DDL commands supported by NITCBase.
 
 ### CREATE TABLE
 #### Description
