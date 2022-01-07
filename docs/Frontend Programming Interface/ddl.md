@@ -11,13 +11,13 @@ tags:
 
 The Data Definition Language commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. 
 
-Following are the method specification and algorithm for each of the DDL commands of the Frontend Class.
+The specifications for DDL methods of the Frontend Class is given below. 
 Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io/constants.html). 
 
-## Frontend::create_table()
+### Frontend :: create_table()
 #### Description
-This command is used to create a relation of the given name, with given attribute names and types. The type of an attribute can only be `NUM` or `STR` for numbers and strings respectively.
-
+* The `CREATE TABLE` command is translated to this method call. 
+* This method calls the appropriate methods from the lower layer (Schema Layer) to create a table with the arguments given below.
 #### Arguments
 | Attribute  | Type                        | Description                                                            |
 |------------|-----------------------------|------------------------------------------------------------------------|
@@ -44,34 +44,20 @@ int Frontend::create_table(char relname[ATTR_SIZE],
 
     // TODO: Call createRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success or Error values appropriately
+    // TODO: Return Success and Error values appropriately
     
 }
 ```
 
-:::info
-* In NITCBase, the **maximum size of an attribute is 16 bytes**. 
-* Since relation names and attribute names are attributes themselves in the catalog structures, the table name and attribute names in the queries must only have a maximum of 15 characters. 
-* If the length is greater than 16, **only the first 15 characters will be taken.**
-* All attribute names of the relation must be unique.
-* A relation cannot be named as `temp`, since it is used for internal operations.
-:::
-
-:::note Example
-
-The following command will create a Relation called `sample` with `RollNo`, `Name` and `CGPA` as the attributes of types number, string and number respectively:
-```bash
-CREATE TABLE sample(Rollno NUM, Name STR, CGPA NUM)
-```
-
-:::
-
-## Frontend::drop_table()
+### Frontend :: drop_table()
 #### Description
-This command is used to delete the relation of the given name. It deletes all the record and index blocks corresponding to the relations, and also deletes the entries corresponding to the relation in the `Relation catalog` and `Attribute catalog`. The entries corresponding to the deleted blocks in the `Block allocation map` are also reset.
-
+* The `DROP TABLE` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to delete the table with the arguments given below and also returns the error values accordingly.
+  
 #### Arguments
-
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation/table to be deleted                               |
 
 #### Return Values
 | Value         | Description                                             |
@@ -82,24 +68,24 @@ This command is used to delete the relation of the given name. It deletes all th
 | E_INVALID     | If the relation name is `RELATIONCAT` or `ATTRIBUTECAT` |
 
 #### Algorithm
-```bash
-DROP TABLE tablename
+```cpp
+int Frontend::drop_table(char relname[ATTR_SIZE]) {
+    // TODO: Call deleteRel() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
 
-:::note Example
-The following command will delete the relation called `sample`:
-```bash
-DROP TABLE sample
-```
-:::
-
-### OPEN TABLE
+### Frontend :: open_table()
 #### Description
-This command is used to open the relation specified for manipulation by updating the Cache/OpenRelTable.
-#### Syntax
-```bash
-OPEN TABLE tablename
-```
+* The `OPEN TABLE` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to open the table with the arguments given below and also returns the error values accordingly.
+
+#### Arguments
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation/table to be opened                                |
+
 #### Return Values
 | Value         | Description                                                     |
 |---------------|-----------------------------------------------------------------|
@@ -107,20 +93,24 @@ OPEN TABLE tablename
 | E_RELNOTEXIST | If the relation with the given name does not exist              |
 | E_CACHEFULL   | If there are no free slots left in the `Open Relation table`    |
 
-:::note Example
-The following command will open the relation called `sample`:
-```bash
-OPEN TABLE sample
+#### Algorithm
+```cpp
+int Frontend::open_table(char relname[ATTR_SIZE]) {
+    // TODO: Call openRel() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
 
-### CLOSE TABLE
+### Frontend :: close_table()
 #### Description
-This command is used to close the relation specified by updating the Cache/OpenRelTable.
-#### Syntax
-```bash
-CLOSE TABLE tablename
-```
+* The `CLOSE TABLE` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to close the table with the arguments given below and also returns the error values accordingly.
+#### Arguments
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation/table to be opened                                |
+
 #### Return Values
 | Value     | Description                                                                                                              |
 |-----------|--------------------------------------------------------------------------------------------------------------------------|
@@ -128,20 +118,27 @@ CLOSE TABLE tablename
 | E_NOTOPEN | If relation with the given name is not open                                                                              |
 | E_INVALID | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to close either of the catalogs |
 
-:::note Example
-The following command will close the relation called `sample`:
-```bash
-CLOSE TABLE sample
+#### Algorithm
+```cpp
+int Frontend::close_table(char relname[ATTR_SIZE]) {
+    // TODO: Call closeRel() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
 
-### CREATE INDEX
+### Frontend :: create_index()
 #### Description
-This command is used to create an index on the given attribute of a relation. [B+ trees](https://nitcbase.github.io/design/Bplustreedetails.html) are used for creating indexes. Before executing this query, the relation must be opened using the `OPEN TABLE` command.
-#### Syntax
-```bash
-CREATE INDEX ON tablename.attributename
-```
+* The `CREATE INDEX` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to create index on the attribute of the relation given as argument and also returns the error values accordingly.
+* [B+ trees](https://nitcbase.github.io/design/Bplustreedetails.html) are used for creating indexes. Before executing this query, the relation must be opened using the `OPEN TABLE` command.
+
+#### Arguments
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation that contains the attribute to create index on    |
+| attrname   | `char[ATTR_SIZE]`           | Attribute to create index on                                           |
+
 #### Return Values
 | Value          | Description                                                                                                              |
 |----------------|--------------------------------------------------------------------------------------------------------------------------|
@@ -151,20 +148,23 @@ CREATE INDEX ON tablename.attributename
 | E_DISKFULL     | If there is not enough space in the disk to create the tree                                                              |
 | E_INVALID      | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to create an index for catalogs |
 
-:::note Example
-The following command will create an index on the `Rollno` attribute of the `sample` relation:
-```bash
-CREATE INDEX ON sample.Rollno
+#### Algorithm
+```cpp
+int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
+    // TODO: Call createInd() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
-
-### DROP INDEX
+### Frontend :: drop_index()
 #### Description
-This command is used to drop/delete the B+ tree indexing on the given attribute of the given relation. Before executing this query, the relation must be opened using the `OPEN TABLE` command.
-#### Syntax
-```bash
-DROP INDEX ON tablename.attributename
-```
+* The `DROP INDEX` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to drop index on the attribute of the relation given as argument and also returns the error values accordingly.
+#### Arguments
+| Attribute  | Type                        | Description                                                            |
+|------------|-----------------------------|------------------------------------------------------------------------|
+| relname    | `char[ATTR_SIZE]`           | Name of the relation that remove the attribute to create index on      |
+| attrname   | `char[ATTR_SIZE]`           | Attribute to create index on                                           |
 #### Return Values
 | Value          | Description                                                                                                             |
 |----------------|-------------------------------------------------------------------------------------------------------------------------|
@@ -173,21 +173,27 @@ DROP INDEX ON tablename.attributename
 | E_ATTRNOTEXIST | If the given attribute does not exist                                                                                   |
 | E_NOINDEX      | If index on the given attribute of the relation has not been created |
 | E_INVALID      | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e when the user tries to create an index for catalogs |
-
-:::note Example
-The following command will drop the index on the `Rollno` attribute of the `sample` relation:
-```bash
-DROP INDEX ON sample.Rollno
+#### Algorithm
+```cpp
+int drop_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
+    // TODO: Call deleteRel() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
-
-### ALTER TABLE RENAME
+### Frontend :: alter_table_rename()
 #### Description
-This command is used to rename an existing relation to the given new name.
-#### Syntax
-```bash
-ALTER TABLE RENAME tablename TO new_tablename
-```
+* The `ALTER TABLE RENAME` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to rename the table and also returns the error values accordingly.
+
+
+char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]
+#### Arguments
+| Attribute       | Type                        | Description                                                            |
+|-----------------|-----------------------------|------------------------------------------------------------------------|
+| relname_from    | `char[ATTR_SIZE]`           | Name of the relation to be renamed      |
+| relname_to      | `char[ATTR_SIZE]`           | New name of the relation                                        |
+
 #### Return Values
 | Value         | Description                                                                                                     |
 |---------------|-----------------------------------------------------------------------------------------------------------------|
@@ -197,20 +203,24 @@ ALTER TABLE RENAME tablename TO new_tablename
 | E_RELEXIST    | If another relation already exists with the name new_tablename                                                  |
 | E_INVALID     | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to rename the catalogs |
 
-:::note Example
-The following command will rename the existing relation `sample`  to `Students`:
-```bash
-ALTER TABLE RENAME sample TO Students
+#### Algorithm
+```cpp
+int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]) {
+    // TODO: Call renameRel() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
-
-### ALTER TABLE RENAME COLUMN
+### Frontend :: alter_table_rename_column()
 #### Description
-This command is used to rename an attribute of an existing relation to the given new name.
-#### Syntax
-```bash
-ALTER TABLE RENAME tablename COLUMN column_name TO new_column_name
-```
+* The `ALTER TABLE RENAME COLUMN` command is translated to this method call.
+* This method calls the appropriate methods from the lower layer (Schema Layer) to rename the column of the table given as argument and also returns the error values accordingly.
+#### Arguments
+| Attribute       | Type                        | Description                                                            |
+|-----------------|-----------------------------|------------------------------------------------------------------------|
+| relname         | `char[ATTR_SIZE]`           | Name of the relation containing the attribute to be renamed            |
+| attrname_from   | `char[ATTR_SIZE]`           | Name of the attribute to be renamed                                    |
+| attrname_to     | `char[ATTR_SIZE]`           | New name of the attribute                                              |
 #### Return Values
 | Value          | Description                                                                                                                       |
 |----------------|-----------------------------------------------------------------------------------------------------------------------------------|
@@ -220,10 +230,12 @@ ALTER TABLE RENAME tablename COLUMN column_name TO new_column_name
 | E_ATTRNOTEXIST | If the attribute with name column_name does not exist                                                                             |
 | E_ATTREXIST    | If the attribute with name new_column_name already exists                                                                         |
 | E_INVALID      | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to rename the attributes of the catalogs |
-
-:::note Example
-The following command will rename the the attribute of an existing relation `sample`  from `CGPA` to `SGPA`:
-```bash
-ALTER TABLE RENAME sample COLUMN CGPA TO SGPA
+#### Algorithm
+```cpp
+int Frontend::alter_table_rename_column(char relname[ATTR_SIZE], char attrname_from[ATTR_SIZE],
+                                        char attrname_to[ATTR_SIZE]) {
+    // TODO: Call renameAttr() method of the Schema Layer with correct arguments
+    
+    // TODO: Return Success and Error values appropriately
+}
 ```
-:::
