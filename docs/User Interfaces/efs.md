@@ -16,7 +16,7 @@ tags:
   - XFS
 ---
 
-The External File System commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the XFS disk to a UNIX file. These commands are only available for the XFS Interface. The following are the External File System commands supported by NITCBase.
+The External File System commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the NITCbase disk to a UNIX file. These commands are only available for the XFS Interface. The following are the External File System commands supported by NITCBase.
 
 ### Format Disk
 #### Description

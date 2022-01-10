@@ -1,13 +1,18 @@
 ---
 sidebar_position: 1
-title: 'Introduction'
+title: 'Frontend Programming Interface'
 tags:
   - introduction
   - frontend
   - interface
 ---
-## Frontend Interface
-NITCbase provides a command line interface to the users (students) in which they can input and execute any database queries. This interface translates the SQL-like queries given as input to a set of lower-layer function calls.
+## Frontend User Interface
+NITCbase provides a command line interface to the users (students) in which they can input and execute any database queries. This interface translates the SQL-like queries given as input to a set of lower-layer function calls. Frontend interface supports the following types of commands:
+1. [Script Commands](../User%20Interfaces/script-cmds.md)
+2. [Data Definition Language(DDL) Commands ](../User%20Interfaces/ddl.md)
+3. [Data Manipulation Language(DML) Commands](../User%20Interfaces/dml.md)
+
+Among the above commands, script commands have already been implemented and provided to you. DDL and DML commands have to be implemented as methods in the Frontend Class described below.
 
 ## Frontend Class
 The C++ Frontend Class given to you is instantiated by the frontend interface runner program. Frontend interface runner program is supplied to you and hence you do not need to implement. It will translate the input SQL-like queries, extracts the arguments and calls the appropriate methods of the Frontend Class. The Frontend Class given has to be implemented by you by following the specification of all the class methods given in this section. All the methods of frontend class are static and it has the following C++ declaration:
@@ -84,8 +89,5 @@ public:
                                                char attr_list[attr_count][ATTR_SIZE]);
 };
 ```
-As you can see, this class contains two sets of functions required to be implemented by you, namely:
-1. [Data Definition Language (DDL) Commands](./ddl.md)
-2. [Data Manipulaiton Language (DML) Commands](./dml.md)
 
 The specifications for each method of this class is provided in the following sections.
