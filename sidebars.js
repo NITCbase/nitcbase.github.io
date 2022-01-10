@@ -31,21 +31,8 @@ const sidebars = {
       id: 'intro'
     },
     {
-      type: 'category',
-      label: 'System Design',
-      collapsible: true,
-      collapsed: false,
-      items: [
-        {
-          type: 'doc',
-          label: 'Introduction',
-          id: 'System Design/introduction',
-        },
-        {
-          type: 'doc',
-          id: 'System Design/DesignDiagram',
-        },
-      ],
+      type: 'doc',
+      id: 'DesignDiagram',
     },
     {
       type: 'category',
@@ -91,6 +78,19 @@ const sidebars = {
         {
           type: 'doc',
           id: 'XfS Interface/Installation Guidelines',
+        },
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Frontend User Interface',
+      collapsible: true,
+      collapsed: false,
+      items: [
+        {
+          type: 'doc',
+          label: 'Introduction',
+          id: 'Frontend User Interface/introduction',
         },
       ],
     },
