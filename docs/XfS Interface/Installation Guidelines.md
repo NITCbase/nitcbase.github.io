@@ -7,18 +7,9 @@ tags:
   - XFS
 ---
 # XFS Interface Installation Guidelines
-XFS Interface is a command line external interface to access the NITCBase filesystem from the host (UNIX) system. The filesystem is simulated on a binary file. This interface aims to provide the functionality of transferring relations from/to the host system to/from the disk and can be helpful in debugging the system during implementation.
-
-There are three types of commands that can be given as input to the XFS interface:
-
-1. External File System Commands
-2. Data Definition Language Commands
-3. Data Manipulation Language Commands
-
 ## Set Up
 
 The following are the instructions for installation in linux/unix environments:
-
 1. Download the NITCBase XFS Interface package from here **ATTACH LINK HERE**
 2. Copy the tar file to your home directory 
     ```bash
@@ -42,7 +33,7 @@ The following are the instructions for installation in linux/unix environments:
     cmake
     make
     ```
-
+    
 ## Running XFS Interface
 
 To run the xfs interface do the following:
