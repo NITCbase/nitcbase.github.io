@@ -1,8 +1,7 @@
 ---
+title: 'System Design'
 sidebar_position: 1
 ---
-
-# Introduction
 
 NITCbase is a tiny database management system. It has a very simple specification that allows a junior undergraduate computer science student to implement it in a few months.
 
