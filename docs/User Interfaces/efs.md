@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 3
 title: 'External File System Commands'
 tags:
   - External
@@ -13,9 +13,10 @@ tags:
   - dump
   - exit
   - ls
+  - XFS
 ---
 
-The External File System commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the XFS disk to a UNIX file. The following are the External File System commands supported by NITCBase.
+The External File System commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the XFS disk to a UNIX file. These commands are only available for the XFS Interface. The following are the External File System commands supported by NITCBase.
 
 ### Format Disk
 #### Description
@@ -23,30 +24,6 @@ This command is used to create a simulated disk or to format the disk if already
 #### Syntax
 ```bash
 fdisk
-```
-
-### Batch Execution
-#### Description
-This command is used to run multiple XFS commands in sequence by reading the commands line-by-line from an external file. For example the `run` command given below will execute commands present in `filename`. If there is an error on running a command at a given line, all commands after that **will not be excuted** and the `run` command fails by giving the line number of the command in which error occurred.
-#### Syntax
-```bash
-run filename
-```
-:::tip
-This is useful to execute multiple commonly used commands while debugging.
-:::
-
-### Echo
-#### Description
-This command is used to echo back the message given as argument to the command line.
-
-:::tip
-This is useful while debugging in combination with the `run` command.
-:::
-
-#### Syntax
-```bash
-echo <any message>
 ```
 
 ### Import Relation
