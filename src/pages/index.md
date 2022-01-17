@@ -18,7 +18,7 @@ The following diagram gives an idea of the system that we are building and it's 
 
 ![Design Diagram](../../static/img/overall-design.png)
 
-There are two command line interfaces([Frontend Interface](/docs/Frontend%20User%20Interface/introduction) and [XFS Interface](/docs/XFS%20Interface/introduction)), a disk and the Seven Layers. Since NITCbase is a relational database, it supports execution of SQL-like queries on the command-line interfaces. Disk is the single storage unit for for all data present in NITCbase. 
+There are two command line interfaces([Frontend Interface](/docs/Design/Frontend/Introduction) and [XFS Interface](/docs/XFS%20Interface/introduction)), a disk and the Seven Layers. Since NITCbase is a relational database, it supports execution of SQL-like queries on the command-line interfaces. Disk is the single storage unit for for all data present in NITCbase. 
 
 The project assumes that the student has adequate background in programming in C/C++ and data structures.
-To begin with the project. Continue to the [Roadmap](/docs/Roadmap/introduction)
+To begin with the project, continue to the [Roadmap](/docs/Roadmap/Introduction).
