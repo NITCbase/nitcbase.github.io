@@ -116,20 +116,6 @@ const sidebars = {
       ],
     },
     // {
-    //   type: 'category',
-    //   label: 'Docusaurus',
-    //   items: [
-    //     {
-    //       type: 'doc',
-    //       id: 'doc2',
-    //     },
-    //     {
-    //       type: 'doc',
-    //       id: 'doc3',
-    //     },
-    //   ],
-    // },
-    // {
     //   type: 'link',
     //   label: 'Learn more',
     //   href: 'https://example.com',
