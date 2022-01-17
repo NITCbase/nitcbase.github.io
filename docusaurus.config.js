@@ -57,9 +57,21 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'User Interface Commands/introduction',
+            docId: 'Roadmap/introduction',
             position: 'left',
-            label: 'User Interfacing',
+            label: 'Roadmap',
+          },
+          {
+            type: 'doc',
+            docId: 'Tutorials/introduction',
+            position: 'left',
+            label: 'Tutorials',
+          },
+          {
+            type: 'doc',
+            docId: 'XFS Interface/introduction',
+            position: 'left',
+            label: 'XFS Interface',
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
