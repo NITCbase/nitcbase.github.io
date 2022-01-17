@@ -6,9 +6,9 @@ tags:
   - frontend
   - interface
 ---
-Frontend layer is the highest layer among the [7 layers of NITCbase](../DesignDiagram.md). It consists of 2 parts - [Frontend User Interface](../Frontend%20User%20Interface/introduction.md) and the Frontend Programming Interface as seen in the below figure.
+Frontend layer is the highest layer among the [7 layers of NITCbase](../../DesignDiagram.md). It consists of 2 parts - [Frontend User Interface](../Frontend%20User%20Interface/introduction.md) and the Frontend Programming Interface as seen in the below figure.
 <!-- <img src="/static/img/FrontendExplanation.png" alt="drawing" width="200"/> -->
-![Design Diagram](../../static/img/FrontendExplanation.png)
+![Design Diagram](../../../../static/img/FrontendExplanation.png)
 
 Frontend user interface is supplied to you and hence you do not need to implement. It will translate the input SQL-like queries, extracts the arguments and calls the appropriate methods of the Frontend Class/Frontend Programming Interface. The C++ Frontend Class specification is given below.
 
