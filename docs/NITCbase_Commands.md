@@ -1,14 +1,15 @@
 ---
 sidebar_position: 1
-title: 'User Interface Commands'
+title: 'NITCbase Commands'
 tags:
-  - introduction
+  - NITCbase 
+  - Commands
 ---
 NITCbase supports two user interfaces namely, [XFS Interface](../XfS%20Interface/introduction.md) and [Frontend Interface](../Frontend%20Programming%20Interface/introduction.md). The commands supported by the two interfaces have overlap and they fall into the following **four** categories:
-1. [Data Definition Language(DDL) Commands ](../NITCbase_Commands#data-definition-language-commands)
-2. [Data Manipulation Language(DML) Commands](../NITCbase_Commands#data-manipulation-language-commands)
-3. [XFS / External File System Commands](../NITCbase_Commands#external-file-system-xfs-commands)
-4. [Script Commands](../NITCbase_Commands##script-commands)
+1. [Data Definition Language(DDL) Commands ](#data-definition-language-commands)
+2. [Data Manipulation Language(DML) Commands](#data-manipulation-language-commands)
+3. [XFS / External File System Commands](#external-file-system-xfs-commands)
+4. [Script Commands](#script-commands)
 
 
 ## Data Definition Language Commands

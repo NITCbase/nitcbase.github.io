@@ -15,7 +15,7 @@ Contents include:
 6. Buffer Layer
 7. Physical Layer
 
-NITCbase provides a command line interface called [Frontend Interface](../Design/Frontend/Frontend%20User%20Interface/introduction.md) to the users (students) in which they can input and execute any database queries which forms part of the Frontend Layer. This layer is responsible for translating the SQL-like queries given as input to a set of lower-layer function calls.
+NITCbase provides a command line interface called [Frontend Interface](../Design/Frontend/Frontend%20User%20Interface) to the users (students) in which they can input and execute any database queries which forms part of the Frontend Layer. This layer is responsible for translating the SQL-like queries given as input to a set of lower-layer function calls.
 
 ---
 The following System Design Diagram shows the commands / functions to be implemented by students at each layer and also shows their invocation order:

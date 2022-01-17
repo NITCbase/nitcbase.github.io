@@ -63,7 +63,7 @@ const config = {
           },
           {
             type: 'doc',
-            docId: 'Tutorials/introduction',
+            docId: 'Tutorials/Indexing',
             position: 'left',
             label: 'Tutorials',
           },
@@ -72,6 +72,12 @@ const config = {
             docId: 'XFS Interface/introduction',
             position: 'left',
             label: 'XFS Interface',
+          },
+          {
+            type: 'doc',
+            docId: 'NITCbase_Commands',
+            position: 'left',
+            label: 'NITCbase Commands',
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
