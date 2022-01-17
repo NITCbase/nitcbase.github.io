@@ -15,7 +15,7 @@ The following are the instructions for installation in linux/unix environments:
     sudo apt update;
     sudo apt-get install -y build-essential cmake gcc;
     ```
-2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/blob/main/NITCbase.zip).
+2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
 3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
 4. Change directory to `XFS_Interface_Code/`  as follows:
     ```bash
