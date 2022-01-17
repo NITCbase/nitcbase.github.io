@@ -10,32 +10,19 @@ tags:
 ## Set Up
 
 The following are the instructions for installation in linux/unix environments:
-1. Download the NITCBase XFS Interface package from here **ATTACH LINK HERE**
-2. Copy the tar file to your home directory 
+1. Download the NITCbase package from [here](https://github.com/Nitcbase/nitcbase-download/blob/main/NITCbase.zip)
+2. Install pre-requisities
     ```bash
-    cp NITCBase.tar.xz $HOME/
-    cd $HOME
+    sudo apt update;
+    sudo apt-get install -y build-essential cmake gcc;
     ```
-3. Extract the contents
-    ```bash
-    tar -xvf NITCBase.tar.xz
-    ```
-4. Install prerequisites such as g++
-    ```bash
-    sudo apt install g++
-    ```
-5. Change directory to XFS_Interface_Code.
-    ```bash
-    cd $HOME/NITCBase/XFS_Interface_Code
-    ```  
-6. Cmake and then make
-    ```bash
-    cmake
-    make
-    ```
+3. Extract the NITCbase.zip folder and copy it to the HOME folder
+4. Change directory into XFS Interface.
+5. Run `cmake .`
+6. Run `cmake --build .`
+7. ./XFSInterface would be the excutable.
     
 ## Running XFS Interface
-
 To run the xfs interface do the following:
    ```bash
    ./xfs-interface
