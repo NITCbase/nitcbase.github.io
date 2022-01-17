@@ -10,26 +10,35 @@ tags:
 ## Set Up
 
 The following are the instructions for installation in linux/unix environments:
-1. Download the NITCbase package from [here](https://github.com/Nitcbase/nitcbase-download/blob/main/NITCbase.zip)
-2. Install pre-requisities
+1. Install the pre-requisities.
     ```bash
     sudo apt update;
     sudo apt-get install -y build-essential cmake gcc;
     ```
-3. Extract the NITCbase.zip folder and copy it to the HOME folder
-4. Change directory into XFS Interface.
-5. Run `cmake .`
-6. Run `cmake --build .`
-7. ./XFSInterface would be the excutable.
-    
-## Running XFS Interface
-To run the xfs interface do the following:
-   ```bash
-   ./xfs-interface
-   ```
+2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/blob/main/NITCbase.zip).
+3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
+4. Change directory to `XFS_Interface_Code/`  as follows:
+    ```bash
+    cd
+    cd NITCbase/XFS_Interface_Code
+    ```
+5. ADD A DIRECTORY STRUCTURE HERE FOR THE XFS INTERFACE
+6. Run CMake to generate the make files (BEFORE THIS I FEEL WE WOULD CREATE A build DIRECTORY AND THEN do CMAKE.... REFER):
+    ```bash
+    cmake --clean-first .
+    ```
+7. Run the build to generate executable as follows:
+    ```bash
+    make
+    ```
+8. `XFS-Interface` would be the excutable which can be run by using the following command:
+    ```bash
+    ./XFS-Interface
+    ```
 
 ## All Files 
 
+* ADD A DIRECTORY TREE HERE FOR NITCBASE and EXPLAIN ABOUT DISK CLASS AND FRONTEND INTERFACE AS WELL
 * Sample data files and run files will be present in the `/Files` directory
 * Output files from operations such as: `dump` and `export` will also fetch from from this folder
 * Input files for operations such as: `import` and `insert from file` will also be fetched from the above folder
