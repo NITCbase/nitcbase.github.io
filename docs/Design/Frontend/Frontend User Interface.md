@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 2
 title: 'Frontend User Interface'
 tags:
   - introduction
@@ -13,4 +13,4 @@ NITCbase provides a command line interface to the users (students) in which they
 
 Please refer the [NITCbase Commands section](../../NITCbase_Commands) to get specifications for each of the above command types.
 
-Among the above commands, script commands have been implemented and provided to you. DDL and DML commands have to be implemented as class methods starting from the Frontend Class described in the [Frontend Programming Interface](../Frontend/Frontend%20Programming%20Interface/introduction.md) and then moving on to subsequent lower layers.
+Among the above commands, script commands have been implemented and provided to you. DDL and DML commands have to be implemented as class methods starting from the Frontend Class described in the [Frontend Programming Interface](../Frontend/Frontend%20Programming%20Interface.md) and then moving on to subsequent lower layers.
