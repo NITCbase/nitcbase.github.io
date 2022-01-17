@@ -18,4 +18,4 @@ NITCbase is a tiny database management system. It has a very simple specificatio
 8. Physical Layer
 9. Constants
 
-![Design Diagram](../static/img/design.png)
+![Design Diagram](../../static/img/design.png)
