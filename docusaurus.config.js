@@ -55,6 +55,12 @@ const config = {
             position: 'left',
             label: 'Design',
           },
+          {
+            type: 'doc',
+            docId: 'User Interface Commands/introduction',
+            position: 'left',
+            label: 'User Interfacing',
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/nitcbase',
