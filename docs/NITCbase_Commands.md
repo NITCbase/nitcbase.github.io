@@ -5,12 +5,13 @@ tags:
   - NITCbase 
   - Commands
 ---
-NITCbase supports two user interfaces namely, [XFS Interface](XFS%20Interface/introduction.md) and [Frontend Interface](Design/Frontend/Frontend%20Programming%20Interface.md). The commands supported by the two interfaces have overlap and they fall into the following **four** categories:
+NITCbase supports two user interfaces namely, [XFS Interface](XFS%20Interface/introduction.md) and [Frontend Interface](Design/Frontend/Frontend%20Programming%20Interface.md). The commands supported by the two interfaces fall into the following **four** categories:
 1. [Data Definition Language(DDL) Commands ](#data-definition-language-commands)
 2. [Data Manipulation Language(DML) Commands](#data-manipulation-language-commands)
-3. [XFS / External File System Commands](#external-file-system-xfs-commands)
+3. [External File System / XFS Commands](#external-file-system-xfs-commands)
 4. [Script Commands](#script-commands)
 
+Among the above commands, XFS Interface supports all four categories whereas Frontend Interface supports Data Definition Language(DDL), Data Manipulation Language(DML) and Script commands.
 
 ## Data Definition Language Commands
 The Data Definition Language(DDL) commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. DDL Commands are supported by both XFS Interface and Frontend Interface. The following are the DDL commands supported by NITCBase.
@@ -626,7 +627,8 @@ This command is used to run multiple commands in sequence by reading the command
 run filename
 ```
 :::tip
-This is useful to execute multiple commonly used commands while debugging.
+* This is useful to execute multiple commonly used commands while debugging.
+* We can use folders within `/Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.
 :::
 
 ### Echo
