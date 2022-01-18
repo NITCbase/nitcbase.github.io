@@ -1,11 +1,11 @@
 import React from 'react';
 import Layout from '@theme/Layout';
+import SVGDiagram from '../../static/img/FrontendExplanation-withLinks.drawio.svg'
 
 export default function MyReactPage() {
   return (
     <Layout>
-      <h1>My React page</h1>
-      <p>This is a React page</p>
-    </Layout>
+      <SVGDiagram />
+      </Layout>
   );
 }
