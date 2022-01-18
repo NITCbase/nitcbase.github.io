@@ -14,3 +14,5 @@ NITCbase provides a command line interface to the users (students) in which they
 Please refer the [NITCbase Commands section](../../NITCbase_Commands) to get specifications for each of the above command types.
 
 Among the above commands, script commands have been implemented and provided to you. DDL and DML commands have to be implemented as class methods starting from the Frontend Class described in the [Frontend Programming Interface](../Frontend/Frontend%20Programming%20Interface.md) and then moving on to subsequent lower layers.
+
+For installation and setup of frontend interface follow the instructions [given here](../../XFS%20Interface/Installation%20Guidelines#frontend-interface-setup).
