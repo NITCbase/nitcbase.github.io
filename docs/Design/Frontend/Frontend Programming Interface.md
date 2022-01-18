@@ -99,8 +99,8 @@ Make sure to return the correct value from the methods, preferably sticking to t
 |------------|-----------------------------|------------------------------------------------------------------------|
 | relname    | `char[ATTR_SIZE]`           | Name of the relation/table to be created                               |
 | no_attrs   | `int`                       | Number of attributes of the relation to be created                     |
-| attributes | `char[no_attrs][ATTR_SIZE]` | Names of each attribute of the relation                                |
-| type_attrs | `int[no_attrs]`             | Data type of each attribute, in the same order as the attributes array |
+| attributes | `char[][ATTR_SIZE]` | Names of each attribute of the relation                                |
+| type_attrs | `int[]`             | Data type of each attribute, in the same order as the attributes array |
 
 #### Return Values
 | Value           | Description                                                                     |
@@ -115,8 +115,8 @@ Make sure to return the correct value from the methods, preferably sticking to t
 ```cpp
 int Frontend::create_table(char relname[ATTR_SIZE], 
                            int no_attrs, 
-                           char attributes[no_attrs][ATTR_SIZE],
-                           int type_attrs[no_attrs]) {
+                           char attributes[][ATTR_SIZE],
+                           int type_attrs[]) {
 
     // TODO: Call createRel() method of the Schema Layer with correct arguments
 
@@ -435,7 +435,7 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 int Frontend::select_attrlist_from_table(char relname_source[ATTR_SIZE], 
 char relname_target[ATTR_SIZE],
 int attr_count, 
-char attr_list[attr_count][ATTR_SIZE]) {
+char attr_list[][ATTR_SIZE]) {
 
 
     // TODO: Call project() method of the Algebra Layer with correct arguments
@@ -511,7 +511,7 @@ char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 ```cpp
 nt Frontend::select_attrlist_from_table_where(
     char relname_source[ATTR_SIZE], char relname_target[ATTR_SIZE],
-    int attr_count, char attr_list[attr_count][ATTR_SIZE], 
+    int attr_count, char attr_list[][ATTR_SIZE], 
     char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 
 
@@ -602,7 +602,7 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 int Frontend::select_attrlist_from_join_where(
     char relname_source_one[ATTR_SIZE], char relname_source_two[ATTR_SIZE],
     char relname_target[ATTR_SIZE], char join_attr_one[ATTR_SIZE], 
-    char join_attr_two[ATTR_SIZE], int attr_count, char attr_list[attr_count][ATTR_SIZE]) {
+    char join_attr_two[ATTR_SIZE], int attr_count, char attr_list[][ATTR_SIZE]) {
 
     // TODO: Step 1- Call join() method of the Algebra Layer with correct arguments to create a temporary target relation with name "temp". 
     // "temp" results from the join of the two source relation (and hence it contains all attributes of the source relations except the join attribute of the second source relation)
