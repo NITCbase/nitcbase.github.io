@@ -16,8 +16,8 @@ public:
     // Data Definition Language (DDL) Commands
     static int create_table(char relname[ATTR_SIZE], 
                             int no_attrs, 
-                            char attribute[no_attrs][ATTR_SIZE], 
-                            int type_attr[no_attrs]);
+                            char attributes[][ATTR_SIZE], 
+                            int type_attrs[]);
 
     static int drop_table(char relname[ATTR_SIZE]);
 
@@ -51,7 +51,7 @@ public:
     static int select_attrlist_from_table(char relname_source[ATTR_SIZE], 
                                           char relname_target[ATTR_SIZE],
                                           int attr_count, 
-                                          char attr_list[attr_count][ATTR_SIZE]);
+                                          char attr_list[][ATTR_SIZE]);
 
     static int select_from_table_where(char relname_source[ATTR_SIZE], 
                                        char relname_target[ATTR_SIZE],
@@ -62,7 +62,7 @@ public:
     static int select_attrlist_from_table_where(char relname_source[ATTR_SIZE], 
                                                 char relname_target[ATTR_SIZE],
                                                 int attr_count, 
-                                                char attr_list[attr_count][ATTR_SIZE],
+                                                char attr_list[][ATTR_SIZE],
                                                 char attribute[ATTR_SIZE], 
                                                 int op, 
                                                 char value[ATTR_SIZE]);
@@ -79,7 +79,7 @@ public:
                                                char join_attr_one[ATTR_SIZE], 
                                                char join_attr_two[ATTR_SIZE],
                                                int attr_count, 
-                                               char attr_list[attr_count][ATTR_SIZE]);
+                                               char attr_list[][ATTR_SIZE]);
 };
 ```
 
@@ -90,7 +90,7 @@ The Data Definition Language commands are used to define the database schema. Th
 The specifications for DDL methods of the Frontend Class is given below. 
 Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io/constants.html). 
 
-### Frontend :: create_table()
+## Frontend :: create_table()
 #### Description
 * The `CREATE TABLE` command is translated to this method call. 
 * This method calls the appropriate methods from the lower layer (Schema Layer) to create a table with the arguments given below.
@@ -125,7 +125,7 @@ int Frontend::create_table(char relname[ATTR_SIZE],
 }
 ```
 
-### Frontend :: drop_table()
+## Frontend :: drop_table()
 #### Description
 * The `DROP TABLE` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to delete the table with the arguments given below and also returns the error values accordingly.
@@ -152,7 +152,7 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 }
 ```
 
-### Frontend :: open_table()
+## Frontend :: open_table()
 #### Description
 * The `OPEN TABLE` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to open the table with the arguments given below and also returns the error values accordingly.
@@ -178,7 +178,7 @@ int Frontend::open_table(char relname[ATTR_SIZE]) {
 }
 ```
 
-### Frontend :: close_table()
+## Frontend :: close_table()
 #### Description
 * The `CLOSE TABLE` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to close the table with the arguments given below and also returns the error values accordingly.
@@ -203,7 +203,7 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 }
 ```
 
-### Frontend :: create_index()
+## Frontend :: create_index()
 #### Description
 * The `CREATE INDEX` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to create index on the attribute of the relation given as argument and also returns the error values accordingly.
@@ -232,7 +232,7 @@ int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
     // TODO: Return Success and Error values appropriately
 }
 ```
-### Frontend :: drop_index()
+## Frontend :: drop_index()
 #### Description
 * The `DROP INDEX` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to drop index on the attribute of the relation given as argument and also returns the error values accordingly.
@@ -257,7 +257,7 @@ int drop_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
     // TODO: Return Success and Error values appropriately
 }
 ```
-### Frontend :: alter_table_rename()
+## Frontend :: alter_table_rename()
 #### Description
 * The `ALTER TABLE RENAME` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to rename the table and also returns the error values accordingly.
@@ -287,7 +287,7 @@ int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[A
     // TODO: Return Success and Error values appropriately
 }
 ```
-### Frontend :: alter_table_rename_column()
+## Frontend :: alter_table_rename_column()
 #### Description
 * The `ALTER TABLE RENAME COLUMN` command is translated to this method call.
 * This method calls the appropriate methods from the lower layer (Schema Layer) to rename the column of the table given as argument and also returns the error values accordingly.

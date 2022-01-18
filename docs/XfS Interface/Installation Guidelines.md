@@ -32,11 +32,23 @@ The following are the instructions for installation in linux/unix environments:
     ./XFS-Interface
     ```
 
-## All Files 
+## Files and Directories
 * Sample data files and run files will be present in the `/Files` directory
-* Output files from operations such as: `dump` and `export` will also fetch from from this folder
-* Input files for operations such as: `import` and `insert from file` will also be fetched from the above folder
-* The folder structure is as follows:
+* Output files from operations such as: `dump` and `export` will be created at  `/Files` directory
+* Input files for operations such as: `import` and `insert from file` will also be fetched from the `/Files` directory
+
+  :::note
+    We can use folders within `/Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.
+  :::
+
+* Notable directories include:
+  * `Disk/` : contains the `disk` binary file on which NITCbase Disk is simulated.
+  *  `Disk_Class/` : contains the `Disk.cpp` file which encompasses the Disk Class described in the Physical Layer. Students should **only** use the Disk Class Object instantiation for doing disk acceess (read & write and create & destroy)
+  *  `define/` : contains the global constants.
+  *  `Frontend_Interface/` : contains the `Frontend.cpp` and `frontend-runner.cpp` files. Refer [Frontend Interface section](../Design/Frontend/introduction.md) to know more. Students need not edit the `frontend-runner.cpp` file rather, can start from the methods of Frontend C++ Class in `Frontend.cpp` for lower layer function call invocations.
+  *  `XFS_Interface/` : contains the `build.sh` script file for building XFS Interface. Once built succesfully, the `XFS-Interface` executable will be present here.
+
+* The entire folder structure is as follows:
   ```bash
   NITCbase
   .
@@ -92,8 +104,6 @@ The following are the instructions for installation in linux/unix environments:
   ├── run.sh
   └── run_fint.sh
   ```
-
-
 
 ## Docker Method
 
