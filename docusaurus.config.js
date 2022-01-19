@@ -79,7 +79,16 @@ const config = {
             position: 'left',
             label: 'NITCbase Commands',
           },
+          {
+            label: 'Architecture',
+            to: 'Architecture'
+          },
           // {to: '/blog', label: 'Blog', position: 'left'},
+          {
+            label: 'About Us',
+            href: 'https://nitcbase.github.io/about.html',
+            position: 'right',
+          },
           {
             href: 'https://github.com/nitcbase',
             label: 'GitHub',
