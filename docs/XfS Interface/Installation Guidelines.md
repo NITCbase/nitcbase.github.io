@@ -9,7 +9,7 @@ tags:
 # XFS Interface Installation Guidelines
 ## Setup
 :::note
-The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](#docker-based-setup).
+The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](#docker-based-setup-for-xfs-interface).
 :::
 The following are the instructions for installation in linux/unix environments:
 1. Install the prerequisites.
