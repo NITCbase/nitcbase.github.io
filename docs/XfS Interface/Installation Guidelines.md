@@ -6,12 +6,19 @@ tags:
   - Guidelines
   - XFS
 ---
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # XFS Interface Installation Guidelines
 ## Setup
 :::note
 The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](#docker-based-setup-for-xfs-interface).
 :::
 The following are the instructions for installation in linux/unix environments:
+
+<Tabs>
+<TabItem value="ubuntu" label="Ubuntu / Debian" default>
+
 1. Install the prerequisites.
     ```bash
     sudo apt update;
@@ -33,6 +40,60 @@ The following are the instructions for installation in linux/unix environments:
     ```bash
     ./XFS-Interface
     ```
+
+</TabItem>
+<TabItem value="fedora" label="Fedora / Red Hat">
+
+1. Install the prerequisites.
+    ```bash
+    sudo dnf install cmake make automake gcc gcc-c++ kernel-devel
+    ```
+2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
+3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
+4. Change directory to `XFS_Interface/`  as follows:
+    ```bash
+    cd
+    cd NITCbase/XFS_Interface
+    ```
+5. Run the following script file to generate the `XFS-Interface` executable as follows:
+    ```bash
+    chmod +x build.sh;
+    ./build.sh
+    ```
+6. Run the XFS Interface as follows:
+    ```bash
+    ./XFS-Interface
+    ```
+
+</TabItem>
+<TabItem value="arch" label="Arch Linux">
+
+1. Install the prerequisites.
+    ```bash
+    sudo pacman -Syy
+    sudo pacman -Sy base-devel cmake gcc
+    ```
+2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
+3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
+4. Change directory to `XFS_Interface/`  as follows:
+    ```bash
+    cd
+    cd NITCbase/XFS_Interface
+    ```
+5. Run the following script file to generate the `XFS-Interface` executable as follows:
+    ```bash
+    chmod +x build.sh;
+    ./build.sh
+    ```
+6. Run the XFS Interface as follows:
+    ```bash
+    ./XFS-Interface
+    ```
+
+</TabItem>
+</Tabs>
+
+
 
 ## Files and Directories
 * Sample data files and run files will be present in the `/Files` directory
