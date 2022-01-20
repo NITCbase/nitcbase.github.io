@@ -118,7 +118,7 @@ The following are the instructions for installation in linux/unix environments:
     chmod +x build.sh;
     ./build.sh
     ```
-4. Run the XFS Interface as follows:
+4. Run the Frontend Interface as follows:
     ```bash
     ./Frontend-Interface
     ```
