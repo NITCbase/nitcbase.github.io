@@ -86,7 +86,7 @@ const config = {
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
             label: 'About Us',
-            href: 'https://nitcbase.github.io/about.html',
+            to: 'AboutUs',
             position: 'right',
           },
           {
@@ -122,7 +122,7 @@ const config = {
             items: [
               {
                 label: 'About Us',
-                href: 'https://nitcbase.github.io/about.html',
+                to: 'AboutUs',
               },
               {
                 label: 'GitHub',
