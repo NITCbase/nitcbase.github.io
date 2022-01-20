@@ -15,7 +15,7 @@ The content in the website and the documentation has been authored in the [Depar
 |[Nileena P C](https://www.linkedin.com/in/nileena-p-c/), [Reema Sebi](https://www.linkedin.com/in/reema-sebi/), [Neema George](https://www.linkedin.com/in/neema-george-93a174175/)|
 |[Athira Dileep](https://www.linkedin.com/in/athira-dileepkumar-96a331154/), [Pravitha Sathyavan](https://www.linkedin.com/in/pravitha-sathyavan-3b6b37130/)|
 
-## 2020 - 2021
+## 2021 - 2022
 |                                      👤 Team Members                                    |
 |:-------------------------------------------------------------------------------------:|
 |[Jessiya Joy](https://www.linkedin.com/in/jessiya-joy-03184b198/), [Gokul Sreekumar](https://www.linkedin.com/in/gokul-sreekumar-63581b174/)|
