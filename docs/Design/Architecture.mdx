@@ -1,0 +1,31 @@
+---
+sidebar_position: 0
+title: 'Architecture'
+tags:
+  - Architecture
+---
+
+
+NITCbase has a seven layer design. This section provides documentation for each of the seven layers and certain additional design specific details.
+Contents include:
+1. Algrbra Layer
+2. Schema Layer
+3. Cache Layer
+4. Block Access Layer
+5. B+ tree Layer
+6. Buffer Layer
+7. Physical Layer
+
+NITCbase provides a command line interface called [Frontend Interface](../Design/Frontend/Frontend%20User%20Interface) to the users (students) in which they can input and execute any database queries which forms part of the Frontend Layer. This layer is responsible for translating the SQL-like queries given as input to a set of lower-layer function calls.
+
+---
+
+The following diagram shows the organization of different layers of NITCbase and important C++ classes present within them. 
+You can use this diagram to navigate to different parts of this section by clicking on the relevant layers.
+
+<iframe
+        frameborder="0"   
+        width="100%"
+        height="2100px"  
+        src="https://viewer.diagrams.net/?highlight=0000ff&layers=1&nav=1&title=LayersNavigation-5.drawio#Uhttps%3A%2F%2Fdrive.google.com%2Fuc%3Fid%3D131Aqw_OuBrZWUeHyDLN6GGCNxcKxL0YD%26export%3Ddownload">
+</iframe>

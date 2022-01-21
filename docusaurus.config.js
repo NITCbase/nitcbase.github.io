@@ -51,7 +51,7 @@ const config = {
         items: [
           {
             type: 'doc',
-            docId: 'Design/DesignDiagram',
+            docId: 'Design/Architecture',
             position: 'left',
             label: 'Design',
           },
@@ -78,10 +78,6 @@ const config = {
             docId: 'NITCbase_Commands',
             position: 'left',
             label: 'NITCbase Commands',
-          },
-          {
-            label: 'Architecture',
-            to: 'Architecture'
           },
           // {to: '/blog', label: 'Blog', position: 'left'},
           {
