@@ -22,21 +22,24 @@ The following are the instructions for installation in linux/unix environments:
 1. Install the prerequisites.
     ```bash
     sudo apt update;
-    sudo apt-get install -y build-essential cmake gcc
+    sudo apt-get install -y build-essential cmake gcc wget curl
     ```
-2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
-3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
-4. Change directory to `XFS_Interface/`  as follows:
+2. Execute the following line in terminal:
     ```bash
-    cd
-    cd NITCbase/XFS_Interface
+     curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
+    ``` 
+    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+
+3. Change directory to `XFS_Interface/`  as follows:
+    ```bash
+    cd nitcbase/XFS_Interface
     ```
-5. Run the following script file to generate the `XFS-Interface` executable as follows:
+4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
     chmod +x build.sh;
     ./build.sh
     ```
-6. Run the XFS Interface as follows:
+5. Run the XFS Interface as follows:
     ```bash
     ./XFS-Interface
     ```
@@ -46,21 +49,24 @@ The following are the instructions for installation in linux/unix environments:
 
 1. Install the prerequisites.
     ```bash
-    sudo dnf install cmake make automake gcc gcc-c++ kernel-devel
+    sudo dnf install cmake make automake gcc gcc-c++ kernel-devel wget curl
     ```
-2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
-3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
-4. Change directory to `XFS_Interface/`  as follows:
+2. Execute the following line in terminal:
     ```bash
-    cd
-    cd NITCbase/XFS_Interface
+     curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
+    ``` 
+    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+
+3. Change directory to `XFS_Interface/`  as follows:
+    ```bash
+    cd nitcbase/XFS_Interface
     ```
-5. Run the following script file to generate the `XFS-Interface` executable as follows:
+4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
     chmod +x build.sh;
     ./build.sh
     ```
-6. Run the XFS Interface as follows:
+5. Run the XFS Interface as follows:
     ```bash
     ./XFS-Interface
     ```
@@ -71,21 +77,24 @@ The following are the instructions for installation in linux/unix environments:
 1. Install the prerequisites.
     ```bash
     sudo pacman -Syy
-    sudo pacman -Sy base-devel cmake gcc
+    sudo pacman -Sy base-devel cmake gcc wget curl
     ```
-2. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
-3. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory.
-4. Change directory to `XFS_Interface/`  as follows:
+2. Execute the following line in terminal:
     ```bash
-    cd
-    cd NITCbase/XFS_Interface
+     curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
+    ``` 
+    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+
+3. Change directory to `XFS_Interface/`  as follows:
+    ```bash
+    cd nitcbase/XFS_Interface
     ```
-5. Run the following script file to generate the `XFS-Interface` executable as follows:
+4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
     chmod +x build.sh;
     ./build.sh
     ```
-6. Run the XFS Interface as follows:
+5. Run the XFS Interface as follows:
     ```bash
     ./XFS-Interface
     ```
@@ -113,7 +122,7 @@ The following are the instructions for installation in linux/unix environments:
 
 * The entire folder structure is as follows:
   ```bash
-  NITCbase
+  nitcbase
   .
   ├── Disk
   │   ├── README.txt
@@ -163,16 +172,17 @@ The following are the instructions for installation in linux/unix environments:
   │   ├── enum_constants.h
   │   ├── errors.h
   │   └── id.h
+  ├── install
+  │   ├── install.sh
   ├── run_frontend.sh
   └── run_xfs.sh
   ```
 
 ## Frontend Interface Setup
-1. Ensure you have done till step 3 in the [above setup](#setup).
+1. Ensure you have done till step 2 in the [above setup](#setup).
 2. Change directory to `Frontend_Interface/`  as follows:
     ```bash
-    cd
-    cd NITCbase/Frontend_Interface
+    cd nitcbase/Frontend_Interface
     ```
 3. Run the following script file to generate the `Frontend-Interface` executable as follows:
     ```bash
@@ -191,7 +201,7 @@ The following are the instructions for installation in linux/unix environments:
 2. Open the Docker application and keep it running in the background.
 3. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
 4. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory (Important for build scripts to run properly).
-5. Open Terminal and change working directory to `NITCbase/`  as follows:
+5. Open Terminal and change working directory to `nitcbase/`  as follows:
     ```bash
     cd
     cd NITCbase
@@ -213,7 +223,7 @@ The following are the instructions for installation in linux/unix environments:
 ## Docker based setup for Frontend Interface
 
 1. Ensure that you have done till step 5 in the [above setup](#docker-based-setup-for-xfs-interface) and that Docker application is running the background.
-2. Open Terminal and change working directory to `NITCbase/` as follows:
+2. Open Terminal and change working directory to `nitcbase/` as follows:
     ```bash
     cd
     cd NITCbase
