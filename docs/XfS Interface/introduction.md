@@ -16,4 +16,4 @@ There are **four** types of commands supported by the XFS interface:
 3. [XFS / External File System Commands](../NITCbase_Commands#external-file-system-xfs-commands)
 4. [Script Commands](../NITCbase_Commands#script-commands)
 
-Please refer the [NITCbase Commands section](../NITCbase_Commands) to get specifications for each of these commmands.
+**XFS interface has been imlemented completely and provided to you**. It is available in the `XFS_Interface` directory. Feel free follow the [installation guidelines provided here](./Installation%20Guidelines.md) and familiarize yourself with the commands. Refer the [NITCbase Commands section](../NITCbase_Commands) to get specifications for each of these commmands.

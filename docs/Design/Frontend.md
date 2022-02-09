@@ -14,7 +14,11 @@ import FrontendExplanationSrc from '../../static/img/FrontendExplanation.png';
 
 The RDBMS code must include a frontend code that interacts with the user and accepts user commands to the RDBMS.  This frontend code needs to translate the Data Definition Language (DDL), Data Manipulation Language (DML) and script commands from the user to function calls at the lower layers. 
 
-The code for the frontend of NITCbase is divided into two sub-modules - **Frontend user interface** and **Frontend programming interface**. The part of the frontend that interacts with the user directly is already implemented and is supplied to you along with the documentation for the project. This part is called the frontend user interface sub-module and its implementation can be found in the file `frontend-runner.cpp`. 
+The code for the frontend of NITCbase is divided into two sub-modules:
+* **Frontend user interface** 
+* **Frontend programming interface**
+
+The part of the frontend that interacts with the user directly is already implemented and is supplied to you along with the documentation for the project. This part is called the frontend user interface sub-module and its implementation can be found in the file `frontend-runner.cpp`. 
 
 *The frontend user interface translates each high level DDL and DML commands from the user to invocations of specific functions which are part of the second sub-module called front-end programming interface*. A C++ class file that contains the declarations of various functions of the frontend programming interface can be found in the file `Frontend.cpp`.  
 
@@ -28,7 +32,7 @@ The code implementing the functions of the front end programming interface sub-m
 
 ## Frontend User Interface
 
-The Frontend user interface sub-module supplied to you interacts with the user and translates the SQL-like queries given as input to a set of lower-layer by extracting the arguments and calling the appropriate methods of the Frontend Class / Frontend Programming Interface sub-module.
+The Frontend user interface sub-module supplied to you interacts with the user and translates the SQL-like queries given as input to a set of lower-layer function calls by extracting the arguments and calling the appropriate methods of the Frontend Class / Frontend Programming Interface sub-module.
 Frontend User Interface supports the following types of commands:
 
 1. [Data Definition Language(DDL) Commands ](../NITCbase_Commands.md#data-definition-language-commands)
