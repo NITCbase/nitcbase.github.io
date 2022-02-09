@@ -217,24 +217,30 @@ The following are the instructions for installation in linux/unix environments:
 <TabItem value="mac" label="Mac" default>
 
 
-3. Download the compressed NITCbase package from ***either one*** of the following options:
+3. Download the compressed NITCbase package from ***either one*** of the following options and extract the compressed file:
    1. [zip](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip)
    2. [tar.gz](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.tar.gz)
-4. Extract the compressed file.
-5. Open Terminal Application change working directory to `NITCbase/`  as follows:
+4. Open Terminal Application change working directory to `NITCbase/`  as follows:
+   
     ```bash
     cd NITCbase
     ```
-6. Ensure that the `build_xfs.sh` and `run_xfs.sh` have the execute permissions by running the following commands in terminal:
+   
+5. Ensure that the `build_xfs.sh` and `run_xfs.sh` have the execute permissions by running the following commands in terminal:
+   
     ```bash
     chmod +x build_xfs.sh;
     chmod +x run_xfs.sh;
     ```
-7. Run the following shell script which will build the docker image of XFS Interface:
+
+6. Run the following shell script which will build the docker image of XFS Interface:
+   
     ```bash
     ./build_xfs.sh
     ```
-8.  To run the Docker Instance of XFS Interface execute the following shell script:
+   
+7.  To run the Docker Instance of XFS Interface execute the following shell script:
+   
     ```bash
     ./run_xfs.sh
     ```
