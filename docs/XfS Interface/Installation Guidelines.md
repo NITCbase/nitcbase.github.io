@@ -12,7 +12,7 @@ import TabItem from '@theme/TabItem';
 # XFS Interface Installation Guidelines
 ## Setup
 :::note
-The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](#docker-based-setup-for-xfs-interface).
+The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the environment setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](#docker-based-setup-for-xfs-interface). Note: Windows installation of docker requires WSL2.
 :::
 The following are the instructions for installation in linux/unix environments:
 
@@ -211,11 +211,17 @@ The following are the instructions for installation in linux/unix environments:
 1. Download and Install docker by following the steps mentioned [here](https://docs.docker.com/get-docker/).
    * You can go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker.
 2. Open the Docker application and keep it running in the background.
+
+
+<Tabs>
+<TabItem value="mac" label="Mac" default>
+
+
 3. Download the compressed NITCbase package from ***either one*** of the following options:
    1. [zip](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip)
    2. [tar.gz](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.tar.gz)
 4. Extract the compressed file.
-5. Open Terminal (in MAC) or WSL Terminal and change working directory to `NITCbase/`  as follows:
+5. Open Terminal Application change working directory to `NITCbase/`  as follows:
     ```bash
     cd NITCbase
     ```
@@ -232,6 +238,36 @@ The following are the instructions for installation in linux/unix environments:
     ```bash
     ./run_xfs.sh
     ```
+
+</TabItem>
+<TabItem value="win" label="Windows (WSL2)" default>
+
+
+3. Open WSL Linux terminal and run the following command to download the NITCbase package:
+   ```bash
+   curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
+   ```
+
+4. Change working directory to `NITCbase/`  as follows:
+    ```bash
+    cd NITCbase
+    ```
+5. Ensure that the `build_xfs.sh` and `run_xfs.sh` have the execute permissions by running the following commands in terminal:
+    ```bash
+    chmod +x build_xfs.sh;
+    chmod +x run_xfs.sh;
+    ```
+6. Run the following shell script which will build the docker image of XFS Interface:
+    ```bash
+    ./build_xfs.sh
+    ```
+7.  To run the Docker Instance of XFS Interface execute the following shell script:
+    ```bash
+    ./run_xfs.sh
+    ```
+
+</TabItem>
+</Tabs>
 
 ## Docker based setup for Frontend Interface
 
