@@ -197,7 +197,7 @@ INSERT INTO tablename VALUES FROM filename
 * The order of attribute values in each line of the CSV file must be same as that of the attributes of the relation.
 * The number and types of attribute values in each row should match the number and types of the attributes of the specified relation.
 * The CSV file should not contain any `null` values.
-* The CSV file from which the values are to be inserted, must be stored in the path `$HOME/NITCBase/Files/`.
+* The CSV file from which the values are to be inserted, must be stored in the path `NITCBase/Files/Input_Files`.
 :::
 :::note Example
 Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:
@@ -378,6 +378,7 @@ The CSV file **must follow** the following format:
 * The first line must contain the names of the attributes of the relation separated by commas. 
 * Second line onwards records are specified as *comma-seperated attribute values*, in the **same order** as the attrbiutes listed in the first line. 
 * Only **one record is allowed per line.**
+* The CSV file must be stored in the path `NITCBase/Files/Input_Files`.
 #### Syntax
 ```bash
 import filename
@@ -388,7 +389,7 @@ import filename
 * First **15 characters of name of file is taken as the relation name**. Similarly, only the first 15 characters of attributes listed in first line of the CSV file is taken as the name for each attribute.
 * The CSV file **should not contain any null values.**
 * If a relation with the same name as that of the CSV file already exists, then the import will *fail, without any changes to disk.*
-* All files to be imported should be stored in the path `$HOME/NITCBase/Files/`.
+* All files to be imported should be stored in the path `NITCBase/Files/Input_Files`.
 * The _order of attribute values in each line of the CSV file must be same as that of the attributes of the relation._
 * The number of attribute values in each row should match the number of attributes specified in the first line of the file.
 * The types of attribute values in each row should match the attribute types inferred from the second line of the file.
@@ -622,13 +623,19 @@ Script commands are available for both XFS interface and frontend interface. The
 ### Batch Execution
 #### Description
 This command is used to run multiple commands in sequence by reading the commands line-by-line from an external file. For example the `run` command given below will execute commands present in `filename`. If there is an error on running a command at a given line, all commands after that **will not be excuted** and the `run` command fails by giving the line number of the command in which error occurred.
+
+:::note
+* File name given as input to `run` command is fetched from the `/Files/Batch_Execution_Files/` directory and hence are required to be placed in that folder.
+:::
+
+
 #### Syntax
 ```bash
 run filename
 ```
 :::tip
 * This is useful to execute multiple commonly used commands while debugging.
-* We can use folders within `/Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.
+* We can use folders within `/Files/Batch_Execution_Files/` to organize the run files. In that case, `run folder_name/run_file` format can be used.
 :::
 
 ### Echo

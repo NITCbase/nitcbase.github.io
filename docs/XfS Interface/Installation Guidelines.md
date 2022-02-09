@@ -28,11 +28,11 @@ The following are the instructions for installation in linux/unix environments:
     ```bash
      curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
     ``` 
-    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+    On successful execution of the script, a new `NITCbase/` directory will be created containing all the necessary components to start the NITCbase project.
 
 3. Change directory to `XFS_Interface/`  as follows:
     ```bash
-    cd nitcbase/XFS_Interface
+    cd NITCbase/XFS_Interface
     ```
 4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
@@ -55,11 +55,11 @@ The following are the instructions for installation in linux/unix environments:
     ```bash
      curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
     ``` 
-    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+    On successful execution of the script, a new `NITCbase/` directory will be created containing all the necessary components to start the NITCbase project.
 
 3. Change directory to `XFS_Interface/`  as follows:
     ```bash
-    cd nitcbase/XFS_Interface
+    cd NITCbase/XFS_Interface
     ```
 4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
@@ -83,11 +83,11 @@ The following are the instructions for installation in linux/unix environments:
     ```bash
      curl -Sf https://raw.githubusercontent.com/Nitcbase/nitcbase/master/install/install.sh | sh
     ``` 
-    On successful execution of the script, a new `nitcbase/` directory will be created containing all the necessary components to start the NITCbase project.
+    On successful execution of the script, a new `NITCbase/` directory will be created containing all the necessary components to start the NITCbase project.
 
 3. Change directory to `XFS_Interface/`  as follows:
     ```bash
-    cd nitcbase/XFS_Interface
+    cd NITCbase/XFS_Interface
     ```
 4. Run the following script file to generate the `XFS-Interface` executable as follows:
     ```bash
@@ -105,24 +105,35 @@ The following are the instructions for installation in linux/unix environments:
 
 
 ## Files and Directories
-* Sample data files and run files will be present in the `/Files` directory
-* Output files from operations such as: `dump` and `export` will be created at  `/Files` directory
-* Input files for operations such as: `import` and `insert from file` will also be fetched from the `/Files` directory
 
-  :::note
-    We can use folders within `/Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.
-  :::
-
-* Notable directories include:
+* Notable directories / files include:
   * `Disk/` : contains the `disk` binary file on which NITCbase Disk is simulated.
   *  `Disk_Class/` : contains the `Disk.cpp` file which encompasses the Disk Class described in the Physical Layer. Students should **only** use the Disk Class Object instantiation for doing disk acceess (read & write and create & destroy)
   *  `define/` : contains the global constants.
-  *  `Frontend_Interface/` : contains the `Frontend.cpp` and `frontend-runner.cpp` files. Refer [Frontend Interface section](../Design/Frontend/introduction.md) to know more. Students need not edit the `frontend-runner.cpp` file rather, can start from the methods of Frontend C++ Class in `Frontend.cpp` for lower layer function call invocations.
+  *  `Files/`: Within this folder, three sub-directories can be found: 
+     *  `/Batch_Execution_FIles` - files taken as input by `run` command is organized and fetched from here (run files).
+     *  `/Input_Files` - Input data files for commands like `import`, `insert from file` etc. are organized and fetched from here.
+     *  `/Output_Fies` - Output data files generated from `dump` and `export`  are organized and fetched from here.
+  *  `Frontend_Interface/` : contains the `Frontend.cpp` and `frontend-runner.cpp` files. Refer [Frontend Interface section](../Design/Frontend/introduction.md) to know more. Students need not edit the `frontend-runner.cpp` file rather, can start from the methods of Frontend C++ Class in `Frontend.cpp` for lower layer function call invocations. To build Frontend-Interface executable locally in Linux Environment, `build.sh` script present in this folder can be executed.
   *  `XFS_Interface/` : contains the `build.sh` script file for building XFS Interface. Once built succesfully, the `XFS-Interface` executable will be present here.
+  *  Dockerfiles (To be noted if you are following the Docker method of installation given [here](#docker-based-setup-for-xfs-interface)):
+     *  `Dockerfile_frontend`
+     *  `Dockerfile_xfs`
+     *  `build_frontend.sh` - To build the docker image for Frontend Interface from `Dockerfile_frontend`.
+     *  `build_xfs.sh` - To build the docker image for XFS Interface from `Dockerfile_xfs`.
+     *  `run_frontend.sh` - To run the docker image of Frontend Interface.
+     *  `run_xfs.sh` - To run the docker image of XFS Interface.
+  * `install.sh`: contains build scripts for local linux based installation of NITCbase.
+
+
+:::note
+  We can use sub-directories within `/Files/Batch_Execution_Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.
+:::
+
 
 * The entire folder structure is as follows:
   ```bash
-  nitcbase
+  NITCbase
   .
   ├── Disk
   │   ├── README.txt
@@ -133,14 +144,15 @@ The following are the instructions for installation in linux/unix environments:
   ├── Dockerfile_frontend
   ├── Dockerfile_xfs
   ├── Files
-  │   ├── 10000nums.csv
-  │   ├── 10000nums_1.csv
-  │   ├── 10000nums_2.csv
+  │   ├── Batch_Execution_Files
+  │   ├── Input_Files
+  │   ├── Output_Files
   │   .
   │   .
   │   .
   ├── Frontend_Interface
   │   ├── CMakeLists.txt
+  │   ├── build.sh
   │   ├── Frontend.cpp
   │   ├── Frontend.h
   │   ├── frontend-runner.cpp
