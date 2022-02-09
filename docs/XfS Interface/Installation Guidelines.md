@@ -114,7 +114,7 @@ The following are the instructions for installation in linux/unix environments:
      *  `/Batch_Execution_FIles` - files taken as input by `run` command is organized and fetched from here (run files).
      *  `/Input_Files` - Input data files for commands like `import`, `insert from file` etc. are organized and fetched from here.
      *  `/Output_Fies` - Output data files generated from `dump` and `export`  are organized and fetched from here.
-  *  `Frontend_Interface/` : contains the `Frontend.cpp` and `frontend-runner.cpp` files. Refer [Frontend Interface section](../Design/Frontend/introduction.md) to know more. Students need not edit the `frontend-runner.cpp` file rather, can start from the methods of Frontend C++ Class in `Frontend.cpp` for lower layer function call invocations. To build Frontend-Interface executable locally in Linux Environment, `build.sh` script present in this folder can be executed.
+  *  `Frontend_Interface/` : contains the `Frontend.cpp` and `frontend-runner.cpp` files. Refer [Frontend Interface section](../Design/Frontend.md) to know more. Students need not edit the `frontend-runner.cpp` file rather, can start from the methods of Frontend C++ Class in `Frontend.cpp` for lower layer function call invocations. To build Frontend-Interface executable locally in Linux Environment, `build.sh` script present in this folder can be executed.
   *  `XFS_Interface/` : contains the `build.sh` script file for building XFS Interface. Once built succesfully, the `XFS-Interface` executable will be present here.
   *  Dockerfiles (To be noted if you are following the Docker method of installation given [here](#docker-based-setup-for-xfs-interface)):
      *  `Dockerfile_frontend`
