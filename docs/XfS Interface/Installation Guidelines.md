@@ -211,11 +211,12 @@ The following are the instructions for installation in linux/unix environments:
 1. Download and Install docker by following the steps mentioned [here](https://docs.docker.com/get-docker/).
    * You can go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker.
 2. Open the Docker application and keep it running in the background.
-3. Download the NITCbase zip package from [here](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip).
-4. Extract the `NITCbase.zip` folder and copy it to the `HOME` Directory (Important for build scripts to run properly).
-5. Open Terminal and change working directory to `nitcbase/`  as follows:
+3. Download the compressed NITCbase package from ***either one*** of the following options:
+   1. [zip](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.zip)
+   2. [tar.gz](https://github.com/Nitcbase/nitcbase-download/raw/main/NITCbase.tar.gz)
+4. Extract the compressed file.
+5. Open Terminal (in MAC) or WSL Terminal and change working directory to `NITCbase/`  as follows:
     ```bash
-    cd
     cd NITCbase
     ```
 6. Ensure that the `build_xfs.sh` and `run_xfs.sh` have the execute permissions by running the following commands in terminal:
@@ -234,10 +235,9 @@ The following are the instructions for installation in linux/unix environments:
 
 ## Docker based setup for Frontend Interface
 
-1. Ensure that you have done till step 5 in the [above setup](#docker-based-setup-for-xfs-interface) and that Docker application is running the background.
-2. Open Terminal and change working directory to `nitcbase/` as follows:
+1. Ensure that you have done till step 4 in the [above setup](#docker-based-setup-for-xfs-interface) and that Docker application is running the background.
+2. Open Terminal and change working directory to `NITCbase/` as follows:
     ```bash
-    cd
     cd NITCbase
     ```
 3. Ensure that the `build_frontend.sh` and `run_frontend.sh` have the execute permissions by running the following commands in terminal:
