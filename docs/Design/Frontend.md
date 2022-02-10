@@ -8,7 +8,7 @@ tags:
   - Programming Interface
   - fint
 ---
-import FrontendExplanationSrc from '../../static/img/FrontendExplanation.png';
+import FrontendExplanation from '../../static/img/FrontendExplanation.svg';
 
 ## Introduction
 
@@ -26,7 +26,7 @@ The code implementing the functions of the front end programming interface sub-m
 
 
 
-<img src={FrontendExplanationSrc} alt="FrontendExplanation" width="700"/>
+<FrontendExplanation />
 
 
 
