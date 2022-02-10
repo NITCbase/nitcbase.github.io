@@ -26,7 +26,7 @@ Since NITCbase is a relational database, it supports execution of SQL-like queri
  Disk is the single storage unit for for all data present in NITCbase. 
 
 The student is provided with the following:
-* [Frontend Programming Interface](/docs/Design/Frontend.md#frontend-programming-interface), which is a sub-layer of [Frontend Interface](/docs/Design/Frontend) code(sub-module that handles parsing of sql-like commands entred by the user to function calls)
+* [Frontend Programming Interface](/docs/Design/Frontend#frontend-programming-interface), which is a sub-layer of [Frontend Interface](/docs/Design/Frontend) code(sub-module that handles parsing of sql-like commands entred by the user to function calls)
 * [XFS Interface](/docs/XFS%20Interface/introduction)(an external interfacing tool for NITCbase)
 * Physical Layer code(implemented as a Disk Class). 
 
