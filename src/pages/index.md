@@ -1,4 +1,4 @@
-![Nitcbase Intro Pic](../../static/img/IntroPicNitcbase.png)
+![Nitcbase Intro Pic](../../static/img/FrontBannerLogo.png)
 
 ---
 ## Introduction
