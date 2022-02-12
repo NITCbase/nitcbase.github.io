@@ -4,8 +4,7 @@ title: 'Physical Layer'
 ---
 import diskModel from '../../static/img/DiskModel.png'; 
 
-OLD DOC - https://nitcbase.github.io/storage-model.html
-
+old doc - https://nitcbase.github.io/storage-model.html
 
 ## Disk Model
 
@@ -37,6 +36,9 @@ public:
     static int writeBlock(unsigned char *block, int blockNum);
 };
 ```
+
+---
+
 ### Disk :: Disk()
 
 #### Description
@@ -113,6 +115,9 @@ Nitcbase assumes that the disk is a sequence of blocks, and a block is a sequenc
 3. [Leaf Index Block](#leaf-index-block-structure)
 
 The structure and function of each block type is explained below.
+
+---
+
 ### Record block structure
 
 Nitcbase is a collection of relations, and each relation is a collection of records. The DBMS must store relations in the disk and the strategy is to store each relation in a set of blocks in the disk, organized as a linked list. Each block in such a linked list will be called a **record block**. The block will contain some metadata as well, for instance, the indices of the left block and right blocks in the linked list.
@@ -139,7 +144,7 @@ In NITCbase, *we fix the size of all attributes to the same value to simplify th
 !["Record Block"](https://nitcbase.github.io/img/record_block.png)
 
 
-* First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where REC represents a record block.
+* First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](https://nitcbase.github.io/constants.html) represents a record block.
 * Next four bytes (4-7) are used for storing parent block pointer which has no significance for a record block and can be set to `-1`. 
 * Bytes 8-11 and 12-15 are used for storing Left and right block numbers respectively. 
 * Next four bytes are used for storing number of records currently stored in the block. 
@@ -149,35 +154,182 @@ In NITCbase, *we fix the size of all attributes to the same value to simplify th
 **Each record block is divided into slots of variable record size. Each slot stores a single record** (and hence requires `16 * K bytes` for a relation with `K` attributes). Each block can have an arbitrary number of slots depending on the number of attributes in the relation. Number of slots (Maximum number of records, `L`) that fits in a block for any given relation can be calculated as:
 
 $$
-\(32 + L + L∗ (16  ∗K) ≤ 2048L ∗ (16 ∗ K +1) ≤ 2016)\)
-#Slots=L=⌊2016((16∗#Attributes(K))+1)⌋
-$$
+32+L+L*(16*K) \leq 2048 
+L*(16*K + 1 ) \leq 2016 
+\#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
 
-!["Equation for Number of Slots"](../../static/img/EqnForNumberOfSlots.png)
+$$
 
 
 The **slotmap**, which appears at the end of the header is used for *indicating whether a slot is occupied or free*. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be `0` or else it will be `1`. Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
 
 The record block must be loaded from the disk to the main memory before its data can be accessed/modified. The Buffer Layer provides the necessary data structures for this purpose. The RecBuffer class is used to access a record block. The header of the block is stored in the struct HeadInfo. Each record in a record block is treated as an array of union Attributes.
 
-QUESTIONS HERE
+:::info Question 1
 
-Q1. Calculate the number of slots and slotmap size for a relation with 5 attributes
+**Q1**. Calculate the number of slots and slotmap size for a relation with 5 attributes.
 
-Q2. What is the maximum number of attributes possible for a relation in Nitcbase?
+**Solution**. 
+$$
+\#Slots = \left \lfloor \frac{2016}{(16*5)+1} \right \rfloor = 24 
+$$
 
-Q3. What is the maximum number of slots possible for a record block in Nitcbase?
+* Since the slotmap size is equal to the number of slots in a block, **slotmap size = 24 bytes**.
+
+
+:::
+
+:::info Question 2
+
+**Q2**. What is the maximum number of attributes possible for a relation in Nitcbase?
+
+**Solution**.
+In Nitcbase, size of the record in any relation is bounded by the size of a block. Hence number of attributes is maximum when a record fits in a block. 
+It is calculated as:
+$$
+16*K+1 \leq 2016 
+K = \left \lfloor \frac{2015}{16} \right \rfloor 
+K = 125 
+
+$$
+:::
+
+:::info Question 3
+
+**Q3**. What is the maximum number of slots possible for a record block in Nitcbase?
+
+**Solution**.
+A record block has maximum number of slots when number of attributes of the corresponding relation is 1. Hence maximum number of slots can be calculated as 118.
+
+:::
+
+---
 
 ### Internal Index Block Structure
 
+Nitcbase uses the [B+ tree](../Tutorials/B+%20Trees.md) data structure for indexing records in a relation. *The DBMS may maintain zero or more indices per relation*. There are **two types** of nodes for a B+ tree. These are called internal nodes and leaf nodes. A disk block that stores an internal node of the B+ tree is called an **Internal Index block**. 
+
+*Each internal index block in Nitcbase stores a maximum of 100 attribute(key) values. Each of these values has an associated pair of left and right child pointers. Hence each internal index block is also required to store 101 child pointers (Only 101 Child pointers are required because the right child of one value is the same as the left child of the next value).*
+
+<br/>
+
 !["Internal Index Block"](https://nitcbase.github.io/img/internal_index.png)
+
+An Internal index block is divided into two parts. The first 32 bytes stores header followed by actual attribute(key) values and child pointers arranged alternatively as shown in the figure. The header metadata is similar to that of a record block. The first four bytes of the header stores the value [`INDINT`](https://nitcbase.github.io/constants.html). `PBlock` is the block number of parent block in the corresponding B+ tree. `LBlock` and `RBlock` have no significance for an internal index block. `#Entries` field stores the actual number of attribute values (of maximum 100) stored in the block. `#Attrs` and `#Slots` fields also have no significance for an internal index block. The remaining space in the header is left unused.
+
+The Internal index block must be loaded from the disk to the main memory before its data can be accessed/modified. The [Buffer Layer](./Buffer%20Layer.md) provides the necessary data structures for this purpose. The [IndInternal class](./Buffer%20Layer.md) is used to access a internal index block. The header of the block is stored in the  [struct HeadInfo](./Buffer%20Layer.md). Each entry in an internal index block is acccessed through a structure [struct InternalEntry](./Buffer%20Layer.md).
+
+---
 
 ### Leaf Index Block Structure
 
+**A leaf node in the B+ tree stores the actual indices for the records in a relation**. A disk block that stores a leaf node of a B+ tree is called a leaf index Block. *Each leaf index block in Nitcbase stores a maximum of 63 indices*. An index is a 3-tuple: `(attribute value, block number, slot number)`. The size of an index in nitcbase is 32 bytes (the last 8 bytes are unused)
+
 !["Leaf Index Block"](https://nitcbase.github.io/img/leaf_node.png)
+
+Any Leaf Index Block is also divided into a header part of 32 bytes followed by a part containing actual indices. The header is similar to that of any other block. The first four bytes of the header stores the value [`INDLEAF`](https://nitcbase.github.io/constants.html). `PBlock` is the block number of the parent block in the corresponding B+ tree. This entry must always contain block number of an Internal Index block. Since all leaf nodes are connected in a B+ tree, `LBlock` and `RBlock` point to left and right Leaf Index blocks respectively. `#Entries` stores the actual number of indices (of maximum 63) stored in the block. `#Attrs` and `#Slots` fields have no significance for a Leaf index block. The remaining space in the header is left unused.
+
+The Leaf index block must be loaded from the disk to the main memory before its data can be accessed/modified. The [Buffer Layer](./Buffer%20Layer.md) provides the necessary data structures for this purpose. The [IndLeaf class](./Buffer%20Layer.md) is used to access a leaf index block. The header of the block is stored in the [struct HeadInfo](./Buffer%20Layer.md). Each entry in a leaf index block is accessed through a structure [struct Index](./Buffer%20Layer.md).
+
+---
 
 ## Catalog Structures
 
+Nitcbase maintains two catalogs in the disk for storing metadata information about relations, attributes, indices, etc. These catalogs are:
+
+1. Relation Catalog
+2. Attribute Catalog
+
+In an RDBMS, 
+* A relation refers to a collection of records where each record is an n-tuple of attribute values. 
+* An attribute is a column or a field in a relation. 
+* A database is a collection of relations.
+
+*Nitcbase organizes these catalogs as relations. Hence the block structures used for the catalogs are record block structures.*
+
+---
+
 ### Relation Catalog
 
+NITCbase has alloted *a single block* for the storage of Relation Catalog. **Block 4 of the disk is used for this purpose**. 
+
+Relation Catalog is used for storing meta-information of the relations in a database. Each entry in the Relation Catalog has a *size of 96 bytes* and has the following six attributes: 
+1. `RelationName`
+2. `#Attributes` 
+3. `#Records`
+4. `FirstBlock` 
+5. `LastBlock`
+6. `#SlotsPerBlock` 
+
+`RelationName` (bytes 0-15) stores the name of the relation, `#Attributes` (bytes 16-31) stores the number of attributes of that relation, and `#Records` (bytes 32-47) stores the number of records currently stored in that relation. The record blocks of a relation are arranged as a linked list. 
+
+`FirstBlock` (bytes 48-63), which stores the block number of the first record block of the relation, essentially points to the head of the linked list. `LastBlock` (bytes 64-79), which stores the block number of the last record block of the relation, indicates the tail of the linked list. `#SlotsPerBlock` (bytes 80-95) stores the number of slots a record block of that relation has. 
+
+Note that `#Slots` can be calculated from `#Attributes` as described [earlier](#record-block-structure).
+
+![relcat](https://nitcbase.github.io/img/relation_catalog.png)
+
+:::note
+Since the Relation Catalog is internally implemented as a relation, it's block structure is identical to that of any record block with **six** attributes.
+:::
+
+
+:::info Question 1
+
+**Q1**. What are the values of the header fields #Attrs and #Slots for a Relation Catalog block?
+
+**Solution**.
+
+$$
+\left \lfloor \frac{2016}{(16*6)+1} \right \rfloor = 20
+
+$$
+
+:::
+
+:::info Question 2
+
+**Q2**. What are the values of the header fields #Attrs and #Slots for a Relation Catalog block?
+
+**Solution**.
+The minimum number of entries in the Relation Catalog is two, even in the absence of other relations in the database. These entries correspond to Relation Catalog and Attribute Catalog since they are also treated as relations and should be in the disk at all times. Thus, **the maximum number of relations allowed in NITCbase is 18 (why?).**
+:::
+
+
+---
+
 ### Attribute Catalog
+
+Attribute Catalog stores meta-information regarding all the attributes of each relation. NITCbase allows Attribute Catalog to be stored over multiple blocks arranged as a linked list. 
+
+The `LBlock` and `RBlock` fields in the header are used to traverse the linked list. 
+Each entry of the Attribute Catalog has the following six attributes: 
+1. `RelationName` 
+2. `AttributeName` 
+3. `AttributeType` 
+4. `PrimaryFlag` 
+5. `RootBlock`
+6. `Offset` 
+
+`RelationName` is the name of the relation corresponding to the attribute, `AttributeName` is the name of the attribute and `AttributeType` is the data type of the attribute. Only two data types are permitted in Nitcbase- numbers (`NUM`) and strings (`STR`) of maximum length 16. The `PrimaryFlag` is presently unused \*. 
+
+Nitcbase employes [B+ tree](../Tutorials/B+%20Trees.md) for indexing. `RootBlock` stores the root block number of the B+ tree if there is an index created on the attribute; and contains `-1` otherwise. `Offset` is an integer that specifies the relative offset of the attribute in the record (0 for the first attribute, 1 for the second attribute and so on).
+
+
+\* At present, **Nitcbase does not support the notion of a [primary key](https://en.wikipedia.org/wiki/Primary_key)**. The `flag` is kept in the slot for future support of primary keys.
+
+![attcat](https://nitcbase.github.io/img/attr_cat.png)
+
+:::note
+1. Attribute Catalog is internally implemented as a relation. Hence, it's block structure is identical to that of any record block with six attributes.
+2. Nitcbase does not create indices for accessing the Attribute Catalog and Relation Catalog. Access to these catalogs is possible only through a sequential search of the record blocks of the respective catalogs.
+
+:::
+
+:::info Question 1
+
+**Q1**. What is the minimum number of entries allowed in the Attribute Catalog? What relations and attributes do these entries correspond to?
+
+**Solution**.
+**The minimum number of entries in the attribute catalog is 12**, even in the absence of other relations in the database. 6 out of these 12 correspond to the 6 attributes of Relation Catalog and the remaining 6 corresponds to the 6 attributes of Attribute Catalog. This is because the catalogs are also treated as relations and should be in the disk at all times.
+:::
