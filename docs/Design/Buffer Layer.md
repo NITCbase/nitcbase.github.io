@@ -108,7 +108,7 @@ struct BufferMetaInfo{
 
 ---
 ## Class StaticBuffer
-The `class StaticBuffer` contains as its member field, `blocks[HEADER_SIZE][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32 disk blocks` in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as `buffer block` in the NITCbase documentation. `Buffer blocks` will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains `meta-information` for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[HEADER_SIZE]` field. `StaticBuffer class` also maintains a copy of the `Block Allocation Map` in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the `Block Allocation Map` specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
+The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32 disk blocks` in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as `buffer block` in the NITCbase documentation. `Buffer blocks` will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains `meta-information` for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the `Block Allocation Map` in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the `Block Allocation Map` specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
 
 All these data fields are `private` to the `StaticBuffer class` and can only be accessed through `public` methods. This class provides the basic disk fetch and commit interfaces to the higher layers, creating an illusion of having the entire disk in memory at all times. `StaticBuffer` is a `static class`, i.e., all member fields and methods are declared `static`. By doing so, memory will be allocated statically for all member fields of the class, and any access to them will refer to the same statically allocated memory. Also static methods in a class are allowed to access only static members of the class. Consequently, there needs to exist only a single static object of the class(see implementation tip below). The class definition of `StaticBuffer` is as given below:
 
@@ -135,8 +135,8 @@ public:
 	
 private:
 	//fields
-	static unsigned char blocks[HEADER_SIZE][BLOCK_SIZE];
-	static struct BufferMetaInfo metaInfo[HEADER_SIZE];
+	static unsigned char blocks[BUFFER_CAPACITY][BLOCK_SIZE];
+	static struct BufferMetaInfo metaInfo[BUFFER_CAPACITY];
 	static unsigned char blockAllocMap[DISK_BLOCKS];
 
 	//methods
