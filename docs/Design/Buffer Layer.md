@@ -10,8 +10,8 @@ import BufferClassesSvg from '../../static/img/buffer_classes.svg'
 
 https://nitcbase.github.io/design/buffer.html
 
-:::note 
-The stub code with class and function declarations of the buffer layer can be found in the file `buffer.cpp`.
+:::info note 
+The Buffer Layer code is contained in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these can be found [here](../../buffer_stub).
 :::
 
 
@@ -146,6 +146,8 @@ private:
 };
 ```
 ---
+
+The following are the specifications for the methods in `class StaticBuffer`. The stub code is availabe here.
 
 ### StaticBuffer :: StaticBuffer()
 
