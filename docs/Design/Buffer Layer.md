@@ -11,7 +11,7 @@ import BufferClassesSvg from '../../static/img/buffer_classes.svg'
 https://nitcbase.github.io/design/buffer.html
 
 :::note 
-The stub code with class and function declarations of the buffer layer can be found in the file [`buffer.cpp`](google.com).
+The stub code with class and function declarations of the buffer layer can be found in the file `buffer.cpp`.
 :::
 
 
@@ -40,7 +40,7 @@ The Buffer Layer defines the following block data structures.
 * [InternalEntry](#InternalEntry)
 * [Index](#Index)
 
-Each structure is designed to store a subset of the data stored in a disk block. A disk block contains `2048` bytes of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](./Cache%20Layer), the [Block Access Layer](./Block%20Access), and the [B+ Tree Layer](./B+%20Tree%20Layer).
+Each structure is designed to store a subset of the data stored in a disk block. A disk block contains `2048` bytes of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](./Cache%20Layer), the [Block Access Layer](./Block%20Access%20Layer), and the [B+ Tree Layer](./B+%20Tree%20Layer).
 
 ### HeadInfo
 NITCbase maintains a `32 bytes` fixed-size header for every disk block. This header stores meta-information, like the type of the block, and a few block specific information, like `#Attrs` and `#Slots`. Though the header has many fields, usage of the fields depends on the type of the block. The structure `HeadInfo` is used to collect all the entries of the header, as shown below. The `setHeader()` and the `getHeader()` methods take a pointer to `struct HeadInfo` as argument.
