@@ -1,6 +1,12 @@
 ![Nitcbase Intro Pic](../../static/img/FrontBannerLogo.png)
 
 ---
+
+import BufferClassesSvg from '../../static/img/buffer_classes.svg';
+
+
+<BufferClassesSvg/>
+
 ## Introduction
 NITCbase is a Relational Database Management System Implementation (RDBMS) project that is intended to help an undergraduate student understand the design and data structures of an elementary RDBMS by implementing one herself.
 
