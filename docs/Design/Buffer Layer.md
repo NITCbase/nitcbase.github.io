@@ -147,7 +147,7 @@ private:
 ```
 ---
 
-The following are the specifications for the methods in `class StaticBuffer`. The stub code is availabe here.
+The following are the specifications for the methods in `class StaticBuffer`. The stub code is availabe here(TODO LINK).
 
 ### StaticBuffer :: StaticBuffer()
 
@@ -214,7 +214,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 #### Return Values
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
-| blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`). |
+| blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
 ```cpp
 int StaticBuffer::getStaticBlockType(int blockNum){
     //traverse the blockAllocMap to find the type corresponding to blockNum.
@@ -340,6 +340,313 @@ protected:
 	int getFreeBlock(int BlockType);
 
 };
+```
+
+The following are the specifications for the methods in class BlockBuffer. The stub code is availabe here(TODO LINK).
+
+### BlockBuffer :: BlockBuffer() (Constructor1)
+
+#### Description
+* One of the`Constructors` of the `class BlockBuffer`
+* Called if a new block of the input type is to be allocated in the disk.
+
+:::info note
+If the block already exists on the disk use [constructor 2](#blockbuffer--blockbuffer-constructor-2).
+:::
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockType | `char`             | Type of the new block to be allotted. (`'R'`/`'I'`/`'L'`); (`R`-`REC`, `I`-`IND_INTERNAL`, `L`-`IND_LEAF`) |
+
+#### Return Values
+Nil
+
+```cpp
+Blockbuffer::BlockBuffer(char blockType){
+	
+	// allocate a block in the disk and a buffer in memory to hold the new block of given type using getFreeBlock().
+
+	// set the blockNum field of the object to that of the allocated block number.
+
+}
+```
+
+### BlockBuffer :: BlockBuffer() (Constructor2)
+
+#### Description
+* One of the`Constructors` of the `class BlockBuffer`
+* Called when the block already exists on the disk.
+
+:::info note
+If a new block is to be allocated in the disk use [constructor 1](#blockbuffer--blockbuffer-constructor-1).
+:::
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`             | Block number of the block whose object is to be created.                                     |
+
+#### Return Values
+Nil
+
+```cpp
+Blockbuffer::BlockBuffer(int blockNum){
+	
+	// set the blockNum field of the object to input argument.
+
+	// copy the block into buffer memory using getBlock() (discard the return value).
+
+}
+```
+
+### BlockBuffer :: getBlockNum()
+
+#### Description
+Returns the block number of the block.
+
+#### Arguments
+Nil
+
+#### Return Values
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`             | Block number of the block.   |
+
+
+```cpp
+int BlockBuffer::getBlockNum(){
+
+	//return corresponding block number.
+	
+}
+```
+
+### BlockBuffer :: getBlockType()
+
+#### Description
+Returns the type of the block corresponding to the block object.
+
+#### Arguments
+Nil
+#### Return Values
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockType | `int`             | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+
+```cpp
+int BlockBuffer::getBlockType(){
+
+	// get the starting address of the buffer containing the block using getBufferPtr(). 
+	
+	//return the first 4 bytes of the buffer that stores the block type.
+	
+}
+```
+
+### BlockBuffer :: setBlockType()
+
+#### Description
+Sets the type of the block with the input block type.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockType | `int`             | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+
+#### Return Values
+Nil
+
+```cpp
+void BlockBuffer::setBlockType(int blockType){						
+	
+	// get the starting address of the buffer containing the block using getBufferPtr().
+
+	//store the input block type in the first 4 bytes of the buffer.
+
+	//update the StaticBuffer::blockAllocMap entry corresponding to the object's block number. 
+
+	//update dirty bit using StaticBuffer::setDirtyBit().
+	
+}
+```
+
+### BlockBuffer :: getHeader()
+
+#### Description
+Gives the header of the block.
+
+:::info note
+* Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `getHeader()` method is kept in abstract `BlockBuffer class`.
+* Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
+:::
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| head | struct HeadInfo*   | Pointer to the HeadInfo structure to which the block header is copied.  |
+
+#### Return Values
+Nil
+
+```cpp
+void BlockBuffer::getHeader(struct HeadInfo *head){	
+	
+	// get the starting address of the buffer containing the block using getBufferPtr().
+
+	//copy the header of block to the memory location pointed to by the head using appropriate type casting.
+
+}
+```
+
+### BlockBuffer :: setHeader()
+
+#### Description
+Sets the header of the block.
+
+:::info note
+* Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `setHeader()` method is kept in abstract `BlockBuffer class`.
+* Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
+:::
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| head | struct HeadInfo*   | Pointer to the HeadInfo structure to which the block header is copied.  |
+
+#### Return Values
+Nil
+
+```cpp
+void BlockBuffer::setHeader(struct HeadInfo *head){
+
+	// get the starting address of the buffer containing the block using getBufferPtr().
+
+	//copy the contents of the memory location pointed to by head to the header of block using appropriate type casting.
+
+	//update dirty bit using StaticBuffer::setDirtyBit().
+	
+}
+```
+
+### BlockBuffer :: releaseBlock()
+
+#### Description
+Deletes the block from both the buffer memory and the disk.
+
+#### Arguments
+Nil                                    |
+
+#### Return Values
+Nil
+
+```cpp
+void BlockBuffer::releaseBlock(){
+
+	// get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
+
+	//if the buffer number is valid, free the buffer by setting the free flag of its metaInfo entry to true.
+
+	//free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED.
+	
+	//set the object's blockNum to -1.
+	
+}
+```
+
+### BlockBuffer :: getBufferPtr()
+
+#### Description
+Returns a pointer to the first byte of the buffer storing the block.
+
+#### Arguments
+Nil
+
+#### Return Values
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| bufferPtr | `unsigned char*`  | Pointer to the buffer containing the block. |
+
+:::info Note
+* All get and set methods accessing the block's data should call the `getBufferPtr()` method to get the starting address of the buffer block holding the block's data. 
+* **This also ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
+:::
+
+```cpp
+void BlockBuffer::releaseBlock(){
+
+	// get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
+
+	//if the buffer number is valid, free the buffer by setting the free flag of its metaInfo entry to true.
+
+	//free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED.
+	
+	//set the object's blockNum to -1.
+	
+}
+```
+
+### BlockBuffer :: getBlock()
+
+#### Description
+Loads the block into buffer (if not present), updates the timestamps and returns the corresponding buffer number.
+
+#### Arguments
+Nil                                    |
+
+#### Return Values
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| bufferNum | `int`  | Buffer number of the buffer containing the block. |
+
+:::info note
+This function **never fails** - a buffer is always alloted to the block doing replacement, if necessary.
+:::
+```cpp
+int BlockBuffer::getBlock(){
+
+     // get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
+	 
+     // if present in buffer memory(i.e., a valid buffer number), set the timeStamp in the corresponding BufferMetaInfo entry to 0 and increment the timeStamp in the BufferMetaInfo of all other occupied buffers.
+     
+     //if not present in buffer memory(i.e., an invalid buffer number), get a free buffer using StaticBuffer::getFreeBuffer() and read the block into the free buffer using Disk::readBlock().
+   
+     //return the buffer number.
+	
+}
+```
+
+### BlockBuffer :: getFreeBlock()
+
+#### Description
+Returns the block number of a free block of the input type in the disk and allots a buffer to that block. If free block is not available FAILURE is returned.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockType | `int`  | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
+
+#### Return Values
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`  | Block number of the free block. |
+| `FAILURE` | `int`  | No free block is available in the disk. |
+
+```cpp
+int BlockBuffer::getFreeBlock(int blockType){
+
+	//iterate through the StaticBuffer::blockAllocMap and find the block number of a free block in the disk.
+
+	//if no block is free, return FAILURE.
+	
+	//set the object's blockNum to the block number of the free block.
+
+	//find a free buffer using StaticBuffer::getFreeBuffer() .
+	
+	//initialize the header of the block with pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0 using setHeader().	
+
+	//update the block type of the block to the input block type using setBlockType().
+
+	//return block number of the free block.
+
+}
 ```
 
 ## Class RecBuffer
