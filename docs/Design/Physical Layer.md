@@ -4,7 +4,7 @@ title: 'Physical Layer'
 ---
 import diskModel from '../../static/img/DiskModel.png'; 
 
-old doc - https://nitcbase.github.io/storage-model.html
+https://nitcbase.github.io/storage-model.html
 
 ## Disk Model
 
