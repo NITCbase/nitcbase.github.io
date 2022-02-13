@@ -147,7 +147,7 @@ private:
 ```
 ---
 
-### StaticBuffer :: StaticBuffer()
+<!-- ### StaticBuffer :: StaticBuffer()
 
 #### Description
 Transfers the contents of the specified disk block to the input memory buffer. Used in buffer layer to load disk block to buffer.
@@ -165,7 +165,7 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
 | `SUCCESS`      | Successful loading/reading of the block to the buffer. |
-| `E_OUTOFBOUND` | Block number is out of range.                          |
+| `E_OUTOFBOUND` | Block number is out of range.                          | -->
 
 
 ---
