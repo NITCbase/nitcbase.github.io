@@ -6,12 +6,12 @@ title: 'Buffer Layer'
 
 
 import BufferClassesSvg from '../../static/img/buffer_classes.svg'
-
+import Link from '@docusaurus/Link';
 
 https://nitcbase.github.io/design/buffer.html
 
 :::info note 
-The Buffer Layer code is contained in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these can be found [here](../../buffer_stub).
+The Buffer Layer code is contained in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these can be found <Link to="/buffer_stub">here</Link >.
 :::
 
 
@@ -292,6 +292,19 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 | `SUCCESS`      | Successful loading/reading of the block to the buffer. |
 | `E_OUTOFBOUND` | Block number is out of range.                          |
 ```cpp
+int StaticBuffer::getFreeBuffer(int blockNum){
+    // increase the timeStamp in metaInfo of all occupied buffers.
+    
+    // let bufferNum be used to store the buffer number of the free/freed buffer.
+	
+    // if a free buffer is available, bufferNum is the index of that free buffer.
+    
+    // if a free buffer is not available, write back the buffer with the largest timeStamp using Disk::writeBlock() and set it as bufferNum.
+    
+    // update the metaInfo entry corresponding to bufferNum with free:false, dirty:false, blockNum:the input block number and timeStamp:0.
+    
+    // return the bufferNum.
+}
 ```
 
 ---
