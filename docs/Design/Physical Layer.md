@@ -3,8 +3,16 @@ sidebar_position: 9
 title: 'Physical Layer'
 ---
 import diskModel from '../../static/img/DiskModel.png'; 
+import Link from '@docusaurus/Link';
 
 https://nitcbase.github.io/storage-model.html
+
+:::info NOTE
+
+The `disk` binary file that simulates the NITCbase disk (and the run copy of disk called `disk_run_copy`) is located in the `Disk/` directory.
+The C++ Disk class that initiates the run copy of disk and also provides read/write access to the disk is located in `Disk.cpp` file of `Disk_Class/` directory. The Disk Class have been fully implemented and the code for the same can be found <Link to="/Disk_Class_Impl"> here. </Link>
+
+:::
 
 ## Disk Model
 
