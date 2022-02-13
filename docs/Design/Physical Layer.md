@@ -154,9 +154,9 @@ In NITCbase, *we fix the size of all attributes to the same value to simplify th
 **Each record block is divided into slots of variable record size. Each slot stores a single record** (and hence requires `16 * K bytes` for a relation with `K` attributes). Each block can have an arbitrary number of slots depending on the number of attributes in the relation. Number of slots (Maximum number of records, `L`) that fits in a block for any given relation can be calculated as:
 
 $$
-32+L+L*(16*K) \leq 2048 
-L*(16*K + 1 ) \leq 2016 
-\#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
+32+L+L*(16*K) \leq 2048 \\
+                                L*(16*K + 1 ) \leq 2016 \\
+                                \#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
 
 $$
 
