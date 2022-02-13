@@ -147,13 +147,136 @@ private:
 ```
 ---
 
-<!-- ### StaticBuffer :: StaticBuffer()
+### StaticBuffer :: StaticBuffer()
 
 #### Description
-Transfers the contents of the specified disk block to the input memory buffer. Used in buffer layer to load disk block to buffer.
+* `Constructor` of the `class StaticBuffer`
+* Copies `Block Allocation Map` from disk to buffer memory and updates the meta information of each buffer to initial empty conditions. 
+* Should be called at the beginning of the session after the `Disk constructor`.
 
-:::note 
-Higher layers must allocate memory for the unsigned character array of size 2048 before passing its pointer to the function.
+:::info Note 
+The object of the `StaticBuffer class` must be declared after the object of the `Disk class` to ensure that the `StaticBuffer constructor` is called after the `Disk constructor`.
+:::
+#### Arguments
+Nil
+#### Return Values
+Nil
+```cpp
+StaticBuffer::StaticBuffer(){
+    // copy Block Allocation Map blocks from disk to blockAllocMap using Disk::readBlock()
+
+    //initialize metaInfo of all the buffer blocks with free:true, dirty:false, blockNum:-1 and timeStamp:-1.
+    
+}
+```
+
+### StaticBuffer :: ~StaticBuffer()
+
+#### Description
+* `Destructor` of the `class StaticBuffer`
+* Copies the `Block Allocation Map` and the dirty blocks from the buffer memory to disk. 
+* Should be called at the end of the session before the `Disk destructor`.
+
+:::info Note 
+The object of the `StaticBuffer class` must be declared after the object of the `Disk class` to ensure that the `StaticBuffer destructor` is called before the `Disk destructor`.
+:::
+#### Arguments
+Nil
+
+#### Return Values
+Nil
+```cpp
+StaticBuffer::~StaticBuffer(){
+    // copy blockAllocMap to Block Allocation Map blocks in the disk using Disk::writeBlock().
+
+    /*iterate through all the metaInfo entries, 
+    	write back buffer blocks with meta-info as free:false,dirty:true using Disk::writeBlock().*/
+	
+}
+```
+
+### StaticBuffer :: getStaticBlockType()
+
+#### Description
+Returns the block type of the block corresponding to the input block number. This function is used to find the block type without the creation of a block object.
+
+:::info note 
+* This function is useful in cases where, given a block number, its block type is not known. Hence it is also not known which type of record object (`Record`, `Internal Index`, or `Leaf Index`) needs to be used to store the block. 
+* This function has been used in the B+ Tree Layer, where the block number of the constituent blocks of a B+ Tree is known, but it is not known whether the block is of type `IndInternal` or `IndLeaf`.
+:::
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`             | Block number of the block whose type is required.                              |
+
+#### Return Values
+|        Value      |                         Description                               |
+|--------------|--------------------------------------------------------|
+| blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`). |
+```cpp
+int StaticBuffer::getStaticBlockType(int blockNum){
+    //traverse the blockAllocMap to find the type corresponding to blockNum.
+    
+    //return the blockType obtained(REC/IND_INTERNAL/IND_LEAF/UNUSED)
+    
+}
+```
+
+### StaticBuffer :: setDirtyBit()
+
+#### Description
+Sets the `dirty bit` of the buffer corresponding to the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`             | Block number of the block whose buffer's dirty bit is to be set.   |
+
+#### Return Values
+Nil
+
+```cpp
+void StaticBuffer::setDirtyBit(int blockNum){
+    //find the buffer number corresponding to the block using getBufferNum().
+    
+    //set the dirty flag of that buffer in metaInfo to true.
+    
+}
+```
+
+### StaticBuffer :: getBufferNum()
+
+#### Description
+Returns the buffer number of the buffer to which the block with the given block number is loaded.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| blockNum | `int`             | Block number of the block whose buffer number is required.                                    |
+
+#### Return Values
+|        Value  | Type |                        Description                               |
+|--------------|--------------------------------------------------------|
+| bufferNum  | `int`    | Buffer number to which the given block is loaded. |
+| `FAILURE`  | `int`    | Block is not loaded to any buffer.                          |
+```cpp
+int StaticBuffer::getBufferNum(int blockNum){
+    //traverse through the metaInfo array &
+    //	find the buffer number of the buffer to which the block is loaded.
+    
+    //if found return buffer number, else indicate failure.
+	
+}
+```
+### StaticBuffer :: getFreeBuffer()
+
+#### Description
+Assigns a buffer to the block and returns the buffer number. If no free buffer block is found, the least recently used (`LRU`) buffer block is replaced.
+
+:::info note
+* This function never fails - a buffer is always assigned to the block.
+* The `timeStamp` is reset to `0` each time the buffer block is accessed and incremented when other buffer blocks are accessed. Thus the buffer block with the largest `timeStamp` is the one that is least recently used.
+* The function allots a free buffer block, fills its `metaInfo` with relevant information, and updates the `timeStamp`. The caller is responsible for actually loading the block into the buffer. 
 :::
 #### Arguments
 | Name | Type | Description |
@@ -165,8 +288,9 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
 | `SUCCESS`      | Successful loading/reading of the block to the buffer. |
-| `E_OUTOFBOUND` | Block number is out of range.                          | -->
-
+| `E_OUTOFBOUND` | Block number is out of range.                          |
+```cpp
+```
 
 ---
 
