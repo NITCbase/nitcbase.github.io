@@ -273,7 +273,10 @@ Returns the buffer number of the buffer to which the block with the given block 
 | `FAILURE`  | `int`    | Block is not loaded to any buffer.                          |
 ```cpp
 int StaticBuffer::getBufferNum(int blockNum){
-    //traverse through the metaInfo array &
+	// Check if blockNum is valid (non zero and less than number of disk blocks)
+	// and return E_OUTOFBOUND if not valid.
+    
+	//traverse through the metaInfo array &
     //	find the buffer number of the buffer to which the block is loaded.
     
     //if found return buffer number, else indicate failure.
@@ -303,7 +306,8 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 | `E_OUTOFBOUND` | Block number is out of range.                          |
 ```cpp
 int StaticBuffer::getFreeBuffer(int blockNum){
-	// if blockNum is out of valid block numbers range, return E_OUTOFBOUND
+	// Check if blockNum is valid (non zero and less than number of disk blocks)
+	// and return E_OUTOFBOUND if not valid.
 
     // increase the timeStamp in metaInfo of all occupied buffers.
     
