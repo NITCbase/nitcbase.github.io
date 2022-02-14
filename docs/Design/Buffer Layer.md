@@ -235,13 +235,19 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 | blockNum | `int`             | Block number of the block whose buffer's dirty bit is to be set.   |
 
 #### Return Values
-Nil
+|        Value      |                         Description                               |
+| `SUCCESS` | successfully set dirty bit                          |
+| `E_OUTOFBOUND` | Block number is out of range.                          |
 
 ```cpp
-void StaticBuffer::setDirtyBit(int blockNum){
+int StaticBuffer::setDirtyBit(int blockNum){
+	// if blockNum is out of valid block numbers range, return E_OUTOFBOUND
+
     //find the buffer number corresponding to the block using getBufferNum().
     
-    //set the dirty flag of that buffer in metaInfo to true.
+    //set the dirty flag of that buffer in metaInfo to true
+
+	// return SUCCESS
     
 }
 ```
@@ -293,6 +299,8 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 | `E_OUTOFBOUND` | Block number is out of range.                          |
 ```cpp
 int StaticBuffer::getFreeBuffer(int blockNum){
+	// if blockNum is out of valid block numbers range, return E_OUTOFBOUND
+
     // increase the timeStamp in metaInfo of all occupied buffers.
     
     // let bufferNum be used to store the buffer number of the free/freed buffer.
@@ -570,17 +578,13 @@ Nil
 :::
 
 ```cpp
-void BlockBuffer::releaseBlock(){
-
-	// get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
-
-	//if the buffer number is valid, free the buffer by setting the free flag of its metaInfo entry to true.
-
-	//free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED.
+unsigned char * BlockBuffer::getBufferPtr(){
 	
-	//set the object's blockNum to -1.
+	//find the buffer number of the block using getBlock().
 	
+	// return the pointer to this buffer (given by StaticBuffer::blocks[bufferNum]).
 }
+
 ```
 
 ### BlockBuffer :: getBlock()
