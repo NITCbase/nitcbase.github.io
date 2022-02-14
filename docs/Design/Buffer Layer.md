@@ -217,10 +217,11 @@ Returns the block type of the block corresponding to the input block number. Thi
 | blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
 ```cpp
 int StaticBuffer::getStaticBlockType(int blockNum){
-    //traverse the blockAllocMap to find the type corresponding to blockNum.
-    
-    //return the blockType obtained(REC/IND_INTERNAL/IND_LEAF/UNUSED)
-    
+	// Check if blockNum is valid (non zero and less than number of disk blocks)
+	// and return E_OUTOFBOUND if not valid.
+
+	// Access the entry in block allocation map corresponding to the blockNum argument
+	// and return the block type after type casting to integer.
 }
 ```
 
@@ -235,17 +236,20 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 | blockNum | `int`             | Block number of the block whose buffer's dirty bit is to be set.   |
 
 #### Return Values
-|        Value      |                         Description                               |
-| `SUCCESS` | successfully set dirty bit                          |
-| `E_OUTOFBOUND` | Block number is out of range.                          |
+
+|        Value     |           Description                        |
+|------------------|----------------------------------------------|
+| `SUCCESS`        | successfully set dirty bit                   |
+| `E_OUTOFBOUND`   | Block number is out of range.                |
 
 ```cpp
 int StaticBuffer::setDirtyBit(int blockNum){
-	// if blockNum is out of valid block numbers range, return E_OUTOFBOUND
+	// Check if blockNum is valid (non zero and less than number of disk blocks)
+	// and return E_OUTOFBOUND if not valid.
 
-    //find the buffer number corresponding to the block using getBufferNum().
+    // find the buffer number corresponding to the block using getBufferNum().
     
-    //set the dirty flag of that buffer in metaInfo to true
+    // set the dirty flag of that buffer in metaInfo to true
 
 	// return SUCCESS
     
