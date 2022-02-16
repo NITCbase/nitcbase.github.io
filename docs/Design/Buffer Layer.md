@@ -566,7 +566,7 @@ void BlockBuffer::releaseBlock(){
 
 	//if the buffer number is valid, free the buffer by setting the free flag of its metaInfo entry to true.
 
-	//free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED.
+	//free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
 	
 	//set the object's blockNum to -1.
 	
