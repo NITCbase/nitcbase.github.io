@@ -554,7 +554,7 @@ void BlockBuffer::setHeader(struct HeadInfo *head){
 Deletes the block from both the buffer memory and the disk.
 
 #### Arguments
-Nil                                    |
+Nil 
 
 #### Return Values
 Nil
