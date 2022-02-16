@@ -6,6 +6,7 @@ title: 'Buffer Layer'
 
 
 import BufferClassesSvg from '../../static/img/buffer_classes.svg'
+import BufferClasses from '../../static/img/buffer_classes.png'; 
 import Link from '@docusaurus/Link';
 
 https://nitcbase.github.io/design/buffer.html
@@ -24,12 +25,15 @@ NITCbase uses a dedicated **Buffer Layer** for the above task. All the requests 
 
 NITCbase follows an Object-Oriented design for Buffer Layer. The class diagram is as shown below.
 
-<BufferClassesSvg className="themedDocusaurus" />
-
-
-Certain structure definitions and functions that help access record data and metadata from the disk block are also included in the Buffer Layer. These are discussed at the end of this page (see [miscellaneous section](#Miscellaneous)).
+<!-- <BufferClassesSvg className="themedDocusaurus" /> -->
 
 ---
+
+<img src={BufferClasses} alt="BufferClasses" width="1600"/>
+
+---
+
+Certain structure definitions and functions that help access record data and metadata from the disk block are also included in the Buffer Layer. These are discussed at the end of this page (see [miscellaneous section](#Miscellaneous)).
 
 ## Block Structures
 
@@ -131,7 +135,7 @@ public:
 	StaticBuffer();
 	~StaticBuffer();
 	static int getStaticBlockType(int blockNum);
-	static void setDirtyBit(int blockNum);
+	static int setDirtyBit(int blockNum);
 	
 private:
 	//fields
