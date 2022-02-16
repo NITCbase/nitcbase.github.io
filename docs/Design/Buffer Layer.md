@@ -772,7 +772,7 @@ public:
 
 ## Class IndLeaf
 
-An object of the IndLeaf class will be associated with a Leaf Index block. A Leaf Index block stores entries of type struct Index and is used as the leaf nodes of a B+ Tree. Public methods of this class deal with the access/modification of the Index entries. IndLeaf class extends IndBuffer class and overrides its virtual methods. The constructor of the IndLeaf class calls the constructor of the parent class by passing suitable argument.
+An object of the *IndLeaf* class will be associated with a [Index Leaf blocks](../Design/Physical%20Layer#leaf-index-block-structure). A Leaf Index block stores entries of type `struct Index` and is used as the leaf nodes of a B+ Tree. Public methods of this class deal with the access/modification of the *Index* entries. **IndLeaf* class extends [IndBuffer class](#class-indbuffer) and overrides its virtual methods. The constructor of the IndLeaf class calls the constructor of the parent class by passing suitable argument.
 
 ```cpp
 class IndLeaf : public IndBuffer{
@@ -904,6 +904,7 @@ int IndLeaf::getEntry(void *ptr, int indexNum) {
 	// return SUCCESS.
 
 }
+```
 
 :::note
 * The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
@@ -914,12 +915,65 @@ int IndLeaf::getEntry(void *ptr, int indexNum) {
 
 
 ## Miscellaneous
-```cpp
 
-```
-```cpp
+Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](Cache%20Layer.md), [Block access layer](Block%20Access%20Layer.md) and [B+ tree](B+%20Tree%20Layer.md) layer, to name a few.
 
-```
-```cpp
+### RecId
 
+Relations in NITCbase are made up of records. Every record of any relation can be referenced using an id called `RecId`. `RecId` is a combination of the block number of the corresponding record block and the slot number of the slot occupied by the record in the block. It is used to locate where the record is stored in the disk.
+
+```cpp
+struct RecId {
+	int block;
+	int slot;
+};
 ```
+
+### IndexId
+
+The Leaf Index blocks of a B+ Tree are made of [Index](#index) entries. Every *Index* entry of any *Leaf Index* block can be referenced using an id called `IndexId`. It is a combination of block number of the corresponding leaf index block and index number, which is the offset of the index in that block. It is used to locate where the index is stored in the disk.
+
+```cpp
+struct IndexId {
+	int block;
+	int index;
+};
+```
+
+### compare()
+
+#### Description
+This function compares two [`union Attribute`](#attribute) values on the basis of the input attribute type.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| attr1 | [`union Attribute`](#attribute)  |First attribute value to be compared. |
+| attr2 | [`union Attribute`](#attribute)  | Second attribute value to be compared. |
+| attrType | `int`  | Type of the attribute [`NUM/STR`](https://nitcbase.github.io/constants.html#constants). |
+
+#### Return Values
+| Value | Description |
+|----------|--------------------------------------------------------------------------------|
+| Negative integer  |	Value in `attr1` is **less** than the value in `attr2`. |
+| Zero  |	Value in `attr1` is **equal** to the value in `attr2`. |
+| Positive integer	 |	Value in `attr1` is **greater** than the value in `attr2`. |
+
+
+```cpp
+int compare(union Attribute attr1, union Attribute attr2, int attrType) {
+	
+    /* 	if attrType == STRING
+			return strcmp(attr1.sval, attr2.sval); */
+    
+    /* else if attrType == NUMBER 
+          return -1, 0, 1 depending on whether the value attr1.nval is
+          less than, equal to or greater than the value attr2.nval */ 
+    
+}
+```
+
+:::note
+* Both the attributes given as input must be of the same type as the input type.
+* For string type, the comparision is performed with respect to *lexicographic order*.
+:::
