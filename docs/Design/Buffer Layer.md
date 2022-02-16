@@ -49,7 +49,10 @@ Each structure is designed to store a subset of the data stored in a disk block.
 ### HeadInfo
 NITCbase maintains a `32 bytes` fixed-size header for every disk block. This header stores meta-information, like the type of the block, and a few block specific information, like `#Attrs` and `#Slots`. Though the header has many fields, usage of the fields depends on the type of the block. The structure `HeadInfo` is used to collect all the entries of the header, as shown below. The `setHeader()` and the `getHeader()` methods take a pointer to `struct HeadInfo` as argument.
 
-Implementation Note: `getHeader()` and `setHeader()` methods expect the higher layers to allocate memory for the `struct HeadInfo` before calling them.
+:::note Implementation Note
+`getHeader()` and `setHeader()` methods expect the higher layers to allocate memory for the `struct HeadInfo` before calling them.
+:::
+
 ```cpp
 struct HeadInfo{
 	int32_t blockType;
@@ -65,7 +68,7 @@ struct HeadInfo{
 ```
 
 ### Attribute
-According to the [Physical Layer storage model](./Physical%20Layer#disk-model), a Record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, `Attribute` is a union of the two types. The size of an Attribute is fixed at `16 bytes`. A `record` will be an array of Attributes whose size is equal to the number of attributes in the relation. An `attribute` being a fundamental unit of data in a `record`, the `Attribute` block data structure is used in several functions of NITCbase.
+According to the [Physical Layer storage model](../Design/Physical%20Layer#disk-model), a Record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, `Attribute` is a union of the two types. The size of an Attribute is fixed at `16 bytes`. A `record` will be an array of Attributes whose size is equal to the number of attributes in the relation. An `attribute` being a fundamental unit of data in a `record`, the `Attribute` block data structure is used in several functions of NITCbase.
 ```cpp
 typedef union Attribute{
 	float nVal;
