@@ -274,17 +274,10 @@ Returns the buffer number of the buffer to which the block with the given block 
 | blockNum | `int`             | Block number of the block whose buffer number is required.                                    |
 
 #### Return Values
-<<<<<<< HEAD
-|        Value  | Type |                        Description                               |
-|--------------|--------|------------------------------------------------|
-| bufferNum  | `int`    | Buffer number to which the given block is loaded. |
-| `FAILURE`  | `int`    | Block is not loaded to any buffer.                          |
-=======
 |        Value |                        Description                               |
 |--------------|--------------------------------------------------------|
 | bufferNum  | Buffer number to which the given block is loaded. |
 | `FAILURE` | Block is not loaded to any buffer.                          |
->>>>>>> Adding IndInternal and RecBuffer classes
 ```cpp
 int StaticBuffer::getBufferNum(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
