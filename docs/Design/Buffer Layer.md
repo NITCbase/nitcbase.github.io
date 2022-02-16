@@ -685,8 +685,15 @@ public:
 ```
 
 ## Class IndBuffer
+
+*IndBuffer* class is a generic class for representing an *Index* block. [B+ Trees](https://en.wikipedia.org/wiki/B%2B_tree) are constructed using *Index* blocks which can be either [Index Internal blocks](../Design/Physical%20Layer#internal-index-block-structure) or [Index Leaf blocks](../Design/Physical%20Layer#leaf-index-block-structure). B+ Tree helps in faster data access as compared to sequentially accessing the data through [Record](../Design/Physical%20Layer#record-block-structure) blocks. 
+
+*IndBuffer* class extends the [BlockBuffer](#class-blockbuffer) class. Thus, all its protected fields and methods can be accessed by *IndBuffer* class. In addition to these, *IndBuffer* class has two [pure virtual methods](https://en.wikipedia.org/wiki/Virtual_function#Abstract_classes_and_pure_virtual_functions)- `getEntry()` and `setEntry()`. These methods take an argument of type `void *` so that arguments of both [`struct InternalEntry`](#internalentry) and [`struct Index`](#index) type can be passed to it. This is based on the fact that a [void pointer](https://en.wikipedia.org/wiki/Void_type) can hold address of any type and can be typcasted to any type. 
+
+The children classes, [IndInternal](#class-indinternal) and [IndLeaf](#class-indleaf), extend the class IndBuffer and override the virtual functions. The constructors of *IndBuffer* class simply calls the constructor of the parent class with the received argument.
+
 ```cpp
-class IndBuffer : public BlockBuffer{
+class IndBuffer : public BlockBuffer {
 
 public:
 	//methods
@@ -698,9 +705,60 @@ public:
 };
 ```
 
+The following are the specifications for the methods in class IndBuffer.
+
+### IndBuffer :: IndBuffer() (Constructor 1)
+
+#### Description
+Called if a new index block of the input type is to be allocated in the disk.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| I | `char`  | New block of [`IND_INTERNAL`](https://nitcbase.github.io/constants.html) type to be alloted. |
+| L | `char`  | New block of [`IND_LEAF `](https://nitcbase.github.io/constants.html) type to be alloted. |
+
+#### Return Values
+Nil
+
+#### Algorithm
+```cpp
+// this is the way to call parent non-default constructor.
+IndBuffer::IndBuffer(char blockType) : BlockBuffer(blockType){}
+
+```
+
+:::note
+If the index block already exists on the disk use [constructor 2](#indbuffer-constructor-2).
+:::
+
+### IndBuffer :: IndBuffer() (Constructor 2)
+
+#### Description
+Called when the index block already exists on the disk.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| blockNum | `int`  | Block number of the index block. |
+
+#### Return Values
+Nil
+
+#### Algorithm
+```cpp
+// this is a way to call parent non-default constructor.
+IndBuffer::IndBuffer(int blockNum) : BlockBuffer(blockNum){} 
+```
+
+:::note
+If a new index block is to be allocated in the disk use [constructor 1](#indbuffer-constructor-1).
+:::
+
+
 ## Class IndInternal
 ```cpp
-class IndInternal : public IndBuffer{
+class IndInternal : public IndBuffer {
 
 public:
 	//methods
@@ -713,6 +771,9 @@ public:
 ```
 
 ## Class IndLeaf
+
+An object of the IndLeaf class will be associated with a Leaf Index block. A Leaf Index block stores entries of type struct Index and is used as the leaf nodes of a B+ Tree. Public methods of this class deal with the access/modification of the Index entries. IndLeaf class extends IndBuffer class and overrides its virtual methods. The constructor of the IndLeaf class calls the constructor of the parent class by passing suitable argument.
+
 ```cpp
 class IndLeaf : public IndBuffer{
 
@@ -725,6 +786,132 @@ public:
 	
 };
 ```
+
+The following are the specifications for the methods in class IndLeaf.
+
+### IndLeaf :: IndLeaf() (Constructor 1)
+
+#### Description
+Called if a new leaf index block is to be allocated in the disk.
+
+#### Arguments
+Nil
+
+#### Return Values
+Nil
+
+#### Algorithm
+```cpp
+IndLeaf::IndLeaf() : IndBuffer('L'){} // this is the way to call parent non-default constructor.
+				      // 'L' used to denote IndLeaf.
+
+```
+
+:::note
+If the leaf index block already exists on the disk use [constructor 2](#indleaf-constructor-2).
+:::
+
+### IndLeaf :: IndLeaf() (Constructor 2)
+
+#### Description
+Called when the leaf index block already exists on the disk.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| blockNum | `int`  | Block number of the leaf index block. |
+#### Return Values
+Nil
+
+#### Algorithm
+```cpp
+//this is the way to call parent non-default constructor.
+IndLeaf::IndLeaf(int blockNum) : IndBuffer(blockNum){} 
+```
+
+:::note
+If a new leaf index block is to be allocated in the disk use [constructor 1](#indleaf-constructor-1).
+:::
+
+
+### IndLeaf :: getEntry()
+
+#### Description
+Gives the indexNum<sup>th</sup> entry of the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| ptr | `void *`  | Pointer to the  [struct Index](#index) to which the specified leaf index entry of the block is copied. |
+| indexNum | `int`  | Index number of the entry in the block. |
+
+#### Return Values
+| Value | Description |
+|----------|--------------------------------------------------------------------------------|
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful getting of the leaf index entry. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+
+#### Algorithm
+```cpp
+int IndLeaf::getEntry(void *ptr, int indexNum) {
+						
+	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+
+	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_LEAF-1), return E_OUTOFBOUND.
+
+	// using offset range, copy the indexNumth entry to memory pointed to by ptr.    
+
+	// return SUCCESS.
+
+}
+
+```
+
+:::note
+* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `getEntry()` function of the *IndLeaf* class must ensure that the argument of type `struct Index *` is passed.
+* The higher layers must allocate memory for the `struct Index` before calling this function.
+:::
+
+
+### IndLeaf :: setEntry()
+
+#### Description
+Sets the indexNum<sup>th</sup> entry of the block with the input struct Index contents.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| ptr | `void *`  | Pointer to the [struct Index](#index) to which the specified leaf index entry of the block is copied. |
+| indexNum | `int`  | Index number of the entry in the block. |
+
+#### Return Values
+| Value | Description |
+|----------|--------------------------------------------------------------------------------|
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful setting of the leaf index entry. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+
+#### Algorithm
+```cpp
+int IndLeaf::getEntry(void *ptr, int indexNum) {
+						
+	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+
+	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_LEAF-1), return E_OUTOFBOUND.
+
+	// using offset range, copy the indexNumth entry to memory pointed to by ptr.    
+
+	// return SUCCESS.
+
+}
+
+:::note
+* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
+* The higher layers must allocate memory for the struct Index before calling this function.
+:::
+
+
 
 ## Miscellaneous
 ```cpp
