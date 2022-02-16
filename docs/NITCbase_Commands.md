@@ -364,6 +364,13 @@ The External File System commands are used to format the disk, dump disk data st
 ### Format Disk
 #### Description
 This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of *disk data structures*, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCBase. The disk is simulated on a binary file called `disk` which is located at `$HOME/NITCBase/Disk/` once it is created.
+
+:::note Important Details
+* The **first four blocks of the disk** is used for storing the Block Allocation Map and hence *the first 4 entries in the Block Allocation Map is marked as occupied during the initialization of the disk.*
+* Blocks 4 and 5 used for storing relation catalog and attribute catalog are also marked as `REC` type in the newly initialized Block Allocation Map as part of the fdisk routine.
+:::
+
+
 #### Syntax
 ```bash
 fdisk

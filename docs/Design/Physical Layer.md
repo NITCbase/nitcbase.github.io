@@ -16,11 +16,14 @@ The C++ Disk class that initiates the run copy of disk and also provides read/wr
 
 ## Disk Model
 
-Nitcbase assumes that the disk is a sequence of blocks, and a block is a sequence of bytes. The disk consists of **8192 blocks**, and each block is of **2048 bytes**, resulting in a total of 16MB of storage. 
+Nitcbase assumes that the disk is a sequence of blocks, and a block is a sequence of bytes. The disk consists of **8192 blocks**, and each block is of **2048 bytes**, resulting in a total of 16MB of storage. Disk blocks are **indexed from 0 to 8191.** 
 
-Disk blocks are **indexed from 0 to 8191.** Blocks 0-3 are reserved for storing *Block Allocation Map*, whereas Blocks 4 and 5 are reserved for storing the block of [Relation Catalog](#relation-catalog) and the first block of [Attribute Catalog](#attribute-catalog), respectively. 
+**Block Allocation Map** tells us whether a particular block is **free** or **occupied**. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF`](https://nitcbase.github.io/constants.html)) of the block. *It requires one byte per each block*. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
 
-Block Allocation Map tells us whether a particular block is free or occupied. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF`](https://nitcbase.github.io/constants.html)) of the block. *It requires one byte per each block*. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
+Blocks 0-3 are reserved for storing *Block Allocation Map*, whereas Blocks 4 and 5 are reserved for storing the block of [Relation Catalog](#relation-catalog) and the first block of [Attribute Catalog](#attribute-catalog), respectively. 
+
+The first four blocks of the disk is used for storing the Block Allocation Map and hence **the first four entries in the Block Allocation Map is makred as occupied.**
+This is done when the XFS interface command of [`fdisk`](../NITCbase_Commands.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
 
 <br/>
 <img src={diskModel} alt="DiskModel" width="650"/>
