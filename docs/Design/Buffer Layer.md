@@ -639,7 +639,7 @@ Returns the block number of a free block of the input type in the disk and allot
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|--------------------------------------------------------------------------------|
-| blockType | `int`  | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
+| blockType | `int`  | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
 #### Return Values
 | Name | Type | Description |
