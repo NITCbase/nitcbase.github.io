@@ -275,7 +275,7 @@ Returns the buffer number of the buffer to which the block with the given block 
 
 #### Return Values
 |        Value  | Type |                        Description                               |
-|--------------|--------------------------------------------------------|
+|--------------|--------|------------------------------------------------|
 | bufferNum  | `int`    | Buffer number to which the given block is loaded. |
 | `FAILURE`  | `int`    | Block is not loaded to any buffer.                          |
 ```cpp
@@ -303,14 +303,13 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|--------------------------------------------------------------------------------|
-| buffer   | `unsigned char *` | Memory pointer of the buffer to which the block contents is to be loaded/read. |
-| blockNum | `int`             | Block number of the disk block to be read.                                     |
+| blockNum | `int`             | Block number of the block to be loaded to a buffer block.                       
 
 #### Return Values
-|        Value      |                         Description                               |
-|--------------|--------------------------------------------------------|
-| `SUCCESS`      | Successful loading/reading of the block to the buffer. |
-| `E_OUTOFBOUND` | Block number is out of range.                          |
+|        Value |  Type |                        Description                                        |
+|--------------|-------|---------------------------------------------------------------------------|
+| bufferNum    | `int` | Buffer number of the free/freed buffer block assigned to the input block. |
+
 ```cpp
 int StaticBuffer::getFreeBuffer(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
