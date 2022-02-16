@@ -660,6 +660,9 @@ int BlockBuffer::getFreeBlock(int blockType){
 	
 	//initialize the header of the block with pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0 using setHeader().	
 
+	// THIS STEP BELOW IS NECESSARY RIGHT??
+	//update StaticBuffer.blockAllocMap to indicate the occupancy of the free block with corresponding input block type 
+	
 	//update the block type of the block to the input block type using setBlockType().
 
 	//return block number of the free block.
