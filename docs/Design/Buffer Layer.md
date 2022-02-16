@@ -274,10 +274,17 @@ Returns the buffer number of the buffer to which the block with the given block 
 | blockNum | `int`             | Block number of the block whose buffer number is required.                                    |
 
 #### Return Values
+<<<<<<< HEAD
 |        Value  | Type |                        Description                               |
 |--------------|--------|------------------------------------------------|
 | bufferNum  | `int`    | Buffer number to which the given block is loaded. |
 | `FAILURE`  | `int`    | Block is not loaded to any buffer.                          |
+=======
+|        Value |                        Description                               |
+|--------------|--------------------------------------------------------|
+| bufferNum  | Buffer number to which the given block is loaded. |
+| `FAILURE` | Block is not loaded to any buffer.                          |
+>>>>>>> Adding IndInternal and RecBuffer classes
 ```cpp
 int StaticBuffer::getBufferNum(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
@@ -429,9 +436,9 @@ Returns the block number of the block.
 Nil
 
 #### Return Values
-| Name | Type | Description |
-|-----------|------------------|--------------------------------------------------------------------------------|
-| blockNum | `int`             | Block number of the block.   |
+| Value  | Description |
+|----------|--------------------------------------------------------------------------------|
+| blockNum | Block number of the block.   |
 
 
 ```cpp
@@ -450,9 +457,9 @@ Returns the type of the block corresponding to the block object.
 #### Arguments
 Nil
 #### Return Values
-| Name | Type | Description |
-|-----------|------------------|--------------------------------------------------------------------------------|
-| blockType | `int`             | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+| Value  | Description |
+|------------|--------------------------------------------------------------------------------|
+| blockType  | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
 ```cpp
 int BlockBuffer::getBlockType(){
@@ -582,9 +589,9 @@ Returns a pointer to the first byte of the buffer storing the block.
 Nil
 
 #### Return Values
-| Name | Type | Description |
-|-----------|------------------|--------------------------------------------------------------------------------|
-| bufferPtr | `unsigned char*`  | Pointer to the buffer containing the block. |
+| Value | Description |
+|-----------|--------------------------------------------------------------------------------|
+| bufferPtr | Pointer to the buffer containing the block. |
 
 :::info Note
 * All get and set methods accessing the block's data should call the `getBufferPtr()` method to get the starting address of the buffer block holding the block's data. 
@@ -607,12 +614,12 @@ unsigned char * BlockBuffer::getBufferPtr(){
 Loads the block into buffer (if not present), updates the timestamps and returns the corresponding buffer number.
 
 #### Arguments
-Nil                                    |
+Nil                         
 
 #### Return Values
-| Name | Type | Description |
-|-----------|------------------|--------------------------------------------------------------------------------|
-| bufferNum | `int`  | Buffer number of the buffer containing the block. |
+| Value | Description |
+|-----------|--------------------------------------------------------------------------------|
+| bufferNum | Buffer number of the buffer containing the block. |
 
 :::info note
 This function **never fails** - a buffer is always alloted to the block doing replacement, if necessary.
@@ -642,10 +649,10 @@ Returns the block number of a free block of the input type in the disk and allot
 | blockType | `int`  | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
 #### Return Values
-| Name | Type | Description |
-|-----------|------------------|--------------------------------------------------------------------------------|
-| blockNum | `int`  | Block number of the free block. |
-| `FAILURE` | `int`  | No free block is available in the disk. |
+| Value | Description |
+|-----------|--------------------------------------------------------------------------------|
+| blockNum | Block number of the free block. |
+| `FAILURE` | No free block is available in the disk. |
 
 ```cpp
 int BlockBuffer::getFreeBlock(int blockType){
@@ -671,6 +678,7 @@ int BlockBuffer::getFreeBlock(int blockType){
 ```
 
 ## Class RecBuffer
+An object of the `RecBuffer class` is associated with a **record block**. In a Record block, a slot can store one record, and each record is a fixed sized set of Attributes. Ordering of data as records and making use of slotmap are done only in a record block. **Public methods** of this class deal with **access/modification of the records and the slotmap**. `RecBuffer class` extends the `BlockBuffer class`. Thus, all its **protected** fields and methods can be accessed by `RecBuffer class`.
 ```cpp
 class RecBuffer : public BlockBuffer{
 
@@ -686,6 +694,197 @@ public:
 
 };
 ```
+
+The following are the specifications for the methods in `class RecBuffer`.
+
+### RecBuffer :: RecBuffer() (Constructor 1)
+
+#### Description
+Called if a new record block is to be allocated in the disk.
+
+#### Arguments
+Nil
+
+#### Return Values
+Nil
+
+:::info note
+If the record block already exists on the disk use [constructor 2](#recbuffer--recbuffer-constructor-2).
+:::
+
+```cpp
+RecBuffer::RecBuffer() : BlockBuffer('R'){}  
+//this is the way to call parent non-default constructor.
+// 'R' is used to denote RecBuffer.
+```
+
+### RecBuffer :: RecBuffer() (Constructor 2)
+
+#### Description
+Called when the record block already exists on the disk.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|-----------------------|
+| blockNum | `int` | Block number of the record block |
+
+#### Return Values
+Nil
+
+:::info note
+If a new record block is to be allocated in the disk use [constructor 1](#recbuffer--recbuffer-constructor-1).
+:::
+
+```cpp
+RecBuffer::RecBuffer(int blockNum) : BlockBuffer(blockNum){} 
+//this is the way to call parent non-default constructor.
+```
+
+### RecBuffer :: getSlotmap()
+
+#### Description
+Gives the slotmap of the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|------------------------------------|
+| slotMap | `unsigned char *` | Pointer to the array of unsigned char to which the slot map is copied. |
+
+#### Return Values
+Nil
+
+:::info note
+* The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
+* The higher layers must allocate memory for the `unsigned char` array before calling the function.
+:::
+
+```cpp
+void RecBuffer::getSlotmap(unsigned char *slotMap){ 
+
+    // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+	
+    // get the number of slots in the block.
+    
+    // using offset range, copy the slotMap of the block to the memory pointed by the argument.
+    
+}
+```
+
+### RecBuffer :: setSlotmap()
+
+#### Description
+Sets the slotmap of the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------|
+| slotMap | `unsigned char *` | Pointer to the array of unsigned char from which the slot map is set. |
+
+#### Return Values
+Nil
+
+:::info note
+* The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
+* The higher layers must allocate memory for the `unsigned char` array before calling the function.
+:::
+
+```cpp
+void RecBuffer::setSlotmap(unsigned char *slotMap){ 
+												
+    // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+    
+    // get the number of slots in the block.
+    
+    // using offset range, copy the contents of the memory pointed to by the argument to the slotMap of the block.
+    
+    //update dirty bit using StaticBuffer::setDirtyBit().
+```
+
+### RecBuffer :: getRecord()
+
+#### Description
+Gives the slotNumth record entry of the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------|
+| rec | `union Attribute *` | Pointer to the array of union Attribute elements to which the record entry is copied. |
+| slotNum | `int` | Slot number of the record in the block. |
+
+#### Return Values
+| Value | Description |
+|-----------|--------------------------|
+| `SUCCESS` | Succesful copy of the record. |
+| `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
+| `E_FREESLOT` | Slot corresponding to the input slotNum is free. |
+
+:::info note
+* The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
+* The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
+:::
+
+```cpp
+int RecBuffer::getRecord(union Attribute *rec,int slotNum){ 
+												
+    // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+
+    // get the number of attributes in the block.
+    
+    // get the number of slots in the block.
+
+    // if input slotNum is not in the permitted range return E_OUTOFBOUND.
+    
+    // if slot corresponding to input slotNum is free return E_FREESLOT.
+
+    // using offset range, copy slotNumth record to the memory pointed by rec.
+
+    // return SUCCESS.
+	
+}
+```
+
+### RecBuffer :: setRecord()
+
+#### Description
+Sets the slotNumth record entry of the block with the input record contents.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------------------------------------------------------|
+| rec | `union Attribute *` | Pointer to the array of union Attribute elements from which the record entry is set. |
+| slotNum | `int` | Slot number of the record in the block. |
+
+#### Return Values
+| Value | Description |
+|-----------|-----------------|
+| `SUCCESS` | Succesful copy of the record. |
+| `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
+
+:::info note
+* The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
+* The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
+:::
+
+```cpp
+void RecBuffer::setRecord(union Attribute *rec,int slotNum){ 
+												
+     // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+    
+    // get the number of attributes in the block.
+    
+    // get the number of slots in the block.
+
+    // if input slotNum is not in the permitted range return E_OUTOFBOUND.
+    
+    // using offset range, copy contents of the memory pointed by rec to slotNumth record.
+
+    // update dirty bit using StaticBuffer::setDirtyBit().
+    
+    // return SUCCESS.
+	
+}
+```
+
 
 ## Class IndBuffer
 
@@ -760,6 +959,8 @@ If a new index block is to be allocated in the disk use [constructor 1](#indbuff
 
 
 ## Class IndInternal
+An object of the `class IndInternal` is associated with an **Internal Index block**. An Internal Index block stores entries of type `struct InternalEntry` and is used as the **internal nodes of a B+ Tree**. Public methods of this class deal with the access/modification of the InternalEntry entries. `IndInternal class` extends `IndBuffer class` and overrides its virtual methods. The constructor of the IndInternal class calls the constructor of the parent class by passing suitable argument.
+
 ```cpp
 class IndInternal : public IndBuffer {
 
@@ -772,6 +973,128 @@ public:
 	
 };
 ```
+
+The following are the specifications for the methods in `class IndInternal`.
+
+###  IndInternal :: IndInternal() (Constructor1)
+
+#### Description
+Called if a new internal index block is to be allocated in the disk.
+
+#### Arguments
+Nil
+
+#### Return Values
+Nil
+
+:::info note
+If the internal index block already exists on the disk use  [constructor 2](#indinternal--indinternal-constructor2).
+:::
+
+```cpp
+IndInternal::IndInternal() : IndBuffer('I'){}  
+//this is the way to call parent non-default constructor.
+// 'I' used to denote IndInternal.
+```
+
+###  IndInternal :: IndInternal() (Constructor2)
+
+#### Description
+Called when the internal index block already exists on the disk.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|--------------------------------|
+| blockNum | `int` | Block number of the internal index block. |
+
+#### Return Values
+Nil
+
+:::info note
+If a new internal index block is to be allocated in the disk use [constructor 1](#indinternal--indinternal-constructor1).
+:::
+
+```cpp
+IndInternal::IndInternal(int blockNum) : IndBuffer(blockNum){} 
+//this is the way to call parent non-default constructor.
+```
+
+###  IndInternal :: getEntry()
+
+#### Description
+Gives the indexNumth entry of the block.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|---------------------|
+| ptr | `void *` | Pointer to the struct InternalEntry to which the specified internal index entry of the block is copied. |
+| indexNum | `int` | Index number of the entry in the block. |
+
+#### Return Values
+| Value | Description |
+|-----------|-----------------|
+| `SUCCESS` | Successful copy of the internal index entry. |
+| `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
+
+:::info note
+* The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
+* The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+:::
+
+```cpp
+int IndInternal::getEntry(void *ptr, int indexNum){
+	
+	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+
+	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_INTERNAL-1), return E_OUTOFBOUND.
+
+	// using offset range, copy the indexNumth entry to memory pointed to by ptr. 
+
+	// return SUCCESS.
+	
+}
+```
+
+###  IndInternal :: setEntry()
+
+#### Description
+Sets the indexNumth entry of the block with the input struct InternalEntry contents.
+
+#### Arguments
+| Name | Type | Description |
+|-----------|------------------|-------------------------|
+| ptr | `void *` | Pointer to the struct InternalEntry from which the specified internal index entry of the block is set. |
+| indexNum | `int` | Index number of the entry in the block. |
+
+#### Return Values
+| Value | Description |
+|-----------|-----------------|
+| `SUCCESS` | Successful copy of the internal index entry. |
+| `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
+
+:::info note
+* The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `setEntry()` method of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
+* The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+:::
+
+```cpp
+int IndInternal::setEntry(void *ptr, int indexNum){
+						
+	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+
+	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_INTERNAL-1), return E_OUTOFBOUND.
+
+	// using offset range, copy contents of the memory pointed to by ptr to indexNumth entry.
+
+	//update dirty bit using StaticBuffer::setDirtyBit().
+
+	//return SUCCESS.
+	
+}
+```
+
 
 ## Class IndLeaf
 
