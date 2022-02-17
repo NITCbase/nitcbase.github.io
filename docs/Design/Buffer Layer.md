@@ -6,13 +6,14 @@ title: 'Buffer Layer'
 
 
 import BufferClassesSvg from '../../static/img/buffer_classes.svg'
-import BufferClasses from '../../static/img/buffer_classes.png'; 
+import BufferClasses from '../../static/img/buffer_classes.png';
+import BufferStructures from '../../static/img/buffer_structures.png'; 
 import Link from '@docusaurus/Link';
 
 https://nitcbase.github.io/design/buffer.html
 
 :::info note 
-The Buffer Layer code is contained in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these can be found <Link to="/buffer_stub">here</Link >.
+The Buffer Layer code is to be implemented in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these files can be found <Link to="/buffer_stub">here</Link >.
 :::
 
 
@@ -33,16 +34,21 @@ NITCbase follows an Object-Oriented design for Buffer Layer. The class diagram i
 
 ---
 
-Certain structure definitions and functions that help access record data and metadata from the disk block are also included in the Buffer Layer. These are discussed at the end of this page (see [miscellaneous section](#Miscellaneous)).
+Various structures used in the buffer layer are outlined in the below diagrams.
+<img src={BufferStructures} alt="BufferStructures" width="800" />
+
+---
+
+Certain other structure definitions and functions that help access record data and metadata from the disk block are also included in the Buffer Layer. These are discussed at the end of this page (see [miscellaneous section](#Miscellaneous)).
 
 ## Block Structures
 
 The Buffer Layer defines the following block data structures.
 
-* [HeadInfo](#HeadInfo)
-* [Attribute](#Attribute)
-* [InternalEntry](#InternalEntry)
-* [Index](#Index)
+* [HeadInfo](#headinfo)
+* [Attribute](#attribute)
+* [InternalEntry](#internalentry)
+* [Index](#index)
 
 Each structure is designed to store a subset of the data stored in a disk block. A disk block contains `2048` bytes of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](./Cache%20Layer), the [Block Access Layer](./Block%20Access%20Layer), and the [B+ Tree Layer](./B+%20Tree%20Layer).
 
@@ -115,13 +121,13 @@ struct BufferMetaInfo{
 
 ---
 ## Class StaticBuffer
-The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32 disk blocks` in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as `buffer block` in the NITCbase documentation. `Buffer blocks` will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains `meta-information` for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the `Block Allocation Map` in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the `Block Allocation Map` specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
+The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32` disk blocks in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as buffer block in the NITCbase documentation. Buffer blocks will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains meta-information for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the **Block Allocation Map** in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the Block Allocation Map specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
 
-All these data fields are `private` to the `StaticBuffer class` and can only be accessed through `public` methods. This class provides the basic disk fetch and commit interfaces to the higher layers, creating an illusion of having the entire disk in memory at all times. `StaticBuffer` is a `static class`, i.e., all member fields and methods are declared `static`. By doing so, memory will be allocated statically for all member fields of the class, and any access to them will refer to the same statically allocated memory. Also static methods in a class are allowed to access only static members of the class. Consequently, there needs to exist only a single static object of the class(see implementation tip below). The class definition of `StaticBuffer` is as given below:
+All these data fields are **private** to the `StaticBuffer class` and can only be accessed through **public** methods. This class provides the basic disk fetch and commit interfaces to the higher layers, creating an illusion of having the entire disk in memory at all times. `StaticBuffer` is a **static class**, i.e., all member fields and methods are declared static. By doing so, memory will be allocated statically for all member fields of the class, and any access to them will refer to the same statically allocated memory. Also static methods in a class are allowed to access only static members of the class. Consequently, there needs to exist only a single static object of the class(see implementation tip below). The class definition of `StaticBuffer` is as given below:
 
 :::info Note
-* The `class BlockBuffer` is a `friend class` to `StaticBuffer class`. This allows all methods in `BlockBuffer` to access the `private` fields and methods of the `StaticBuffer class`. 
-* At the same time, friendship is not inherited in C++, i.e., if a `base class` has a friend class, then the class doesn’t become a friend of the `derived classes`. This is explained in detail in the next section.
+* The `class BlockBuffer` is a **friend class** to `StaticBuffer class`. This allows all methods in `BlockBuffer` to access the private fields and methods of the `StaticBuffer class`. 
+* At the same time, **friendship is not inherited in C++**, i.e., if a base class has a friend class, then the class doesn’t become a friend of the derived classes. This is explained in detail in the next section.
 :::
 
 :::tip Implementation Tip
@@ -154,7 +160,7 @@ private:
 ```
 ---
 
-The following are the specifications for the methods in `class StaticBuffer`. The stub code is availabe here(TODO LINK).
+The following are the specifications for the methods in `class StaticBuffer`.
 
 ### StaticBuffer :: StaticBuffer()
 
@@ -332,12 +338,12 @@ int StaticBuffer::getFreeBuffer(int blockNum){
 ---
 
 ## Class BlockBuffer
-The `class BlockBuffer` is a generic class for representing a disk block of any type (`Record`, `Internal Index`, or `Leaf Index`). Its only field is `blockNum`. The field `blockNum` stores the disk block number corresponding to the block object. The block has to be loaded and stored in one of the `32 buffers` of the `StaticBuffer class` before its data can be accessed. Adding to the complexity is the fact that the block, once loaded, may not even be present in the buffer memory later on because of the `buffer replacement algorithm` implemented by `Buffer Layer`. In order to work with data of the block, any method of the `BlockBuffer class` or its descendent classes need to know the address of the buffer memory to which the block has been loaded. Hence any method of this class operating on the block data should first get the pointer to the buffer memory that holds the contents of the block. The `getBufferPtr()` method is used for this purpose. The public methods of `BlockBuffer` deal with information like `header` and `block type`, which are generic to all blocks. `RecBuffer` and `IndBuffer` classes extend the `class BlockBuffer`, thereby, inheriting all the fields and methods of `BlockBuffer`.
+The `class BlockBuffer` is a generic class for representing a disk block of any type (`Record`, `Internal Index`, or `Leaf Index`). Its only field is `blockNum`. The field `blockNum` stores the disk block number corresponding to the block object. The block has to be loaded and stored in one of the `32` buffers of the `StaticBuffer class` before its data can be accessed. Adding to the complexity is the fact that the block, once loaded, may not even be present in the buffer memory later on because of the **buffer replacement algorithm** implemented by Buffer Layer. In order to work with data of the block, any method of the `BlockBuffer class` or its descendent classes need to know the address of the buffer memory to which the block has been loaded. Hence any method of this class operating on the block data should first get the pointer to the buffer memory that holds the contents of the block. The `getBufferPtr()` method is used for this purpose. The public methods of `BlockBuffer` deal with information like **header** and **block type**, which are generic to all blocks. `RecBuffer` and `IndBuffer` classes extend the `class BlockBuffer`, thereby, inheriting all the fields and methods of `BlockBuffer`.
 
 :::info Note
-* If the class definition of a class (say A) declares another class (say B) as a `friend class`, then an instance of class B can access the `private` fields and methods of class A. This friendship is, however, not inherited by the `child classes` of B. 
-* As per the NITCbase design, the definition of the `class StaticBuffer` contains the declaration: `friend class BlockBuffer`. Hence, the methods in `BlockBuffer` can access the `private` fields and methods of the `class StaticBuffer`. 
-* On the other hand, `RecBuffer` and `IndBuffer` classes can access them only through the public functions of `StaticBuffer class` and through the `public` and `protected` functions of `BlockBuffer class`.
+* If the class definition of a class (say A) declares another class (say B) as a **friend class**, then an instance of class B can access the private fields and methods of class A. **This friendship is, however, not inherited by the child classes of B.**
+* As per the NITCbase design, the definition of the `class StaticBuffer` contains the declaration: `friend class BlockBuffer`. Hence, the methods in `BlockBuffer` can access the private fields and methods of the `class StaticBuffer`. 
+* On the other hand, `RecBuffer` and `IndBuffer` classes can access them only through the public functions of `StaticBuffer class` and through the public and protected functions of `BlockBuffer class`.
 :::
 ```cpp
 class BlockBuffer{
@@ -364,7 +370,7 @@ protected:
 };
 ```
 
-The following are the specifications for the methods in class BlockBuffer. The stub code is availabe here(TODO LINK).
+The following are the specifications for the methods in class BlockBuffer.
 
 ### BlockBuffer :: BlockBuffer() (Constructor1)
 
