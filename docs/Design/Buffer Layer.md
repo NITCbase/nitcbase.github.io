@@ -465,7 +465,8 @@ int BlockBuffer::getBlockType(){
 
 	// get the starting address of the buffer containing the block using getBufferPtr(). 
 	
-	//return the first 4 bytes of the buffer that stores the block type.
+	//return the first 4 bytes of the buffer that stores the block type. 
+		// (Hint: do type casting using int32_t)
 	
 }
 ```
@@ -492,7 +493,7 @@ void BlockBuffer::setBlockType(int blockType){
 
 	//update the StaticBuffer::blockAllocMap entry corresponding to the object's block number. 
 
-	//update dirty bit using StaticBuffer::setDirtyBit().
+	//update dirty bit by calling appropriate method of StaticBuffer class.
 	
 }
 ```
@@ -517,9 +518,11 @@ Nil
 ```cpp
 void BlockBuffer::getHeader(struct HeadInfo *head){	
 	
-	// get the starting address of the buffer containing the block using getBufferPtr().
+	// get the starting address of the buffer containing the block using getBufferPtr.
+        // (Use type casting here to cast the returned pointer type to the appropriate struct pointer)
 
-	//copy the header of block to the memory location pointed to by the head using appropriate type casting.
+	// copy the header of block to the memory location pointed to by the argument head.
+	 	// (we can assume the memory for head pointer is allocated by higher or same levels.)
 
 }
 ```
@@ -545,11 +548,12 @@ Nil
 ```cpp
 void BlockBuffer::setHeader(struct HeadInfo *head){
 
-	// get the starting address of the buffer containing the block using getBufferPtr().
+	// get the starting address of the buffer containing the block using getBufferPtr.
+        // (Use type casting here to cast the returned pointer type to the appropriate struct pointer)
 
-	//copy the contents of the memory location pointed to by head to the header of block using appropriate type casting.
+	//copy the contents of the memory location pointed to by head to the header of block using appropriate.
 
-	//update dirty bit using StaticBuffer::setDirtyBit().
+	//update dirty bit by calling appropriate method of StaticBuffer class.
 	
 }
 ```
