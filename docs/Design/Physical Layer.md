@@ -179,13 +179,20 @@ The record block must be loaded from the disk to the main memory before its data
 
 **Q1**. Calculate the number of slots and slotmap size for a relation with 5 attributes.
 
-**Solution**. 
+<details>
+<summary>
+View solution
+</summary>
+<p>
+
 $$
 \#Slots = \left \lfloor \frac{2016}{(16*5)+1} \right \rfloor = 24 
 $$
 
-* Since the slotmap size is equal to the number of slots in a block, **slotmap size = 24 bytes**.
+* Since the slotmap size is equal to the number of slots in a block, *slotmap size = 24 bytes*.
 
+</p>
+</details>
 
 :::
 
@@ -193,23 +200,39 @@ $$
 
 **Q2**. What is the maximum number of attributes possible for a relation in NITCbase?
 
-**Solution**.
+<details>
+<summary>
+View solution
+</summary>
+<p>
+
 In NITCbase, size of the record in any relation is bounded by the size of a block. Hence the number of attributes is maximum when a record fits in a block. 
 It is calculated as:
 $$
-16*K+1 \leq 2016 
-K = \left \lfloor \frac{2015}{16} \right \rfloor 
-K = 125 
-
+16*K+1 \leq 2016 \\
+K = \left \lfloor \frac{2015}{16} \right \rfloor \\
+K = 125 \\
 $$
+
+</p>
+</details>
+
 :::
 
 :::info Question 3
 
 **Q3**. What is the maximum number of slots possible for a record block in NITCbase?
 
-**Solution**.
+<details>
+<summary>
+View solution
+</summary>
+<p>
+
 A record block has the maximum number of slots when number of attributes of the corresponding relation is 1. Hence the maximum number of slots can be calculated as 118.
+
+</p>
+</details>
 
 :::
 
@@ -288,20 +311,36 @@ Since the Relation Catalog is internally implemented as a relation, it's block s
 
 **Q1**. What are the values of the header fields `#Attrs` and `#Slots` for a Relation Catalog block?
 
-**Solution**.
+<details>
+<summary>
+View solution
+</summary>
+<p>
 
 `#Attrs` = 6
 
 `#Slots` = $\left \lfloor \frac{2016}{(16*6)+1} \right \rfloor = 20$
 
+</p>
+</details>
+
 :::
 
 :::info Question 2
 
-**Q2**. What are the values of the header fields `#Attrs` and `#Slots` for a Relation Catalog block?
+**Q2**.  What is the minimum number of entries allowed in the Relation Catalog? What relations do these entries correspond to?
 
-**Solution**.
-The minimum number of entries in the Relation Catalog is two, even in the absence of other relations in the database. These entries correspond to Relation Catalog and Attribute Catalog since they are also treated as relations and should be in the disk at all times. Thus, **the maximum number of relations allowed in NITCbase is 18 (why?).**
+<details>
+<summary>
+View solution
+</summary>
+<p>
+
+**The minimum number of entries in the Relation Catalog is two**, even in the absence of other relations in the database. These entries correspond to Relation Catalog and Attribute Catalog since they are also treated as relations and should be in the disk at all times. Thus, **the maximum number of relations allowed in NITCbase is 18 (why?).**
+
+</p>
+</details>
+
 :::
 
 
@@ -339,6 +378,15 @@ NITCbase employes [B+ tree](../Tutorials/B+%20Trees.md) for indexing. `RootBlock
 
 **Q1**. What is the minimum number of entries allowed in the Attribute Catalog? What relations and attributes do these entries correspond to?
 
-**Solution**.
+<details>
+<summary>
+View solution
+</summary>
+<p>
+
 **The minimum number of entries in the attribute catalog is 12**, even in the absence of other relations in the database. 6 out of these 12 correspond to the 6 attributes of Relation Catalog and the remaining 6 corresponds to the 6 attributes of Attribute Catalog. This is because the catalogs are also treated as relations and should be in the disk at all times.
+
+</p>
+</details>
+
 :::
