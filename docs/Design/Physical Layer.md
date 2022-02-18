@@ -286,20 +286,19 @@ Since the Relation Catalog is internally implemented as a relation, it's block s
 
 :::info Question 1
 
-**Q1**. What are the values of the header fields #Attrs and #Slots for a Relation Catalog block?
+**Q1**. What are the values of the header fields `#Attrs` and `#Slots` for a Relation Catalog block?
 
 **Solution**.
 
-$$
-\left \lfloor \frac{2016}{(16*6)+1} \right \rfloor = 20
+`#Attrs` = 6
 
-$$
+`#Slots` = $\left \lfloor \frac{2016}{(16*6)+1} \right \rfloor = 20$
 
 :::
 
 :::info Question 2
 
-**Q2**. What are the values of the header fields #Attrs and #Slots for a Relation Catalog block?
+**Q2**. What are the values of the header fields `#Attrs` and `#Slots` for a Relation Catalog block?
 
 **Solution**.
 The minimum number of entries in the Relation Catalog is two, even in the absence of other relations in the database. These entries correspond to Relation Catalog and Attribute Catalog since they are also treated as relations and should be in the disk at all times. Thus, **the maximum number of relations allowed in NITCbase is 18 (why?).**
