@@ -176,6 +176,8 @@ The object of the `StaticBuffer class` must be declared after the object of the 
 Nil
 #### Return Values
 Nil
+
+#### Algorithm
 ```cpp
 StaticBuffer::StaticBuffer(){
     // copy Block Allocation Map blocks from disk to blockAllocMap using Disk::readBlock()
@@ -200,6 +202,8 @@ Nil
 
 #### Return Values
 Nil
+
+#### Algorithm
 ```cpp
 StaticBuffer::~StaticBuffer(){
     // copy blockAllocMap to Block Allocation Map blocks in the disk using Disk::writeBlock().
@@ -228,6 +232,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
 | blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
+#### Algorithm
 ```cpp
 int StaticBuffer::getStaticBlockType(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
@@ -255,6 +260,7 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 | `SUCCESS`        | successfully set dirty bit                   |
 | `E_OUTOFBOUND`   | Block number is out of range.                |
 
+#### Algorithm
 ```cpp
 int StaticBuffer::setDirtyBit(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
@@ -284,6 +290,8 @@ Returns the buffer number of the buffer to which the block with the given block 
 |--------------|--------------------------------------------------------|
 | bufferNum  | Buffer number to which the given block is loaded. |
 | `FAILURE` | Block is not loaded to any buffer.                          |
+
+#### Algorithm
 ```cpp
 int StaticBuffer::getBufferNum(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
@@ -316,6 +324,7 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 |--------------|-------|---------------------------------------------------------------------------|
 | bufferNum    | `int` | Buffer number of the free/freed buffer block assigned to the input block. |
 
+#### Algorithm
 ```cpp
 int StaticBuffer::getFreeBuffer(int blockNum){
 	// Check if blockNum is valid (non zero and less than number of disk blocks)
@@ -389,6 +398,7 @@ If the block already exists on the disk use [constructor 2](#blockbuffer--blockb
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 Blockbuffer::BlockBuffer(char blockType){
 	
@@ -416,6 +426,7 @@ If a new block is to be allocated in the disk use [constructor 1](#blockbuffer--
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 Blockbuffer::BlockBuffer(int blockNum){
 	
@@ -439,7 +450,7 @@ Nil
 |----------|--------------------------------------------------------------------------------|
 | blockNum | Block number of the block.   |
 
-
+#### Algorithm
 ```cpp
 int BlockBuffer::getBlockNum(){
 
@@ -460,6 +471,7 @@ Nil
 |------------|--------------------------------------------------------------------------------|
 | blockType  | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
+#### Algorithm
 ```cpp
 int BlockBuffer::getBlockType(){
 
@@ -484,6 +496,7 @@ Sets the type of the block with the input block type.
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 void BlockBuffer::setBlockType(int blockType){						
 	
@@ -515,6 +528,7 @@ Gives the header of the block.
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 void BlockBuffer::getHeader(struct HeadInfo *head){	
 	
@@ -545,6 +559,7 @@ Sets the header of the block.
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 void BlockBuffer::setHeader(struct HeadInfo *head){
 
@@ -569,6 +584,7 @@ Nil
 #### Return Values
 Nil
 
+#### Algorithm
 ```cpp
 void BlockBuffer::releaseBlock(){
 
@@ -601,6 +617,7 @@ Nil
 * **This also ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
 :::
 
+#### Algorithm
 ```cpp
 unsigned char * BlockBuffer::getBufferPtr(){
 	
@@ -627,6 +644,8 @@ Nil
 :::info note
 This function **never fails** - a buffer is always alloted to the block doing replacement, if necessary.
 :::
+
+#### Algorithm
 ```cpp
 int BlockBuffer::getBlock(){
 
@@ -657,6 +676,7 @@ Returns the block number of a free block of the input type in the disk and allot
 | blockNum | Block number of the free block. |
 | `FAILURE` | No free block is available in the disk. |
 
+#### Algorithm
 ```cpp
 int BlockBuffer::getFreeBlock(int blockType){
 
@@ -715,6 +735,7 @@ Nil
 If the record block already exists on the disk use [constructor 2](#recbuffer--recbuffer-constructor-2).
 :::
 
+#### Algorithm
 ```cpp
 RecBuffer::RecBuffer() : BlockBuffer('R'){}  
 //this is the way to call parent non-default constructor.
@@ -738,6 +759,7 @@ Nil
 If a new record block is to be allocated in the disk use [constructor 1](#recbuffer--recbuffer-constructor-1).
 :::
 
+#### Algorithm
 ```cpp
 RecBuffer::RecBuffer(int blockNum) : BlockBuffer(blockNum){} 
 //this is the way to call parent non-default constructor.
@@ -761,6 +783,7 @@ Nil
 * The higher layers must allocate memory for the `unsigned char` array before calling the function.
 :::
 
+#### Algorithm
 ```cpp
 void RecBuffer::getSlotmap(unsigned char *slotMap){ 
 
@@ -803,6 +826,7 @@ void RecBuffer::setSlotmap(unsigned char *slotMap){
     //update dirty bit using StaticBuffer::setDirtyBit().
 ```
 
+#### Algorithm
 ### RecBuffer :: getRecord()
 
 #### Description
@@ -868,6 +892,7 @@ Sets the slotNumth record entry of the block with the input record contents.
 * The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
 :::
 
+#### Algorithm
 ```cpp
 void RecBuffer::setRecord(union Attribute *rec,int slotNum){ 
 												
@@ -1045,14 +1070,15 @@ Gives the indexNumth entry of the block.
 * The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
 :::
 
+#### Algorithm
 ```cpp
 int IndInternal::getEntry(void *ptr, int indexNum){
 	
 	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
 
-	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_INTERNAL-1), return E_OUTOFBOUND.
+	// if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1), return E_OUTOFBOUND.
 
-	// using offset range, copy the indexNumth entry to memory pointed to by ptr. 
+	// using offset range, copy the indexNum'th entry to memory pointed to by ptr. 
 
 	// return SUCCESS.
 	
@@ -1082,14 +1108,15 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 * The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
 :::
 
+#### Algorithm
 ```cpp
 int IndInternal::setEntry(void *ptr, int indexNum){
 						
 	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
 
-	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_INTERNAL-1), return E_OUTOFBOUND.
+	// if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1), return E_OUTOFBOUND.
 
-	// using offset range, copy contents of the memory pointed to by ptr to indexNumth entry.
+	// using offset range, copy contents of the memory pointed to by ptr to indexNum'th entry.
 
 	//update dirty bit using StaticBuffer::setDirtyBit().
 
@@ -1180,27 +1207,28 @@ Gives the indexNum<sup>th</sup> entry of the block.
 | [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful getting of the leaf index entry. |
 | [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
+
+:::info note
+* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `getEntry()` function of the *IndLeaf* class must ensure that the argument of type `struct Index *` is passed.
+* The higher layers must allocate memory for the `struct Index` before calling this function.
+:::
+
 #### Algorithm
 ```cpp
 int IndLeaf::getEntry(void *ptr, int indexNum) {
 						
 	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
 
-	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_LEAF-1), return E_OUTOFBOUND.
+	// if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
 
-	// using offset range, copy the indexNumth entry to memory pointed to by ptr.    
+	// using offset range, copy the indexNum'th entry to memory pointed to by ptr.    
 
 	// return SUCCESS.
 
 }
 
 ```
-
-:::note
-* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
-* The higher layers calling the `getEntry()` function of the *IndLeaf* class must ensure that the argument of type `struct Index *` is passed.
-* The higher layers must allocate memory for the `struct Index` before calling this function.
-:::
 
 
 ### IndLeaf :: setEntry()
@@ -1220,26 +1248,25 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 | [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful setting of the leaf index entry. |
 | [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
+:::info note
+* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
+* The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
+* The higher layers must allocate memory for the struct Index before calling this function.
+:::
 #### Algorithm
 ```cpp
 int IndLeaf::getEntry(void *ptr, int indexNum) {
 						
 	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
 
-	// if the indexNum is not in the valid range of 0-(MAX_ENTRIES_LEAF-1), return E_OUTOFBOUND.
+	// if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
 
-	// using offset range, copy the indexNumth entry to memory pointed to by ptr.    
+	// using offset range, copy the indexNum'th entry to memory pointed to by ptr.    
 
 	// return SUCCESS.
 
 }
 ```
-
-:::note
-* The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
-* The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
-* The higher layers must allocate memory for the struct Index before calling this function.
-:::
 
 
 
