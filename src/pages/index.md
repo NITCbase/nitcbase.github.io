@@ -3,6 +3,7 @@
 ---
 import HomepageFigPNGSource from '../../static/img/HomepageFigure.png';
 
+# NITCbase : RDBMS Implementation Project
 ## Introduction
 NITCbase is a Relational Database Management System Implementation (RDBMS) project that is intended to help an undergraduate student understand the design and data structures of an elementary RDBMS by implementing one herself.
 
@@ -17,7 +18,7 @@ The seven layer design of NITCbase starts with the Physical layer at the bottom,
 The following diagram gives an idea of the system that we are building and its components on a high level.
 
 
-[To get the full image click here](https://htmlpreview.github.io/?https://github.com/Nitcbase/nitcbase-documentation-v2-code/blob/main/static/img/HomepageFigure.svg)
+[To view the full image, click here](https://htmlpreview.github.io/?https://github.com/Nitcbase/nitcbase-documentation-v2-code/blob/main/static/img/HomepageFigure.svg)
 
 <br/>
 <img src={HomepageFigPNGSource} alt="System Image" width="100%" />

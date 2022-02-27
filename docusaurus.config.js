@@ -17,6 +17,7 @@ const config = {
   favicon: 'img/favicon.ico',
   organizationName: 'NITCbase', // Usually your GitHub org/user name.
   projectName: 'nitcbase.github.io', // Usually your repo name.
+  deploymentBranch: 'gh-pages',
 
   presets: [
     [
@@ -25,16 +26,11 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          editUrl: 'https://github.com/facebook/docusaurus/edit/main/website/',
           remarkPlugins: [math],
           rehypePlugins: [katex],
         },
         blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          editUrl:
-            'https://github.com/facebook/docusaurus/edit/main/website/blog/',
+          showReadingTime: true,      
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -53,7 +49,9 @@ const config = {
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-    ({
+    (
+    {
+      hideableSidebar: true,
       navbar: {
         title: 'NITCbase',
         // logo: {

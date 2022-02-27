@@ -5,7 +5,7 @@ title: 'Physical Layer'
 import diskModel from '../../static/img/DiskModel.png'; 
 import Link from '@docusaurus/Link';
 
-https://nitcbase.github.io/storage-model.html
+https://nitcbase.github.io/archived-site/storage-model.html
 
 :::info NOTE
 

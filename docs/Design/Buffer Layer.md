@@ -10,10 +10,14 @@ import BufferClasses from '../../static/img/buffer_classes.png';
 import BufferStructures from '../../static/img/buffer_structures.png'; 
 import Link from '@docusaurus/Link';
 
-https://nitcbase.github.io/design/buffer.html
+https://nitcbase.github.io/archived-site/design/buffer.html
 
 :::info note 
-The Buffer Layer code is to be implemented in four files: `StaticBuffer.cpp`, `StaticBuffer.h`, `BlockBuffer.cpp` and `BlockBuffer.h`. The stub code for these files can be found <Link to="/buffer_stub">here</Link >.
+The Buffer Layer code is to be written in 2 pairs of files: 
+* `StaticBuffer.cpp` and it's header file `StaticBuffer.h`
+* `BlockBuffer.cpp` and it's header file `BlockBuffer.h`. 
+  
+The stub code for these files can be found <Link to="/buffer_stub">here</Link >.
 :::
 
 
