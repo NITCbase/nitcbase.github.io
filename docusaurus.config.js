@@ -11,12 +11,12 @@ const config = {
   title: 'Nitcbase',
   tagline: 'Relational database project',
   url: 'https://nitcbase.github.io/',
-  baseUrl: '/nitcbase-documentation-v2/',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
   organizationName: 'NITCbase', // Usually your GitHub org/user name.
-  projectName: 'nitcbase-documentation-v2', // Usually your repo name.
+  projectName: 'nitcbase.github.io', // Usually your repo name.
 
   presets: [
     [
