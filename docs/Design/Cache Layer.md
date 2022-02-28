@@ -19,9 +19,10 @@ The Cache Layer code is to be written in 3 pairs of files:
 :::
 
 ## Layout
-Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the *Cache Layer* **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.
+Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the *Cache Layer* **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. 
+**NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.**
 
-Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Table** for *Relation Catalog* entries, the **Attribute Cache Table** for *Attribute Catalog* entries and the **Open Relation Table** for operations that include both *Relation* and *Attribute* Catalogs.
+Three tables are used by NITCbase for caching Catalogs - the **Relation Cache Table** for *Relation Catalog* entries, the **Attribute Cache Table** for *Attribute Catalog* entries and the **Open Relation Table** for operations that include both *Relation* and *Attribute* Catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
 <img src={CacheClasses} alt="CacheClasses" width="1600"/>
