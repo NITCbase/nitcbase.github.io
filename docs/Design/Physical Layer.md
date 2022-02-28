@@ -151,7 +151,7 @@ In NITCbase, *we fix the size of all attributes to the same value to simplify th
 <br/>
 
 
-!["Record Block"](https://nitcbase.github.io/img/record_block.png)
+!["Record Block"](../../static/img/record_block.png)
 
 
 * First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](https://nitcbase.github.io/constants.html) represents a record block.
@@ -246,7 +246,7 @@ NITCbase uses the [B+ tree](../Tutorials/B+%20Trees.md) data structure for index
 
 <br/>
 
-!["Internal Index Block"](https://nitcbase.github.io/img/internal_index.png)
+!["Internal Index Block"](../../static/img/internal_index_block.png)
 
 An Internal index block is divided into two parts. The first 32 bytes stores header followed by actual attribute(key) values and child pointers arranged alternatively as shown in the figure. The header metadata is similar to that of a record block. The first four bytes of the header stores the value [`INDINT`](https://nitcbase.github.io/constants.html). `PBlock` is the block number of parent block in the corresponding B+ tree. `LBlock` and `RBlock` have no significance for an internal index block. `#Entries` field stores the actual number of attribute values (of maximum 100) stored in the block. `#Attrs` and `#Slots` fields also have no significance for an internal index block. The remaining space in the header is left unused.
 
@@ -258,7 +258,7 @@ The Internal index block must be loaded from the disk to the main memory before 
 
 **A leaf node in the B+ tree stores the actual indices for the records in a relation**. A disk block that stores a leaf node of a B+ tree is called a leaf index Block. *Each leaf index block in NITCbase stores a maximum of 63 indices*. An index is a 3-tuple: `(attribute value, block number, slot number)`. The size of an index in nitcbase is 32 bytes (the last 8 bytes are unused)
 
-!["Leaf Index Block"](https://nitcbase.github.io/img/leaf_node.png)
+!["Leaf Index Block"](../../static/img/leaf_index_block.png)
 
 Any Leaf Index Block is also divided into a header part of 32 bytes followed by a part containing actual indices. The header is similar to that of any other block. The first four bytes of the header stores the value [`INDLEAF`](https://nitcbase.github.io/constants.html). `PBlock` is the block number of the parent block in the corresponding B+ tree. This entry must always contain block number of an Internal Index block. Since all leaf nodes are connected in a B+ tree, `LBlock` and `RBlock` point to left and right Leaf Index blocks respectively. `#Entries` stores the actual number of indices (of maximum 63) stored in the block. `#Attrs` and `#Slots` fields have no significance for a Leaf index block. The remaining space in the header is left unused.
 
@@ -300,7 +300,7 @@ Relation Catalog is used for storing meta-information of the relations in a data
 
 Note that `#Slots` can be calculated from `#Attributes` as described [earlier](#record-block-structure).
 
-![relcat](https://nitcbase.github.io/img/relation_catalog.png)
+![relcat](../../static/img/relcat.png)
 
 :::note
 Since the Relation Catalog is internally implemented as a relation, it's block structure is identical to that of any record block with **six** attributes.
@@ -366,7 +366,7 @@ NITCbase employes [B+ tree](../Tutorials/B+%20Trees.md) for indexing. `RootBlock
 
 \* At present, **NITCbase does not support the notion of a [primary key](https://en.wikipedia.org/wiki/Primary_key)**. The `flag` is kept in the slot for future support of primary keys.
 
-![attcat](https://nitcbase.github.io/img/attr_cat.png)
+![attcat](../../static/img/attrcat.png)
 
 :::note
 1. Attribute Catalog is internally implemented as a relation. Hence, it's block structure is identical to that of any record block with six attributes.
