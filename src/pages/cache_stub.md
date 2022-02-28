@@ -408,6 +408,7 @@ int OpenRelTable::getFreeOpenRelTableEntry() {
 #define NITCBASE_OPENRELTABLE_H
 
 #include "../define/constants.h"
+#include "../define/errors.h"
 
 typedef struct OpenRelTableMetaInfo {
 
