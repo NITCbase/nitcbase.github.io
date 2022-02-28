@@ -129,6 +129,7 @@ private:
 
 ```cpp
 #include "OpenRelTable.h"
+#include "RelCacheTable.h"
 #include "AttrCacheTable.h"
 
 OpenRelTableMetaInfo OpenRelTable::tableMetaInfo[MAX_OPEN];
