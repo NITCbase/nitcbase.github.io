@@ -19,9 +19,9 @@ The Cache Layer code is to be written in 3 pairs of files:
 :::
 
 ## Layout
-Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the *Cache Layer* caches the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.
+Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the *Cache Layer* **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.
 
-Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Table** for *Relation Catalog* entries, the **Attribute Cache Table** for *Attribute Catalog* entries and the **Open Relation Table** for operations that include both Relation and Attribute Catalogs.
+Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Table** for *Relation Catalog* entries, the **Attribute Cache Table** for *Attribute Catalog* entries and the **Open Relation Table** for operations that include both *Relation* and *Attribute* Catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
 <img src={CacheClasses} alt="CacheClasses" width="1600"/>
@@ -36,18 +36,18 @@ Various structures used in the cache layer are outlined in the below diagrams.
 
 ## relId
 
-Any relation that is stored in the cache memory will have an entry in each of the three tables- **Relation Cache Table**, **Attribute Cache Table**, and **Open Relation Table**. An *open relation* is a relation that has been loaded to the cache memory while a *closed relation* is one that is not loaded to the cache memory. NITCbase is designed in such a way that the entries in all the three tables will be stored at the same index.
+Any relation that is stored in the cache memory will have an entry in each of the three tables- **Relation Cache Table**, **Attribute Cache Table**, and **Open Relation Table**. An *open relation* is a relation that has been loaded to the cache memory while a *closed relation* is one that is not loaded to the cache memory   (hence it is only present in the disk). NITCbase is designed in such a way that the entries in all the three tables will be stored at the **same index**.
 
-*This common index is called the `relId` of the relation and all further operations on the relation require this **`relId`**.*
+*This common index is called the **`relId`** of the relation and all further operations on the relation require this `relId`.*
 
 ---
 
 ## Relation Cache Table Structures
-The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the Relation Catalog entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using Relation Cache Table. *Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.*
+The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the *Relation Catalog* entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using *Relation Cache* Table. *Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.*
 
-NITCbase caches Relation Catalog using two structures: `RelCatEntry` and `RelCacheEntry`.
+NITCbase caches *Relation Catalog* using two structures: `RelCatEntry` and `RelCacheEntry`.
 ### RelCatEntry
-The structure `RelCatEntry` stores in its data fields all the attribute values in the relation's record entry from the Relation Catalog block.
+The structure `RelCatEntry` stores all the attribute values in the relation's record entry from the *Relation Catalog* block in its data fields.
 
 ```cpp
 typedef struct RelCatEntry {
@@ -62,13 +62,14 @@ typedef struct RelCatEntry {
 } RelCatEntry;
 ```
 ### RelCacheEntry
-The structure `RelCacheEntry` stores the *Relation Catalog* entry of the relation along with some additonal information used during runtime.
+The structure `RelCacheEntry` stores the *Relation Catalog* entry of the relation along with some additonal information needed during runtime.
 
 The `RelCacheEntry` data field details are as follows:
-* `relCatEntry`: Stores the relation's cached Relation Catalog entry.
-* `dirty`: Indicates whether the Relation Catalog entry has been modified. The Relation Catalog entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
-* `recId`: Stores the record id `{blockNum, slotNum}` of the relation's entry in the Relation Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
-* `searchIndex`: Stores the record id `{blockNum, slotNum}` of the record block corresponding to the last (previous) search hit in the relation. Linear search algorithm of the Block Access Layer starts searching for the next hit from the previous hit location. The entries are initialized to `{-1, -1}` each time the relation is loaded to the cache memory. When every record of the relation has been searched, the linear search algorithm resets the searchIndex value to `{-1, -1}`.
+* `relCatEntry`: Stores the relation's cached *Relation Catalog* entry.
+* `dirty`: Indicates whether the *Relation Catalog* entry has been modified. The *Relation Catalog* entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
+* `recId`: Stores the *record id*  `{blockNum, slotNum}` of the relation's entry in the *Relation Catalog* block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
+* `searchIndex`: Stores the *record id*  `{blockNum, slotNum}` of the record block corresponding to the last (previous) search hit in the relation. Linear search algorithm of the Block Access Layer starts searching for the next hit from the previous hit location. The entries are initialized to `{-1, -1}` each time the relation is loaded to the cache memory. When every record of the relation has been searched, the linear search algorithm resets the `searchIndex` value to `{-1, -1}`.
+
 ```cpp
 typedef struct RelCacheEntry {
 
@@ -83,11 +84,11 @@ typedef struct RelCacheEntry {
 ---
 
 ## Attribute Cache Table Structures
-The *Attribute Catalog* blocks, analogous to the *Relation Catalog* block, stores the **meta information of the attributes of all the relations in the database**. In addition to this, the Attribute Catalog entries of every open relation is also loaded to the cache memory. This is implemented using Attribute Cache Table. *Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a **linked list** along with some additional meta-data.*
+The *Attribute Catalog* blocks, analogous to the *Relation Catalog* block, stores the **meta information of the attributes of all the relations in the database**. In addition to this, the *Attribute Catalog* entries of every open relation is also loaded to the cache memory. This is implemented using *Attribute Cache* Table. *Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a **linked list** along with some additional meta-data.*
 
-NITCbase caches Attribute Catalog using two structures: `AttrCatEntry` and `AttrCacheEntry`.
+NITCbase caches *Attribute Catalog* using two structures: `AttrCatEntry` and `AttrCacheEntry`.
 ### AttrCatEntry
-The structure `AttrCatEntry` stores in its data fields all the attribute values in the record entry corresponding to one of the relation's attribute from an Attribute Catalog block.
+The structure `AttrCatEntry` stores in its data fields all the attribute values in the record entry corresponding to one of the relation's attribute from an *Attribute Catalog* block.
 ```cpp
 typedef struct AttrCatEntry {
 
@@ -105,9 +106,9 @@ The structure `AttrCacheEntry` stores the *Attribute Catalog* entry of an attrib
 
 The `AttrCacheEntry` data field details are as follows:
 
-* `attrCatEntry`: Stores the cached Attribute Catalog entry corresponding to an attribute of the relation.
-* `dirty`: Indicates whether the Attribute Catalog entry has been modified. The Attribute Catalog entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
-* `recId`: Stores the record id `{blockNum, slotNum}` of the record entry corresponding to the relation's attribute in the Attribute Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
+* `attrCatEntry`: Stores the cached *Attribute Catalog* entry corresponding to an attribute of the relation.
+* `dirty`: Indicates whether the *Attribute Catalog* entry has been modified. The *Attribute Catalog* entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
+* `recId`: Stores the *record id*  `{blockNum, slotNum}` of the record entry corresponding to the relation's attribute in the *Attribute Catalog* block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
 * `searchIndex`: Stores the index id `{blockNum, indexNum}` of the leaf index block corresponding to the last (previous) search hit for the attribute. This entry is used only if there is a B+ Tree created on the attribute. B+ Tree search algorithm of the B+ Tree Layer starts searching from the previous hit location for the next hit. The entries are initialized to `{-1, -1}` each time the relation is opened in the cache memory. When every Index Leaf Block entry of the B+ Tree has been searched, B+ Tree search resets the searchIndex value to `{-1, -1}`.
 * `next`: Gives the pointer to the next `AttrCacheEntry` element in the linked list.
 
@@ -147,7 +148,7 @@ The following diagram summarizes the design of this module.
 ---
 
 ## class RelCacheTable
-The class RelCacheTable is used to cache Relation Catalog entries of all the **open** relations in NITCbase. The first two entries of the Relation Cache Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.**
+The class RelCacheTable is used to cache *Relation Catalog* entries of all the **open** relations in NITCbase. The first two entries of the *Relation Cache* Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.**
 
 The class contains a `private` member field, `relCache`, which is an array of pointers to `struct RelCacheEntry` with size `MAX_OPEN`. For each relation opened, an entry is made in the array `relCache`, at the index corresponding to the *relation id* of the relation. This entry points to the `struct RelCacheEntry` that stores all the attribute values of the relation's entry from the *Relation Catalog* block along with other meta-data of the relation.
 
@@ -201,16 +202,16 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the Relation Cache Table |
-| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry to which the Relation Catalog entry corresponding to input relId is to be copied |
+| relId | int | The relation id of the relation in the *Relation Cache* Table |
+| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry to which the *Relation Catalog* entry corresponding to input relId is to be copied |
 
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |  Successfully copied the Relation Catalog entry  |
+| SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the Relation Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -243,15 +244,15 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the Relation Cache Table |
-| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry using which the Relation Catalog entry corresponding to input relId is to be updated |
+| relId | int | The relation id of the relation in the *Relation Cache* Table |
+| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry using which the *Relation Catalog* entry corresponding to input relId is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |  Successfully copied the Relation Catalog entry  |
+| SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the Relation Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -286,16 +287,16 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the Relation Cache Table |
-| searchIndex |	RecId* | Pointer to struct RecId to which the searchIndex field of the Relation Cache entry corresponding to input relId is to be copied |
+| relId | int | The relation id of the relation in the *Relation Cache* Table |
+| searchIndex |	RecId* | Pointer to struct RecId to which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be copied |
 
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |  Successfully copied the Relation Catalog entry  |
+| SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the Relation Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -328,16 +329,16 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the Relation Cache Table |
-| searchIndex |	RecId* | Pointer to struct RecId using which the searchIndex field of the Relation Cache entry corresponding to input relId is to be updated | 
+| relId | int | The relation id of the relation in the *Relation Cache* Table |
+| searchIndex |	RecId* | Pointer to struct RecId using which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be updated | 
 
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |  Successfully copied the Relation Catalog entry  |
+| SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the Relation Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -361,7 +362,7 @@ int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
 ```
 ### RelCacheTable :: recordToRelCacheEntry
 #### Description
-A utility function that converts a record, implemented as an array of `union Attribute`, to `RelCacheEntry` structure. The record content is used to populate the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex `fields are initialised with default values of `false`, `{-1, -1}`, and `{-1, -1}`, respectively. This function can be used to convert a record in a *Relation Catalog* block to the corresponding Relation Cache entry when caching a relation in *Relation Cache* Table. The details of the implementation are left to you.
+A utility function that converts a record, implemented as an array of `union Attribute`, to `RelCacheEntry` structure. The record content is used to populate the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex `fields are initialised with default values of `false`, `{-1, -1}`, and `{-1, -1}`, respectively. This function can be used to convert a record in a *Relation Catalog* block to the corresponding *Relation Cache* entry when caching a relation in *Relation Cache* Table. The details of the implementation are left to you.
 
 :::caution note
 The caller should allocate memory for the `struct RelCacheEntry` and array of `union Attribute` before calling the function.
@@ -370,7 +371,7 @@ The caller should allocate memory for the `struct RelCacheEntry` and array of `u
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[RELCAT_SIZE] | The record which is to be converted to a Relation Cache Entry |
+| record | union Attribute[RELCAT_SIZE] | The record which is to be converted to a *Relation Cache* Entry |
 | RelCacheEntry | RelCacheEntry* | Pointer to struct RelCacheEntry to which the contents of the input record is to be copied |
 #### Return Values
 Nil
@@ -386,7 +387,7 @@ The caller should allocate memory for the struct RelCacheEntry and array of unio
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[RELCAT_SIZE] | The record to which the contents of the input Relation Cache Entry is to be copied |
+| record | union Attribute[RELCAT_SIZE] | The record to which the contents of the input *Relation Cache* Entry is to be copied |
 | RelCacheEntry | RelCacheEntry* | Pointer to struct RelCacheEntry which is to be converted to a record. |
 		
 #### Return Values
@@ -395,7 +396,7 @@ Nil
 ---
 
 ## class AttrCacheTable
-The `class AttrCacheTable` is used to cache *Attribute Catalog* entries of the attributes of open relations in NITCbase. The first two entries of the Attribute Cache Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.** 
+The `class AttrCacheTable` is used to cache *Attribute Catalog* entries of the attributes of open relations in NITCbase. The first two entries of the *Attribute Cache* Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.** 
 
 The class contains a `private` member field, `attrCache`, which is an array of pointers to `struct AttrCacheEntry` with size `MAX_OPEN`. For each relation opened, an entry is made in the array `attrCache`, at the index given by *relation id* of the relation. This entry is the head of the linked list of `struct AttrCacheEntry` elements. A linked list is used because a relation can have variable number of attributes (though the maximum number of attributes for a relation is bounded in Nitcbase by 125 - why?). **Each element in the linked list corresponds to an attribute of the relation.**
 
@@ -453,17 +454,17 @@ Gives the *Attribute Catalog* entry corresponding to the given attribute of the 
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the Attribute Cache Table |
+| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
 | attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry to which the Attribute Catalog entry corresponding to the input relid and attribute is to be copied |
+| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry to which the *Attribute Catalog* entry corresponding to the input relid and attribute is to be copied |
 
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |	Successfully copied the Attribute Catalog entry |
+| SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the Attribute Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 #### Algorithm
 ```cpp
@@ -505,16 +506,16 @@ Sets the *Attribute Catalog* entry corresponding to the given attribute of the s
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the Attribute Cache Table |
+| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
 | attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry using which the Attribute Catalog entry corresponding to input relId and attribute is to be updated |
+| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry using which the *Attribute Catalog* entry corresponding to input relId and attribute is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |	Successfully copied the Attribute Catalog entry |
+| SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the Attribute Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -559,16 +560,16 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the Attribute Cache Table |
+| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
 | attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| searchIndex | IndexId* | Pointer to struct IndexId to which the searchIndex field of the Attribute Cache entry corresponding to the input relid and attribute is to be copied |
+| searchIndex | IndexId* | Pointer to struct IndexId to which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be copied |
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |	Successfully copied the Attribute Catalog entry |
+| SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the Attribute Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -612,16 +613,16 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the Attribute Cache Table |
+| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
 | attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| searchIndex | IndexId* | Pointer to struct IndexId using which the searchIndex field of the Attribute Cache entry corresponding to the input relid and attribute is to be updated |
+| searchIndex | IndexId* | Pointer to struct IndexId using which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| SUCCESS |	Successfully copied the Attribute Catalog entry |
+| SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the Attribute Cache Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -664,7 +665,7 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[ATTRCAT_SIZE] | The record which is to be converted to a Attribute Cache entry. |
+| record | union Attribute[ATTRCAT_SIZE] | The record which is to be converted to a *Attribute Cache* entry. |
 | attrCacheEntry | AttrCacheEntry* | Pointer to struct AttrCacheEntry to which the contents of the input record is to be copied. |
 
 #### Return Values
@@ -681,7 +682,7 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 | Name | Type | Description |
 |-----------|--------------|--------------|
 | attrCacheEntry | AttrCacheEntry* | Pointer to struct AttrCacheEntry which is to be converted to a record. |
-| record | union Attribute[ATTRCAT_SIZE] | The record to which the given Attribute Cache entry is to be copied. |
+| record | union Attribute[ATTRCAT_SIZE] | The record to which the given *Attribute Cache* entry is to be copied. |
 
 #### Return Values
 Nil
@@ -689,13 +690,18 @@ Nil
 ---
 
 ## class OpenRelTable
-NITCbase requires that a relation be cached for the duration it is accessed to improve the processing time. The Open Relation Table is a data structure used as an interface for operations that accesses both Relation Cache and Attribute Cache together. The OpenRelTable class is used for this purpose. As per the NITCbase design, the ith entry of the OpenRelTable corresponds to the ith entry of the RelCacheTable and AttrCacheTable and is used to store the data of a single relation whose relation id is i. The public getRelId() method of the OpenRelTable returns the relation id of the input relation name.
 
-The class OpenRelTable contains as its private member field, tableMetaInfo, an array of struct OpenRelTableMetaInfo that stores the meta information of the entries of the table. The OpenRelTable allows MAX_OPEN number of entries in the cache at any given time. The first two entries of the Open Relation Table corresponding to RELCAT_RELID and ATTRCAT_RELID are reserved for storing the entries of Relation Catalog relation and Attribute Catalog relation, respectively. These relations remain in cache memory throughout the session and can be closed only at shutdown. The OpenRelTable constructor initializes the tableMetaInfo field and populates the Relation Cache Table and Attribute Cache Table with entries of both Relation Catalog relation and Attribute Catalog relation. The OpenRelTable destructor closes any open relation remaining, including the Relation Catalog and Attribute Catalog relations, when the system is shut down. The public functions openRel() and closeRel() are used to open and close an entry in the Open Relation Table. OpenRelTable class is a friend class to both RelCacheTable class, and AtrrCacheTable class. This allows it to access the private fields and methods of the two classes.
+NITCbase requires that a relation be **cached** for the duration it is accessed to improve the processing time. The *Open Relation Table* is a data structure used as an interface for operations that accesses both *Relation Cache* and *Attribute Cache* together. The `OpenRelTable` class is used for this purpose. As per the NITCbase design, the ith entry of the OpenRelTable corresponds to the i<sup>th</sup> entry of the `RelCacheTable` and `AttrCacheTable` and is used to store the data of a single relation whose *relation id* is `i`. The `public getRelId()` method of the `OpenRelTable` returns the *relation id* of the input relation name.
 
-OpenRelTable is a static class, i.e., all member fields and methods are declared static. Memory is allocated statically for all member fields of the class. This class uses static methods to access the static member fields. Static methods are accessed using the semantics class_name::function_name(). Only a single static object of the class needs to be created when NITCbase is running, whose sole purpose is to run the constructor and the destructor. The class definition of OpenRelTable is as given below:
+The *class OpenRelTable* contains as its `private` member field - `tableMetaInfo`, an array of `struct OpenRelTableMetaInfo` that stores the meta information of the entries of the table. The `OpenRelTable` allows `MAX_OPEN` number of entries in the cache at any given time. The first two entries of the Open Relation Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These relations remain in cache memory throughout the session and can be closed only during shutdown.** The *`OpenRelTable` constructor* initializes the `tableMetaInfo` field and populates the *Relation Cache* Table and *Attribute Cache* Table with entries of both *Relation Catalog* relation and *Attribute Catalog* relation. The *`OpenRelTable` destructor* closes any open relation remaining, including the *Relation Catalog* and *Attribute Catalog* relations, when the system is shut down. The `public openRel()` and `public closeRel()` functions are used to open and close an entry in the *Open Relation* Table respectively. `OpenRelTable` class is a *friend class* to both `RelCacheTable` class, and `AtrrCacheTable` class. *This allows it to access the private fields and methods of the two classes.*
+
+:::info C++ Static Classes
+`OpenRelTable` is a *static class*, i.e., all member fields and methods are declared `static`. Memory is allocated statically for all member fields of the class. This class uses *static methods* to access the *static member fields*.*Static methods* are accessed using the semantics `class_name :: function_name()`. Only a **single static object** of the class needs to be created when NITCbase is running, whose sole purpose is to run the constructor and the destructor. 
+:::
+
+The class definition of OpenRelTable is as given below:
 ```cpp
-class OpenRelTable{
+class OpenRelTable {
 
 public:
 
@@ -716,14 +722,15 @@ private:
 };
 ```
 
-The following are the specifications for the methods in class OpenRelTable.
+The following are the specifications for the methods in `class OpenRelTable`.
 
 ### OpenRelTable :: OpenRelTable (Constructor)
 #### Description
-Initializes the meta information of each entry of the Open Relation Table to initial empty conditions. It also loads the entries of the Relation Catalog relation and Attribute Catalog relation to the Relation Cache Table and Attribute Cache Table. This function should be called at the beginning of the session.
-:::info note
-* The object of the OpenRelTable class must be declared after the objects of the Physical Layer and the Buffer Layer to ensure that the main memory is properly set up before the constructor initializes cache memory.
-* The first two entries corresponding to RELCAT_RELID and ATTRCAT_RELID in the all the three tables are reserved for Relation Catalog relation and Attribute Catalog relation, respectively.
+Initializes the meta information of each entry of the *Open Relation* Table to initial empty conditions. It also loads the entries of the *Relation Catalog* relation and *Attribute Catalog* relation to the *Relation Cache* Table and *Attribute Cache* Table. The first two entries corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` in the all the three tables are reserved for *Relation Catalog* relation and *Attribute Catalog* relation, respectively.
+
+:::caution Implementation Note
+* The object of the `OpenRelTable` class must be declared **after** the objects of the Physical Layer and the Buffer Layer to ensure that the main memory is properly set up before the constructor initializes cache memory.
+* This function should be called at the **beginning** of the session.
 :::
 #### Arguments
 Nil
@@ -733,7 +740,7 @@ Nil
 
 #### Algorithm
 ```cpp
-OpenRelTable::OpenRelTable(){
+OpenRelTable::OpenRelTable() {
 
 	// initialize tableMetaInfo of all the entries of the Open Relation Table with free as true and relName as an empty string.
 	
@@ -799,10 +806,10 @@ OpenRelTable::OpenRelTable(){
 
 ### OpenRelTable :: ~OpenRelTable (Destructor)
 #### Description
-Closes the still open relations in the Open Relation Table at the end of the current session.
+Closes the still open relations in the *Open Relation* Table at the end of the current session.
 
-:::info note
-The object of the OpenRelTable class must be declared after the objects of the Physical Layer and the Buffer Layer to ensure that the destructor writes the cache contents to the main memory before the main memory is commited back to the disk.
+:::caution Implementation Note
+The object of the `OpenRelTable` class must be declared **after** the objects of the Physical Layer and the Buffer Layer to ensure that the destructor writes the cache contents to the main memory before the main memory is commited back to the disk.
 :::
 
 #### Arguments
@@ -813,7 +820,7 @@ Nil
 
 #### Algorithm
 ```cpp
-OpenRelTable::~OpenRelTable(){
+OpenRelTable::~OpenRelTable() {
 
 	for i from 2 to MAX_OPEN-1:
 	{
@@ -886,7 +893,7 @@ OpenRelTable::~OpenRelTable(){
 
 ### OpenRelTable :: getRelId
 #### Description
-Returns the relation id, i.e., the index, of the entry corresponding to the input relation in the Open Relation Table.
+Returns the *relation id*, that is, the *index*, of the entry corresponding to the input relation in the *Open Relation* Table.
 
 #### Arguments
 | Name | Type | Description |
@@ -901,7 +908,7 @@ Returns the relation id, i.e., the index, of the entry corresponding to the inpu
 
 #### Algorithm
 ```cpp
-int OpenRelTable::getRelId(unsigned char relName[ATTR_SIZE]){
+int OpenRelTable::getRelId(unsigned char relName[ATTR_SIZE]) {
 
 	/* traverse through the tableMetaInfo array,
 		find the entry in the Open Relation Table corresponding to relName.*/
@@ -913,7 +920,7 @@ int OpenRelTable::getRelId(unsigned char relName[ATTR_SIZE]){
 
 ### OpenRelTable :: openRel
 #### Description
-Creates an entry for the input relation in the Open Relation Table and returns the corresponding relation id.
+Creates an entry for the input relation in the *Open Relation* Table and returns the corresponding *relation id*.
 
 #### Arguments
 | Name | Type | Description |
@@ -929,7 +936,7 @@ Creates an entry for the input relation in the Open Relation Table and returns t
 
 #### Algorithm
 ```cpp
-int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]){
+int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
 	
 	if the relation, relName, already has an entry in the Open Relation Table:
 	{ // checked using OpenRelTable::getRelId().
@@ -999,10 +1006,10 @@ int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]){
 
 ### OpenRelTable :: closeRel
 #### Description
-Closes the entry of the input relation in the Open Relation Table. This function can not close the Relation Catalog relation and Attribute Catalog relation. These relations remain in the cache memory throughout the session and can only be closed at shutdown by the OpenRelTable destructor.
+Closes the entry of the input relation in the *Open Relation* Table. **This function cannot close the *Relation Catalog* relation and *Attribute Catalog* relation**. 
 
-:::info note
-This function can not close the entries corresponding to RELCAT_RELID and ATTRCAT_RELID.
+:::caution Note
+This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTRCAT_RELID`. These relations remain in the cache memory throughout the session and can only be closed at shutdown by the `OpenRelTable` destructor.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -1013,13 +1020,13 @@ This function can not close the entries corresponding to RELCAT_RELID and ATTRCA
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 SUCCESS	| Successfully closed the entry of the relation in the Open Relation Table
-| E_NOTPERMITTED |	Relation Catalog and Attribute Catalog relations cannot be closed during the session |
+| E_NOTPERMITTED |	*Relation Catalog* and *Attribute Catalog* relations cannot be closed during the session |
 | E_OUTOFBOUND | Input relId is outside the valid set of possible relation ids |
 | E_NOTOPEN | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
 
 #### Algorithm
 ```cpp
-int OpenRelTable::closeRel(int relId){
+int OpenRelTable::closeRel(int relId) {
 
 	if relId is either RELCAT_RELID or ATTRCAT_RELID:
 	{
@@ -1069,7 +1076,7 @@ int OpenRelTable::closeRel(int relId){
 
 ### OpenRelTable :: getFreeOpenRelTableEntry
 #### Description
-Returns index of an unoccupied entry in the Open Relation Table.
+Returns *index* of an **unoccupied entry** in the *Open Relation* Table.
 
 #### Arguments
 Nil
@@ -1082,7 +1089,7 @@ Nil
 
 #### Algorithm
 ```cpp
-int OpenRelTable::getFreeOpenRelTableEntry(){
+int OpenRelTable::getFreeOpenRelTableEntry() {
 
 	/* traverse through the tableMetaInfo array,
 		find a free entry in the Open Relation Table.*/
