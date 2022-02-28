@@ -214,7 +214,7 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 
 #### Algorithm
 ```cpp
-int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf){
+int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -235,9 +235,10 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf){
 
 ### RelCacheTable :: setRelCatEntry
 #### Description
-Sets the Relation Catalog entry corresponding to the specified relation in the Relation Cache Table.
-:::info note
-The caller should allocate memory for the struct RelCatEntry before calling the function.
+Sets the *Relation Catalog* entry corresponding to the specified relation in the *Relation Cache* Table.
+
+:::caution note
+The caller should allocate memory for the `struct RelCatEntry` before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -254,7 +255,7 @@ The caller should allocate memory for the struct RelCatEntry before calling the 
 
 #### Algorithm
 ```cpp
-int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf){
+int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 				
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -276,8 +277,9 @@ int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf){
 ```
 ### RelCacheTable :: getSearchIndex
 #### Description
-Gives the value of searchIndex field of the given relation from Relation Cache Table. This is used by the linear search algorithm to find the location of the previous hit so that the search can be resumed from the next record.
-:::info note
+Gives the value of `searchIndex` field of the given relation from *Relation Cache* Table. This is used by the linear search algorithm to find the **location of the previous hit** so that the search can be resumed from the next record.
+
+:::caution note
 The caller should allocate memory for the struct RecId before calling the function.
 :::
 
@@ -298,7 +300,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Algorithm
 
 ```cpp
-int relCacheTable::getSearchIndex(relId relid, recId *recidbuff_ptr){
+int relCacheTable::getSearchIndex(relId relid, recId *recidbuff_ptr) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -317,8 +319,9 @@ int relCacheTable::getSearchIndex(relId relid, recId *recidbuff_ptr){
 ```
 ### RelCacheTable :: setSearchIndex
 #### Description
-Sets the value of searchIndex field of the given relation in Relation Cache Table. This is used by the linear search algorithm to set the location of the previous hit so that the search can be resumed from the next record.
-:::info note
+Sets the value of `searchIndex` field of the given relation in *Relation Cache* Table. This is used by the linear search algorithm to set the location of the previous hit so that the search can be resumed from the next record.
+
+:::caution note
 The caller should allocate memory for the struct RecId before calling the function.
 :::
 
@@ -338,7 +341,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 
 #### Algorithm
 ```cpp
-int RelCacheTable::setSearchIndex(int relId, recId *searchIndex){
+int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -358,9 +361,10 @@ int RelCacheTable::setSearchIndex(int relId, recId *searchIndex){
 ```
 ### RelCacheTable :: recordToRelCacheEntry
 #### Description
-A utility function that converts a record, implemented as an array of union Attribute, to RelCacheEntry structure. The record content is used to populate the relCatEntry field. The dirty, recId, and searchIndex fields are initialised with default values of false, {-1, -1}, and {-1, -1}, respectively. This function can be used to convert a record in a Relation Catalog block to the corresponding Relation Cache entry when caching a relation in Relation Cache Table. The details of the implementation are left to you.
-:::info note
-The caller should allocate memory for the struct RelCacheEntry and array of union Attribute before calling the function.
+A utility function that converts a record, implemented as an array of `union Attribute`, to `RelCacheEntry` structure. The record content is used to populate the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex `fields are initialised with default values of `false`, `{-1, -1}`, and `{-1, -1}`, respectively. This function can be used to convert a record in a *Relation Catalog* block to the corresponding Relation Cache entry when caching a relation in *Relation Cache* Table. The details of the implementation are left to you.
+
+:::caution note
+The caller should allocate memory for the `struct RelCacheEntry` and array of `union Attribute` before calling the function.
 :::
 
 #### Arguments
@@ -373,8 +377,9 @@ Nil
 
 ### RelCacheTable :: relCacheEntryToRecord
 #### Description
-A utility function that converts RelCacheEntry structure to a record, implemented as an array of union Attribute. The record is populated with the contents of the relCatEntry field. The dirty, recId, and searchIndex fields are used only during runtime and are not written to the disk. This function can be used to convert the Relation Cache entry to the corresponding record that can be written back to Relation Catalog block when closing a relation in the cache memory. The details of the implementation are left to you.
-:::info note
+A utility function that converts `RelCacheEntry` structure to a record, implemented as an array of `union Attribute`. The record is populated with the contents of the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex` fields are used only during runtime and are not written to the disk. This function can be used to convert the *Relation Cache* entry to the corresponding record that can be written back to *Relation Catalog* block when closing a relation in the cache memory. The details of the implementation are left to you.
+
+:::caution note
 The caller should allocate memory for the struct RelCacheEntry and array of union Attribute before calling the function.
 :::
 
@@ -390,16 +395,26 @@ Nil
 ---
 
 ## class AttrCacheTable
-The class AttrCacheTable is used to cache Attribute Catalog entries of the attributes of open relations in NITCbase. The first two entries of the Attribute Cache Table corresponding to RELCAT_RELID and ATTRCAT_RELID are reserved for storing the entries of Relation Catalog relation and Attribute Catalog relation, respectively. These are loaded into the cache by the OpenRelTable constructor at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the OpenRelTable destructor at shutdown. The class contains a private member field, attrCache, which is an array of pointers to struct AttrCacheEntry with size MAX_OPEN. For each relation opened, an entry is made in the array attrCache, at the index given by relation id of the relation. This entry is the head of the linked list of struct AttrCacheEntry elements. A linked list is used because a relation can have variable number of attributes (though the maximum number of attributes for a relation is bounded in Nitcbase by 125 - why?). Each element in the linked list corresponds to an attribute of the relation.
+The `class AttrCacheTable` is used to cache *Attribute Catalog* entries of the attributes of open relations in NITCbase. The first two entries of the Attribute Cache Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.** 
 
-The class provides public overloaded methods getAttrCatEntry() and setAttrCatEntry() to retrieve and update the Attribute Catalog Entry of a relation's attribute in the Attribute Cache Table. The class also provides overloaded public methods getSearchIndex() and setSearchIndex() for retrieving and updating the searchIndex field of Attribute Cache Entry. The private method recordToAttrCacheEntry() is used to convert a record (implemented as an array of union Attribute) to AttrCacheEntry structure. This function is called by the friend class, OpenRelTable, while opening a relation. Similarly, the private method attrCacheEntryToRecord() is used to convert AttrCacheEntry structure in to a record. This function is also called from the friend class, OpenRelTable, while closing a relation.
+The class contains a `private` member field, `attrCache`, which is an array of pointers to `struct AttrCacheEntry` with size `MAX_OPEN`. For each relation opened, an entry is made in the array `attrCache`, at the index given by *relation id* of the relation. This entry is the head of the linked list of `struct AttrCacheEntry` elements. A linked list is used because a relation can have variable number of attributes (though the maximum number of attributes for a relation is bounded in Nitcbase by 125 - why?). **Each element in the linked list corresponds to an attribute of the relation.**
 
-AttrCacheTable is a static class, i.e., all member fields and methods are declared static. Memory is allocated statically for all member fields of the class. This class uses static methods to access the static member fields. C++ allows static methods to be accessed using the semantics class_name::function_name(). The class definition of AttrCacheTable is as given below:
+The class provides `public` *overloaded methods* - `getAttrCatEntry()` and `setAttrCatEntry()` to retrieve and update the *Attribute Catalog* entry of a relation's attribute in the *Attribute Cache* Table. The class also provides *overloaded* `public` methods - `getSearchIndex()` and `setSearchIndex()` for retrieving and updating the `searchIndex` field of *Attribute Cache* Entry. 
 
-Note: The class OpenRelTable is a friend class to AttrCacheTable class. This allows all methods in OpenRelTable to access the private fields and methods of the AttrCacheTable class.
+The `private` method `recordToAttrCacheEntry()` is used to convert a record (implemented as an array of union Attribute) to `AttrCacheEntry` structure. This function is called by the *friend class*, `OpenRelTable`, while opening a relation. Similarly, the `private` method `attrCacheEntryToRecord()` is used to convert `AttrCacheEntry` structure in to a record. This function is also called from the *friend class*, `OpenRelTable`, while closing a relation.
+
+:::info C++ STATIC CLASSES
+AttrCacheTable is a *static class*, i.e., all member fields and methods are declared static. Memory is allocated statically for all member fields of the class. This class uses *static methods* to access the *static member fields*. C++ allows static methods to be accessed using the semantics `class_name :: function_name()`.
+:::
+
+:::note Note 
+The class OpenRelTable is a *friend class* to `AttrCacheTable` class. This allows all methods in `OpenRelTable` to access the `private` fields and methods of the `AttrCacheTable` class.
+:::
+
+The class definition of `AttrCacheTable` is as given below.
 
 ```cpp
-class AttrCacheTable{
+class AttrCacheTable {
 
 friend class OpenRelTable;
 	
@@ -425,15 +440,15 @@ private:
 };
 ```
 
-The following are the specifications for the methods in class AttrCacheTable.
+The following are the specifications for the methods in `class AttrCacheTable`.
 
 ### AttrCacheTable :: getAttrCatEntry 
 #### Description
-Gives the Attribute Catalog entry corresponding to the given attribute of the specified relation in the Attribute Cache Table.
+Gives the *Attribute Catalog* entry corresponding to the given attribute of the specified relation in the *Attribute Cache* Table.
 
-:::info note
+:::caution note
+* The caller should allocate memory for the `struct AttrCatEntry` before calling the function.
 * This method is overloaded in type of the second argument.
-* The caller should allocate memory for the struct AttrCatEntry before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -452,7 +467,7 @@ Gives the Attribute Catalog entry corresponding to the given attribute of the sp
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 #### Algorithm
 ```cpp
-int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf){
+int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -481,11 +496,11 @@ int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
 
 ### AttrCacheTable :: setAttrCatEntry
 #### Description
-Sets the Attribute Catalog entry corresponding to the given attribute of the specified relation in the Attribute Cache Table.
+Sets the *Attribute Catalog* entry corresponding to the given attribute of the specified relation in the *Attribute Cache* Table.
 
-:::info note
+:::caution note
+* The caller should allocate memory to the pointer to `struct AttrCatEntry` before calling the function.
 * This method is overloaded in type of the second argument.
-* The caller should allocate memory to the pointer to struct AttrCatEntry before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -504,7 +519,7 @@ Sets the Attribute Catalog entry corresponding to the given attribute of the spe
 
 #### Algorithm
 ```cpp
-int AttrCacheTable::setAttrCatEntry(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf){
+int AttrCacheTable::setAttrCatEntry(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -535,11 +550,11 @@ int AttrCacheTable::setAttrCatEntry(relId relId, unsigned char attrName[ATTR_SIZ
 
 ### AttrCacheTable :: getSearchIndex
 #### Description
-Gives the value of searchIndex field of the given attribute in the specified relation from Attribute Cache Table. This is used by the B+ Tree search algorithm to find the location of the previous hit so that the search can be resumed from the next leaf index entry.
+Gives the value of `searchIndex` field of the given attribute in the specified relation from *Attribute Cache* Table. This is used by the *B+ Tree* search algorithm to find the **location of the previous hit** so that the search can be resumed from the next *leaf index* entry.
 
-:::info note
+:::caution note
 * This method is overloaded in type of the second argument.
-* The caller should allocate memory for the struct IndexId before calling the function.
+* The caller should allocate memory for the `struct IndexId` before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -558,7 +573,7 @@ Gives the value of searchIndex field of the given attribute in the specified rel
 
 #### Algorithm
 ```cpp
-int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex){
+int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -588,11 +603,11 @@ int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
 
 ### AttrCacheTable :: setSearchIndex
 #### Description
-Sets the value of searchIndex field of the given attribute in the specified relation from Attribute Cache Table. This is used by the B+ Tree search algorithm to set the location of the previous hit so that the search can be resumed from the next leaf index entry.
+Sets the value of `searchIndex` field of the given attribute in the specified relation from *Attribute Cache* Table. This is used by the *B+ Tree* search algorithm to set the **location of the previous hit** so that the search can be resumed from the next *leaf index* entry.
 
-:::info note
+:::caution note
 * This method is overloaded in type of the second argument
-* The caller should allocate memory for the struct IndexId before calling the function.
+* The caller should allocate memory for the `struct IndexId` before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
@@ -611,7 +626,7 @@ Sets the value of searchIndex field of the given attribute in the specified rela
 
 #### Algorithm
 ```cpp
-int AttrCacheTable::setSearchIndex(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex){
+int AttrCacheTable::setSearchIndex(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -640,10 +655,10 @@ int AttrCacheTable::setSearchIndex(relId relId, unsigned char attrName[ATTR_SIZE
 
 ### AttrCacheTable :: recordToAttrCacheEntry
 #### Description
-A utility function that converts a record, implemented as an array of union Attribute, to AttrCacheEntry structure. The record content is used to populate the attrCatEntry field. The dirty, recId, searchIndex, and next fields are initialized with default values of false, {-1, -1}, {-1, -1}, and NULL, respectively. This function can be used to convert the records in Attribute Catalog block/blocks to the corresponding Attribute Cache entries when caching a relation in Attribute Cache Table. The details of the implementation are left to you.
+A utility function that converts a record, implemented as an array of `union Attribute`, to `AttrCacheEntry` structure. The record content is used to populate the `attrCatEntry` field. The `dirty`, `recId`, `searchIndex`, and next fields are initialized with default values of `false`, `{-1, -1}`, `{-1, -1}`, and `NULL`, respectively. This function can be used to convert the records in *Attribute Catalog* block/blocks to the corresponding *Attribute Cache* entries when caching a relation in *Attribute Cache* Table. The details of the implementation are left to you.
 
-:::info note
-The caller should allocate memory for the struct AttrCacheEntry and array of union Attribute before calling the function.
+:::caution note
+The caller should allocate memory for the `struct AttrCacheEntry` and array of `union Attribute` before calling the function.
 :::
 
 #### Arguments
@@ -657,9 +672,10 @@ Nil
 
 ### AttrCacheTable :: attrCacheEntryToRecord
 #### Description
-A utility function that converts AttrCacheEntry structure to a record, implemented as an array of union Attribute. The record is populated with the contents of the attrCatEntry field. The dirty, recId, searchIndex, and next fields are used only during runtime and are not written to the disk. This function can be used to convert the Attribute Cache entries to corresponding records that can be written back to Attribute Catalog block/blocks when closing a relation in the cache memory. The details of the implementation are left to you.
-:::info note
-The caller should allocate memory for the struct AttrCacheEntry and array of union Attribute before calling the function.
+A utility function that converts `AttrCacheEntry` structure to a record, implemented as an array of `union Attribute`. The record is populated with the contents of the `attrCatEntry` field. The `dirty`, `recId`, `searchIndex`, and next fields are used only during runtime and are not written to the disk. This function can be used to convert the *Attribute Cache* entries to corresponding records that can be written back to *Attribute Catalog* block/blocks when closing a relation in the cache memory. The details of the implementation are left to you.
+
+:::caution note
+The caller should allocate memory for the `struct AttrCacheEntry` and array of `union Attribute` before calling the function.
 :::
 #### Arguments
 | Name | Type | Description |
