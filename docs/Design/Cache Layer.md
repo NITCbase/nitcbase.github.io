@@ -19,9 +19,9 @@ The Cache Layer code is to be written in 3 pairs of files:
 :::
 
 ## Layout
-Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the Cache Layer caches the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.
+Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the *Cache Layer* caches the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of `MAX_OPEN` number of relations at any given time. NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.
 
-Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Table** for Relation Catalog entries, the **Attribute Cache Table** for Attribute Catalog entries and the **Open Relation Table** for operations that include both Relation and Attribute Catalogs.
+Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Table** for *Relation Catalog* entries, the **Attribute Cache Table** for *Attribute Catalog* entries and the **Open Relation Table** for operations that include both Relation and Attribute Catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
 <img src={CacheClasses} alt="CacheClasses" width="1600"/>
@@ -36,18 +36,21 @@ Various structures used in the cache layer are outlined in the below diagrams.
 
 ## relId
 
-Any relation that is stored in the cache memory will have an entry in each of the three tables- **Relation Cache Table**, **Attribute Cache Table**, and **Open Relation Table**. An **open relation** is a relation that has been loaded to the cache memory while a closed relation is one that is not loaded to the cache memory. NITCbase is designed in such a way that the entries in all the three tables will be stored at the same index. This common index is called the `relId` of the relation. All further operations on the relation require this `relId`.
+Any relation that is stored in the cache memory will have an entry in each of the three tables- **Relation Cache Table**, **Attribute Cache Table**, and **Open Relation Table**. An *open relation* is a relation that has been loaded to the cache memory while a *closed relation* is one that is not loaded to the cache memory. NITCbase is designed in such a way that the entries in all the three tables will be stored at the same index.
+
+*This common index is called the `relId` of the relation and all further operations on the relation require this **`relId`**.*
 
 ---
 
 ## Relation Cache Table Structures
-The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the Relation Catalog entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using Relation Cache Table. Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.
+The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the Relation Catalog entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using Relation Cache Table. *Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.*
 
 NITCbase caches Relation Catalog using two structures: `RelCatEntry` and `RelCacheEntry`.
 ### RelCatEntry
 The structure `RelCatEntry` stores in its data fields all the attribute values in the relation's record entry from the Relation Catalog block.
+
 ```cpp
-typedef struct RelCatEntry{
+typedef struct RelCatEntry {
 
 	unsigned char relName[ATTR_SIZE];
 	int numAttrs;
@@ -59,7 +62,7 @@ typedef struct RelCatEntry{
 } RelCatEntry;
 ```
 ### RelCacheEntry
-The structure `RelCacheEntry` stores the Relation Catalog entry of the relation along with some additonal information used during runtime.
+The structure `RelCacheEntry` stores the *Relation Catalog* entry of the relation along with some additonal information used during runtime.
 
 The `RelCacheEntry` data field details are as follows:
 * `relCatEntry`: Stores the relation's cached Relation Catalog entry.
@@ -80,7 +83,7 @@ typedef struct RelCacheEntry {
 ---
 
 ## Attribute Cache Table Structures
-The Attribute Catalog blocks, analogous to the Relation Catalog block, stores the **meta information of the attributes of all the relations in the database**. In addition to this, the Attribute Catalog entries of every open relation is also loaded to the cache memory. This is implemented using Attribute Cache Table. Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a **linked list** along with some additional meta-data.
+The *Attribute Catalog* blocks, analogous to the *Relation Catalog* block, stores the **meta information of the attributes of all the relations in the database**. In addition to this, the Attribute Catalog entries of every open relation is also loaded to the cache memory. This is implemented using Attribute Cache Table. *Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a **linked list** along with some additional meta-data.*
 
 NITCbase caches Attribute Catalog using two structures: `AttrCatEntry` and `AttrCacheEntry`.
 ### AttrCatEntry
@@ -98,7 +101,7 @@ typedef struct AttrCatEntry {
 } AttrCatEntry;
 ```
 ### AttrCacheEntry
-The structure `AttrCacheEntry` stores the Attribute Catalog entry of an attribute of the relation along with some additonal information used during runtime. Since a relation can have variable number of attributes, a linked list of struct AttributeCacheEntry elements is maintained to cache all the Attribute Catalog entries together.
+The structure `AttrCacheEntry` stores the *Attribute Catalog* entry of an attribute of the relation along with some additonal information used during runtime. Since a relation can have variable number of attributes, a linked list of `struct AttributeCacheEntry` elements is maintained to cache all the *Attribute Catalog* entries together.
 
 The `AttrCacheEntry` data field details are as follows:
 
@@ -123,11 +126,12 @@ typedef struct AttributeCacheEntry {
 ---
 
 ## Open Relation Table Structure
-A relation must have an entry in the Open Relation Table for its Relation Catalog and Attribute Catalog entries to be cached in the Relation Cache Table and Attribute Cache Table, respectively.
+A relation must have an entry in the *Open Relation Table* for its *Relation Catalog* and *Attribute Catalog* entries to be cached in the *Relation Cache Table* and *Attribute Cache Table*, respectively.
 ### OpenRelTableMetaInfo
-The `struct OpenRelTableMetaInfo` stores whether the given entry in the `OpenRelTable`, the Relation Cache Table, and Attribute Cache Table is occupied and also stores the name of the relation if occupied.
+The `struct OpenRelTableMetaInfo` stores whether the given entry in the `OpenRelTable`, the *Relation Cache Table*, and *Attribute Cache Table* is occupied and also stores the name of the relation if occupied.
+
 ```cpp
-typedef struct OpenRelTableMetaInfo{
+typedef struct OpenRelTableMetaInfo {
 				    
 	bool free;
 	unsigned char rel_name[ATTR_SIZE];
@@ -143,18 +147,27 @@ The following diagram summarizes the design of this module.
 ---
 
 ## class RelCacheTable
-The class RelCacheTable is used to cache Relation Catalog entries of all the open relations in NITCbase. The first two entries of the Relation Cache Table corresponding to RELCAT_RELID and ATTRCAT_RELID are reserved for storing the entries of Relation Catalog relation and Attribute Catalog relation, respectively. These are loaded into the cache by the OpenRelTable constructor at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the OpenRelTable destructor at shutdown. The class contains a private member field, relCache, which is an array of pointers to struct RelCacheEntry with size MAX_OPEN. For each relation opened, an entry is made in the array relCache, at the index corresponding to the relation id of the relation. This entry points to the struct RelCacheEntry that stores all the attribute values of the relation's entry from the Relation Catalog block along with other meta-data of the relation.
+The class RelCacheTable is used to cache Relation Catalog entries of all the **open** relations in NITCbase. The first two entries of the Relation Cache Table corresponding to `RELCAT_RELID` and `ATTRCAT_RELID` are reserved for storing the entries of *Relation Catalog* relation and *Attribute Catalog* relation, respectively. **These are loaded into the cache by the *`OpenRelTable` constructor* at the start of the session. These relations remain in the cache memory throughout the session and can only be closed by the *`OpenRelTable` destructor* during shutdown.**
 
-The class provides public methods getRelCatEntry() and setRelCatEntry() to retrieve and update the Relation Catalog Entry of a relation in the Relation Cache Table. The class also provides public methods getSearchIndex() and setSearchIndex() for retrieving and updating the searchIndex field of Relation Cache Entry. The private method recordToRelCacheEntry() is used to convert a record (implemented as an array of union Attribute) to RelCacheEntry structure. This function is called by the friend class, OpenRelTable, while opening a relation. Similarly, the private method relCacheEntryToRecord() is used to convert RelCacheEntry structure in to a record. This function is also called from the friend class, OpenRelTable, while closing a relation.
+The class contains a `private` member field, `relCache`, which is an array of pointers to `struct RelCacheEntry` with size `MAX_OPEN`. For each relation opened, an entry is made in the array `relCache`, at the index corresponding to the *relation id* of the relation. This entry points to the `struct RelCacheEntry` that stores all the attribute values of the relation's entry from the *Relation Catalog* block along with other meta-data of the relation.
 
-RelCacheTable is a static class, i.e., all member fields and methods are declared static. Memory is allocated statically for all member fields of the class. This class uses static methods to access the static member fields. C++ allows static methods to be accessed using the semantics class_name::function_name(). The class definition of RelCacheTable is as given below:
+The class provides `public` methods - `getRelCatEntry()` and `setRelCatEntry()` to retrieve and update the *Relation Catalog* Entry of a relation in the *Relation Cache* Table. The class also provides `public` methods `getSearchIndex()` and `setSearchIndex()` for retrieving and updating the `searchIndex` field of *Relation Cache* Entry. 
 
-:::info note
-The class OpenRelTable is a friend class to RelCacheTable class. This allows all methods in OpenRelTable to access the private fields and methods of the RelCacheTable class.
+The `private` method `recordToRelCacheEntry()` is used to convert a *record* (implemented as an array of `union Attribute`) to `RelCacheEntry` structure. This function is called by the friend class, `OpenRelTable`, while opening a relation. Similarly, the `private` method `relCacheEntryToRecord()` is used to convert `RelCacheEntry` structure to a record. This function is also called from the friend class, `OpenRelTable`, while closing a relation.
+
+
+:::note C++ Static Classes
+`RelCacheTable` is a *static class*, that is, all member fields and methods are declared `static`. Memory is allocated statically for all member fields of the class. This *static methods* in this class is used to access its *static member fields*. C++ allows static methods to be accessed using the semantics `class_name :: function_name()`.
 :::
 
+:::info note
+The class `OpenRelTable` is a friend class to the `RelCacheTable` class. This allows all methods in `OpenRelTable` to access the private fields and methods of the `RelCacheTable` class.
+:::
+
+The class definition of `RelCacheTable` is given below.
+
 ```cpp
-class RelCacheTable{
+class RelCacheTable {
 					
 friend class OpenRelTable;
 	
@@ -175,13 +188,14 @@ private:
 	
 };
 ```
-The following are the specifications for the methods in class RelCacheTable.
+
+The following are the specifications for the methods in `class RelCacheTable`.
 ### RelCacheTable :: getRelCatEntry
 #### Description
-Gives the Relation Catalog Entry corresponding to the specified relation from Relation Cache Table.
+Gives the *Relation Catalog* entry corresponding to the specified relation from *Relation Cache* Table.
 
-:::info note
-The caller should allocate memory for the struct RelCatEntry before calling the function.
+:::caution note
+The caller should allocate memory for the `struct RelCatEntry` before calling the function.
 :::
 
 #### Arguments

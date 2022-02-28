@@ -78,7 +78,7 @@ Nil
 #### Description
 Transfers the contents of the specified disk block to the input memory buffer. Used in buffer layer to load disk block to buffer.
 
-:::note 
+:::caution 
 Higher layers must allocate memory for the unsigned character array of size 2048 before passing its pointer to the function.
 :::
 #### Arguments
@@ -100,7 +100,7 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 #### Description
 Transfers the contents of the input memory buffer memory buffer to the specified disk block. Used in buffer layer to write buffer contents to disk.
 
-:::note 
+:::caution 
 Higher layers must allocate memory for the unsigned character array of size 2048 before passing its pointer to the function.
 :::
 #### Arguments

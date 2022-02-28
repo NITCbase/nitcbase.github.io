@@ -59,7 +59,7 @@ Each structure is designed to store a subset of the data stored in a disk block.
 ### HeadInfo
 NITCbase maintains a `32 bytes` fixed-size header for every disk block. This header stores meta-information, like the type of the block, and a few block specific information, like `#Attrs` and `#Slots`. Though the header has many fields, usage of the fields depends on the type of the block. The structure `HeadInfo` is used to collect all the entries of the header, as shown below. The `setHeader()` and the `getHeader()` methods take a pointer to `struct HeadInfo` as argument.
 
-:::note Implementation Note
+:::caution Implementation Note
 `getHeader()` and `setHeader()` methods expect the higher layers to allocate memory for the `struct HeadInfo` before calling them.
 :::
 
@@ -88,7 +88,11 @@ typedef union Attribute{
 ### InternalEntry
 Each `Internal Index block` of a `B+ Tree` consists of many `attribute values` and `child pointers`. This data is arranged in the block in such a way that an attribute value is stored between its left child and right child pointers. The `right child pointer` of one attribute value will be the same as the `left child pointer` of the next attribute value. Hence to avoid redundancy, only one copy is stored, making the data overlapped. The combination of `left child`, `attribute value`, and `right child` makes up the `InternalEntry` structure, as shown below. An Internal Index block is a combination of `100 such overlapped entries`. The getEntry() and setEntry() methods of the class IndInternal take a pointer to struct InternalEntry as an argument.
 
-Implementation Note: The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class IndInternal`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for struct InternalEntry before calling them.
+:::caution Implementation Note
+The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class IndInternal`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for struct InternalEntry before calling them.
+:::
+
+
 ```cpp
 struct InternalEntry{
 	int32_t lChild;
@@ -100,7 +104,10 @@ struct InternalEntry{
 ### Index
 An `index` of a relation should store a reference to its record along with the corresponding attribute value. NITCbase uses `RecId`, which is a `(block#, slot#)` pair, for referencing any record. In NITCbase, an `Index` structure is a combination of `attribute value`, `block#`, and `slot#`, followed by some unused space left for future use, as shown below. Each `Leaf Index block` is a combination of `63 such Index entries`. The `getEntry()` and the `setEntry()` methods of the `class IndLeaf` take a pointer to `struct Index` as an argument.
 
-Implementation Note: The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class LeafBuffer`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for `struct Index` before calling them.
+:::caution Implementation Note
+The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class LeafBuffer`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for `struct Index` before calling them.
+:::
+
 ```cpp
 struct Index{
 	union Attribute attrVal;
@@ -173,7 +180,7 @@ The following are the specifications for the methods in `class StaticBuffer`.
 * Copies `Block Allocation Map` from disk to buffer memory and updates the meta information of each buffer to initial empty conditions. 
 * Should be called at the beginning of the session after the `Disk constructor`.
 
-:::info Note 
+:::caution Note 
 The object of the `StaticBuffer class` must be declared after the object of the `Disk class` to ensure that the `StaticBuffer constructor` is called after the `Disk constructor`.
 :::
 #### Arguments
@@ -198,7 +205,7 @@ StaticBuffer::StaticBuffer(){
 * Copies the `Block Allocation Map` and the dirty blocks from the buffer memory to disk. 
 * Should be called at the end of the session before the `Disk destructor`.
 
-:::info Note 
+:::caution Note 
 The object of the `StaticBuffer class` must be declared after the object of the `Disk class` to ensure that the `StaticBuffer destructor` is called before the `Disk destructor`.
 :::
 #### Arguments
@@ -391,7 +398,7 @@ The following are the specifications for the methods in class BlockBuffer.
 * One of the`Constructors` of the `class BlockBuffer`
 * Called if a new block of the input type is to be allocated in the disk.
 
-:::info note
+:::note
 If the block already exists on the disk use [constructor 2](#blockbuffer--blockbuffer-constructor-2).
 :::
 #### Arguments
@@ -419,7 +426,7 @@ Blockbuffer::BlockBuffer(char blockType){
 * One of the`Constructors` of the `class BlockBuffer`
 * Called when the block already exists on the disk.
 
-:::info note
+:::note
 If a new block is to be allocated in the disk use [constructor 1](#blockbuffer--blockbuffer-constructor-1).
 :::
 #### Arguments
@@ -520,7 +527,7 @@ void BlockBuffer::setBlockType(int blockType){
 #### Description
 Gives the header of the block.
 
-:::info note
+:::caution note
 * Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `getHeader()` method is kept in abstract `BlockBuffer class`.
 * Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
 :::
@@ -550,7 +557,7 @@ void BlockBuffer::getHeader(struct HeadInfo *head){
 #### Description
 Sets the header of the block.
 
-:::info note
+:::caution note
 * Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `setHeader()` method is kept in abstract `BlockBuffer class`.
 * Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
 :::
@@ -735,7 +742,7 @@ Nil
 #### Return Values
 Nil
 
-:::info note
+:::note
 If the record block already exists on the disk use [constructor 2](#recbuffer--recbuffer-constructor-2).
 :::
 
@@ -759,7 +766,7 @@ Called when the record block already exists on the disk.
 #### Return Values
 Nil
 
-:::info note
+:::note
 If a new record block is to be allocated in the disk use [constructor 1](#recbuffer--recbuffer-constructor-1).
 :::
 
@@ -782,7 +789,7 @@ Gives the slotmap of the block.
 #### Return Values
 Nil
 
-:::info note
+:::caution note
 * The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 * The higher layers must allocate memory for the `unsigned char` array before calling the function.
 :::
@@ -813,7 +820,7 @@ Sets the slotmap of the block.
 #### Return Values
 Nil
 
-:::info note
+:::caution note
 * The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 * The higher layers must allocate memory for the `unsigned char` array before calling the function.
 :::
@@ -849,7 +856,7 @@ Gives the slotNumth record entry of the block.
 | `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
 | `E_FREESLOT` | Slot corresponding to the input slotNum is free. |
 
-:::info note
+:::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 * The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
 :::
@@ -891,7 +898,7 @@ Sets the slotNumth record entry of the block with the input record contents.
 | `SUCCESS` | Succesful copy of the record. |
 | `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
 
-:::info note
+:::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 * The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
 :::
@@ -1019,7 +1026,7 @@ Nil
 #### Return Values
 Nil
 
-:::info note
+:::note
 If the internal index block already exists on the disk use  [constructor 2](#indinternal--indinternal-constructor2).
 :::
 
@@ -1042,7 +1049,7 @@ Called when the internal index block already exists on the disk.
 #### Return Values
 Nil
 
-:::info note
+:::note
 If a new internal index block is to be allocated in the disk use [constructor 1](#indinternal--indinternal-constructor1).
 :::
 
@@ -1068,7 +1075,7 @@ Gives the indexNumth entry of the block.
 | `SUCCESS` | Successful copy of the internal index entry. |
 | `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
 
-:::info note
+:::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 * The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 * The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
@@ -1106,7 +1113,7 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 | `SUCCESS` | Successful copy of the internal index entry. |
 | `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
 
-:::info note
+:::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 * The higher layers calling the `setEntry()` method of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 * The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
@@ -1212,7 +1219,7 @@ Gives the indexNum<sup>th</sup> entry of the block.
 | [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
 
-:::info note
+:::caution note
 * The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 * The higher layers calling the `getEntry()` function of the *IndLeaf* class must ensure that the argument of type `struct Index *` is passed.
 * The higher layers must allocate memory for the `struct Index` before calling this function.
@@ -1252,7 +1259,7 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 | [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful setting of the leaf index entry. |
 | [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
-:::info note
+:::caution note
 * The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 * The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
 * The higher layers must allocate memory for the struct Index before calling this function.
