@@ -2,6 +2,8 @@
 
 ---
 import HomepageFigPNGSource from '../../static/img/HomepageFigure.png';
+import HomepageFigSvg from '../../static/img/HomepageFigure.svg';
+
 
 # NITCbase : RDBMS Implementation Project
 ## Introduction
@@ -21,7 +23,7 @@ The following diagram gives an idea of the system that we are building and its c
 [To view the full image, click here](https://htmlpreview.github.io/?https://github.com/Nitcbase/nitcbase-documentation-v2-code/blob/main/static/img/HomepageFigure.svg)
 
 <br/>
-<img src={HomepageFigPNGSource} alt="System Image" width="100%" />
+<HomepageFigSvg />
 <br/><br/><br/>
 
 
