@@ -53,6 +53,7 @@ const config = {
     {
       hideableSidebar: true,
       navbar: {
+        hideOnScroll: true,
         title: 'NITCbase',
         // logo: {
         //   alt: 'NITCbase',
@@ -101,6 +102,14 @@ const config = {
             position: 'right',
           },
         ],
+      },
+      announcementBar: {
+        id: 'support_us',
+        content:
+          'This webiste is under contruction.',
+        backgroundColor: '#d4d4d4',
+        textColor: '##fc4069',
+        isCloseable: true,
       },
       footer: {
         style: 'dark',
