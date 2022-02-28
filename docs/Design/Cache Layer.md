@@ -14,7 +14,7 @@ The Cache Layer code is to be written in 3 pairs of files:
 * `AttrCacheTable.cpp` and it's header file `AttrCacheTable.h`
 * `OpenRelTable.cpp` and it's header file `OpenRelTable.h`
 
-<Link to="/cache_stub">The stub code for these files can be found here</Link >.
+**<Link to="/cache_stub">The stub code for these files can be found here.</Link >**
 :::
 
 ## Layout
@@ -34,11 +34,11 @@ Any relation that is stored in the cache memory will have an entry in each of th
 ---
 
 ## Relation Cache Table Structures
-The Relation Catalog block in the disk stores metadata corresponding to all the relations in the database. In addition to this, the Relation Catalog entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using Relation Cache Table. Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.
+The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the Relation Catalog entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using Relation Cache Table. Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data.
 
 NITCbase caches Relation Catalog using two structures: `RelCatEntry` and `RelCacheEntry`.
 ### RelCatEntry
-The structure RelCatEntry stores in its data fields all the attribute values in the relation's record entry from the Relation Catalog block.
+The structure `RelCatEntry` stores in its data fields all the attribute values in the relation's record entry from the Relation Catalog block.
 ```cpp
 typedef struct RelCatEntry{
 
@@ -57,8 +57,8 @@ The structure `RelCacheEntry` stores the Relation Catalog entry of the relation 
 The `RelCacheEntry` data field details are as follows:
 * `relCatEntry`: Stores the relation's cached Relation Catalog entry.
 * `dirty`: Indicates whether the Relation Catalog entry has been modified. The Relation Catalog entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
-* `recId`: Stores the record id {blockNum, slotNum} of the relation's entry in the Relation Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
-* `searchIndex`: Stores the record id {blockNum, slotNum} of the record block corresponding to the last (previous) search hit in the relation. Linear search algorithm of the Block Access Layer starts searching for the next hit from the previous hit location. The entries are initialized to {-1, -1} each time the relation is loaded to the cache memory. When every record of the relation has been searched, the linear search algorithm resets the searchIndex value to {-1, -1}.
+* `recId`: Stores the record id `{blockNum, slotNum}` of the relation's entry in the Relation Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
+* `searchIndex`: Stores the record id `{blockNum, slotNum}` of the record block corresponding to the last (previous) search hit in the relation. Linear search algorithm of the Block Access Layer starts searching for the next hit from the previous hit location. The entries are initialized to `{-1, -1}` each time the relation is loaded to the cache memory. When every record of the relation has been searched, the linear search algorithm resets the searchIndex value to `{-1, -1}`.
 ```cpp
 typedef struct RelCacheEntry {
 
@@ -73,11 +73,11 @@ typedef struct RelCacheEntry {
 ---
 
 ## Attribute Cache Table Structures
-The Attribute Catalog blocks, analogous to the Relation Catalog block, stores the meta information of the attributes of all the relations in the database. In addition to this, the Attribute Catalog entries of every open relation is also loaded to the cache memory. This is implemented using Attribute Cache Table. Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a linked list along with some additional meta-data.
+The Attribute Catalog blocks, analogous to the Relation Catalog block, stores the **meta information of the attributes of all the relations in the database**. In addition to this, the Attribute Catalog entries of every open relation is also loaded to the cache memory. This is implemented using Attribute Cache Table. Each entry in the Attribute Cache Table stores the entries corresponding to each attribute of the relation in the form a **linked list** along with some additional meta-data.
 
 NITCbase caches Attribute Catalog using two structures: `AttrCatEntry` and `AttrCacheEntry`.
 ### AttrCatEntry
-The structure AttrCatEntry stores in its data fields all the attribute values in the record entry corresponding to one of the relation's attribute from an Attribute Catalog block.
+The structure `AttrCatEntry` stores in its data fields all the attribute values in the record entry corresponding to one of the relation's attribute from an Attribute Catalog block.
 ```cpp
 typedef struct AttrCatEntry {
 
@@ -91,15 +91,15 @@ typedef struct AttrCatEntry {
 } AttrCatEntry;
 ```
 ### AttrCacheEntry
-The structure AttrCacheEntry stores the Attribute Catalog entry of an attribute of the relation along with some additonal information used during runtime. Since a relation can have variable number of attributes, a linked list of struct AttributeCacheEntry elements is maintained to cache all the Attribute Catalog entries together.
+The structure `AttrCacheEntry` stores the Attribute Catalog entry of an attribute of the relation along with some additonal information used during runtime. Since a relation can have variable number of attributes, a linked list of struct AttributeCacheEntry elements is maintained to cache all the Attribute Catalog entries together.
 
-The AttrCacheEntry data field details are as follows:
+The `AttrCacheEntry` data field details are as follows:
 
 * `attrCatEntry`: Stores the cached Attribute Catalog entry corresponding to an attribute of the relation.
 * `dirty`: Indicates whether the Attribute Catalog entry has been modified. The Attribute Catalog entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
-* `recId`: Stores the record id {blockNum, slotNum} of the record entry corresponding to the relation's attribute in the Attribute Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
-* `searchIndex`: Stores the index id {blockNum, indexNum} of the leaf index block corresponding to the last (previous) search hit for the attribute. This entry is used only if there is a B+ Tree created on the attribute. B+ Tree search algorithm of the B+ Tree Layer starts searching from the previous hit location for the next hit. The entries are initialized to {-1, -1} each time the relation is opened in the cache memory. When every Index Leaf Block entry of the B+ Tree has been searched, B+ Tree search resets the searchIndex value to {-1, -1}.
-* `next`: Gives the pointer to the next AttrCacheEntry element in the linked list.
+* `recId`: Stores the record id `{blockNum, slotNum}` of the record entry corresponding to the relation's attribute in the Attribute Catalog block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
+* `searchIndex`: Stores the index id `{blockNum, indexNum}` of the leaf index block corresponding to the last (previous) search hit for the attribute. This entry is used only if there is a B+ Tree created on the attribute. B+ Tree search algorithm of the B+ Tree Layer starts searching from the previous hit location for the next hit. The entries are initialized to `{-1, -1}` each time the relation is opened in the cache memory. When every Index Leaf Block entry of the B+ Tree has been searched, B+ Tree search resets the searchIndex value to `{-1, -1}`.
+* `next`: Gives the pointer to the next `AttrCacheEntry` element in the linked list.
 
 ```cpp
 typedef struct AttributeCacheEntry {
