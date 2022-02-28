@@ -203,8 +203,8 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the *Relation Cache* Table |
-| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry to which the *Relation Catalog* entry corresponding to input relId is to be copied |
+| relId | `int` | The relation id of the relation in the *Relation Cache* Table |
+| relCatBuf |  `RelCatEntry *`	| Pointer to struct RelCatEntry to which the *Relation Catalog* entry corresponding to input relId is to be copied |
 
 #### Return Values
 
@@ -245,8 +245,8 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the *Relation Cache* Table |
-| relCatBuf |  RelCatEntry*	| Pointer to struct RelCatEntry using which the *Relation Catalog* entry corresponding to input relId is to be updated |
+| relId | `int` | The relation id of the relation in the *Relation Cache* Table |
+| relCatBuf |  `RelCatEntry *`	| Pointer to struct RelCatEntry using which the *Relation Catalog* entry corresponding to input relId is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
@@ -288,8 +288,8 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the *Relation Cache* Table |
-| searchIndex |	RecId* | Pointer to struct RecId to which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be copied |
+| relId | `int` | The relation id of the relation in the *Relation Cache* Table |
+| searchIndex |	`RecId *` | Pointer to struct RecId to which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be copied |
 
 #### Return Values
 
@@ -330,8 +330,8 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId | int | The relation id of the relation in the *Relation Cache* Table |
-| searchIndex |	RecId* | Pointer to struct RecId using which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be updated | 
+| relId | `int` | The relation id of the relation in the *Relation Cache* Table |
+| searchIndex |	`RecId *` | Pointer to struct RecId using which the searchIndex field of the *Relation Cache* entry corresponding to input relId is to be updated | 
 
 #### Return Values
 
@@ -372,8 +372,8 @@ The caller should allocate memory for the `struct RelCacheEntry` and array of `u
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[RELCAT_SIZE] | The record which is to be converted to a *Relation Cache* Entry |
-| RelCacheEntry | RelCacheEntry* | Pointer to struct RelCacheEntry to which the contents of the input record is to be copied |
+| record | `union Attribute[RELCAT_SIZE`]` | The record which is to be converted to a *Relation Cache* Entry |
+| RelCacheEntry | `RelCacheEntry *` | Pointer to struct RelCacheEntry to which the contents of the input record is to be copied |
 #### Return Values
 Nil
 
@@ -388,8 +388,8 @@ The caller should allocate memory for the struct RelCacheEntry and array of unio
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[RELCAT_SIZE] | The record to which the contents of the input *Relation Cache* Entry is to be copied |
-| RelCacheEntry | RelCacheEntry* | Pointer to struct RelCacheEntry which is to be converted to a record. |
+| record | `union Attribute[RELCAT_SIZE]` | The record to which the contents of the input *Relation Cache* Entry is to be copied |
+| RelCacheEntry | `RelCacheEntry *` | Pointer to struct RelCacheEntry which is to be converted to a record. |
 		
 #### Return Values
 Nil
@@ -455,9 +455,9 @@ Gives the *Attribute Catalog* entry corresponding to the given attribute of the 
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
-| attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry to which the *Attribute Catalog* entry corresponding to the input relid and attribute is to be copied |
+| relId	| `int` |	The relation id of the relation in the *Attribute Cache* Table |
+| attrName / attrOffset	| `unsigned char[ATTR_SIZE]` / `int` |	The name/offset of the target attribute |
+| attrCatBuf |	`AttrCatEntry *` |	Pointer to struct AttrCatEntry to which the *Attribute Catalog* entry corresponding to the input relid and attribute is to be copied |
 
 #### Return Values
 
@@ -507,9 +507,9 @@ Sets the *Attribute Catalog* entry corresponding to the given attribute of the s
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
-| attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| attrCatBuf |	AttrCatEntry* |	Pointer to struct AttrCatEntry using which the *Attribute Catalog* entry corresponding to input relId and attribute is to be updated |
+| relId	| `int` |	The relation id of the relation in the *Attribute Cache* Table |
+| attrName / attrOffset	| `unsigned char[ATTR_SIZE]` / `int` |	The name/offset of the target attribute |
+| attrCatBuf |	`AttrCatEntry *` |	Pointer to `struct AttrCatEntry` using which the *Attribute Catalog* entry corresponding to input `relId` and attribute is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
@@ -561,9 +561,9 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
-| attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| searchIndex | IndexId* | Pointer to struct IndexId to which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be copied |
+| relId	| `int` |	The relation id of the relation in the *Attribute Cache* Table |
+| attrName / attrOffset	| `unsigned char[ATTR_SIZE]` / `int` |	The name/offset of the target attribute |
+| searchIndex |`IndexId *` | Pointer to struct IndexId to which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be copied |
 #### Return Values
 
 |        Value     |           Description                        |
@@ -614,9 +614,9 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| relId	| int |	The relation id of the relation in the *Attribute Cache* Table |
-| attrName / attrOffset	| unsigned char[ATTR_SIZE] / int |	The name/offset of the target attribute |
-| searchIndex | IndexId* | Pointer to struct IndexId using which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be updated |
+| relId	| `int` |	The relation id of the relation in the *Attribute Cache* Table |
+| attrName / attrOffset	| `unsigned char[ATTR_SIZE]` / `int` |	The name/offset of the target attribute |
+| searchIndex | `IndexId *` | Pointer to struct IndexId using which the searchIndex field of the *Attribute Cache* entry corresponding to the input relid and attribute is to be updated |
 #### Return Values
 
 |        Value     |           Description                        |
@@ -666,8 +666,8 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| record | union Attribute[ATTRCAT_SIZE] | The record which is to be converted to a *Attribute Cache* entry. |
-| attrCacheEntry | AttrCacheEntry* | Pointer to struct AttrCacheEntry to which the contents of the input record is to be copied. |
+| record | `union Attribute[ATTRCAT_SIZE]` | The record which is to be converted to a *Attribute Cache* entry. |
+| attrCacheEntry | `AttrCacheEntry *` | Pointer to struct AttrCacheEntry to which the contents of the input record is to be copied. |
 
 #### Return Values
 Nil
@@ -682,8 +682,8 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-| attrCacheEntry | AttrCacheEntry* | Pointer to struct AttrCacheEntry which is to be converted to a record. |
-| record | union Attribute[ATTRCAT_SIZE] | The record to which the given *Attribute Cache* entry is to be copied. |
+| attrCacheEntry | `AttrCacheEntry *` | Pointer to struct AttrCacheEntry which is to be converted to a record. |
+| record | `union Attribute[ATTRCAT_SIZE]` | The record to which the given *Attribute Cache* entry is to be copied. |
 
 #### Return Values
 Nil
@@ -1015,7 +1015,7 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 #### Arguments
 | Name | Type | Description |
 |-----------|--------------|--------------|
-|`relId` | `int` | Relation id of a relation in the Open Relation Table. |
+|relId | `int` | Relation id of a relation in the Open Relation Table. |
 
 #### Return Values
 |        Value     |           Description                        |
