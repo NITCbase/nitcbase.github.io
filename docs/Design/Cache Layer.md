@@ -5,7 +5,8 @@ title: 'Cache Layer'
 https://nitcbase.github.io/archived-site/cache.html
 
 import CacheClasses from '../../static/img/cache_classes.png';
-import CacheTables from '../../static/img/cache_tables.png'; 
+import CacheTables from '../../static/img/cache_tables.png';
+import CacheStructures from '../../static/img/cache_structures.png'; 
 import Link from '@docusaurus/Link';
 
 :::info note 
@@ -24,6 +25,12 @@ Three tables are used by NITCbase for caching Catalogs- the **Relation Cache Tab
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
 <img src={CacheClasses} alt="CacheClasses" width="1600"/>
+
+---
+
+Various structures used in the cache layer are outlined in the below diagrams.
+
+<img src={CacheStructures} alt="CacheStructures" width="1600"/>
 
 ---
 
