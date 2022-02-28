@@ -20,7 +20,7 @@ The seven layer design of NITCbase starts with the Physical layer at the bottom,
 The following diagram gives an idea of the system that we are building and its components on a high level.
 
 
-[To view the full image, click here](https://htmlpreview.github.io/?https://github.com/Nitcbase/nitcbase-documentation-v2-code/blob/main/static/img/HomepageFigure.svg)
+[To view the full image, click here](https://htmlpreview.github.io/?https://github.com/Nitcbase/nitcbase-documentation-v2-code/blob/main/static/img/HomepageFigWithLinks.svg)
 
 <br/>
 <HomepageFigSvg />
