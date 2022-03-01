@@ -151,7 +151,7 @@ In NITCbase, *we fix the size of all attributes to the same value to simplify th
 <br/>
 
 
-!["Record Block"](../../static/img/record_block.png)
+!["Record Block"](../../static/img/RecordBlock-fin.jpg)
 
 
 * First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](https://nitcbase.github.io/constants.html) represents a record block.
