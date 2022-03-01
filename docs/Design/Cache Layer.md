@@ -114,15 +114,15 @@ The `AttrCacheEntry` data field details are as follows:
 * `next`: Gives the pointer to the next `AttrCacheEntry` element in the linked list.
 
 ```cpp
-typedef struct AttributeCacheEntry {
+typedef struct AttrCacheEntry {
 
 	AttrCatEntry attrCatEntry;
 	bool dirty;
-	RecId recid;
+	RecId recId;
 	IndexId searchIndex;
-	struct AttributeCacheEntry *next;
+	struct AttrCacheEntry *next;
 
-} AttributeCacheEntry;
+} AttrCacheEntry;
 ```
 
 ---
@@ -436,8 +436,8 @@ private:
 	static AttrCacheEntry* attrCache[MAX_OPEN];
 	
 	//methods
-	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_SIZE], AttrCatEntry *attrCatEntry);
-	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_SIZE], AttrCatEntry *attrCatEntry);
+	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_SIZE], AttrCacheEntry *attrCacheEntry);
+	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_SIZE], AttrCacheEntry *attrCacheEntry);
 	
 };
 ```
@@ -762,7 +762,7 @@ OpenRelTable::OpenRelTable() {
 	for i from 0 to 5:
 	{
 	
-         	/* read the ith record entry from bock 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
+         	/* read the ith record entry from block 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
 		   using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCacheEntry().
 		   update the recId field of this Attribute Cache entry to {5,i}.
 		   add the Attribute Cache entry to the linked list of listHead .*/
