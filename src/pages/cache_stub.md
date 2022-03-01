@@ -51,8 +51,8 @@ private:
 	static RelCacheEntry* relCache[MAX_OPEN];
 
 	//methods
-	static void RecordToRelCacheEntry(union Attribute record[RELCAT_SIZE], RelCacheEntry* relCacheEntry);
-	static void RelCacheEntryToRecord(union Attribute record[RELCAT_SIZE], RelCacheEntry* relCacheEntry);
+	static void RecordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
+	static void RelCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
 
 };
 #endif //NITCBASE_RELCACHETABLE_H
@@ -116,8 +116,8 @@ private:
 	static AttrCacheEntry* attrCache[MAX_OPEN];
 
 	//methods
-	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_SIZE], AttrCatEntry *attrCatEntry);
-	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_SIZE], AttrCatEntry *attrCatEntry);
+	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
+	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
 
 };
 
@@ -215,8 +215,8 @@ OpenRelTable::~OpenRelTable() {
 
 	// if the Relation Catalog entry of the ATTRCAT_RELIDth Relation Cache entry has been modified:
 	{
-		/* write back the entry to the Relation Catalog block using
-		   RelCacheTable::relCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+		/* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+				Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 	}
 
 	/****** releasing the entry corresponding to Attribute Catalog relation from Attribute Cache Table ******/
@@ -225,8 +225,8 @@ OpenRelTable::~OpenRelTable() {
 	{
 		if the entry has been modified:
 		{
-			/* write back the entry to the Attribute Catalog block using
-			   AttrCacheTable::attrCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+			/* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
 		}
 
@@ -243,8 +243,8 @@ OpenRelTable::~OpenRelTable() {
 
 	// if the Relation Catalog entry of the RELCAT_RELIDth Relation Cache entry has been modified:
 	{
-		/* write back the entry to the Relation Catalog block using
-		   RelCacheTable::relCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+		/* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+		Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 	}
 
 	/****** releasing the entry corresponding to Relation Catalog relation from Attribute Cache Table ******/
@@ -253,8 +253,8 @@ OpenRelTable::~OpenRelTable() {
 	{
 		if the entry has been modified:
 		{
-			/* write back the entry to the Attribute Catalog block using
-			   AttrCacheTable::attrCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+			/* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
 		}
 
@@ -364,8 +364,8 @@ int OpenRelTable::closeRel(int relId) {
 
 	// if the Relation Catalog entry of the relIdth Relation Cache entry has been modified:
 	{
-		/* write back the entry to the Relation Catalog block using
-		   RelCacheTable::relCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+		/* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+        Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 	}
 
 	/****** Releasing the Attribute Cache entry of the relation ******/
@@ -374,8 +374,8 @@ int OpenRelTable::closeRel(int relId) {
 	{
 		if the entry has been modified:
 		{
-			/* write back the entry to the Attribute Catalog block using
-			   AttrCacheTable::attrCacheEntryToRecord(), recId member field, and RecBuffer::setRecord().*/
+			/* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
 		}
 
