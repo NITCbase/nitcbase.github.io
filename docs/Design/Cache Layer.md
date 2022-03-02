@@ -212,7 +212,7 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 |------------------|----------------------------------------------|
 | SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -253,7 +253,7 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 |------------------|----------------------------------------------|
 | SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -297,7 +297,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 |------------------|----------------------------------------------|
 | SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -339,7 +339,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 |------------------|----------------------------------------------|
 | SUCCESS |  Successfully copied the *Relation Catalog* entry  |
 | E_OUTOFBOUND |  Input relId is outside the valid set of possible relation ids  |
-| E_NOTOPEN |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) |   Entry corresponding to input relId is free in the *Relation Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 ```cpp
@@ -465,7 +465,7 @@ Gives the *Attribute Catalog* entry corresponding to the given attribute of the 
 |------------------|----------------------------------------------|
 | SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 #### Algorithm
 ```cpp
@@ -516,7 +516,7 @@ Sets the *Attribute Catalog* entry corresponding to the given attribute of the s
 |------------------|----------------------------------------------|
 | SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -570,7 +570,7 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 |------------------|----------------------------------------------|
 | SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -623,7 +623,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 |------------------|----------------------------------------------|
 | SUCCESS |	Successfully copied the *Attribute Catalog* entry |
 | E_OUTOFBOUND |	Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) | Entry corresponding to input relId is free in the *Attribute Cache* Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | E_ATTRNOTEXIST |	No attribute with the input attribute name or offset exists |
 
 #### Algorithm
@@ -906,7 +906,7 @@ Returns the *relation id*, that is, the *index*, of the entry corresponding to t
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 | `relId` |  The relation id of the relation in the Open Relation Table  |
-| `E_NOTOPEN`  | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory.   |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants)  | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory.   |
 
 #### Algorithm
 ```cpp
@@ -1022,9 +1022,9 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 SUCCESS	| Successfully closed the entry of the relation in the Open Relation Table
-| E_NOTPERMITTED |	*Relation Catalog* and *Attribute Catalog* relations cannot be closed during the session |
-| E_OUTOFBOUND | Input relId is outside the valid set of possible relation ids |
-| E_NOTOPEN | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
+| [`E_NOTPERMITTED`](https://nitcbase.github.io/constants.html#constants) |	*Relation Catalog* and *Attribute Catalog* relations cannot be closed during the session |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input relId is outside the valid set of possible relation ids |
+| [`E_NOTOPEN`](https://nitcbase.github.io/constants.html#constants) | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
 
 #### Algorithm
 ```cpp
@@ -1088,7 +1088,7 @@ Nil
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 | relId |  Index of a free entry in the Open Relation Table  |
-| FAILURE |  No free entries left in the Open Relation Table  |
+| [`FAILURE`](https://nitcbase.github.io/constants.html#constants) |  No free entries left in the Open Relation Table  |
 
 #### Algorithm
 ```cpp

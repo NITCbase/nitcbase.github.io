@@ -243,6 +243,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
 | blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants)   | blockNum is outside the valid range  |
 #### Algorithm
 ```cpp
 int StaticBuffer::getStaticBlockType(int blockNum){
@@ -268,8 +269,8 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| `SUCCESS`        | successfully set dirty bit                   |
-| `E_OUTOFBOUND`   | Block number is out of range.                |
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)        | successfully set dirty bit                   |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants)   | blockNum is outside the valid range                |
 
 #### Algorithm
 ```cpp
@@ -300,7 +301,8 @@ Returns the buffer number of the buffer to which the block with the given block 
 |        Value |                        Description                               |
 |--------------|--------------------------------------------------------|
 | bufferNum  | Buffer number to which the given block is loaded. |
-| `FAILURE` | Block is not loaded to any buffer.                          |
+| [`FAILURE`](https://nitcbase.github.io/constants.html#constants) | Block is not loaded to any buffer.                          |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | blockNum is outside the valid range |
 
 #### Algorithm
 ```cpp
@@ -334,6 +336,7 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 |        Value |  Type |                        Description                                        |
 |--------------|-------|---------------------------------------------------------------------------|
 | bufferNum    | `int` | Buffer number of the free/freed buffer block assigned to the input block. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | blockNum is outside the valid range |
 
 #### Algorithm
 ```cpp
@@ -411,7 +414,7 @@ Nil
 
 #### Algorithm
 ```cpp
-Blockbuffer::BlockBuffer(char blockType){
+BlockBuffer::BlockBuffer(char blockType){
 	
 	// allocate a block in the disk and a buffer in memory to hold the new block of given type using getFreeBlock().
 
@@ -439,7 +442,7 @@ Nil
 
 #### Algorithm
 ```cpp
-Blockbuffer::BlockBuffer(int blockNum){
+BlockBuffer::BlockBuffer(int blockNum){
 	
 	// set the blockNum field of the object to input argument.
 
@@ -685,7 +688,7 @@ Returns the block number of a free block of the input type in the disk and allot
 | Value | Description |
 |-----------|--------------------------------------------------------------------------------|
 | blockNum | Block number of the free block. |
-| `FAILURE` | No free block is available in the disk. |
+| [`FAILURE`](https://nitcbase.github.io/constants.html#constants) | No free block is available in the disk. |
 
 #### Algorithm
 ```cpp
@@ -852,8 +855,8 @@ Gives the slotNumth record entry of the block.
 #### Return Values
 | Value | Description |
 |-----------|--------------------------|
-| `SUCCESS` | Succesful copy of the record. |
-| `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Succesful copy of the record. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input slotNum is outside the set of valid slot values of the block. |
 | `E_FREESLOT` | Slot corresponding to the input slotNum is free. |
 
 :::caution note
@@ -895,8 +898,8 @@ Sets the slotNumth record entry of the block with the input record contents.
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| `SUCCESS` | Succesful copy of the record. |
-| `E_OUTOFBOUND` | Input slotNum is outside the set of valid slot values of the block. |
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Succesful copy of the record. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input slotNum is outside the set of valid slot values of the block. |
 
 :::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
@@ -1072,8 +1075,8 @@ Gives the indexNumth entry of the block.
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| `SUCCESS` | Successful copy of the internal index entry. |
-| `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Successful copy of the internal index entry. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
@@ -1110,8 +1113,8 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| `SUCCESS` | Successful copy of the internal index entry. |
-| `E_OUTOFBOUND` | Input indexNum is outside the valid range of index numbers of the block. |
+| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Successful copy of the internal index entry. |
+| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
