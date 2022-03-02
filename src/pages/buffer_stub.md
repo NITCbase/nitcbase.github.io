@@ -4,57 +4,88 @@
 
 ```cpp
 #include "StaticBuffer.h"
+
+#include "StaticBuffer.h"
 #include "../define/constants.h"
-#include "../disk/disksimulator.cpp"
+#include "../Disk_Class/Disk.cpp"
 
-StaticBuffer::StaticBuffer(){
-// copy blockAllocMap blocks from disk to buffer (using readblock() of disk)
+unsigned char StaticBuffer::blocks[BUFFER_CAPACITY][BLOCK_SIZE];
+struct BufferMetaInfo StaticBuffer::metainfo[BUFFER_CAPACITY];
+unsigned char StaticBuffer::blockAllocMap[DISK_BLOCKS];
 
-//initialise metainfo of all the buffer blocks with dirty:false, free:true, timestamp:-1 and blockNum:-1    
+StaticBuffer::StaticBuffer() {
+
+    // copy blockAllocMap blocks from disk to buffer (using readblock() of disk)
+
+    //initialise metainfo of all the buffer blocks with dirty:false, free:true, timestamp:-1 and blockNum:-1
+
 }
 
-StaticBuffer::~StaticBuffer(){
+StaticBuffer::~StaticBuffer() {
     // copy blockAllocMap blocks from buffer to disk(using writeblock() of disk)
 
-    /*iterate through all the buffer blocks, 
-    	write back blocks with meta info as free:false,dirty:true (using writeblock() of disk)*/
+    /*iterate through all the buffer blocks,
+        write back blocks with meta info as free:false,dirty:true (using writeblock() of disk)*/
+
 }
 
-int StaticBuffer::getFreeBuffer(int blockNum){
-    // increase the time stamps in metainfo of all the occupied buffers.
-    
-    // if free buffer is available, bufferIndex is the index of the free buffer.
-    
-    // if free buffer is not available, replace the buffer with the largest timestamp and set it as bufferIndex.
-    
-    // update the metainfo array corresponding to the buffer index. 
-    
-    // return the buffer index
+int StaticBuffer::getStaticBlockType(int blockNum) {
+    // Check if blockNum is valid (non zero and less than number of disk blocks)
+    // and return E_OUTOFBOUND if not valid.
+
+
+    // Access the entry in block allocation map corresponding to the blockNum argument
+    // and return the block type after type casting to integer.
 }
 
-int StaticBuffer::getBufferNum(int blockNum){
-    //traverse through the metainfo array,
-    	find the buffer index of the buffer to which the block is loaded.
-    
-    //if found return buffer index, else indicate failure.
-}
+int StaticBuffer::setDirtyBit(int blockNum) {
+    // Check if blockNum is valid (non zero and less than number of disk blocks)
+    // and return E_OUTOFBOUND if not valid.
 
-int StaticBuffer::getStaticBlockType(int blockNum){
-    //traverse the blockAllocMap to find the type corresponding to blockNum.
-    
-    //return the blockType obtained(REC/IND_INTERNAL/IND_LEAF/UNUSED)
-}
-
-void StaticBuffer::setDirtyBit(int blockNum){
     //find the buffer index corresponding to the block using the getBufferNum().
-    
+
     //set the dirty bit of that buffer in the metaInfo to true.
+
 }
+
+int StaticBuffer::getBufferNum(int blockNum) {
+    // Check if blockNum is valid (non zero and less than number of disk blocks)
+    // and return E_OUTOFBOUND if not valid.
+
+    //traverse through the metainfo array,
+    // find the buffer index of the buffer to which the block is loaded.
+
+
+    //if found return buffer index, else indicate failure.
+
+}
+
+int StaticBuffer::getFreeBuffer(int blockNum) {
+    // Check if blockNum is valid (non zero and less than number of disk blocks)
+    // and return E_OUTOFBOUND if not valid.
+
+    // increase the time stamps in metainfo of all the occupied buffers.
+ 
+    // if free buffer is available, bufferIndex is the index of the free buffer.
+
+    // if free buffer is not available, replace the buffer with the largest timestamp and set it as bufferIndex.
+
+    // update the metainfo array corresponding to the buffer index.
+
+    // return the buffer index
+
+}
+
+
+
 ```
 
 ## StaticBuffer.h
 
 ```cpp
+#ifndef NITCBASE_STATICBUFFER_H
+#define NITCBASE_STATICBUFFER_H
+
 #include "../define/constants.h"
 
 struct BufferMetaInfo {
@@ -65,27 +96,34 @@ struct BufferMetaInfo {
 };
 
 class StaticBuffer {
-				
-friend class BlockBuffer;
+
+	friend class BlockBuffer;
 
 private:
 	//fields
-	static unsigned char blocks[32][BLOCK_SIZE];
-	static struct BufferMetaInfo metainfo[32];
+	static unsigned char blocks[BUFFER_CAPACITY][BLOCK_SIZE];
+	static struct BufferMetaInfo metainfo[BUFFER_CAPACITY];
 	static unsigned char blockAllocMap[DISK_BLOCKS];
 
 	//methods
 	static int getFreeBuffer(int blockNum);
+
 	static int getBufferNum(int blockNum);
-	
+
 public:
-	//methods	
+	//methods
 	static int getStaticBlockType(int blockNum);
-	static void setDirtyBit(int blockNum);
+
+	static int setDirtyBit(int blockNum);
+
 	StaticBuffer();
+
 	~StaticBuffer();
-	
+
 };
+
+#endif //NITCBASE_STATICBUFFER_H
+
 ```
 
 ## BlockBuffer.cpp
