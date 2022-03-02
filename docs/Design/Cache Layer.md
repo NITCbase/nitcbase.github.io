@@ -933,8 +933,8 @@ Creates an entry for the input relation in the *Open Relation* Table and returns
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 | `relId` | Relation id of the relation in the Open Relation Table   |
-| `E_RELNOTEXIST` |  No relation with name, relName, exists in the disk  |
-| `E_CACHEFULL` |  No free entries left in the Open Relation Table  |
+| [`E_RELNOTEXIST`](https://nitcbase.github.io/constants.html#constants) |  No relation with name, relName, exists in the disk  |
+| [`E_CACHEFULL`](https://nitcbase.github.io/constants.html#constants) |  No free entries left in the Open Relation Table  |
 
 #### Algorithm
 ```cpp

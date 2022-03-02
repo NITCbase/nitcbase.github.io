@@ -857,7 +857,7 @@ Gives the slotNumth record entry of the block.
 |-----------|--------------------------|
 | [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Succesful copy of the record. |
 | [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input slotNum is outside the set of valid slot values of the block. |
-| `E_FREESLOT` | Slot corresponding to the input slotNum is free. |
+| [`E_FREESLOT`](https://nitcbase.github.io/constants.html#constants) | Slot corresponding to the input slotNum is free. |
 
 :::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
