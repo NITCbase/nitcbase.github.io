@@ -1269,16 +1269,17 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 :::
 #### Algorithm
 ```cpp
-int IndLeaf::getEntry(void *ptr, int indexNum) {
-						
-	// get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
+int IndLeaf::setEntry(void *ptr, int indexNum) {
+
+	// get the starting address of the buffer containing the block using BlockBuffer.getBufferPtr().
 
 	// if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
 
-	// using offset range, copy the indexNum'th entry to memory pointed to by ptr.    
+	// copy the struct Index pointed by ptr to indexNum'th entry in block.
 
-	// return SUCCESS.
+	//update dirty bit.
 
+	//return SUCCESS
 }
 ```
 
