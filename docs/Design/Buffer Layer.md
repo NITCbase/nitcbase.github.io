@@ -724,8 +724,8 @@ public:
 	//methods
 	RecBuffer();
 	RecBuffer(int blockNum);
-	void getSlotmap(unsigned char *slotMap);
-	void setSlotmap(unsigned char *slotMap);
+	void getSlotMap(unsigned char *slotMap);
+	void setSlotMap(unsigned char *slotMap);
 	int getRecord(union Attribute *rec,int slotNum);
 	int setRecord(union Attribute *rec,int slotNum);
 
@@ -779,7 +779,7 @@ RecBuffer::RecBuffer(int blockNum) : BlockBuffer(blockNum){}
 //this is the way to call parent non-default constructor.
 ```
 
-### RecBuffer :: getSlotmap()
+### RecBuffer :: getSlotMap()
 
 #### Description
 Gives the slotmap of the block.
@@ -799,7 +799,7 @@ Nil
 
 #### Algorithm
 ```cpp
-void RecBuffer::getSlotmap(unsigned char *slotMap){ 
+void RecBuffer::getSlotMap(unsigned char *slotMap){ 
 
     // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
 	
@@ -810,7 +810,7 @@ void RecBuffer::getSlotmap(unsigned char *slotMap){
 }
 ```
 
-### RecBuffer :: setSlotmap()
+### RecBuffer :: setSlotMap()
 
 #### Description
 Sets the slotmap of the block.
@@ -829,7 +829,7 @@ Nil
 :::
 
 ```cpp
-void RecBuffer::setSlotmap(unsigned char *slotMap){ 
+void RecBuffer::setSlotMap(unsigned char *slotMap){ 
 												
     // get the starting address of the buffer containing the block using BlockBuffer::getBufferPtr(). 
     
