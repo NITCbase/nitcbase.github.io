@@ -243,7 +243,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
 | blockType      | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants)   | blockNum is outside the valid range  |
+| [`E_OUTOFBOUND`](/constants)   | blockNum is outside the valid range  |
 #### Algorithm
 ```cpp
 int StaticBuffer::getStaticBlockType(int blockNum){
@@ -269,8 +269,8 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)        | successfully set dirty bit                   |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants)   | blockNum is outside the valid range                |
+| [`SUCCESS`]/constants        | successfully set dirty bit                   |
+| [`E_OUTOFBOUND`]/constants   | blockNum is outside the valid range                |
 
 #### Algorithm
 ```cpp
@@ -301,8 +301,8 @@ Returns the buffer number of the buffer to which the block with the given block 
 |        Value |                        Description                               |
 |--------------|--------------------------------------------------------|
 | bufferNum  | Buffer number to which the given block is loaded. |
-| [`FAILURE`](https://nitcbase.github.io/constants.html#constants) | Block is not loaded to any buffer.                          |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | blockNum is outside the valid range |
+| [`FAILURE`]/constants | Block is not loaded to any buffer.                          |
+| [`E_OUTOFBOUND`]/constants | blockNum is outside the valid range |
 
 #### Algorithm
 ```cpp
@@ -336,7 +336,7 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 |        Value |  Type |                        Description                                        |
 |--------------|-------|---------------------------------------------------------------------------|
 | bufferNum    | `int` | Buffer number of the free/freed buffer block assigned to the input block. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | blockNum is outside the valid range |
+| [`E_OUTOFBOUND`]/constants | blockNum is outside the valid range |
 
 #### Algorithm
 ```cpp
@@ -688,7 +688,7 @@ Returns the block number of a free block of the input type in the disk and allot
 | Value | Description |
 |-----------|--------------------------------------------------------------------------------|
 | blockNum | Block number of the free block. |
-| [`FAILURE`](https://nitcbase.github.io/constants.html#constants) | No free block is available in the disk. |
+| [`FAILURE`]/constants | No free block is available in the disk. |
 
 #### Algorithm
 ```cpp
@@ -855,9 +855,9 @@ Gives the slotNumth record entry of the block.
 #### Return Values
 | Value | Description |
 |-----------|--------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Succesful copy of the record. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input slotNum is outside the set of valid slot values of the block. |
-| [`E_FREESLOT`](https://nitcbase.github.io/constants.html#constants) | Slot corresponding to the input slotNum is free. |
+| [`SUCCESS`]/constants | Succesful copy of the record. |
+| [`E_OUTOFBOUND`]/constants | Input slotNum is outside the set of valid slot values of the block. |
+| [`E_FREESLOT`]/constants | Slot corresponding to the input slotNum is free. |
 
 :::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
@@ -898,8 +898,8 @@ Sets the slotNumth record entry of the block with the input record contents.
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Succesful copy of the record. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input slotNum is outside the set of valid slot values of the block. |
+| [`SUCCESS`]/constants | Succesful copy of the record. |
+| [`E_OUTOFBOUND`]/constants | Input slotNum is outside the set of valid slot values of the block. |
 
 :::caution note
 * The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
@@ -1075,8 +1075,8 @@ Gives the indexNumth entry of the block.
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Successful copy of the internal index entry. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input indexNum is outside the valid range of index numbers of the block. |
+| [`SUCCESS`]/constants | Successful copy of the internal index entry. |
+| [`E_OUTOFBOUND`]/constants | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
@@ -1113,8 +1113,8 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants) | Successful copy of the internal index entry. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input indexNum is outside the valid range of index numbers of the block. |
+| [`SUCCESS`]/constants | Successful copy of the internal index entry. |
+| [`E_OUTOFBOUND`]/constants | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 * The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
@@ -1218,8 +1218,8 @@ Gives the indexNum<sup>th</sup> entry of the block.
 #### Return Values
 | Value | Description |
 |----------|--------------------------------------------------------------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful getting of the leaf index entry. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+| [`SUCCESS`]/constants  |	Successful getting of the leaf index entry. |
+| [`E_OUTOFBOUND`]/constants | Input `indexNum` is outside the valid range of index numbers of the block. |
 
 
 :::caution note
@@ -1259,8 +1259,8 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 #### Return Values
 | Value | Description |
 |----------|--------------------------------------------------------------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  |	Successful setting of the leaf index entry. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+| [`SUCCESS`]/constants  |	Successful setting of the leaf index entry. |
+| [`E_OUTOFBOUND`]/constants | Input `indexNum` is outside the valid range of index numbers of the block. |
 
 :::caution note
 * The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
@@ -1321,7 +1321,7 @@ This function compares two [`union Attribute`](#attribute) values on the basis o
 |-----------|------------------|---------------------|
 | attr1 | [`union Attribute`](#attribute)  |First attribute value to be compared. |
 | attr2 | [`union Attribute`](#attribute)  | Second attribute value to be compared. |
-| attrType | `int`  | Type of the attribute [`NUM/STR`](https://nitcbase.github.io/constants.html#constants). |
+| attrType | `int`  | Type of the attribute [`NUM/STR`]/constants. |
 
 #### Return Values
 | Value | Description |

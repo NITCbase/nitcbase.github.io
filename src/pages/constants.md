@@ -29,7 +29,6 @@ The constants used by various algorithms in NITCbase documentation are listed in
 #define STRING 1
 #define FLOAT 2
 
-
 #define RELCAT_RELID 0
 #define ATTRCAT_RELID 1
 ```

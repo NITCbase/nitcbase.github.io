@@ -90,8 +90,8 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 #### Return Values
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)      | Successful loading/reading of the block to the buffer. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) | Block number is out of range.                          |
+| [`SUCCESS`]/constants      | Successful loading/reading of the block to the buffer. |
+| [`E_OUTOFBOUND`]/constants | Block number is out of range.                          |
 
 
 ---
@@ -112,8 +112,8 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 #### Return Values
 |        Value      |                         Description                               |
 |--------------|--------------------------------------------------------|
-| [`SUCCESS`](https://nitcbase.github.io/constants.html#constants)  | Successful writing of the block to the disk. |
-| [`E_OUTOFBOUND`](https://nitcbase.github.io/constants.html#constants) |Block number is out of range.                          |
+| [`SUCCESS`]/constants  | Successful writing of the block to the disk. |
+| [`E_OUTOFBOUND`]/constants |Block number is out of range.                          |
 
 
 ---
