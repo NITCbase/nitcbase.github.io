@@ -12,7 +12,7 @@
 #ifndef NITCBASE_RELCACHETABLE_H
 #define NITCBASE_RELCACHETABLE_H
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include "../Buffer/BlockBuffer.h"
 
 typedef struct RelCatEntry {
@@ -72,7 +72,7 @@ private:
 #ifndef NITCBASE_ATTRCACHETABLE_H
 #define NITCBASE_ATTRCACHETABLE_H
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include "../Buffer/BlockBuffer.h"
 
 typedef struct AttrCatEntry {
@@ -407,7 +407,7 @@ int OpenRelTable::getFreeOpenRelTableEntry() {
 #ifndef NITCBASE_OPENRELTABLE_H
 #define NITCBASE_OPENRELTABLE_H
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include "../define/errors.h"
 
 typedef struct OpenRelTableMetaInfo {

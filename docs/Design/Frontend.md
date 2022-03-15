@@ -132,7 +132,7 @@ public:
 The specifications for each method of this class is provided in the following sections.
 
 :::note
- Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io/constants.html). 
+ Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](https://nitcbase.github.io(/constants).html). 
 :::
 
 

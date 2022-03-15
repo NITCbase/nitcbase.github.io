@@ -6,7 +6,7 @@
 #include "StaticBuffer.h"
 
 #include "StaticBuffer.h"
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include "../Disk_Class/Disk.cpp"
 
 unsigned char StaticBuffer::blocks[BUFFER_CAPACITY][BLOCK_SIZE];
@@ -86,7 +86,7 @@ int StaticBuffer::getFreeBuffer(int blockNum) {
 #ifndef NITCBASE_STATICBUFFER_H
 #define NITCBASE_STATICBUFFER_H
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 
 struct BufferMetaInfo {
 	bool free;
@@ -132,7 +132,7 @@ public:
 #include "BlockBuffer.h"
 #include "StaticBuffer.h"
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include "../define/errors.h"
 #include "../Disk_Class/Disk.h"
 
@@ -370,7 +370,7 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 #ifndef NITCBASE_BLOCKBUFFER_H
 #define NITCBASE_BLOCKBUFFER_H
 
-#include "../define/constants.h"
+#include "../define(/constants).h"
 #include <cstdint>
 
 
