@@ -131,7 +131,7 @@ struct BufferMetaInfo{
 ```
 
 ---
-## Class StaticBuffer
+## class StaticBuffer
 The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32` disk blocks in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as buffer block in the NITCbase documentation. Buffer blocks will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains meta-information for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the **Block Allocation Map** in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the Block Allocation Map specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
 
 All these data fields are **private** to the `StaticBuffer class` and can only be accessed through **public** methods. This class provides the basic disk fetch and commit interfaces to the higher layers, creating an illusion of having the entire disk in memory at all times. `StaticBuffer` is a **static class**, i.e., all member fields and methods are declared static. By doing so, memory will be allocated statically for all member fields of the class, and any access to them will refer to the same statically allocated memory. Also static methods in a class are allowed to access only static members of the class. Consequently, there needs to exist only a single static object of the class(see implementation tip below). The class definition of `StaticBuffer` is as given below:
@@ -360,7 +360,7 @@ int StaticBuffer::getFreeBuffer(int blockNum){
 
 ---
 
-## Class BlockBuffer
+## class BlockBuffer
 The `class BlockBuffer` is a generic class for representing a disk block of any type (`Record`, `Internal Index`, or `Leaf Index`). Its only field is `blockNum`. The field `blockNum` stores the disk block number corresponding to the block object. The block has to be loaded and stored in one of the `32` buffers of the `StaticBuffer class` before its data can be accessed. Adding to the complexity is the fact that the block, once loaded, may not even be present in the buffer memory later on because of the **buffer replacement algorithm** implemented by Buffer Layer. In order to work with data of the block, any method of the `BlockBuffer class` or its descendent classes need to know the address of the buffer memory to which the block has been loaded. Hence any method of this class operating on the block data should first get the pointer to the buffer memory that holds the contents of the block. The `getBufferPtr()` method is used for this purpose. The public methods of `BlockBuffer` deal with information like **header** and **block type**, which are generic to all blocks. `RecBuffer` and `IndBuffer` classes extend the `class BlockBuffer`, thereby, inheriting all the fields and methods of `BlockBuffer`.
 
 :::info Note
@@ -714,7 +714,7 @@ int BlockBuffer::getFreeBlock(int blockType){
 }
 ```
 
-## Class RecBuffer
+## class RecBuffer
 An object of the `RecBuffer class` is associated with a **record block**. In a Record block, a slot can store one record, and each record is a fixed sized set of Attributes. Ordering of data as records and making use of slotmap are done only in a record block. **Public methods** of this class deal with **access/modification of the records and the slotmap**. `RecBuffer class` extends the `BlockBuffer class`. Thus, all its **protected** fields and methods can be accessed by `RecBuffer class`.
 ```cpp
 class RecBuffer : public BlockBuffer{
@@ -928,7 +928,7 @@ void RecBuffer::setRecord(union Attribute *rec,int slotNum){
 ```
 
 
-## Class IndBuffer
+## class IndBuffer
 
 *IndBuffer* class is a generic class for representing an *Index* block. [B+ Trees](https://en.wikipedia.org/wiki/B%2B_tree) are constructed using *Index* blocks which can be either [Index Internal blocks](../Design/Physical%20Layer#internal-index-block-structure) or [Index Leaf blocks](../Design/Physical%20Layer#leaf-index-block-structure). B+ Tree helps in faster data access as compared to sequentially accessing the data through [Record](../Design/Physical%20Layer#record-block-structure) blocks. 
 
@@ -1000,7 +1000,7 @@ If a new index block is to be allocated in the disk use [constructor 1](#indbuff
 :::
 
 
-## Class IndInternal
+## class IndInternal
 An object of the `class IndInternal` is associated with an **Internal Index block**. An Internal Index block stores entries of type `struct InternalEntry` and is used as the **internal nodes of a B+ Tree**. Public methods of this class deal with the access/modification of the InternalEntry entries. `IndInternal class` extends `IndBuffer class` and overrides its virtual methods. The constructor of the IndInternal class calls the constructor of the parent class by passing suitable argument.
 
 ```cpp
@@ -1140,7 +1140,7 @@ int IndInternal::setEntry(void *ptr, int indexNum){
 ```
 
 
-## Class IndLeaf
+## class IndLeaf
 
 An object of the *IndLeaf* class will be associated with a [Index Leaf blocks](../Design/Physical%20Layer#leaf-index-block-structure). A Leaf Index block stores entries of type `struct Index` and is used as the leaf nodes of a B+ Tree. Public methods of this class deal with the access/modification of the *Index* entries. **IndLeaf* class extends [IndBuffer class](#class-indbuffer) and overrides its virtual methods. The constructor of the IndLeaf class calls the constructor of the parent class by passing suitable argument.
 
