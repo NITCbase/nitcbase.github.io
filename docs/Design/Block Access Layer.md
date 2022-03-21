@@ -38,7 +38,6 @@ class BlockAccess {
 
         static int deleteRelation(char relName[ATTR_SIZE]);
     
-    private:
         static struct recId linearSearch(relId relid, char attrName[ATTR_SIZE], Attribute attrval, int op);
 
 }

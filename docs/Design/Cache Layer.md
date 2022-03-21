@@ -1052,6 +1052,9 @@ int OpenRelTable::closeRel(int relId) {
 		/* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
         Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 	}
+
+	// free the memory dynamically alloted to this Relation Cache entry
+	// and assign nullptr to that entry
 	
 	/****** Releasing the Attribute Cache entry of the relation ******/
 	
@@ -1062,10 +1065,10 @@ int OpenRelTable::closeRel(int relId) {
 			/* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
              Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 			
-			
 		}
 		
-		// free the memory dynamically alloted to this entry in Attribute Cache linked list.
+		// free the memory dynamically alloted to this entry in Attribute Cache linked list
+		// and assign nullptr to that entry
 	}
 	
 	/****** Updating metadata in the Open Relation Table of the relation  ******/
