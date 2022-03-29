@@ -4,6 +4,65 @@
 
 ```cpp
 #include "RelCacheTable.h"
+#include "OpenRelTable.h"
+
+RelCacheEntry *RelCacheTable::relCache[MAX_OPEN];
+
+int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
+    // if relId is outside the range [0, MAX_OPEN-1] return E_OUTOFBOUND
+
+    // if entry corresponding to the relId in the Relation Cache Table is free
+
+    //copy the corresponding Relation Catalog entry in the Relation Cache Table to relCatBuf.
+
+    // return SUCCESS
+}
+
+int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
+    // if relId is outside the range [0, MAX_OPEN-1] return E_OUTOFBOUND
+
+    // if entry corresponding to the relId in the Relation Cache Table is free
+
+    //copy the relCatBuf to the corresponding Relation Catalog entry in the Relation Cache Table.
+
+    //set the dirty flag of the corresponding Relation Cache entry in the Relation Cache Table.
+
+    // return SUCCESS
+}
+
+int RelCacheTable::getSearchIndex(int relId, RecId *searchIndex) {
+    // if relId is outside the range [0, MAX_OPEN-1] return E_OUTOFBOUND
+
+    // if entry corresponding to the relId in the Relation Cache Table is free
+
+    // copy the searchIndex field of the Relation Cache entry corresponding to input relId to searchIndex variable.
+
+    // return SUCCESS
+}
+
+int RelCacheTable::setSearchIndex(int relId, RecId *searchIndex) {
+    // if relId is outside the range [0, MAX_OPEN-1] return E_OUTOFBOUND
+
+    // if entry corresponding to the relId in the Relation Cache Table is free
+
+    // copy the searchIndex variable to the searchIndex field of the Relation Cache entry corresponding to input relId.
+
+    // return SUCCESS
+}
+
+void RelCacheTable::recordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry) {
+    /*
+     * The dirty, recId, and searchIndex fields are initialised with default values of
+     * false, {-1, -1}, and {-1, -1}, respectively
+     */
+    // The record content is used to populate the relCatEntry field
+}
+
+void RelCacheTable::relCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry) {
+    //  The record is populated with the contents of the relCatEntry field.
+    //  The dirty, recId, and searchIndex fields are used only during runtime and are not written to the disk.
+}
+
 ```
 
 ## RelCacheTable.h
@@ -12,7 +71,7 @@
 #ifndef NITCBASE_RELCACHETABLE_H
 #define NITCBASE_RELCACHETABLE_H
 
-#include "../define(/constants).h"
+#include "../define/constants.h"
 #include "../Buffer/BlockBuffer.h"
 
 typedef struct RelCatEntry {
@@ -51,12 +110,11 @@ private:
 	static RelCacheEntry* relCache[MAX_OPEN];
 
 	//methods
-	static void RecordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
-	static void RelCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
+	static void recordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
+	static void relCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry* relCacheEntry);
 
 };
 #endif //NITCBASE_RELCACHETABLE_H
-
 ```
 
 ## AttrCacheTable.cpp
