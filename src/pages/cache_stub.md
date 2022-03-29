@@ -121,6 +121,124 @@ private:
 
 ```cpp
 #include "AttrCacheTable.h"
+#include "../define/constants.h"
+#include "../define/errors.h"
+
+AttrCacheEntry * AttrCacheTable::attrCache[MAX_OPEN];
+
+int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
+    
+    if relId is outside the range [0, MAX_OPEN-1]:
+    {
+        return E_OUTOFBOUND;
+    }
+    
+    if entry corresponding to the relId in the Attribute Cache Table is free:
+    {
+        return E_NOTOPEN;
+    }
+    
+    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+    {
+        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
+        {
+            // copy that Attribute Catalog entry in the Attribute Cache Table to attrCatBuf.
+            
+            return SUCCESS;
+        }
+    }
+    
+    return E_ATTRNOTEXIST;
+    
+}
+
+int AttrCacheTable::setAttrCatEntry(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
+    
+    if relId is outside the range [0, MAX_OPEN-1]:
+    {
+        return E_OUTOFBOUND;
+    }
+    
+    if entry corresponding to the relId in the Attribute Cache Table is free:
+    {
+        return E_NOTOPEN;
+    }
+    
+    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+    {
+        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
+        {
+            // copy the attrCatBuf to the corresponding Attribute Catalog entry in the Attribute Cache Table.
+            
+            // set the dirty flag of the corresponding Attribute Cache entry in the Attribute Cache Table.
+            
+            return SUCCESS;
+        }
+    }
+    
+    return E_ATTRNOTEXIST;
+    
+}
+
+int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
+    
+    if relId is outside the range [0, MAX_OPEN-1]:
+    {
+        return E_OUTOFBOUND;
+    }
+    
+    if entry corresponding to the relId in the Attribute Cache Table is free:
+    {
+        return E_NOTOPEN;
+    }
+    
+    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+    {
+        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
+        {
+        
+            //copy the searchIndex field of the corresponding Attribute Cache entry in the Attribute Cache Table to input searchIndex variable.
+
+            return SUCCESS;
+        }
+    }
+    
+    return E_ATTRNOTEXIST;
+    
+}
+
+int AttrCacheTable::setSearchIndex(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
+    
+    if relId is outside the range [0, MAX_OPEN-1]:
+    {
+        return E_OUTOFBOUND;
+    }
+    
+    if entry corresponding to the relId in the Attribute Cache Table is free:
+    {
+        return E_NOTOPEN;
+    }
+    
+    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+    {
+        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
+        {
+            // copy the input searchIndex variable to the searchIndex field of the corresponding Attribute Cache entry in the Attribute Cache Table.
+            
+            return SUCCESS;
+        }
+    }
+    
+    return E_ATTRNOTEXIST;
+    
+}
+
+void AttrCacheTable::recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry) {
+}
+
+
+void AttrCacheTable::attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry) {
+}
 
 ```
 
@@ -130,7 +248,7 @@ private:
 #ifndef NITCBASE_ATTRCACHETABLE_H
 #define NITCBASE_ATTRCACHETABLE_H
 
-#include "../define(/constants).h"
+#include "../define/constants.h"
 #include "../Buffer/BlockBuffer.h"
 
 typedef struct AttrCatEntry {
@@ -148,7 +266,7 @@ typedef struct AttrCacheEntry {
 
 	AttrCatEntry attrCatEntry;
 	bool dirty;
-	RecId recid;
+	RecId recId;
 	IndexId searchIndex;
 	struct AttrCacheEntry *next;
 
@@ -174,13 +292,12 @@ private:
 	static AttrCacheEntry* attrCache[MAX_OPEN];
 
 	//methods
-	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
-	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
+	static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry);
+	static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry);
 
 };
 
 #endif //NITCBASE_ATTRCACHETABLE_H
-
 ```
 
 ## OpenRelTable.cpp
