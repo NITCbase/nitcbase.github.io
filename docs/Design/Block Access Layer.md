@@ -28,9 +28,9 @@ NITCbase follows an Object-Oriented design for Block Access Layer. The class dia
 ```cpp
 class BlockAccess {
     public:
-        static int search(relId relid, Attribute *record, char attrName[ATTR_SIZE], Attribute attrval, int op)
+        static int search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrval, int op);
 
-        static int insert(int relid, union Attribute *record);
+        static int insert(int relId, union Attribute *record);
 
 		static int renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]);
 		
@@ -38,9 +38,9 @@ class BlockAccess {
 
         static int deleteRelation(char relName[ATTR_SIZE]);
     
-        static struct recId linearSearch(relId relid, char attrName[ATTR_SIZE], Attribute attrval, int op);
+        static RecId linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrval, int op);
 
-}
+};
 ```
 
 ### BlockAccess :: linearSearch()
@@ -59,41 +59,43 @@ This method searches the relation specified linearly to find the next record tha
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| RecId (block#, slot#) |	returns (block#, slot#) of the record corresponding to the next hit.
+| recId (block#, slot#) |	returns (block#, slot#) of the record corresponding to the next hit.
  |(-1, -1) |	If no valid next hit is found.
 
 #### Algorithm
 ```cpp
-struct recId BlockAccess::linearSearch(relId relid, char attrName[ATTR_SIZE], union Attribute attrval, int op) {
-	//get the previous record id from the relation cache corresponding to the relation with Id=relid
-	OpenRelTabel::getPrevRecId(relid, prev_recid);
-	if(prev_recid == {-1, -1}){ //It is the first time that linear search search for the record with the attribute value attrval
-		//get the first record block of the relation from the relation cache 
-		//using getRelCatEntry() method of OpenRelTable in cache layer
-		//block = the first record block of the relation
-		//slot = 0
+RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
+	// get the previous record id from the relation cache corresponding to the relation with Id=relId
+	RelCacheTable::getSearchIndex(relId, prev_recid);
+	if(prev_recid == {-1, -1}) { 
+		// It is the first time that linear search search for the record with the attribute value attrval
+		// get the first record block of the relation from the relation cache using the appropriate function of Cache Layer
+
+		block = first record block of the relation
+		slot = 0
 	}
-	else{ //if the linear search knows the  hit from previous search
-		// block = the previous record id block
-		// slot = the previous record id slot
+	else { //if the linear search knows the  hit from previous search
+		block = previous record id's block
+		slot = previous record id's slot
 	}
 	
-	//The following code searches for the next record in the relation that satisfies the given condition
-	//Start from block and iterate over the records of the relation{
+	// The following code searches for the next record in the relation that satisfies the given condition
+	// Start from block and iterate over the records of the relation{
 		//get the record of the relation using the following buffer layer functions
-		rec_buffer = Buffer::getRecBuffer(block);
-		rec_buffer->getRecord(record, slot);
-		//If slot is free skip the loop and continue to the next record slot
+		RecBuffer recBuffer = new RecBuffer(block);
+		recBuffer.getRecord(record, slot);
+
+		// If slot is free skip the loop and continue to the next record slot
 		
-		//compare record's attribute value to the the given attrval as below:
-		//storing the outcome of comparision in the variable flag
-		//flag = compare(AttrVal, record[attr_offset], attr_type);
+		// compare record's attribute value to the the given attrval as below:
+		// storing the outcome of comparison in the variable flag
+		flag = compare(attrval, record[attr_offset], attr_type);
 		
-		//cond = UNSET
+		// cond = UNSET
 		
-		//Next task is to check whether this record satisfies the given condition.
-		//It is determined based on the output of previous comparision and the op value received.
-		//The following code sets the cond variable if the condition is satisfied.
+		// Next task is to check whether this record satisfies the given condition.
+		// It is determined based on the output of previous comparison and the op value received.
+		// The following code sets the cond variable if the condition is satisfied.
 		switch(op){
 		
 			case NE: //if op is "not equal to"
@@ -137,14 +139,14 @@ struct recId BlockAccess::linearSearch(relId relid, char attrName[ATTR_SIZE], un
 			recid = {block, slot} //record id of the record that satisfies the given condition
 			/*set the previous record id in the relation cache as 
 			the record id of the record that sastifies the given condition*/		
-			OpenRelTable::setPrevRecId(relid, recid);
+			OpenRelTable::setPrevRecId(relId, recid);
 			return recid;
 		}
 		
 		//get the next record id by adjusting the block and slot
 	//}
 	
-	return {-1, -1}; //i.e., no record in the relation with Id relid satisfies the given condition
+	return {-1, -1}; //i.e., no record in the relation with Id relId satisfies the given condition
 }
 ```
 
@@ -157,7 +159,7 @@ This method searches the relation specified to find the next record that satisfi
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|-----------------------|
-| relid	| `int`	| Relation Id of Relation to which search has to be made. | 
+| relId	| `int`	| Relation Id of Relation to which search has to be made. | 
 | record	| `union Attribute*`	| pointer to record where next found record satisfying given condition is to be placed. | 
 | attrname	| `char[ATTR_SIZE]`	| Attribute/column name to which condition need to be checked with. | 
 | attrval	| `union Attribute`	| value of attribute that has to be checked against the operater. | 
@@ -174,31 +176,31 @@ This method searches the relation specified to find the next record that satisfi
 int BlockAccess::search(){ 
 												
      /*get the attribute catalog entry from the attribute cache corresponding 
-	  to the relation with Id=relid and with attribute_name=attrName using
-	  OpenRelTable::getAttrCatEntry(relid, attrName, &attrcat_entry); of cache layer */
+	  to the relation with Id=relId and with attribute_name=attrName using
+	  OpenRelTable::getAttrCatEntry(relId, attrName, &attrcat_entry); of cache layer */
 	//get root_block from the attribute catalog entry (attrcat_entry)
 	
 	if(root_block == -1){ //if Index does not exist for the attribute
 		if(op == RST){ //the op is reset
 			//assign the previous record id (prev_recid) to {block_num=-1, slot_num=-1}
-			/*update the previous record id (prev_recid) in the relation cache corresponding to the relation with Id=relid
-			 using OpenRelTable::setPrevRecId(relid, prev_recid); of cache layer */
+			/*update the previous record id (prev_recid) in the relation cache corresponding to the relation with Id=relId
+			 using OpenRelTable::setPrevRecId(relId, prev_recid); of cache layer */
 			return SUCCESS;
 		}
 		
 		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval  
-		recid = linear_search(relid, attrName, attrVal, op);
+		recid = linear_search(relId, attrName, attrVal, op);
 	}
 	else{ //if Index exists for the attribute
 		if(op == RST){ // the op is reset
 			//assign the previous index id (prev_indexid) to {block_num=-1, index_num=-1}
 			/*update the previous index id (prev_recid) in the attribute cache corresponding 
-			  to the relation with Id relid and attribute name with attrName
-			  using OpenRelTable::setPrevIndexId(relid, attrName, prev_indexid); of cache layer */
+			  to the relation with Id relId and attribute name with attrName
+			  using OpenRelTable::setPrevIndexId(relId, attrName, prev_indexid); of cache layer */
 			return SUCCESS;
 		}
 		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
-		recid = bplus_search(relid, attrName, attval, op);
+		recid = bplus_search(relId, attrName, attval, op);
 	}
 	
 	if(recid == {-1, -1}){ //if it fails to find a record satisfying the given condition
@@ -223,7 +225,7 @@ This method inserts the Record into Relation as specified in arguments.
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|-----------------------|
-| relid	| `int`	| Relation Id of Relation to which record is to be inserted | 
+| relId	| `int`	| Relation Id of Relation to which record is to be inserted | 
 | record	| `union Attribute*`	| Pointer to Record(containing values for all the attributes), Record is an array of Attribute type | 
 
 
@@ -235,13 +237,15 @@ This method inserts the Record into Relation as specified in arguments.
 
 #### Algorithm
 ```cpp
-int BlockAccess::insert(int relid, union Attribute *record){
-	//get the relaction catalog entry from relation cache
-	RelCatEntry relcat_entry;
-	OpenRelTable::getRelCatEntry(relid, &relcat_entry);
+int BlockAccess::insert(int relId, union Attribute *record){
+	// get the relation catalog entry from relation cache
+	RelCatEntry relcatEntry;
+	OpenRelTable::getRelCatEntry(relId, &relcatEntry);
 	
-	//get a free slot from the existing record blocks of the relation with Id=relid
-	//This can be done by performing a linear search on the linked list of records and checking slotmap.
+	/*
+		get a free slot from the existing record blocks of the relation with Id = relId
+		(This can be done by performing a linear search on the linked list of records and checking slotmap)
+	*/
 
 	if(no free slot is found in existing record blocks){
 		//get a new record block and free slot of the new record  from disk by calling
@@ -265,10 +269,10 @@ int BlockAccess::insert(int relid, union Attribute *record){
 	//Iterate over all the attributes of the relation{
 		//get the attribute catalog entry for the attribute from the attribute cache
 		AttrCatEntry attrcat_entry;
-		OpenRelTable::getAttrCatEntry(relid, attr_offset, &attrcat_entry);
+		OpenRelTable::getAttrCatEntry(relId, attr_offset, &attrcat_entry);
 		//get the root block from the attribute catalog entry
 		if(root_block != -1){ //if index exists for the attribute
-			bplus_insert(relid, attrcat_entry.attrName, attrval, recid); 
+			bplus_insert(relId, attrcat_entry.attrName, attrval, recid); 
 			       //where recid specifies the block# and slot# of the newly inserted record.
 		}
 	//}
@@ -301,27 +305,34 @@ This method changes the relation name of specified relation to the new name spec
 #### Algorithm
 ```cpp
 int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
-	//search for the relation with name newName in relation catalog 
-	relcat_recid = linear_search(RELCAT_RELID, "RelName", newName, EQ);
-	if(relcat_recid != {-1,-1}){ //If relation with name newName already exits
+	// search for the relation with name newName in relation catalog using linearSearch()
+	relcat_recid = linearSearch(RELCAT_RELID, "RelName", newRelationName, EQ ); 
+	// note: newRelationName is of type Attribute (to be constructed from newName)
+	
+	// If relation with name newName already exits
+	if(relcat_recid != {-1,-1}){ 
 		return E_RELEXIST;
 	}
 	
-	//search for the relation with name oldName in relation catalog 
-	relcat_recid = linear_search(RELCAT_RELID, "RelName", oldName, EQ);
-	if(relcat_recid == {-1,-1}){ //If relation with name relName does not exits
+	// search for the relation with name oldName in relation catalog 
+	relcat_recid = linearSearch( ---fill the arguments--- );
+
+	// If relation with name relName does not exits
+	if(relcat_recid == {-1,-1}) {
 		return E_RELNOTEXIST;
 	}
 	
-	//get the relation catalog record from the relation catalog (recid of the relation catalog record = relcat_recid)
-	rec_buffer = Buffer::getRecBuffer(relcat_recid.block);
-	rec_buffer->getRecord(relcat_record, relcat_recid.slot);
+	// get the relation catalog record from the relation catalog (recid of the relation catalog record = relcat_recid)
+	RecBuffer recBuffer = RecBuffer(relcat_recid.block);
+	recBuffer.getRecord(relcat_record, relcat_recid.slot);
 	
-	//update the relation catalog record in the relation catalog with relation name newName
-	rec_buffer->setRecord(relcat_record, attrcat_recid.slot);
+	// update the relation catalog record in the relation catalog with relation name newName
+	recBuffer.setRecord(record, relcat_recid.slot);
 	
-	/*update all the attribute catalog entries in the attribute catalog corresponding to the 
-	  relation with relation name oldName to the relation name newName*/
+	/* 
+		update all the attribute catalog entries in the attribute catalog corresponding to the 
+	  	relation with relation name oldName to the relation name newName 
+	*/
 	
 	return SUCCESS;
 }

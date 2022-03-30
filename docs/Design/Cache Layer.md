@@ -302,7 +302,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 #### Algorithm
 
 ```cpp
-int relCacheTable::getSearchIndex(relId relid, recId *recidbuff_ptr) {
+int relCacheTable::getSearchIndex(int relid, recId *recidbuff_ptr) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -521,7 +521,7 @@ Sets the *Attribute Catalog* entry corresponding to the given attribute of the s
 
 #### Algorithm
 ```cpp
-int AttrCacheTable::setAttrCatEntry(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
+int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
@@ -628,7 +628,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 #### Algorithm
 ```cpp
-int AttrCacheTable::setSearchIndex(relId relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
+int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 	
 	if relId is outside the range [0, MAX_OPEN-1]:
 	{
