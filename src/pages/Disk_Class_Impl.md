@@ -3,10 +3,9 @@
 ## Disk.cpp
 
 ```cpp
-
 #include <iostream>
 #include <fstream>
-#include "../define(/constants).h"
+#include "../define/constants.h"
 #include "../define/errors.h"
 #include "Disk.h"
 
@@ -49,7 +48,7 @@ Disk::~Disk() {
  */
 int Disk::readBlock(unsigned char *block, int blockNum) {
 	FILE *disk = fopen(DISK_RUN_COPY_PATH, "rb");
-	if (blockNum < 0 || blockNum > 8191) {
+	if (blockNum < 0 || blockNum > DISK_BLOCKS - 1) {
 		return E_OUTOFBOUND;
 	}
 	const int offset = blockNum * BLOCK_SIZE;
@@ -66,8 +65,8 @@ int Disk::readBlock(unsigned char *block, int blockNum) {
  * blockNum - Block number of the disk block to be written into.
  */
 int Disk::writeBlock(unsigned char *block, int blockNum) {
-	FILE *disk = fopen(DISK_RUN_COPY_PATH, "wb");
-	if (blockNum < 0 || blockNum > 8191) {
+    FILE *disk = fopen(DISK_RUN_COPY_PATH, "rb+");
+	if (blockNum < 0 || blockNum > DISK_BLOCKS - 1) {
 		return E_OUTOFBOUND;
 	}
 	const int offset = blockNum * BLOCK_SIZE;
@@ -81,8 +80,8 @@ int Disk::writeBlock(unsigned char *block, int blockNum) {
 ## Disk.h
 
 ```cpp
-#ifndef FRONTEND_INTERFACE_H
-#define FRONTEND_INTERFACE_H
+#ifndef NITCBASE_H
+#define NITCBASE_H
 class Disk {
 public:
     Disk();
@@ -90,5 +89,6 @@ public:
     static int readBlock(unsigned char *block, int blockNum);
     static int writeBlock(unsigned char *block, int blockNum);
 };
-#endif //FRONTEND_INTERFACE_H
+#endif //NITCBASE_H
+
 ```
