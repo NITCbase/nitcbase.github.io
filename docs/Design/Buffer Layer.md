@@ -500,7 +500,7 @@ int BlockBuffer::getBlockType(){
 ### BlockBuffer :: setBlockType()
 
 #### Description
-Sets the type of the block with the input block type.
+Sets the type of the block with the input block type. This method sets the type in both the header of the block and also in the block allocation map.
 
 #### Arguments
 | Name | Type | Description |
@@ -590,7 +590,7 @@ void BlockBuffer::setHeader(struct HeadInfo *head){
 ### BlockBuffer :: releaseBlock()
 
 #### Description
-Deletes the block from both the buffer memory and the disk.
+Deletes the block from both the buffer memory and the disk. The `blockNum` field of the object is invalidated (set to `INVALID_BLOCK` (-1)).
 
 #### Arguments
 Nil 
@@ -598,6 +598,9 @@ Nil
 #### Return Values
 Nil
 
+:::warn
+If `releaseBlock()` method is called again after having successfully released for the first time (or if the `blockNum` field is invalid), then this method will not perform any operation.
+:::
 #### Algorithm
 ```cpp
 void BlockBuffer::releaseBlock(){
@@ -1289,6 +1292,9 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 
 Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](Cache%20Layer.md), [Block access layer](Block%20Access%20Layer.md) and [B+ tree](B+%20Tree%20Layer.md) layer, to name a few.
 
+:::note
+The code for RecId class and IndexId class can be found in the `id.h` file defined inside `define/` directory, **<Link to="/idHeader">the code for which can be can be found here. </Link >**
+:::
 ### RecId
 
 Relations in NITCbase are made up of records. Every record of any relation can be referenced using an id called `RecId`. `RecId` is a combination of the block number of the corresponding record block and the slot number of the slot occupied by the record in the block. It is used to locate where the record is stored in the disk.
