@@ -384,9 +384,9 @@ public:
 	BlockBuffer(int blockNum);
 	int getBlockNum();
 	int getBlockType();
-	void setBlockType(int blockType);
-	void getHeader(struct HeadInfo* head);
-	void setHeader(struct HeadInfo* head);
+	int setBlockType(int blockType);
+	int getHeader(struct HeadInfo* head);
+	int setHeader(struct HeadInfo* head);
 	void releaseBlock();
 
 protected:
@@ -522,7 +522,7 @@ Nil
 
 #### Algorithm
 ```cpp
-void BlockBuffer::setBlockType(int blockType){						
+int BlockBuffer::setBlockType(int blockType){						
 	
 	unsigned char *bufferPtr;
     // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
@@ -561,7 +561,7 @@ Nil
 
 #### Algorithm
 ```cpp
-void BlockBuffer::getHeader(struct HeadInfo *head){	
+int BlockBuffer::getHeader(struct HeadInfo *head){	
 	
 	unsigned char *bufferPtr;
     // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
@@ -598,7 +598,7 @@ Nil
 
 #### Algorithm
 ```cpp
-void BlockBuffer::setHeader(struct HeadInfo *head){
+int BlockBuffer::setHeader(struct HeadInfo *head){
 
 	unsigned char *bufferPtr;
     // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
@@ -713,7 +713,7 @@ Returns the block number of a free block of the input type in the disk and allot
 | Value | Description |
 |-----------|--------------------------------------------------------------------------------|
 | blockNum | Block number of the free block. |
-| [`FAILURE`](/constants) | No free block is available in the disk. |
+| [`E_DISKFULL`](/constants) | No free block is available in the disk. |
 
 #### Algorithm
 ```cpp
@@ -721,7 +721,7 @@ int BlockBuffer::getFreeBlock(int blockType){
 
 	//iterate through the StaticBuffer::blockAllocMap and find the block number of a free block in the disk.
 
-	//if no block is free, return FAILURE.
+	//if no block is free, return E_DISKFULL.
 	
 	//set the object's blockNum to the block number of the free block.
 
@@ -748,8 +748,8 @@ public:
 	//methods
 	RecBuffer();
 	RecBuffer(int blockNum);
-	void getSlotMap(unsigned char *slotMap);
-	void setSlotMap(unsigned char *slotMap);
+	int getSlotMap(unsigned char *slotMap);
+	int setSlotMap(unsigned char *slotMap);
 	int getRecord(union Attribute *rec,int slotNum);
 	int setRecord(union Attribute *rec,int slotNum);
 
@@ -1325,20 +1325,16 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 #### Algorithm
 ```cpp
 int IndLeaf::setEntry(void *ptr, int indexNum) {
-    unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
 
-    // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-        // return the value returned by the call.
+	// get the starting address of the buffer containing the block using BlockBuffer.getBufferPtr().
 
+	// if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
+	// copy the struct Index pointed by ptr to indexNum'th entry in block.
 
-    // copy the struct Index pointed by ptr to indexNum'th entry in block.
+	//update dirty bit.
 
-    //update dirty bit.
-
-    //return SUCCESS
+	//return SUCCESS
 }
 ```
 

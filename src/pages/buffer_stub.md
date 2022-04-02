@@ -266,7 +266,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
 int BlockBuffer::getFreeBlock(int blockType) {
 	//iterate through the StaticBuffer.blockAllocMap and find the index of a free block in the disk.
 
-	//if no block is free, return FAILURE.
+	//if no block is free, return E_DISKFULL.
 
 	//set the object's blockNum to the block number of the free block.
 

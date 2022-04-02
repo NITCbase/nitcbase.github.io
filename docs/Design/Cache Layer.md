@@ -1091,7 +1091,7 @@ Nil
 |        Value     |           Description                        |
 |------------------|----------------------------------------------|
 | relId |  Index of a free entry in the Open Relation Table  |
-| [`FAILURE`](/constants) |  No free entries left in the Open Relation Table  |
+| [`E_CACHEFULL`](/constants) |  No free entries left in the Open Relation Table  |
 
 #### Algorithm
 ```cpp
@@ -1100,7 +1100,7 @@ int OpenRelTable::getFreeOpenRelTableEntry() {
 	/* traverse through the tableMetaInfo array,
 		find a free entry in the Open Relation Table.*/
     
-	// if found return the relation id, else indicate failure.
+	// if found return the relation id, else return E_CACHEFULL.
 	
 }
 ```

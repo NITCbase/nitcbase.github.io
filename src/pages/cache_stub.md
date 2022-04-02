@@ -570,7 +570,7 @@ int OpenRelTable::getFreeOpenRelTableEntry() {
 	/* traverse through the tableMetaInfo array,
 		find a free entry in the Open Relation Table.*/
 
-	// if found return the relation id, else indicate failure.
+	// if found return the relation id, else return E_CACHEFULL.
 
 }
 
