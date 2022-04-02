@@ -39,13 +39,20 @@ int StaticBuffer::getStaticBlockType(int blockNum) {
 }
 
 int StaticBuffer::setDirtyBit(int blockNum) {
-    // Check if blockNum is valid (non zero and less than number of disk blocks)
-    // and return E_OUTOFBOUND if not valid.
-
     //find the buffer index corresponding to the block using the getBufferNum().
 
-    //set the dirty bit of that buffer in the metaInfo to true.
+    // if Buffer is valid, bufferNum != E_BLOCKNOTINBUFFER
 
+        // set the dirty bit of that buffer in the metaInfo to true.
+
+    // else Buffer is ivalid
+
+		// return the returned error code from getBufferNum call 
+
+			// E_OUTOFBOUND - blockNum is invalid
+        	// E_BLOCKNOTINBUFFER - block with blockNum is not present in Buffer
+
+    // return SUCCESS
 }
 
 int StaticBuffer::getBufferNum(int blockNum) {
@@ -56,7 +63,9 @@ int StaticBuffer::getBufferNum(int blockNum) {
     // find the buffer index of the buffer to which the block is loaded.
 
 
-    //if found return buffer index, else indicate failure.
+    //if found return buffer index.
+
+	// if block not found in buffer return E_BLOCKNOTINBUFFER
 
 }
 
@@ -177,7 +186,7 @@ int BlockBuffer::setBlockType(int blockType) {
 
 	// update dirty bit by calling appropriate method of StaticBuffer class.
 	// if setDirtyBit() failed
-		// return thr returned value from the call
+		// return the returned value from the call
 
 	// return SUCCESS
 }
@@ -209,7 +218,8 @@ int BlockBuffer::setHeader(struct HeadInfo *head) {
 	//copy the contents of the memory location pointed to by head to the header of block using appropriate.
 		// not copying reserved
 
-	//update dirty bit by calling appropriate method of StaticBuffer class.
+	// update dirty bit by calling appropriate method of StaticBuffer class.
+    // if setDirtyBit() failed, return the error code
 
 	// return SUCCESS;
 }
@@ -220,12 +230,11 @@ void BlockBuffer::releaseBlock() {
 	// else
 		// get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
 
-		// if the buffer number is valid, free the buffer by setting the free flag of its metaInfo entry to true.
+		// if the buffer number is valid (!=E_BLOCKNOTINBUFFER), free the buffer by setting the free flag of its metaInfo entry to true.
 
 		// free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
 
 		// set the object's blockNum to INVALID_BLOCK (-1)
-	}
 }
 
 /* NOTE: This function will NOT check if the block already exists in disk or not,
@@ -237,7 +246,8 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
 	// check whether the block is already present in the buffer using StaticBuffer.getBufferNum()
 	int bufferNum = StaticBuffer::getBufferNum(this->blockNum);
 
-	// if present, set the timestamp of the corresponding buffer to 0 and increment the timpestamps of all other occupied buffers in the BufferMetaInfo.
+	// if present (!=E_BLOCKNOTINBUFFER), set the timestamp of the corresponding buffer to 0 and increment the timpestamps of all other occupied buffers in the BufferMetaInfo.
+
 	
 	// else
 		// if not present, get a free buffer using StaticBuffer.getFreeBuffer()
