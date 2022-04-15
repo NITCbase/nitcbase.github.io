@@ -600,8 +600,8 @@ int BlockAccess::deleteRelation(char *relName) {
         attrcatRecBuffer.getRecord(attrcatEntryRecord, attrcatRecId.slot);
         int rootBlock = (int) attrcatEntryRecord[ATTRCAT_ROOT_BLOCK_INDEX].nVal;
 
-        // Update the Slotmap for the block by indicating the slot as free
-        slotMap[attrcatRecId.slot] = (unsigned char) 0;
+        // Update the Slotmap for the block by indicating the slot as free(use SLOT_UNOCCUPIED)
+        slotMap[attrcatRecId.slot] = SLOT_UNOCCUPIED;
 
         // Adjust the number of entries in the block (decrease by 1) corresponding to the attribute catalog entry 
 				// and set it back using setHeader()
@@ -640,15 +640,13 @@ int BlockAccess::deleteRelation(char *relName) {
   // Adjust the number of entries in the header of the block (decrease by 1) corresponding to the relation catalog entry
 	// and set it back
 
-  // Get the slotmap in relation catalog, update it by marking the slot as free and set it back.
-
+  // Get the slotmap in relation catalog, update it by marking the slot as free(use SLOT_UNOCCUPIED) and set it back.
 
     /** Update relation catalog record entry in the relation catalog (i.e number of records in relation catalog is decreased by 1) **/
 	// Hint: call getRecord method by using the slot number used by relcat (RELCAT_SLOTNUM_FOR_RELCAT)
 
 
 	/** Update attribute catalog entry in the relation catalog (i.e number of records in attribute catalog is decreased by num_attrs) **/
-
 
 	// return SUCCESS;
 }
