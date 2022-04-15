@@ -171,7 +171,7 @@ $$
 $$
 
 
-The **slotmap**, which appears at the end of the header is used for *indicating whether a slot is occupied or free*. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be `0` or else it will be `1`. Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
+The **slotmap**, which appears at the end of the header is used for *indicating whether a slot is occupied or free*. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be [`SLOT_UNOCCUPIED`](/constants) or else it will be [`SLOT_OCCUPIED`](/constants). Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
 
 The record block must be loaded from the disk to the main memory before its data can be accessed/modified. The Buffer Layer provides the necessary data structures for this purpose. The RecBuffer class is used to access a record block. The header of the block is stored in the struct HeadInfo. Each record in a record block is treated as an array of union Attributes.
 
