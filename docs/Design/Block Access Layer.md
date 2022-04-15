@@ -409,45 +409,54 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Algorithm
 ```cpp
-int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
-	//search for the relation with name relName in relation catalog 
-	relcat_recid = linear_search(RELCAT_RELID, "RelName", relName, EQ);
-	
-	if(relcat_recid == {-1,-1}){ //If relation with name relName does not exits
-		return E_RELNOTEXIST;
-	}
-	
-	//Iterate over all the attributes corresponding to the relation{
-		//search for the attributes with relation name relName in attribute catalog 
-		attrcat_recid = linear_search(ATTRCAT_RELID, "RelName", relName, EQ);
-		
-		//get the attribute catalog record from the attribute catalog (recid of the attribute catalog record = attrcat_recid)
-		rec_buffer = Buffer::getRecBuffer(attrcat_recid.block);
-		rec_buffer->getRecord(attrcat_record, attrcat_recid.slot);
-		
-		//get attrName from attrcat_record
-		if(attrName == newName){ //if the attribute with name newName already exists
-			return E_ATTREXIST;
-		}	
-	//}
-	
-	//Iterate over all the attributes corresponding to the relation{
-		//search for the attributes with relation name relName in attribute catalog 
-		attrcat_recid = linear_search(ATTRCAT_RELID, "RelName", relName, EQ);
-		
-		//get the attribute catalog record from the attribute catalog (recid of the attribute record = attrcat_recid)
-		rec_buffer = Buffer::getRecBuffer(attrcat_recid.block);
-		rec_buffer->getRecord(attrcat_record, attrcat_recid.slot);
-		
-		//get attrName from attrcat_record
-		if(attrName == oldName){ //if the attribute is attribute with oldName
-			//update the attribute catalog record in the attribute catalog with attribute name newName
-			rec_buffer->setRecord(attrcat_record, attrcat_recid.slot);
-			return SUCCESS;
-		}
-	//}	
-	return E_ATTRNOTEXIST;
-}		 
+int BlockAccess::renameAttribute(char *relName, char *oldName, char *newName) {
+	// Search for the relation with name relName in relation catalog using Linear Search and store it in relcatRecId
+	// Hint: relid is RELCAT_RELID, attribute name to search will be "RelName", op = EQ
+	// Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
+	Attribute attrValueRelName;
+	strcpy(attrValueRelName.sVal, relName);
+	RecId relcatRecId = linearSearch(RELCAT_RELID, "RelName", attrValueRelName, EQ);
+
+	//If relation with name relName does not exits (relcatRecird == {-1,-1})
+	//    return E_RELNOTEXIST;
+
+    // Declare Attribute* relcatEntryRecord to store the relation catalog entry corresponding to the relcat entry.
+    Attribute *relcatEntryRecord;
+
+    /* Get the relation catalog entry record corresponding to relation with relName using the relcatRecId */
+    // Hint: instantiate RecBuffer class using relcatRecId.block and then use appropriate class method to get the record.
+
+    // get the number of attributes corresponding to the relation (numAttrs) using the relation catalog entry record
+
+	/* Declare attrcatRecId and attractEntryRecord variables to store
+	   record id of the attrcat entry and to store the attrcat entry record respectively.
+	 */
+
+	// Declare and assign integer attrExistFlag = 0
+
+	// Iterate over all the attributes corresponding to the relation
+    for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
+        attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
+
+        if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
+            // Continue to search for more attributes
+            continue;
+        }
+
+        // Set attrExistFlag = 1 to denote that the attribute exists.
+
+        // get the attribute catalog record from the attribute catalog
+        // (recid of the attribute record = attrcat_recid)
+
+        // update the attribute catalog record in the attribute catalog with attribute name newName
+    	// and set the record back
+    }
+
+	// If attrExistFlag = 0, return E_ATTRNOTEXIST
+
+	// return SUCCESS
+}
+ 
 ```
 
 
