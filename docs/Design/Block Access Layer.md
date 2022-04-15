@@ -272,7 +272,7 @@ int BlockAccess::insert(int relId, union Attribute *record){
 		    lblock
 		            = -1 (if linked list of existing record blocks was empty)
 					= prev_block_num (otherwise),
-		    rblock: -1, numEntries: 1,
+		    rblock: -1, numEntries: 0,
 			numAttrs and numSlots can be filled from the relation catalog entry
 		*/
 		/*
@@ -282,8 +282,8 @@ int BlockAccess::insert(int relId, union Attribute *record){
 
 		/*
 			get the header of the block prev_block_num
-		    update the rblock field of the header to the new block number(i.e. free_block)
-		 */
+		    update the rblock field of the header to the new block number(i.e. rec_id.block)
+		*/
 
 		// update last block field in the relation catalogue entry to the new block
 		// (use setRelCatEntry function)
