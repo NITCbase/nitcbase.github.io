@@ -524,7 +524,7 @@ new:
 If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of Block access layer are being called, make sure to get the return value and if it is not success, then to return the error code from the method.
 :::
 
-```
+```cpp
 int BlockAccess::deleteRelation(char *relName) {
 	/* search for relation with name relName in relation catalog using Linear Search and store the relcatRecId */
 	// Hint: relid is RELCAT_RELID attribute name to search will be "RelName" op = EQ
