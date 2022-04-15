@@ -641,22 +641,15 @@ int BlockAccess::ba_deleteRelation(char *relName) {
 	// and set it back
 
   // Get the slotmap in relation catalog, update it by marking the slot as free(use SLOT_UNOCCUPIED) and set it back.
-    /*** Updating the Relation Cache Table ***/
+    
+	/*** Updating the Relation Cache Table ***/
     /** Update relation catalog record entry (number of records in relation catalog is decreased by 1) **/
     // Hint: Get the entry corresponding to relation catalog from the relation cache and update the number of records
     // and set it back
-    RelCatEntry relCatEntryForRelcat;
-    RelCacheTable::getRelCatEntry(RELCAT_RELID, &relCatEntryForRelcat);
-    relCatEntryForRelcat.numRecs = relCatEntryForRelcat.numRecs - 1;
-    RelCacheTable::setRelCatEntry(RELCAT_RELID, &relCatEntryForRelcat);
 
     /** Update attribute catalog entry (number of records in attribute catalog is decreased by numAttrs) **/
     // Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records
     // and set it back
-    RelCatEntry relCatEntryForAttrcat;
-    RelCacheTable::getRelCatEntry(ATTRCAT_RELID, &relCatEntryForAttrcat);
-    relCatEntryForAttrcat.numRecs = relCatEntryForAttrcat.numRecs - numAttrs;
-    RelCacheTable::setRelCatEntry(RELCAT_RELID, &relCatEntryForAttrcat);
 
 	// return SUCCESS;
 }
