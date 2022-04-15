@@ -481,7 +481,7 @@ old:
 ```cpp
 int BlockAccess::ba_deleteRelation(char relName[ATTR_SIZE]){
 	/* search for relation with name relName in relation catalog */
-	relcat_recid = linear_search(RELCAT_RELID, "RelName", relName, EQ);
+	relcat_recid = ba_linear_search(RELCAT_RELID, "RelName", relName, EQ);
 	
 	if(relcat_recid == {-1,-1}){ //If relation with relName does not exits
 		return E_RELNOTEXIST;
@@ -641,12 +641,22 @@ int BlockAccess::ba_deleteRelation(char *relName) {
 	// and set it back
 
   // Get the slotmap in relation catalog, update it by marking the slot as free(use SLOT_UNOCCUPIED) and set it back.
+    /*** Updating the Relation Cache Table ***/
+    /** Update relation catalog record entry (number of records in relation catalog is decreased by 1) **/
+    // Hint: Get the entry corresponding to relation catalog from the relation cache and update the number of records
+    // and set it back
+    RelCatEntry relCatEntryForRelcat;
+    RelCacheTable::getRelCatEntry(RELCAT_RELID, &relCatEntryForRelcat);
+    relCatEntryForRelcat.numRecs = relCatEntryForRelcat.numRecs - 1;
+    RelCacheTable::setRelCatEntry(RELCAT_RELID, &relCatEntryForRelcat);
 
-    /** Update relation catalog record entry in the relation catalog (i.e number of records in relation catalog is decreased by 1) **/
-	// Hint: call getRecord method by using the slot number used by relcat (RELCAT_SLOTNUM_FOR_RELCAT)
-
-
-	/** Update attribute catalog entry in the relation catalog (i.e number of records in attribute catalog is decreased by num_attrs) **/
+    /** Update attribute catalog entry (number of records in attribute catalog is decreased by numAttrs) **/
+    // Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records
+    // and set it back
+    RelCatEntry relCatEntryForAttrcat;
+    RelCacheTable::getRelCatEntry(ATTRCAT_RELID, &relCatEntryForAttrcat);
+    relCatEntryForAttrcat.numRecs = relCatEntryForAttrcat.numRecs - numAttrs;
+    RelCacheTable::setRelCatEntry(RELCAT_RELID, &relCatEntryForAttrcat);
 
 	// return SUCCESS;
 }
