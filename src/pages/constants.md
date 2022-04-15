@@ -131,6 +131,8 @@ The constants used by various algorithms in NITCbase documentation are listed in
 #define E_MAXATTRS -20
 #define E_NOTPERMITTED -21
 #define E_NOTFOUND -22
+#define E_BLOCKNOTINBUFFER -23
+#define E_INDEX_BLOCKS_RELEASED -24
 
 // 'temp' errors
 #define E_CREATETEMP -21
