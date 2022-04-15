@@ -468,6 +468,7 @@ This method deletes the Relation with the name specified in arguments.
 | [`E_RELNOTEXIST`](/constants) | If the relation does not exist |
 
 #### Algorithm
+old:
 ```cpp
 int BlockAccess::deleteRelation(char relName[ATTR_SIZE]){
 	/* search for relation with name relName in relation catalog */
@@ -507,6 +508,140 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]){
 	//update relation catalog (i.e number of records in relation catalog is decreased by 1)
 	//update attribute catalog (i.e number of records in attribute catalog is decreased by num_attrs)
 	return SUCCESS;
+}
+```
+new:
+:::note
+If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of Block access layer are being called, make sure to get the return value and if it is not success, then to return the error code from the method.
+:::
+
+```
+int BlockAccess::deleteRelation(char *relName) {
+	/* search for relation with name relName in relation catalog using Linear Search and store the relcatRecId */
+	// Hint: relid is RELCAT_RELID attribute name to search will be "RelName" op = EQ
+	// Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
+	RecId relcatRecId = linearSearch(RELCAT_RELID, "RelName", attrvalRelName, EQ);
+
+	// If relation with relName does not exits (relcatRecId == {-1, -1}), return E_RELNOTEXIST
+
+	// Declare Attribute* relcatEntryRecord to store the relation catalog entry corresponding to the relcat entry.
+	Attribute *relcatEntryRecord;
+
+	/* Get the relation catalog entry record corresponding to relation with relName using the relcatRecId */
+	// Hint: instantiate RecBuffer class using relcatRecId.block and then use appropriate class method to get the record.
+
+	// get the first record block of the relation (firstBlock) using the relation catalog entry record
+	// get the number of attributes corresponding to the relation (numAttrs) using the relation catalog entry record
+
+	// Delete all the record blocks of the relation by getting the next record blocks (rblock) from header
+	// and by calling releaseBlock() method
+	/* 
+		Hint: instantiate a BlockBuffer class object by giving appropriate arguments to constructor 
+		(which is block number of the first block),
+		get the header of the block by calling appropriate method of the class to fetch 'next' record block number,
+		delete the existing block and repeat for the next block.
+		Also note that to check if we reached the end either use lastBlock number field for currBlock OR check if nextBlock number is -1
+	 */
+	while (true) {
+		// Call releaseBlock()
+
+		// if currBlock == lastBlock || nextBlock == -1, break
+
+		// get the BlockBuffer instance for 'nextBlock'
+
+		// update current and next block numbers
+
+	}
+
+	/* Deleting attribute catalog entries corresponding the relation and
+	   index blocks corresponding to the relation with relName on its attributes
+
+	   Declare attrcatRecId and attractEntryRecord variables to store
+	   record id of the attrcat entry and to store the attrcat entry record respectively.
+	   Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
+	 */
+	RecId attrcatRecId;
+	Attribute *attrcatEntryRecord;
+	Attribute attrValueRelName;
+	strcpy(attrValueRelName.sVal, relName);
+
+	// Iterate over all the attributes corresponding to the relation
+    for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
+        // search for all the attributes corresponding to the relation with relName in attribute catalog
+        attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
+        if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
+            // Continue, check for more attributes
+            continue;
+        }
+
+        /*** Deleting the attribute catalog entry corresponding to the attribute from attribute catalog ***/
+
+        // Get the header by Instantiating a RecBuffer instance (attrcatRecBuffer) and calling appropriate methods
+        RecBuffer attrcatRecBuffer = RecBuffer(attrcatRecId.block);
+        HeadInfo attrcatRecBufferBlockHeader;
+        int ret = attrcatRecBuffer.getHeader(&attrcatRecBufferBlockHeader);
+        // Return the error code incase getHeader function call fails
+        if (ret != SUCCESS) {
+            return ret;
+        }
+
+        // get the rootBlock from attribute catalog (use attrcatRecBuffer object to call appropriate method
+        // to get record corresponding to the attribute catalog entry)
+        // This will be used later to delete any indexes if it exists
+        attrcatRecBuffer.getRecord(attrcatEntryRecord, attrcatRecId.slot);
+        int rootBlock = (int) attrcatEntryRecord[ATTRCAT_ROOT_BLOCK_INDEX].nVal;
+
+        // Update the Slotmap for the block by indicating the slot as free
+        slotMap[attrcatRecId.slot] = (unsigned char) 0;
+
+        // Adjust the number of entries in the block (decrease by 1) corresponding to the attribute catalog entry 
+				// and set it back using setHeader()
+
+        // If number of entries become 0, releaseBlock is called after fixing the Linked List.
+        // Hint: Update to the linked list involves setting the left and right pointers of block
+        // adjacent to the released block appropriately.
+        if (attrcatRecBufferBlockHeader.numEntries == 0) {
+            /* Standard Linked List Delete for a Block */
+            // Get the header of the previous block (left block)
+            // Hint: instantiate a RecBuffer class corresponding to the lblock and call appropriate methods
+            
+            // Set the previous header's rblock to the block's header's rblock
+
+            if (attrcatRecBufferBlockHeader.rblock != -1) {
+								// Get the header of the next block (right block)
+								// Hint: instantiate a RecBuffer class corresponding to the lblock and call appropriate methods
+								 
+								// Set the next block's header's lblock to the block's header's lblock
+
+            }
+
+            // call releaseBlock()
+
+        }
+
+        // if index exists for the attribute (rootBlock != -1), call bplus destroy
+        if (rootBlock != -1) {
+            // TODO: bplus_destroy(rootBlock); //delete the index blocks corresponding to the attribute
+        }
+    }
+
+	/*** Delete the relation catalog entry corresponding to the relation from relation catalog ***/
+	// Fetch the header of Relcat block
+
+  // Adjust the number of entries in the header of the block (decrease by 1) corresponding to the relation catalog entry
+	// and set it back
+
+  // Get the slotmap in relation catalog, update it by marking the slot as free and set it back.
+
+
+    /** Update relation catalog record entry in the relation catalog (i.e number of records in relation catalog is decreased by 1) **/
+	// Hint: call getRecord method by using the slot number used by relcat (RELCAT_SLOTNUM_FOR_RELCAT)
+
+
+	/** Update attribute catalog entry in the relation catalog (i.e number of records in attribute catalog is decreased by num_attrs) **/
+
+
+	// return SUCCESS;
 }
 ```
 
