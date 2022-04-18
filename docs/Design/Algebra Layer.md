@@ -3,6 +3,8 @@ sidebar_position: 3
 title: 'Algebra Layer'
 ---
 <https://nitcbase.github.io/archived-site/algebra.html>
+<https://nitcbase.github.io/archived-site/design/algebra.html>
+
 
 The Front End parses SQL-Like queries and coverts them into a sequence of algebra layer and schema layer method calls.
 The algebra layer functions process the basic **insert** and **retrieval** requests **to** and **from** the database.
