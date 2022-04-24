@@ -287,16 +287,21 @@ In an RDBMS,
 NITCbase has alloted *a single block* for the storage of Relation Catalog. **Block 4 of the disk is used for this purpose**. 
 
 Relation Catalog is used for storing meta-information of the relations in a database. Each entry in the Relation Catalog has a *size of 96 bytes* and has the following six attributes: 
-1. `RelationName`
+1. `RelName`
 2. `#Attributes` 
 3. `#Records`
 4. `FirstBlock` 
 5. `LastBlock`
-6. `#SlotsPerBlock` 
+6. `#Slots` 
 
-`RelationName` (bytes 0-15) stores the name of the relation, `#Attributes` (bytes 16-31) stores the number of attributes of that relation, and `#Records` (bytes 32-47) stores the number of records currently stored in that relation. The record blocks of a relation are arranged as a linked list. 
+:::note
+The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/constants).
+For example to do linear search on the relation catalog where relation name matches a particular relaiton name, you must provide the attribute name argument as "RelName" / `RELCAT_ATTR_RELNAME` constant.
+:::
 
-`FirstBlock` (bytes 48-63), which stores the block number of the first record block of the relation, essentially points to the head of the linked list. `LastBlock` (bytes 64-79), which stores the block number of the last record block of the relation, indicates the tail of the linked list. `#SlotsPerBlock` (bytes 80-95) stores the number of slots a record block of that relation has. 
+`RelName` (bytes 0-15) stores the name of the relation, `#Attributes` (bytes 16-31) stores the number of attributes of that relation, and `#Records` (bytes 32-47) stores the number of records currently stored in that relation. The record blocks of a relation are arranged as a linked list. 
+
+`FirstBlock` (bytes 48-63), which stores the block number of the first record block of the relation, essentially points to the head of the linked list. `LastBlock` (bytes 64-79), which stores the block number of the last record block of the relation, indicates the tail of the linked list. `#Slots` (bytes 80-95) stores the number of slots a record block of that relation has. 
 
 Note that `#Slots` can be calculated from `#Attributes` as described [earlier](#record-block-structure).
 
@@ -352,14 +357,19 @@ Attribute Catalog stores meta-information regarding all the attributes of each r
 
 The `LBlock` and `RBlock` fields in the header are used to traverse the linked list. 
 Each entry of the Attribute Catalog has the following six attributes: 
-1. `RelationName` 
+1. `RelName` 
 2. `AttributeName` 
 3. `AttributeType` 
 4. `PrimaryFlag` 
 5. `RootBlock`
 6. `Offset` 
 
-`RelationName` is the name of the relation corresponding to the attribute, `AttributeName` is the name of the attribute and `AttributeType` is the data type of the attribute. Only two data types are permitted in NITCbase- numbers (`NUM`) and strings (`STR`) of maximum length 16. The `PrimaryFlag` is presently unused \*. 
+:::note
+The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/constants).
+For example to do linear search on the attribute catalog where attribute name matches a particular attrbute name, you must provide the attribute name argument as "AttributeName" / `ATTRCAT_ATTR_ATTRIBUTE_NAME` constant.
+:::
+
+`RelName` is the name of the relation corresponding to the attribute, `AttributeName` is the name of the attribute and `AttributeType` is the data type of the attribute. Only two data types are permitted in NITCbase- numbers (`NUM`) and strings (`STR`) of maximum length 16. The `PrimaryFlag` is presently unused \*. 
 
 NITCbase employes [B+ tree](../Tutorials/B+%20Trees.md) for indexing. `RootBlock` stores the root block number of the B+ tree if there is an index created on the attribute; and contains `-1` otherwise. `Offset` is an integer that specifies the relative offset of the attribute in the record (0 for the first attribute, 1 for the second attribute and so on).
 
