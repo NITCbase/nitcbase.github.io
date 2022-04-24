@@ -415,19 +415,22 @@ If the block already exists on the disk use [constructor 2](#blockbuffer--blockb
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|--------------------------------------------------------------------------------|
-| blockType | `char`             | Type of the new block to be allotted. (`'R'`/`'I'`/`'L'`); (`R`-`REC`, `I`-`IND_INTERNAL`, `L`-`IND_LEAF`) |
+| blockType | `char`             | Type of the new block to be allotted. It can be one of the following: `'R'`,`'I'` or `'L'` where, <br/>   `R`-`REC` <br/> `I`-`IND_INTERNAL` <br/>  `L`-`IND_LEAF`|
 
 #### Return Values
 Nil
+:::warning Important
+If the block could not be allocatted in the disk, then the `blockNum` field of this class will contain the appropriate error code. The callers of this constructor and the following constructors: [RecBuffer :: RecBuffer() (Constructor 1)](#recbuffer--recbuffer-constructor-1), [IndBuffer :: IndBuffer() (Constructor 1)](#indbuffer--indbuffer-constructor-1), [IndInternal :: IndInternal() (Constructor1)](#indinternal--indinternal-constructor1) and [IndLeaf :: IndLeaf() (Constructor 1)](#indleaf--indleaf-constructor-1) should check the value of `blockNum` field to verify if the disk block was allocatted succesfully.
+:::
 
 #### Algorithm
 ```cpp
 BlockBuffer::BlockBuffer(char blockType){
-	
-	// allocate a block on the disc and a buffer in memory to hold the new block of given type using getFreeBlock function.
+	// allocate a block on the disk and a buffer in memory to hold the new block of given type using getFreeBlock function and get the return error codes if any.
 
-    // set the blockNum field of the object to that of the allocated block number.
-    // TODO: what happens if disk full..note down
+    // set the blockNum field of the object to that of the allocated block number if the method returned a valid block number,
+    // otherwise set the error code returned as the block number.
+        // The caller must check if the constructor allocatted block successfully by checking the value of block number field.
 
 }
 ```
