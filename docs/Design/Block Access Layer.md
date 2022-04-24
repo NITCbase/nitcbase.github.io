@@ -28,7 +28,7 @@ NITCbase follows an Object-Oriented design for Block Access Layer. The class dia
 ```cpp
 class BlockAccess {
     public:
-        static int ba_search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrval, int op);
+        static int ba_search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op);
 
         static int ba_insert(int relId, union Attribute *record);
 
@@ -38,7 +38,7 @@ class BlockAccess {
 
         static int ba_deleteRelation(char relName[ATTR_SIZE]);
     
-        static RecId ba_linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrval, int op);
+        static RecId ba_linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op);
 
 };
 ```
@@ -46,14 +46,14 @@ class BlockAccess {
 ### BlockAccess :: ba_linearSearch()
 
 #### Description
-This method searches the relation specified linearly to find the next record that satisfies the specified condition on attribute attrval and returns the recId of the next record satisfying the condition.
+This method searches the relation specified linearly to find the next record that satisfies the specified condition on attribute attrVal and returns the recId of the next record satisfying the condition.
 
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|-----------------------|
 | relId |	`int` |	Relation Id of Relation to which search has to be made. |
 | attrName |	`char[ATTR_SIZE]` |	Attribute/column name to which condition need to be checked with. |
-| attrval |	`union Attribute` |	value of attribute that has to be checked against the operater. |
+| attrVal |	`union Attribute` |	value of attribute that has to be checked against the operater. |
 | op |	`int` |	Conditional Operator(can be one among `EQ,LE,LT,GE,GT,NE,RST,PRJCT` corresponding to *equal,less than or equal, less than ,greater than or equal, greater than, not equal, reset, projet operators respectively). |
 
 #### Return Values
@@ -65,88 +65,119 @@ This method searches the relation specified linearly to find the next record tha
 #### Algorithm
 ```cpp
 RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
-	// get the previous record id from the relation cache corresponding to the relation with Id=relId
-	RelCacheTable::getSearchIndex(relId, prev_recid);
-	if(prev_recid == {-1, -1}) { 
-		// It is the first time that linear search search for the record with the attribute value attrval
-		// get the first record block of the relation from the relation cache using the appropriate function of Cache Layer
+	/*
+		get the previous record id from the relation cache corresponding to the relation with Id=relId
+	    (use RelCacheTable::getSearchIndex function)
+	*/
 
-		block = first record block of the relation
-		slot = 0
+	// let block and slot denote the record id of the record being currently checked
+
+	if (prevRecId.block == -1 && prevRecId.slot == -1) {
+
+		// It is the first time that linear search search for the record with the attribute value attrval
+
+		// get the first record block of the relation from the relation cache
+		//  (use RelCacheTable::getRelCatEntry function of Cache Layer)
+
+		// block = first record block of the relation
+		// slot = 0
+
+	} else {
+		// there is a hit from previous search
+
+		// block = previous record id's block
+		// slot = previous record id's slot + 1
 	}
-	else { //if the linear search knows the  hit from previous search
-		block = previous record id's block
-		slot = previous record id's slot
-	}
-	
+
 	// The following code searches for the next record in the relation that satisfies the given condition
-	// Start from block and iterate over the records of the relation{
-		//get the record of the relation using the following buffer layer functions
-		RecBuffer recBuffer = new RecBuffer(block);
-		recBuffer.getRecord(record, slot);
+	// Start from block and iterate over the records of the relation
+	{
+		// create a RecBuffer object for block (use RecBuffer Constructor for existing block)
+
+		// get the record of the relation using RecBuffer::getRecord function
+		// get the slot map of the relation using RecBuffer::getSlotMap function
 
 		// If slot is free skip the loop and continue to the next record slot
-		
-		// compare record's attribute value to the the given attrval as below:
-		// storing the outcome of comparison in the variable flag
-		flag = compare(attrval, record[attr_offset], attr_type);
-		
-		// cond = UNSET
-		
+		// (i.e. check if slot'th entry in slot map contains SLOT_UNOCCUPIED
+
+		// compare record's attribute value to the the given attrVal as below:
+		/*
+		    firstly get the attribute offset for the attrName attribute
+		    from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
+		*/
+		// use the attribute offset to get the value of the attribute from current record
+		// perform comparison using compare function and store the outcome of comparison in the variable flag
+
+		// initialize cond = UNSET
+
 		// Next task is to check whether this record satisfies the given condition.
 		// It is determined based on the output of previous comparison and the op value received.
 		// The following code sets the cond variable if the condition is satisfied.
-		switch(op){
-		
+		switch (op) {
+
 			case NE: //if op is "not equal to"
-				if(flag != 0){ //i.e if the record's attribute value is not equal to the given attrval
-					//SET the cond variable
+				if (flag != 0) { //i.e if the record's attribute value is not equal to the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
-				
+
 			case LT: //if op is "less than"
-				if(flag < 0){ //i.e if the record's attribute value is less than the given attrval
-					//SET the cond variable 
+				if (flag < 0) { //i.e if the record's attribute value is less than the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
-			
+
 			case LE: //if op is "less than or equal to"
-				if(flag <= 0){ //i.e if the record's attribute value is less than or equal to the given attrval
-					//SET the cond variable 
+				if (flag <= 0) { //i.e if the record's attribute value is less than or equal to the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
-			
+
 			case EQ: //if op is "equal to"
-				if(flag == 0){ //i.e if the record's attribute value is equal to the given attrval
-					//SET the cond variable 
+				if (flag == 0) { //i.e if the record's attribute value is equal to the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
-			
+
 			case GT: //if op is "greater than"
-				if(flag > 0){ //i.e if the record's attribute value is greater than the given attrval
-					//SET the cond variable 
+				if (flag > 0) { //i.e if the record's attribute value is greater than the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
-			
+
 			case GE: //if op is "greater than or equal to"
-				if(flag >= 0){ //i.e if the record's attribute value is greater than or equal to the given attrval
-					//SET the cond variable 
+				if (flag >= 0) { //i.e if the record's attribute value is greater than or equal to the given attrVal
+					// SET the cond variable (i.e. cond = SET)
 				}
 				break;
 		}
-		
-		if(cond == SET){
-			recid = {block, slot} //record id of the record that satisfies the given condition
-			/*set the previous record id in the relation cache as 
-			the record id of the record that sastifies the given condition*/		
-			OpenRelTable::setPrevRecId(relId, recid);
-			return recid;
+
+		if (cond == SET) {
+			/*
+				set the previous record id in the relation cache as
+			    the record id of the record that satisfies the given condition
+			    (use RelCacheTable::setSearchIndex function)
+		    */
+
+			return recId;
 		}
-		
-		//get the next record id by adjusting the block and slot
-	//}
-	
-	return {-1, -1}; //i.e., no record in the relation with Id relId satisfies the given condition
+
+	    // --- Getting the next record id by adjusting the block and slot ---
+		if (slot = last slot slot in the current block) {
+			// block = block's right block in the linked list of record blocks
+
+			if(block = -1) {
+				// break;
+			}
+
+			// start from first slot in the block (i.e. assign 0 to slot)
+			// create a RecBuffer object for the this block
+			// get the header and slot map of the block
+		}
+	}
+
+	// no record in the relation with Id relid satisfies the given condition
+	return {-1, -1};
 }
 ```
 
@@ -154,7 +185,7 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 ### BlockAccess :: ba_search()
 
 #### Description
-This method searches the relation specified to find the next record that satisfies the specified condition on attribute attrval and updates the recId of next record satisfying the condition in cache.(uses the b+ tree if target attribute is indexed, otherwise, it does linear search).
+This method searches the relation specified to find the next record that satisfies the specified condition on attribute attrVal and updates the recId of next record satisfying the condition in cache.(uses the b+ tree if target attribute is indexed, otherwise, it does linear search).
 
 #### Arguments
 | Name | Type | Description |
@@ -162,7 +193,7 @@ This method searches the relation specified to find the next record that satisfi
 | relId	| `int`	| Relation Id of Relation to which search has to be made. | 
 | record	| `union Attribute*`	| pointer to record where next found record satisfying given condition is to be placed. | 
 | attrname	| `char[ATTR_SIZE]`	| Attribute/column name to which condition need to be checked with. | 
-| attrval	| `union Attribute`	| value of attribute that has to be checked against the operater. | 
+| attrVal	| `union Attribute`	| value of attribute that has to be checked against the operater. | 
 | op	| `int`	| Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE,RST,PRJCT corresponding to equal,lesthan equal, lessthan ,greaterthan equal, greaterthan, Not equal, reset, projet operators respectively). | 
 
 #### Return Values
@@ -188,7 +219,7 @@ int BlockAccess::ba_search(){
 			return SUCCESS;
 		}
 		
-		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval  
+		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrVal  
 		recid = linear_search(relId, attrName, attrVal, op);
 	}
 	else{ //if Index exists for the attribute
@@ -199,7 +230,7 @@ int BlockAccess::ba_search(){
 			  using OpenRelTable::setPrevIndexId(relId, attrName, prev_indexid); of cache layer */
 			return SUCCESS;
 		}
-		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
+		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrVal
 		recid = bplus_search(relId, attrName, attval, op);
 	}
 	
@@ -321,7 +352,7 @@ int BlockAccess::ba_insert(int relId, union Attribute *record){
 		AttrCacheTable::getAttrCatEntry(relId, attr_offset, &attrcat_entry);
 		// get the root block from the attribute catalog entry
 		if(root_block != -1) { // if index exists for the attribute
-			// bplus_insert(relId, attrcat_entry.attrName, attrval, recid);
+			// bplus_insert(relId, attrcat_entry.attrName, attrVal, recid);
 			// BPlusTree bPlusTree = BPlusTree(relId, attrName);
 			int retVal = bPlusTree.bPlusInsert(record[attribute_offset], rec_id);
 			if (retVal == E_DISKFULL) {
