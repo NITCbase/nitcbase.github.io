@@ -4,8 +4,29 @@ title: 'Schema Layer'
 ---
 https://nitcbase.github.io/archived-site/schema.html
 
+import Link from '@docusaurus/Link';
+
+:::info note 
+The Schema Layer code is to be written in `Schema.cpp` and it's header file `Schema.h`
+
+
+**<Link to="/schema_stub">The stub code for these files can be found here.</Link >**
+:::
+
+## Layout
 
 The SQL-Like queries that alter the schema of the database are converted into a sequence of schema layer function calls by front end. These schema layer function calls processes the **basic schema alteration requests to the database.** The functions of Schema layer include `createRel`, `deleteRel`, `renameRel`, `renameAttr`, `createIndex`, `deleteIndex`. The Schema layer function also include `openRel` to the open the relations, `closeRel` to close the relation and `getSchema` to get the schema of the relation.
+
+NITCbase follows an Object-Oriented design for Schema Layer. The class definition is as shown below.
+## class Schema
+
+```cpp
+class Schema {
+    public:
+    private:
+
+};
+```
 
 ## create Relation
 #### Description

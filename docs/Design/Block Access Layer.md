@@ -19,7 +19,7 @@ In any database management system, in order to retrieve data from the database o
 
 The *block access layer also provides an interface to the above layers in terms of records instead of disk blocks*. Hence, the Block Access layer processes the requests for update/retrieval from the algebra and schema layers and works with disk blocks that are buffered by the *<Link to="/docs/Design/Buffer%20Layer"> Buffer layer </Link>)*.
 
-NITCbase follows an Object-Oriented design for Block Access Layer. The class diagram is as shown below.
+NITCbase follows an Object-Oriented design for Block Access Layer. The class definition is as shown below.
 
 ---
 
