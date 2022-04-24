@@ -257,11 +257,18 @@ int BlockAccess::ba_insert(int relId, union Attribute *record){
 		// if relation is RELCAT, do not allocate any more blocks
 		//	return E_MAXRELATIONS;
 
-		//get a new record block and free slot of the new record  from disk by calling
+		//get a new record block and free slot of the new record from disk by calling (RecBuffer's constructor 1)
 		recBuffer = RecBuffer();
-		if(recBuffer.getBlockNum() == E_DISKFULL){ // disk is full (i.e unable to get new record block from the disk)
+		int ret = recBuffer.getBlockNum()
+		// Check if the blockNum is valid
+		if(ret == E_DISKFULL){
+			// disk is full (i.e unable to get new record block from the disk)
 			return E_DISKFULL;
+		} else if (ret < 0) {
+			// Failure of allocating disk block
+			return ret;
 		}
+		
 		free_block = recBuffer.getBlockNum();
 		free_slot = 0;
 		// let prev_block_num denote the block number of the last element in the linked list
