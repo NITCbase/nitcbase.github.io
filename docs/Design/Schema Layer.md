@@ -101,7 +101,7 @@ This method deletes the Relation with name as specified in arguments.
 
 #### Algorithm
 ```cpp
-int deleterel(char relName[ATTR_SIZE]){
+int deleteRel(char relName[ATTR_SIZE]){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
 
@@ -131,7 +131,7 @@ This method creates a bplus indexing on an attribute attr in a relation relName 
 #### Algorithm
 
 ```cpp
-int createindex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
+int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
     // get the src relation's open relation id, using getRelId() method of Openreltable.
     // if source not opened in open relation table, return E_RELNOTOPEN
 
@@ -160,7 +160,7 @@ This method drops the bplus indexing on an attribute attr in a relation relName 
 
 #### Algorithm
 ```cpp
-int dropindex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
+int dropIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
     // get the src relation's open relation id, using getRelId() method of Openreltable.
     // if source opened in open relation table, return E_RELOPEN
 
@@ -189,7 +189,7 @@ This method changes the relation name of specified relation to new name as speci
 
 #### Algorithm
 ```cpp
-int renamerel(char OldrelName[ATTR_SIZE],char NewrelName[ATTR_SIZE]){
+int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
 
@@ -217,7 +217,7 @@ This method changes the name of an attribute/column present in a specified relat
 | `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to rename any attribute value of either of the catalogs. |
 #### Algorithm
 ```cpp
-int renameattr(char relName[ATTR_SIZE], char OldAttrName[ATTR_SIZE], char NewAttrName){
+int renameAttr(char relName[ATTR_SIZE], char oldAttrName[ATTR_SIZE], char newAttrName[ATTR_SIZE]){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
     
@@ -264,7 +264,7 @@ This method closes the relation specified as name in cache/OpenRelTable.
 #### Algorithm
 
 ```cpp
-int closeRel(char rel_name[ATTR_SIZE]){
+int closeRel(char relName[ATTR_SIZE]){
     // get the rel_name relation's open relation id(let it be rel_id), using getRelId() method of Openreltable
     // if relation is not opened in Openreltable, return E_RELNOTOPEN
 
