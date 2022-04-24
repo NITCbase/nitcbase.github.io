@@ -48,16 +48,16 @@ This method creates a new Relation with the name, attribute/column list as speci
 
 #### Algorithm
 ```cpp
-int createRel(char relname[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[]){
+int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[]){
 
-    // let union Attribute relname_val
-    // copy the relname into relname_val(type = string)
+    // let union Attribute relName_val
+    // copy the relName into relName_val(type = string)
 
     // let recId targetrelid
     /* using ba_search() of ba_layer, search the relation relcat (with Openrelid = 0), for attribute value of attribute "RelName" to be
-     equal to relname_val. let the return value of ba_search be retval*/
+     equal to relName_val. let the return value of ba_search be retval*/
 
-    // if relcat==SUCCESS (i.e "relcat" relation already contains a relation with relation name as relname) 
+    // if relcat==SUCCESS (i.e "relcat" relation already contains a relation with relation name as relName) 
         // return E_RELEXIST
 
     // by iterating though all the attributes of attrs[] array 
@@ -72,7 +72,7 @@ int createRel(char relname[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
     // iterate through 0 to nAttrs-1 :
         // let union Attribute attrcatrec[6] (this is the record in attrcatalog corresponding to i'th Attribute)
         /* update attrcatrec corresponding to i'th attribute of the relation
-         (Relation name = relname, Attribute name=attrs[i], type= attrtype[i], pflag=-1, rootblock= -1, offset= i).*/
+         (Relation name = relName, Attribute name=attrs[i], type= attrtype[i], pflag=-1, rootblock= -1, offset= i).*/
 
         // retval = ba_insert(1,attrcatrec);
         /* if ba_insert fails:
@@ -101,18 +101,18 @@ This method deletes the Relation with name as specified in arguments.
 
 #### Algorithm
 ```cpp
-int deleterel(char relname[ATTR_SIZE]){
+int deleterel(char relName[ATTR_SIZE]){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
 
-    // retval  = ba_delete(relname);
+    // retval  = ba_delete(relName);
     // return retval
 }
 ```
 
 ## create Index
 #### Description
-This method creates a bplus indexing on an attribute attr in a relation relname as specified in arguments.
+This method creates a bplus indexing on an attribute attr in a relation relName as specified in arguments.
 #### Arguments
 |Name|Type|Description|
 |----------|--------------------|-------------------------------------------------------------|
@@ -131,7 +131,7 @@ This method creates a bplus indexing on an attribute attr in a relation relname 
 #### Algorithm
 
 ```cpp
-int createindex(char relname[ATTR_SIZE],char attr[ATTR_SIZE]){
+int createindex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
     // get the src relation's open relation id, using getRelId() method of Openreltable.
     // if source not opened in open relation table, return E_RELNOTOPEN
 
@@ -142,7 +142,7 @@ int createindex(char relname[ATTR_SIZE],char attr[ATTR_SIZE]){
 
 ## drop Index
 #### Description
-This method drops the bplus indexing on an attribute attr in a relation relname as specified in arguments.
+This method drops the bplus indexing on an attribute attr in a relation relName as specified in arguments.
 #### Arguments
 |Name|Type|Description|
 |----------|--------------------|-------------------------------------------------------------|
@@ -160,7 +160,7 @@ This method drops the bplus indexing on an attribute attr in a relation relname 
 
 #### Algorithm
 ```cpp
-int dropindex(char relname[ATTR_SIZE],char attr[ATTR_SIZE]){
+int dropindex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
     // get the src relation's open relation id, using getRelId() method of Openreltable.
     // if source opened in open relation table, return E_RELOPEN
 
@@ -189,11 +189,11 @@ This method changes the relation name of specified relation to new name as speci
 
 #### Algorithm
 ```cpp
-int renamerel(char Oldrelname[ATTR_SIZE],char Newrelname[ATTR_SIZE]){
+int renamerel(char OldrelName[ATTR_SIZE],char NewrelName[ATTR_SIZE]){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
 
-    //retval= ba_renamerel(Oldrelname,Newrelname);
+    //retval= ba_renamerel(OldrelName,NewrelName);
     // return retval
 }
 ```
@@ -217,11 +217,11 @@ This method changes the name of an attribute/column present in a specified relat
 | `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to rename any attribute value of either of the catalogs. |
 #### Algorithm
 ```cpp
-int renameattr(char relname[ATTR_SIZE], char OldAttrName[ATTR_SIZE], char NewAttrName){
+int renameattr(char relName[ATTR_SIZE], char OldAttrName[ATTR_SIZE], char NewAttrName){
     // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
     // if relation is opened in open relation table, return E_RELOPEN
     
-    // retval= ba_renameattr(relname,OldAttrName,NewAttrName);
+    // retval= ba_renameattr(relName,OldAttrName,NewAttrName);
     // return retval
 }
 ```
@@ -241,8 +241,8 @@ This method Opens the relation specified as name in cache/OpenRelTable.
 
 #### Algorithm
 ```cpp
-int openRel(char relname[16]){
-    //retval = openRel(relname) (call to OpenRel of OpenRelTable)
+int openRel(char relName[16]){
+    //retval = openRel(relName) (call to OpenRel of OpenRelTable)
     //return retval;
 }
 ```
