@@ -772,7 +772,7 @@ OpenRelTable::OpenRelTable() {
 	
 	/**** setting up Relation Catalog relation in the Open Relation Table ****/
 	
-	//update the 0th entry of the tableMetaInfo with free as false and relName as the 'RelCatalog'.
+	//update the 0th entry of the tableMetaInfo with free as false and relName as the 'RELATIONCAT'.
 	
 	/************ Setting up Attribute Catalog relation in the cache ************/
 	
@@ -800,7 +800,7 @@ OpenRelTable::OpenRelTable() {
 	
 	/**** setting up Attribute Catalog relation in the Open Relation Table ****/
 	
-	//update the 1st entry of the tableMetaInfo with free as false and relName as the 'AttrCatalog'.
+	//update the 1st entry of the tableMetaInfo with free as false and relName as the 'ATTRIBUTECAT'.
 
 }
 ```
