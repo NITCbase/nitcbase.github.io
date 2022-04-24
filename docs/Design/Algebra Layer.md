@@ -5,19 +5,36 @@ title: 'Algebra Layer'
 <https://nitcbase.github.io/archived-site/algebra.html>
 <https://nitcbase.github.io/archived-site/design/algebra.html>
 
+## Layout
 
 The Front End parses SQL-Like queries and coverts them into a sequence of algebra layer and schema layer method calls.
 The algebra layer functions process the basic **insert** and **retrieval** requests **to** and **from** the database.
 *Retrieval functions will create a **target relation** into which the retrieved data will be stored.*
 
 The functions of the Algebra layer are:
-
 1. *Insert*
 2. *Project*
 3. *Select*
 4. *Join*
 
 The *Join* function of NITCbase supports only [Equi-Join](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) of the two relations.
+
+
+## class ALgebra
+```cpp
+
+class Algebra {
+public:
+    static int insert(char* relName, int nAttrs, char** record);
+
+    static int select(char* srcrel, char* targetrel, char** attr, int op, char* strval);
+
+    static int project(char* srcrel, char* targetrel, int tar_nAttrs, char** tar_Attrs);
+
+    static int join(char* srcrel1, char* srcrel2, char* targetrel, char* attr1, char* attr2);
+};
+
+```
 
 ---
 ## Insert
