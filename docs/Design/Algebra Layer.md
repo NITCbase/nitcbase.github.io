@@ -57,39 +57,65 @@ This method inserts the given record into the specified Relation. This function 
  E_RELNOTOPEN       | If the relation is not open.                                                                                        
  E_NATTRMISMATCH    | If the actual number of attributes in the relation is different from the provided number of attributes              
  E_ATTRTYPEMISMATCH | If the actual type of the attribute in the relation is different from the type of provided attribute in the record. 
- E_DISKFULL         | If disk space is not sufficient for inserting the record / index                                                    
+ E_DISKFULL         | If disk space is not sufficient for inserting the record / index   
+ E_INVALID          | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs.                                                  
 #### Algorithm
 ```cpp
 int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
+// if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
+	// return E_INVALID;
 
-    // get the relation's open relation id(let it be rel_id), using getRelId() method of Openreltable
-    // if relation is not opened in Openreltable, return E_RELNOTOPEN
+	// if relation is not open in open relation table, return E_RELNOTOPEN
+	// (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
-    //get the no. of attributes present in relation, from RelcatEntry present in Openreltable(using getRelCatEntry() method).
-    //if nAttrs!=no_of_attrs in relation, return E_NATTRMISMATCH
+	// get the relation catalog entry from relation cache
+	// (use RelCacheTable::getRelCatEntry() of Cache Layer)
+	
+	// if relCatEntry.numAttrs != numberOfAttributes in relation, return E_NATTRMISMATCH
 
-    // let recval[nAttrs] be an array of type union Attribute
+	// let recordValues[numberOfAttributes] be an array of type union Attribute
 
-    /*iterate through 0 to nAttrs-1 :
-        get the i'th attribute's AttrCatEntry (using getAttrcatEntry() of Openreltable )
-    */
-    // let type=attrcatentry.attr_type;
+	/*
+	    Converting 2D char array of record values to Attribute array recordValues
+	 */
+	// iterate through 0 to nAttrs-1: (let i be the iterator)
+	{
+		// get the attribute catalog entry for the i'th attribute from the attribute cache
+		// (use AttrCacheTable::getAttrCatEntry() function with arguments relId and i)
 
-    if(type==INT){  
-        //The input contains a string representation of the integer attribute value.
-        attrval[iter].ival=atoi(attr[iter]);
-        //if conversion fails(i.e string can not be converted to integer) return E_ATTRTYPEMISMATCH. 
+		// let type = attrCatEntry.attrType;
 
-    }else if(type==FLOAT){
-        //do accordingly to float
-    }else if(type==STRING){
-        //No type conversion needed here.
-    }
+		if (type == NUMBER)
+		{
+			// if the char array record[i] can be converted to a number
+			// (check this using checkAttrTypeOfValue() function)
+			{
+				// convert the char array to numeral and store it at recordValues[i].nVal
+			}
+			// else 
+			{
+				return E_ATTRTYPEMISMATCH;
+			}
+		}
+		else if (type == STRING)
+		{
+			// iterate through 0 to ATTR_SIZE-1: (let charIndex be the iterator)
+			{
+				// let ch be the character at index (i, charIndex) of record array
 
+				// if ch == null character(i.e. '\0') exit the loop
+				
+				// if ch is an invalid character return E_INVALID;
+				// (check this using checkIfInvalidCharacter() function)
+			}
+			// copy record[i] to recordValues[i].sVal
+		}
+	}
 
-    int retval= ba_insert(rel_id,attrval)
+	// insert the record by calling BlockAccess::ba_insert() function of Block Access Layer
+	// let retVal denote the return value of ba_insert call
 
-    //return retval        
+	return retVal;        
 }
 ```
 
