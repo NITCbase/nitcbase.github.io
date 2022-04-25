@@ -585,6 +585,10 @@ int BlockAccess::ba_deleteRelation(char *relName) {
 	/* search for relation with name relName in relation catalog using Linear Search and store the relcatRecId */
 	// Hint: relid is RELCAT_RELID attribute name to search will be "RelName" op = EQ
 	// Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
+	// NOTE: Reset the Search Index by using RelCacheTable and setting value to {-1, -1} before callign the ba_linearSearch()
+	RecId searchIndex = {-1, -1};
+    RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
+	
 	RecId relcatRecId = ba_linearSearch(RELCAT_RELID, "RelName", attrvalRelName, EQ);
 
 	// If relation with relName does not exits (relcatRecId == {-1, -1}), return E_RELNOTEXIST
@@ -629,6 +633,10 @@ int BlockAccess::ba_deleteRelation(char *relName) {
 	Attribute *attrcatEntryRecord;
 	Attribute attrValueRelName;
 	strcpy(attrValueRelName.sVal, relName);
+
+	// Reset the Search Index by using RelCacheTable and setting value to {-1, -1}
+    searchIndex = {-1, -1};
+    RelCacheTable::setSearchIndex(ATTRCAT_RELID, &searchIndex);
 
 	// Iterate over all the attributes corresponding to the relation
     for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
