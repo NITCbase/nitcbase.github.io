@@ -204,7 +204,7 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_search(){ 
+int BlockAccess::ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op) { 
 												
      /*get the attribute catalog entry from the attribute cache corresponding 
 	  to the relation with Id=relId and with attribute_name=attrName using
