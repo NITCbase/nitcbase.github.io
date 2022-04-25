@@ -49,37 +49,55 @@ This method creates a new Relation with the name, attribute/column list as speci
 ```cpp
 int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[]){
 
-    // let union Attribute relName_val
-    // copy the relName into relName_val(type = string)
+    // let relNameAsAttribute be of type Attribute
+	// copy the relName into relNameAsAttribute.sVal
 
-    // let recId targetrelid
-    /* using ba_search() of ba_layer, search the relation relcat (with Openrelid = 0), for attribute value of attribute "RelName" to be
-     equal to relName_val. let the return value of ba_search be retval*/
+	// let targetRelId be of type recId
 
-    // if relcat==SUCCESS (i.e "relcat" relation already contains a relation with relation name as relName) 
-        // return E_RELEXIST
+	/*
+		Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute
+	    using ba_search() of Block Access Layer with OP = EQ
+	    Let the return value of ba_search be retVal
+	*/
+	
+	// if retVal == SUCCESS (i.e relation with relation name as relName already exists)
+	// return E_RELEXIST;
 
-    // by iterating though all the attributes of attrs[] array 
-        // if any two strings of attrs[] array have same string value, return E_DUPLICATEATTR (i.e 2 attributes having same value)
+	// compare every pair of attributes of attrNames[] array
+	// if any attribute names have same string value, return E_DUPLICATEATTR (i.e 2 attributes have same value)
 
-    // let union Attribute relcatrecord[6] (this is the record in relationcatalog corresponding to new relation)
-    // fill relcatrecord appropriately with as that of new relation.
+	// let Attribute relCatRecord[6] be the new record to be inserted into relation catalog corresponding to new relation)
+	// fill relCatRecord fields as given below
+	// offset RELCAT_REL_NAME_INDEX: relName
+	// offset RELCAT_NO_ATTRIBUTES_INDEX: numOfAttributes
+	// offset RELCAT_NO_RECORDS_INDEX: 0
+	// offset RELCAT_FIRST_BLOCK_INDEX: -1
+	// offset RELCAT_LAST_BLOCK_INDEX: -1
+	// offset RELCAT_NO_SLOTS_PER_BLOCK_INDEX: floor((2016 / (16 * nAttrs + 1)))
 
-    //retval = ba_insert(0,relcatrecord);
-    // if ba_insert fails return retval
+	// retVal = ba_insert(RELCAT_RELID(=0), relCatRecord);
+	// if ba_insert fails return retVal
 
-    // iterate through 0 to nAttrs-1 :
-        // let union Attribute attrcatrec[6] (this is the record in attrcatalog corresponding to i'th Attribute)
-        /* update attrcatrec corresponding to i'th attribute of the relation
-         (Relation name = relName, Attribute name=attrs[i], type= attrtype[i], pflag=-1, rootblock= -1, offset= i).*/
+	// iterate through 0 to numOfAttributes - 1 :
+	{
+		// let Attribute attrCatRecord[6] be the record in attribute catalog corresponding to i'th Attribute)
+		// (where i is the iterator of the loop)
+		// fill attrCatRecord fields(corresponding to i'th attribute of the relation) as given below
+		// offset ATTRCAT_REL_NAME_INDEX: relName
+		// offset ATTRCAT_ATTR_NAME_INDEX: attrNames[i]
+		// offset ATTRCAT_ATTR_TYPE_INDEX: attrTypes[i]
+		// offset ATTRCAT_PRIMARY_FLAG_INDEX: -1
+		// offset ATTRCAT_ROOT_BLOCK_INDEX: -1
+		// offset ATTRCAT_OFFSET_INDEX: i
 
-        // retval = ba_insert(1,attrcatrec);
-        /* if ba_insert fails:
-            delete targetrelation by calling deleterel(targetrel) of schema layer
-            return E_DISKFULL
-        */
+		// retVal = BlockAccess::ba_insert(ATTRCAT_RELID(=1), attrCatRecord);
+		/* if ba_insert fails:
+			delete the relation by calling deleteRel(targetrel) of schema layer
+			return E_DISKFULL
+		*/
+	}
 
-    // return SUCCESS
+	// return SUCCESS
 }
 ```
 
@@ -143,11 +161,15 @@ This method creates a bplus indexing on an attribute attr in a relation relName 
 
 ```cpp
 int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
-    // get the src relation's open relation id, using getRelId() method of Openreltable.
-    // if source not opened in open relation table, return E_RELNOTOPEN
+    // get the relation's open relation id using OpenRelTable::getRelId() method
 
-    // retval=bplus_create(relid,attr);
-    // return retval
+	// if relation is not open in open relation table, return E_RELNOTOPEN
+	// (check if the value returned from getRelationId function call = E_RELNOTOPEN)
+
+	// TODO: Update once BPlus Layer algorithms are completed
+	// BPlusTree bPlusTree = BPlusTree(relId, attrName);
+	// if(bPlusTree.blockNum == DISK_FULL)
+	// return DISK_FULL;
 }
 ```
 
@@ -205,10 +227,10 @@ This method changes the relation name of specified relation to new name as speci
 int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
 	// get the relation's open relation id using OpenRelTable::getRelId() method
 
-    // if relation is open in open relation table, return E_RELOPEN
+	// if relation is open in open relation table, return E_RELOPEN
 	// (check if the value returned from getRelId function call != E_RELNOTOPEN)
 
-    // retVal = BlockAccess::ba_renameRelation(oldRelName, newRelName);
+	// retVal = BlockAccess::ba_renameRelation(oldRelName, newRelName);
 	// return retVal
 }
 ```
@@ -284,12 +306,15 @@ This method closes the relation specified as name in cache/OpenRelTable.
 #### Algorithm
 
 ```cpp
-int closeRel(char relName[ATTR_SIZE]){
-    // get the rel_name relation's open relation id(let it be rel_id), using getRelId() method of Openreltable
-    // if relation is not opened in Openreltable, return E_RELNOTOPEN
+int closeRel(char relName[ATTR_SIZE]) {
+    // get the relation's open relation id using OpenRelTable::getRelationId() method
 
-    //close the rel_id'th relation using closeRel() of OpenRelTable(in cache), let the return value be retval
-    //return retval;
+	// if relation is not open in open relation table, return E_RELNOTOPEN
+	// (check if the value returned from getRelationId function call = E_RELNOTOPEN)
+
+	// close the relId'th relation using OpenRelTable::closeRelation(relId) of Cache Layer
+	// let the return value be retVal
+	// return retVal;
 }
 ```
 ## Schema :: getSchema()
