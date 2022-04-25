@@ -83,7 +83,7 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 }
 ```
 
-## Schema :: deleteRel
+## Schema :: deleteRel()
 #### Description
 This method deletes the Relation with name as specified in arguments.
 #### Arguments
@@ -151,7 +151,7 @@ int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
 }
 ```
 
-## Schema :: dropIndex
+## Schema :: dropIndex()
 #### Description
 This method drops the bplus indexing on an attribute attr in a relation relName as specified in arguments.
 #### Arguments
@@ -210,7 +210,7 @@ int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
     // return retval
 }
 ```
-## Schema :: renameAttr
+## Schema :: renameAttr()
 #### Description
 This method changes the name of an attribute/column present in a specified relation, to new name as specified in arguments.
 #### Arguments
@@ -240,7 +240,7 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
 	// return the value returned by the above ba_renameAttribute() call
 }
 ```
-## Schema :: openRel
+## Schema :: openRel()
 #### Description
 This method opens the relation specified as name in cache/OpenRelTable.
 #### Arguments
