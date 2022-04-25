@@ -61,12 +61,14 @@ This method inserts the given record into the specified Relation. This function 
 #### Algorithm
 ```cpp
 int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
-// if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
+    // if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
 	// return E_INVALID;
+
+	// get the relation's open relation id using OpenRelTable::getRelId() method
+	int relId = OpenRelTable::getRelId(relName);
 
 	// if relation is not open in open relation table, return E_RELNOTOPEN
 	// (check if the value returned from getRelId function call = E_RELNOTOPEN)
-
 	// get the relation catalog entry from relation cache
 	// (use RelCacheTable::getRelCatEntry() of Cache Layer)
 	
@@ -352,66 +354,99 @@ This function creates a new target relation with attributes constituting from bo
  E_CACHEFULL        | If the openRel() fails because of no free slots in open relation table                                                
 #### Algorithm
 ```cpp
-int join(char srcRelOne[ATTR_SIZE],char srcrelTwo[ATTR_SIZE],char targetRel[ATTR_SIZE], char attrOne[ATTR_SIZE], char attrTwo[ATTR_SIZE]){
+int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char targetRelation[ATTR_SIZE], char attribute1[ATTR_SIZE], char attribute2[ATTR_SIZE]) {
 	
-    // get the srcrel1's open relation id(let it be srcrelid1), using getRelId() method of Openreltable in cache layer
-    // if srcrel1 is not opened in open relation table, return E_RELNOTOPEN
+    // get the srcRelation1's open relation id using OpenRelTable::getRelId() method
 
-	// get the srcrel2's open relation id(let it be srcrelid2), using getRelId() method of Openreltable in cache layer
-    // if srcrel2 is not opened in open relation table, return E_RELNOTOPEN
-    
-    //get the AttrCatEntry of attr1 in rel1 and attr2 in rel2 using getAttrCatEntry() method of Openreltable in cache layer.
-    
-    // if attr1 is not present in rel1 or attr2 not present in rel2 (failure of call to Openreltable) return E_ATTRNOTEXIST.
-    
-    // if attr1 and attr2 are of different types return E_ATTRTYPEMISMATCH
-    
-    // let nAttrs1 = no_of_attrs in rel1 ( can be found using getRelCatEntry() of Openreltable in cache layer).
-    // let nAttrs2 = no_of_attrs in rel1 ( can be found using getRelCatEntry() of Openreltable in cache layer). 
-    
-    //Next step ensures that an index exists for atleast one of the relations
-    /* if both the attributes of src rels have B+ tree:
-    	  if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)  
-    	else if none of target attrs has bplus tree:
-    	  if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)
-    	  create bplus tree on attr2 in rel2 (using create_bplus() method of bplus layer)
-          If create fails return E_DISKFULL
-    */
-    
-    //let tar_attrs[nAttrs1+nAttrs2-1][ATTR_SIZE] be an array of type char
-    //let tar_attrtypes[nAttrs1+nAttrs2-1] be an array of type int
-    //Note: The target relation has number of attributes less than nAttrs1+nAttrs2 (Why?)
-    
-    /* iterate through all the attributes in both the source rels and update tar_attrs[],tar_attrtype[] arrays (except for attr2 in srcrel2),
-     by getting attribute catalog of each attribute from Openreltable(using method getattrcat() in cache layer) */  
-       
-	// retval= createRel(targetrel,nAttrs1+nAttrs2-1,tar_attrs,tar_attrtypes);
-    // where createrel is a function in schema layer
-    // if create fails return retval
-    
-    //int targetrelid = openRel(targetrel) 
-    //where openRel is a function in schema layer
-    /* if open fails
-        delete targetrelation by calling deleteRel(targetrel) of schema layer
-        return error value targetrelid
-    */
-    
-    //var: Union Attribute rec1[nAttrs1]
-    /* while ba_search(srcrelid1,rec1, ,oper=PROJ, no_val) returns success:
-    		var: union Attribute Record[nAttrs2]
-     		while ba_search(srcrelid2,Record, attr2, oper=EQ, rel1 record's attr1 value) returns SUCCESS:
-     			 var: union Attribute tar_record[nAttrs1+nAttrs2-1]
-     			 copy the rel1's, rel2's record to tar_record[] (except for attr2 offset in rel2)
-     			 call ba_insert(targetrelid,tar_record);
-     			 if insert fails:
-                    close the targetrel(by calling closeRel(targetrel) method of schema layer)
-                    delete targetrel(by calling deleteRel(targetrel) of schema layer)
-                    return E_DISKFULL
-     		
-     */
+	// get the srcRelation2's open relation id using OpenRelTable::getRelId() method
 
-    //close the target relation by calling closeRel() of schema layer.
-     //return SUCCESS;
+	// if either of the two source relations is not open in open relation table, return E_RELNOTOPEN
+	// (check if the value returned from getRelId function call = E_RELNOTOPEN)
+
+	// get the attribute catalog entries for the following from the attribute cache
+	// - attribute1 of srcRelation1 (call AttrCacheTable::getAttrCatEntry() function with arguments srcRel1Id and attribute1)
+	// - attribute2 of srcRelation2 (call AttrCacheTable::getAttrCatEntry() function with arguments srcRel2Id and attribute2)
+	// Let retVal1 & retVal2 denote the return values of the above function calls respectively
+
+	// if attribute1 is not present in srcRelation1 or attribute2 is not present in srcRelation2
+	// (check using return values retVal1, retVal2)
+	// return E_ATTRNOTEXIST.
+
+	// if attribute1 and attribute2 are of different types return E_ATTRTYPEMISMATCH
+
+	// get the relation catalog entries for the relations from the relation cache
+	// (use RelCacheTable::getRelCatEntry() function)
+
+	// let numOfAttributes1, numOfAttributes2 be the number of attributes in srcRelation1 and srcRelation2 respectively
+	// (note: the number of attributes field is present in relation catalog entry)
+
+	// TODO: Discuss if needed
+	// Next step ensures that an index exists for atleast one of the relations
+	/* if both the attributes of src rels have B+ tree:
+		  if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)
+		else if none of target attrs has bplus tree:
+		  if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)
+		  create bplus tree on attr2 in rel2 (using create_bplus() method of bplus layer)
+		  If create fails return E_DISKFULL
+	*/
+
+	// let numOfAttributesInTarget = numOfAttributes1 + numOfAttributes2 - 1
+	// let targetRelAttrNames[numOfAttributesInTarget][numOfAttributesInTarget] be an array of type char
+	// let targetRelAttrTypes[numOfAttributesInTarget] be an array of type int
+	// Note: The target relation has number of attributes one less than nAttrs1+nAttrs2 (Why?)
+
+	/*
+		iterate through all the attributes in both the source relations and
+	    update targetRelAttrNames[],targetRelAttrTypes[] arrays (except for attribute2 in srcRelation2),
+	    by getting attribute catalog of each attribute from attribute cache
+	    (using method AttrCacheTable::getAttrCatEntry() of Cache Layer)
+	    Also check if there are any other pair attributes other than join attributes(i.e. attribute1 and attribute2)
+	    with the same name in srcRelation1 and srcRelation2.
+	    If yes, return error code E_DUPLICATEATTR (as this will lead to duplicate attribute names
+	    in the target relation)
+	*/
+
+	// retVal = Schema::createRel(targetRelation, numOfAttributesInTarget, targetRelAttrNames , targetRelAttrTypes);
+
+	// if create fails return retVal
+
+	// Open the targetRelation in OpenRelTable using OpenRelTable::openRel() function
+
+	// if openRel() fails (No free entries left in the Open Relation Table)
+	{
+		// delete target relation by calling deleteRel(targetRelation) of schema layer
+		// return error value targetRelId
+	}
+
+	Attribute record1[numOfAttributes1];
+	Attribute record2[numOfAttributes2];
+	Attribute targetRecord[numOfAttributesInTarget];
+	Attribute dummy;
+
+	// this loop is to get every record of the srcRelation1 one by one
+	while (BlockAccess::ba_search(srcRelId1, record1, "PROJECT", dummy, PRJCT) == SUCCESS) {
+
+		// this loop is to get every record of the srcRelation2 which satisfies the following condition:
+		// record1.attribute1 = record2.attribute2 (i.e. Equi-Join condition)
+		while (BlockAccess::ba_search(srcRelId2, record2, attribute2, record1[attrCatEntry1.offset], EQ) == SUCCESS) {
+
+			// copy srcRelation1's and srcRelation2's attribute values(except for attribute2 in rel2) from
+			// record1 and record2 to targetRecord
+			// (iterate offset from 0 to numOfAttributes1-1 in record1 and 0 to numOfAttributes2-1 in record2
+
+			// insert the current record into the target relation by calling BlockAccess::ba_insert()
+
+			// if insert fails (insert should fail only due to DISK being FULL)
+			{
+				// close the target relation by calling OpenRelTable::closeRel() of Cache layer
+				// delete targetRelation (by calling Schema::deleteRel() of Schema layer)
+				return E_DISKFULL;
+			}
+		}
+	}
+
+	// close the target relation by calling OpenRelTable::closeRel() of Cache layer
+	// return SUCCESS;
 }
 ```
 
