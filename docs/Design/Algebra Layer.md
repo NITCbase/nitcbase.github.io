@@ -24,18 +24,17 @@ NITCbase follows an Object-Oriented design for Algebra Layer. The class definiti
 
 ## class Algebra
 ```cpp
-
 class Algebra {
 public:
-    static int insert(char* relName, int nAttrs, char** record);
+    static int insert(char relName[ATTR_SIZE], int numberOfAttributes, char record[][ATTR_SIZE]);
 
-    static int select(char* srcRel, char* targetRel, char** attr, int op, char* strVal);
+    static int select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]);
 
-    static int project(char* srcRel, char* targetRel, int tar_nAttrs, char** tar_Attrs);
+    static int project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]);
 
-    static int join(char* srcRelOne, char* srcRelTwo, char* targetRel, char* attrOne, char* attrTwo);
+    static int join(char srcRelOne[ATTR_SIZE], char srcRelTwo[ATTR_SIZE], char targetRel[ATTR_SIZE],
+                    char attrOne[ATTR_SIZE], char attrTwo[ATTR_SIZE]);
 };
-
 
 ```
 
@@ -144,69 +143,80 @@ This function creates a new target relation with attributes as that of source re
  E_INVALID          | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
 #### Algorithm
 ```cpp
-int select(char srcRel[ATTR_SIZE],char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]){
+int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
+    // get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
+    // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
-    // get the srcrel's open relation id(let it be srcrelid), using getRelId() method of cache layer
-    // if srcrel is not open in open relation table, return E_RELNOTOPEN
 
-    // get the attribute catalog entry for attr, using getAttrcatEntry() method of cache layer(let it be attrcatentry).
+    // get the attribute catalog entry for attr, using getAttrcatEntry() method of AttrCacheTable in cache layer.
     // if getAttrcatEntry() call fails return E_ATTRNOTEXIST
 
-    //convert strval into union Attribute (let it be val) as shown in the following code:
-    // let type=attrcatentry.attr_type;
-    if(type==INT){  
-        //The input contains a string representation of the integer attribute value.
-        val.ival=atoi(attr[iter]);
-        //if conversion fails(i.e string can not be converted to integer) return E_ATTRTYPEMISMATCH. 
-    }else if(type==FLOAT){
-        //do accordingly to float
-    }else if(type==STRING){
-        //No type conversion needed here.
+    /*** Convert strVal (c-string) to an attribute of data type NUMBER or STRING as given in the following code. ***/
+    int type = attrCatEntry.attrType;
+    Attribute attrVal;
+    if (type == NUMBER) {
+        try {
+            attrVal.nVal = std::stof(strVal);
+        } catch (std::invalid_argument &e) {
+            // if convert fails, return E_ATTRTYPEMISMATCH
+            return E_ATTRTYPEMISMATCH;
+        }
+    } else if (type == STRING) {
+        strcpy(attrVal.sVal, strVal);
     }
-    //if convert fails, return E_ATTRTYPEMISMATCH
 
-    //Next task is to create the destination relation.
-    //Prepare arguments for createRel() in the following way:
-    //get RelcatEntry of srcrel from cache using getRelCatEntry() method of cache layer.
-    //get the no. of attributes present in src relation, from RelcatEntry.(let it be nAttrs)
+    /*** Creating and opening the target relation ***/
 
-    // let attr_name[nAttrs][ATTR_SIZE] be a 2D array of type char(attribute names of rel).
-    // let attr_types[nAttrs] be an array of type int
+    // Prepare arguments for createRel() in the following way:
+    // get RelcatEntry of srcRel from cache using getRelCatEntry() method of RelCacheTable in cache layer.
+    // get the no. of attributes present in src relation, from RelcatEntry. (let it be nAttrs)
 
-    /*iterate through 0 to nAttrs-1 :
-        get the i'th attribute's AttrCatEntry (using getAttrcatEntry() of cache layer )
-        fill attr_name, attr_types of corresponding attributes using Attribute catalog found.
+
+    // let attr_names[src_nAttrs][ATTR_SIZE] be a 2D array of type char(attribute names of rel).
+    // let attr_types[src_nAttrs] be an array of type int
+
+
+    /*iterate through 0 to src_nAttrs-1 :
+        get the i'th attribute's AttrCatEntry (using getAttrcatEntry() method of AttrCacheTable in cache layer)
+        fill attr_names, attr_types of corresponding attributes using Attribute catalog found.
     */
 
-    /* let retval= createRel(targetrel,no_of_attrs_srcrel,attr_name,attr_type)
-       where createrel is a function in schema layer
-       if create fails return retval */
 
-    //int targetrelid = openRel(targetrel) 
-    //where openRel is a function in schema layer
-    /* if open fails
-        delete target relation by calling deleteRel(targetrel) of schema layer
-        return retval
-    */
-    
-    //Note: Before calling the search function, reset the search to start from the first hit
-    // by calling ba_search of block access layer with op=RST.
+    // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    // if the createRel returns an error code, then return that value.
+    // Hint: ret = Schema::createRel(targetrel, src_nAttrs, attr_names, attr_types)
+
+
+    // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
+    // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
+
+
+    /*** Selecting and inserting records into the target relation ***/
+    // Before calling the search function, reset the search to start from the first hit
+    // by calling ba_search of block access layer with op = RST.
+    Attribute record[src_nAttrs];
+    Attribute val;
+    strcpy(val.sVal, "RST");
+    // if ba_search is called with RST operation, then only the srcRelId field is relevant.
+    BlockAccess::ba_search(srcRelId, record, attr, val, RST);
     /*
     while (1):
         var: union Attribute record[no_of_attrs_srcrel];
-        if ba_search(srcrelid,record,attr,val,op) returns SUCCESS:
-            retval = ba_insert(targetrelid,record);
+        if BlockAccess::ba_search(srcRelId, record, attr, attrVal, op) returns SUCCESS:
+            ret = BlockAccess::ba_insert(targetRelId, record);
             if(insert fails):
-                close the targetrel(by calling closeRel(targetrel) method of schema layer)
-                delete targetrel (by calling deleteRel(targetrel) of schema layer)
+                close the targetrel by calling closeRel() method of schema layer
+                delete targetrel by calling deleteRel() of schema layer
                 return retval
 
-        else: break
+        else:
+            break
     */
 
-    //Close the target relation using closeRel() method of schema layer
-    // return SUCCESS;
-    
+
+    // Close the targetRel by calling closeRel() method of schema layer
+
+    // return SUCCESS.
 }
 ```
 
@@ -236,55 +246,82 @@ This function creates a new target relation with list of Attributes specified in
  E_INVALID       | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
 #### Algorithm
 ```cpp
-int project(char srcRel[ATTR_SIZE],char targetRel[ATTR_SIZE],int tar_nAttrs, char tar_attrs[][ATTR_SIZE]){
-    
-    // get the srcrel's open relation id(let it be srcrelid), using getRelId() method of cache layer
-    // if srcrel is not open in open relation table, return E_RELNOTOPEN
+int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]) {
+    // get the srcRel's open relation id(let it be srcrelid), using getRelId() method of cache layer
+    // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
-    //get RelCatEntry of srcrel using getRelCatEntry() of OpenRelTable in cache layer
-    //get the no. of attributes present in relation from the fetched RelcatEntry.
+
+    // get RelCatEntry of srcRel using getRelCatEntry() of RelCacheTable in Cache layer
+
+    // get the no. of attributes present in relation from the fetched RelCatEntry.
+
 
     // let attr_offset[tar_nAttrs] be an array of type int.
-    // where ith entry corresponds to the offset in the srcrel of ith attribute in the target relation.
+    // where ith entry corresponds to the offset in the srcRel of ith attribute in the target relation.
     // let attr_types[tar_nAttrs] be an array of type int.
     // where ith entry corresponds to the type ith attribute in the target relation.
-    //(type can be one of INT, FLOAT or STRING)
 
-    /*iterate through 0 to nAttrs-1 :
-        get the AttributeCat entry (using getAttrcatEntry() of Openreltable in cache layer)
-        of the attribute with name tar_attrs[i]
-        fill the attr_offset,attr_types arrays of target relation from the corresonding Attribute catalog entries
+
+    /*** Checking if attributes of target are present in the source relation and storing its offsets and types ***/
+    /*iterate through 0 to tar_nAttrs-1 :
+        - get the AttributeCat entry (using getAttrCatEntry() of AttrCacheTable in cache layer)
+        of the attribute with name tar_attrs[i].
+        - if the attribute is not found return E_ATTRNOTEXIST
+        - fill the attr_offset, attr_types arrays of target relation from the corresponding Attribute catalog entries
+            * idea -> each attribute in targetRel corresponds to which attributes of source relation
     */
 
-    // retval= createRel(targetrel,tar_nAttrs,tar_attrs,attr_types);
-    // if create fails return retval.
 
-    //int targetrelid = openRel(targetrel) 
-    //where openRel is a function in schema layer
-    /* if open fails 
-    delete target relation by calling deleteRel(targetrel) of schema layer
-    return retval. */
+    /*** Creating and opening the target relation ***/
+
+    // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    // if the createRel returns an error code, then return that value.
+
+
+    // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
+    // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
+
+
+    /*** Inserting projected records into the target relation ***/
+    // Before calling the search function, reset the search to start from the first hit
+    // by calling ba_search of block access layer with op = RST.
+    Attribute record[src_nAttrs];
+    Attribute val;
+    char attr[ATTR_SIZE];
+    strcpy(val.sVal, "RST");
+
+    // if ba_search is called with RST operation, then only the srcRelId field is relevant.
+    BlockAccess::ba_search(srcRelId, record, attr, val, RST);
+
 
     /*
-    while (1):
-        var: union Attribute record[no_of_attrs_srcrel];
-        if ba_search(srcrelid,record,attr,val,op=PROJ_op) returns SUCCESS{
-            declare: union Attribute proj_record[tar_nAttrs] (buffer for record which need to be inserted into target rel)
+    while (true) :
+        // For doing projection call ba_search of Block Access layer with the following arguments:
+        // int ret = BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT) with variables defined as below.
+        strcpy(val.sVal, "PRJCT");
+        strcpy(attr, "PRJCT");
+
+        if (BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT) returns SUCCESS):
+            // record will contain the searched record
+            Attribute proj_record[tar_nAttrs];
+
             iterate through 0 to tar_attrs-1:
-                proj_record[i]=record[attr_offset[i]]
-            retval= ba_insert(targetrelid,proj_record);
-            if(insert fails){
-                close the targetrel (by calling closeRel(targetrel) method of schema layer)
-                delete targetrel (by calling deleteRel(targetrel) of schema layer)
-                return retval
+                proj_record[attr_iter] = record[attr_offset[attr_iter]];
+            
+            ret = BlockAccess::ba_insert(targetRelId, proj_record);
+            
+            if (insert fails) {
+                close the targetrel by calling closeRel() method of schema layer
+                delete targetrel by calling deleteRel() of schema layer
+                return ret;
             }
-        }
-        else: break
+        else:
+            break;
     */
 
-    //Close the targetrel by calling closeRel() method of schema layer
-    // return SUCCESS.
+    // Close the targetRel by calling closeRel() method of schema layer
 
+    // return SUCCESS.
 }
 ```
 
