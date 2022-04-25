@@ -27,7 +27,7 @@ class Schema {
 };
 ```
 
-## create Relation
+## Schema :: createRel()
 #### Description
 This method creates a new Relation with the name, attribute/column list as specified in arguments.
 #### Arguments
@@ -121,7 +121,7 @@ int Schema::deleteRel(char *relName) {
 }
 ```
 
-## create Index
+## Schema :: createIndex()
 #### Description
 This method creates a bplus indexing on an attribute attr in a relation relName as specified in arguments.
 #### Arguments
@@ -182,7 +182,7 @@ int Schema::dropIndex(char *relName, char *attr) {
 }
 ```
 
-## rename Relation
+## Schema :: renameRel()
 #### Description
 This method changes the relation name of specified relation to new name as specified in arguments.
 #### Arguments
@@ -264,7 +264,7 @@ int Schema::openRel(char *relName) {
 	return ret;
 }
 ```
-## close Relation
+## Schema :: closeRel()
 #### Description
 This method closes the relation specified as name in cache/OpenRelTable.
 #### Arguments
@@ -290,5 +290,5 @@ int closeRel(char relName[ATTR_SIZE]){
     //return retval;
 }
 ```
-## getSchema
+## Schema :: getSchema()
 YET TO BE DESIGNED
