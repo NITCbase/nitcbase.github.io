@@ -83,7 +83,7 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 }
 ```
 
-## delete Relation
+## Schema :: deleteRel
 #### Description
 This method deletes the Relation with name as specified in arguments.
 #### Arguments
@@ -96,16 +96,28 @@ This method deletes the Relation with name as specified in arguments.
 | `SUCCESS`       | On successful deletion of the relation.                                                       |
 | `E_RELOPEN`     | If the relation is open.                                                                      |
 | `E_RELNOTEXIST` | If the relation does not exist                                                                |
-| `E_INVALID`     | If relName is either "relcat" or "attrcat". i.e., when the user tries to delete the catalogs. |
+| `E_NOTPERMITTED`     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 ```cpp
-int deleteRel(char relName[ATTR_SIZE]){
-    // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
-    // if relation is opened in open relation table, return E_RELOPEN
+int Schema::deleteRel(char *relName) {
+    // if the relation to delete is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
+        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
+        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
 
-    // retval  = ba_delete(relName);
-    // return retval
+
+	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
+
+	// if relation is opened in open relation table, return E_RELOPEN
+
+	// Call ba_deleteRelation method of the Block Access Layer by passing appropriate argument.
+
+	// return the value returned by the above ba_deleteRelation() call
+    // Errors from ba_deleteRelation -> E_RELNOTEXIST
+        //  AS OF NOW, It can return E_OUT_OF_BOUND from loadBlockAndGetBufferPtr call,
+        //  but if done properly we will not reach this point
+        //  this comes up only when BlockBuffer(or RecBuffer) was initialized with an Invalid Block Number
+
 }
 ```
 
@@ -139,7 +151,7 @@ int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
 }
 ```
 
-## drop Index
+## Schema :: dropIndex
 #### Description
 This method drops the bplus indexing on an attribute attr in a relation relName as specified in arguments.
 #### Arguments
@@ -159,12 +171,14 @@ This method drops the bplus indexing on an attribute attr in a relation relName 
 
 #### Algorithm
 ```cpp
-int dropIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
-    // get the src relation's open relation id, using getRelId() method of Openreltable.
-    // if source opened in open relation table, return E_RELOPEN
+int Schema::dropIndex(char *relName, char *attr) {
+	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
 
-    // retval=bplus_destroy(relid,attr);
-    // return retval
+	// if relation is opened in open relation table, return E_RELOPEN
+
+	// ret = bplus_destroy(relid,attr);
+    
+	// return ret
 }
 ```
 
@@ -196,7 +210,7 @@ int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
     // return retval
 }
 ```
-## rename Attribute
+## Schema :: renameAttr
 #### Description
 This method changes the name of an attribute/column present in a specified relation, to new name as specified in arguments.
 #### Arguments
@@ -216,17 +230,19 @@ This method changes the name of an attribute/column present in a specified relat
 | `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to rename any attribute value of either of the catalogs. |
 #### Algorithm
 ```cpp
-int renameAttr(char relName[ATTR_SIZE], char oldAttrName[ATTR_SIZE], char newAttrName[ATTR_SIZE]){
-    // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
-    // if relation is opened in open relation table, return E_RELOPEN
-    
-    // retval= ba_renameattr(relName,OldAttrName,NewAttrName);
-    // return retval
+int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
+	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
+
+	// if relation is opened in open relation table, return E_RELOPEN
+
+	// Call ba_renameAttribute method of Block Access Layer by passing appropriate arguments.
+
+	// return the value returned by the above ba_renameAttribute() call
 }
 ```
-## open Relation
+## Schema :: openRel
 #### Description
-This method Opens the relation specified as name in cache/OpenRelTable.
+This method opens the relation specified as name in cache/OpenRelTable.
 #### Arguments
 |Name|Type|Description|
 |----------|--------------------|-------------------------------------------------------------|
@@ -240,9 +256,12 @@ This method Opens the relation specified as name in cache/OpenRelTable.
 
 #### Algorithm
 ```cpp
-int openRel(char relName[16]){
-    //retval = openRel(relName) (call to OpenRel of OpenRelTable)
-    //return retval;
+int Schema::openRel(char *relName) {
+	// Call openRelation method of OpenRelTable by passing appropriate arguments
+	int ret = OpenRelTable::openRel(relName);
+
+	// return the value returned by the above openRelation() call
+	return ret;
 }
 ```
 ## close Relation
