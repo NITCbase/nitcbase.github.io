@@ -203,11 +203,13 @@ This method changes the relation name of specified relation to new name as speci
 #### Algorithm
 ```cpp
 int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
-    // get the relation's open relation id(let it be srelid), using getRelId() method of Openreltable
-    // if relation is opened in open relation table, return E_RELOPEN
+	// get the relation's open relation id using OpenRelTable::getRelId() method
 
-    //retval= ba_renamerel(OldrelName,NewrelName);
-    // return retval
+    // if relation is open in open relation table, return E_RELOPEN
+	// (check if the value returned from getRelId function call != E_RELNOTOPEN)
+
+    // retVal = BlockAccess::ba_renameRelation(oldRelName, newRelName);
+	// return retVal
 }
 ```
 ## Schema :: renameAttr()
