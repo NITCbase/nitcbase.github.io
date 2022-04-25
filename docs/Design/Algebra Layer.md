@@ -29,12 +29,13 @@ class Algebra {
 public:
     static int insert(char* relName, int nAttrs, char** record);
 
-    static int select(char* srcrel, char* targetrel, char** attr, int op, char* strval);
+    static int select(char* srcRel, char* targetRel, char** attr, int op, char* strVal);
 
-    static int project(char* srcrel, char* targetrel, int tar_nAttrs, char** tar_Attrs);
+    static int project(char* srcRel, char* targetRel, int tar_nAttrs, char** tar_Attrs);
 
-    static int join(char* srcrel1, char* srcrel2, char* targetrel, char* attr1, char* attr2);
+    static int join(char* srcRelOne, char* srcRelTwo, char* targetRel, char* attrOne, char* attrTwo);
 };
+
 
 ```
 
@@ -59,7 +60,7 @@ This method inserts the given record into the specified Relation. This function 
  E_DISKFULL         | If disk space is not sufficient for inserting the record / index                                                    
 #### Algorithm
 ```cpp
-int insert(char relname[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
+int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 
     // get the relation's open relation id(let it be rel_id), using getRelId() method of Openreltable
     // if relation is not opened in Openreltable, return E_RELNOTOPEN
@@ -99,11 +100,11 @@ This function creates a new target relation with attributes as that of source re
 #### Arguments
  **Attribute** | **Type**         | **Description**                                                                                                                                                  
 ---------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------
- srcrel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                         
- targetrel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                      
+ srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                         
+ targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                      
  attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                       
  op            | `int`             | Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE corresponding to equal,lesthan equal, lessthan ,greaterthan equal, greaterthan, Not equal respectively). 
- strval        | `char [ATTR_SIZE]` | value of attribute.   
+ strVal        | `char [ATTR_SIZE]` | value of attribute.   
 #### Return values
  **Value**          | **Description**                                                                                                       
 --------------------|-----------------------------------------------------------------------------------------------------------------------
@@ -117,7 +118,7 @@ This function creates a new target relation with attributes as that of source re
  E_INVALID          | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
 #### Algorithm
 ```cpp
-int select(char srcrel[ATTR_SIZE],char targetrel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strval[ATTR_SIZE]){
+int select(char srcRel[ATTR_SIZE],char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]){
 
     // get the srcrel's open relation id(let it be srcrelid), using getRelId() method of cache layer
     // if srcrel is not open in open relation table, return E_RELNOTOPEN
@@ -191,8 +192,8 @@ This function creates a new target relation with list of Attributes specified in
 #### Arguments
  **Attribute** | **Type**          | **Description**                                                                                                            
 ---------------|-------------------|----------------------------------------------------------------------------------------------------------------------------
- srcrel        | `char[ATTR_SIZE]`   | Name of Source Relation.                                                                                                   
- targetrel     | `char [ATTR_SIZE]`  | Name of the target Relation(target relation is the Project of source Relation)                                             
+ srcRel        | `char[ATTR_SIZE]`   | Name of Source Relation.                                                                                                   
+ targetRel     | `char [ATTR_SIZE]`  | Name of the target Relation(target relation is the Project of source Relation)                                             
  tar_nAttrs    | `int`               | No. of attributes that have to be projected from source relation to target relation.                                       
  tar_attrs     | `char[][ATTR_SIZE]` | Pointer to attribute names array, (array of attributes that have to be projected from source relation to target relation.) 
 
@@ -209,7 +210,7 @@ This function creates a new target relation with list of Attributes specified in
  E_INVALID       | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
 #### Algorithm
 ```cpp
-int project(char srcrel[ATTR_SIZE],char targetrel[ATTR_SIZE],int tar_nAttrs, char tar_attrs[][ATTR_SIZE]){
+int project(char srcRel[ATTR_SIZE],char targetRel[ATTR_SIZE],int tar_nAttrs, char tar_attrs[][ATTR_SIZE]){
     
     // get the srcrel's open relation id(let it be srcrelid), using getRelId() method of cache layer
     // if srcrel is not open in open relation table, return E_RELNOTOPEN
@@ -269,11 +270,11 @@ This function creates a new target relation with attributes constituting from bo
 #### Arguments
  **Attribute** | **Type**         | **Description**                   
 ---------------|------------------|-----------------------------------
- srcrel1       | `char[ATTR_SIZE]`  | Name of 1st Source Relation.      
- srcrel2       | `char[ATTR_SIZE]`  | Name of 2nd Source Relation.      
- targetrel     | `char [ATTR_SIZE]` | Name of the target Relation       
- attr1         | `char [ATTR_SIZE]` | Attribute/column name in srcrel1. 
- attr2         | `char [ATTR_SIZE]` | Attribute/column name in srcrel2. 
+ srcRelOne       | `char[ATTR_SIZE]`  | Name of 1st Source Relation.      
+ srcRelTwo       | `char[ATTR_SIZE]`  | Name of 2nd Source Relation.      
+ targetRel     | `char [ATTR_SIZE]` | Name of the target Relation       
+ attrOne         | `char [ATTR_SIZE]` | Attribute/column name in srcrel1. 
+ attrTwo        | `char [ATTR_SIZE]` | Attribute/column name in srcrel2. 
 
 
 #### Return values
@@ -288,7 +289,7 @@ This function creates a new target relation with attributes constituting from bo
  E_CACHEFULL        | If the openRel() fails because of no free slots in open relation table                                                
 #### Algorithm
 ```cpp
-int join(char srcrel1[ATTR_SIZE],char srcrel2[ATTR_SIZE],char targetrel[ATTR_SIZE], char attr1[ATTR_SIZE], char attr2[ATTR_SIZE]){
+int join(char srcRelOne[ATTR_SIZE],char srcrelTwo[ATTR_SIZE],char targetRel[ATTR_SIZE], char attrOne[ATTR_SIZE], char attrTwo[ATTR_SIZE]){
 	
     // get the srcrel1's open relation id(let it be srcrelid1), using getRelId() method of Openreltable in cache layer
     // if srcrel1 is not opened in open relation table, return E_RELNOTOPEN
