@@ -56,8 +56,10 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
 	/*
 		Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute
-	    using ba_search() of Block Access Layer with OP = EQ
+	    using ba_search() of Block Access Layer with OP = EQ and flagValidAttrName = True
 	    Let the return value of ba_search be retVal
+		Hint: retVal = BlockAccess::ba_search(RELCAT_RELID, relCatSearchResultRecord, "RelName",
+                                        relNameAsAttribute, EQ, true);
 	*/
 	
 	// if retVal == SUCCESS (i.e relation with relation name as relName already exists)

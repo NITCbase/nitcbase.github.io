@@ -146,12 +146,12 @@ This function creates a new target relation with attributes as that of source re
 #### Algorithm
 ```cpp
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
-    // get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
+// get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
-
 
     // get the attribute catalog entry for attr, using getAttrcatEntry() method of AttrCacheTable in cache layer.
     // if getAttrcatEntry() call fails return E_ATTRNOTEXIST
+
 
     /*** Convert strVal (c-string) to an attribute of data type NUMBER or STRING as given in the following code. ***/
     int type = attrCatEntry.attrType;
@@ -168,15 +168,13 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     }
 
     /*** Creating and opening the target relation ***/
-
     // Prepare arguments for createRel() in the following way:
     // get RelcatEntry of srcRel from cache using getRelCatEntry() method of RelCacheTable in cache layer.
     // get the no. of attributes present in src relation, from RelcatEntry. (let it be nAttrs)
-
+   
 
     // let attr_names[src_nAttrs][ATTR_SIZE] be a 2D array of type char(attribute names of rel).
     // let attr_types[src_nAttrs] be an array of type int
-
 
     /*iterate through 0 to src_nAttrs-1 :
         get the i'th attribute's AttrCatEntry (using getAttrcatEntry() method of AttrCacheTable in cache layer)
@@ -186,35 +184,39 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
     // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
     // if the createRel returns an error code, then return that value.
-    // Hint: ret = Schema::createRel(targetrel, src_nAttrs, attr_names, attr_types)
+    // Hint: ret = Schema::createRel(targetrel,src_nAttrs,attr_name,attr_type)
 
 
     // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
     // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
 
-
     /*** Selecting and inserting records into the target relation ***/
     // Before calling the search function, reset the search to start from the first hit
-    // by calling ba_search of block access layer with op = RST.
+    // by calling ba_search of block access layer with op = RST and dummy values for attr, val
+
     Attribute record[src_nAttrs];
     Attribute val;
     strcpy(val.sVal, "RST");
-    // if ba_search is called with RST operation, then only the srcRelId field is relevant.
-    BlockAccess::ba_search(srcRelId, record, attr, val, RST);
+
+    // Hint: do BlockAccess::ba_search(srcRelId, record, attr, val, RST, true);
+
     /*
-    while (1):
-        var: union Attribute record[no_of_attrs_srcrel];
-        if BlockAccess::ba_search(srcRelId, record, attr, attrVal, op) returns SUCCESS:
+    while (true) {
+        // For doing projection call ba_search of Block Access layer with the following arguments:
+        // int ret = BlockAccess::ba_search(srcRelId, record, attr, attrVal, op, true)
+
+        if (ba_search call returns SUCCESS):
             ret = BlockAccess::ba_insert(targetRelId, record);
-            if(insert fails):
-                close the targetrel by calling closeRel() method of schema layer
-                delete targetrel by calling deleteRel() of schema layer
-                return retval
-
+            if (ba_insert fails) {
+                close the targetrel(by calling closeRel(targetrel) method of schema layer)
+                delete targetrel (by calling deleteRel(targetrel) of schema layer)
+                return ret;
+            }
         else:
-            break
-    */
+            break;
+    }
 
+    */
 
     // Close the targetRel by calling closeRel() method of schema layer
 
@@ -286,24 +288,25 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     /*** Inserting projected records into the target relation ***/
     // Before calling the search function, reset the search to start from the first hit
-    // by calling ba_search of block access layer with op = RST.
     Attribute record[src_nAttrs];
     Attribute val;
     char attr[ATTR_SIZE];
+    strcpy(attr, "RST");
     strcpy(val.sVal, "RST");
 
-    // if ba_search is called with RST operation, then only the srcRelId field is relevant.
-    BlockAccess::ba_search(srcRelId, record, attr, val, RST);
-
+    // call ba_search with op = RST by passing dummy attr and val.
+    // Also pass flagValidAttrName = false to indicate that attribute name passed is dummy.
+    // Hint: do BlockAccess::ba_search(srcRelId, record, attr, val, RST, false);
+    BlockAccess::ba_search(srcRelId, record, attr, val, RST, false);
 
     /*
     while (true) :
         // For doing projection call ba_search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT) with variables defined as below.
+        // int ret = BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT, false) with variables defined as below.
         strcpy(val.sVal, "PRJCT");
         strcpy(attr, "PRJCT");
 
-        if (BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT) returns SUCCESS):
+        if (BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT, false) returns SUCCESS):
             // record will contain the searched record
             Attribute proj_record[tar_nAttrs];
 

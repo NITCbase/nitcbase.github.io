@@ -27,18 +27,19 @@ NITCbase follows an Object-Oriented design for Block Access Layer. The class def
 
 ```cpp
 class BlockAccess {
-    public:
-        static int ba_search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op);
+public:
 
-        static int ba_insert(int relId, union Attribute *record);
+    static int ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName);
 
-		static int ba_renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]);
-		
-		static int ba_renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE], char newName[ATTR_SIZE]);
+    static int ba_insert(int relId, union Attribute *record);
 
-        static int ba_deleteRelation(char relName[ATTR_SIZE]);
-    
-        static RecId ba_linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op);
+	static int ba_renameRelation(char *oldName, char *newName);
+
+	static int ba_renameAttribute(char *relName, char *oldName, char *newName);
+
+	static int ba_deleteRelation(char *relName);
+
+    static RecId ba_linearSearch(int relId, char *attrName, Attribute attrVal, int op);
 
 };
 ```
@@ -192,9 +193,10 @@ This method searches the relation specified to find the next record that satisfi
 |-----------|------------------|-----------------------|
 | relId	| `int`	| Relation Id of Relation to which search has to be made. | 
 | record	| `union Attribute*`	| pointer to record where next found record satisfying given condition is to be placed. | 
-| attrname	| `char[ATTR_SIZE]`	| Attribute/column name to which condition need to be checked with. | 
+| attrName	| `char[ATTR_SIZE]`	| Attribute/column name to which condition need to be checked with. | 
 | attrVal	| `union Attribute`	| value of attribute that has to be checked against the operater. | 
-| op	| `int`	| Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE,RST,PRJCT corresponding to equal,lesthan equal, lessthan ,greaterthan equal, greaterthan, Not equal, reset, projet operators respectively). | 
+| op	| `int`	| Conditional Operator (can be one among `EQ` , `LE` , `LT` , `GE` , `GT` , `NE` , `RST` , `PRJCT` corresponding to equal, less or than equal, less than ,greater than or equal, greater than, not equal, reset and projet operators respectively). | 
+| flagValidAttrName | `int` | Specifies whether the attrName passed as argument is a valid one or not. For example, for resetting the search hit before doing a search using project operator, we will be required to pass dummy attrName (and a dummy attrVal) in which case this flag is set to `false` |
 
 #### Return Values
 | Value | Description |
@@ -204,46 +206,70 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op) { 
-												
-     /*get the attribute catalog entry from the attribute cache corresponding 
-	  to the relation with Id=relId and with attribute_name=attrName using
-	  OpenRelTable::getAttrCatEntry(relId, attrName, &attrcat_entry); of cache layer */
-	//get root_block from the attribute catalog entry (attrcat_entry)
-	
-	if(root_block == -1){ //if Index does not exist for the attribute
-		if(op == RST){ //the op is reset
-			//assign the previous record id (prev_recid) to {block_num=-1, slot_num=-1}
-			/*update the previous record id (prev_recid) in the relation cache corresponding to the relation with Id=relId
-			 using OpenRelTable::setPrevRecId(relId, prev_recid); of cache layer */
-			return SUCCESS;
-		}
-		
-		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrVal  
-		recid = linear_search(relId, attrName, attrVal, op);
-	}
-	else{ //if Index exists for the attribute
-		if(op == RST){ // the op is reset
-			//assign the previous index id (prev_indexid) to {block_num=-1, index_num=-1}
-			/*update the previous index id (prev_recid) in the attribute cache corresponding 
-			  to the relation with Id relId and attribute name with attrName
-			  using OpenRelTable::setPrevIndexId(relId, attrName, prev_indexid); of cache layer */
-			return SUCCESS;
-		}
-		//search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrVal
-		recid = bplus_search(relId, attrName, attval, op);
-	}
-	
-	if(recid == {-1, -1}){ //if it fails to find a record satisfying the given condition
-		return E_NOTFOUND;
-	}
-	
-	//copying the record with record id (recid) to the record (buffer)
-	rec_buffer = Buffer::getRecBuffer(recid.block); //recid.block is the block that contains record
-	rec_buffer->getRecord(record, recid.slot); //recid.slot is the slot that contains record
-	delete rec_buffer;
+int BlockAccess::ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName) {
+    // Declare a variable called recid to store the searched record
+    RecId recId;
 
-	return SUCCESS;
+    // If op = PRJCT:
+        // search for the next record id (recid) corresponding for the relation
+        // by passing op = PRJCT and dummy attrName, attrVal.
+        recId = ba_linearSearch(relId, attrName, attrVal, op);
+
+    // else {
+        // if (flagValidAttrName == false && op == RST):
+            // assign the previous record id (prevRecId) to {block_num=-1, slot_num=-1}
+            
+            /* update the previous record id (prev_recid) in the relation cache entry
+             * corresponding to the relation with Id = relid by using method from the cache layer */
+            
+
+            // return SUCCESS;
+        }
+
+        /* get the attribute catalog entry from the attribute cache corresponding
+        to the relation with Id=relid and with attribute_name=attrName  */
+
+        // get rootBlock from the attribute catalog entry (attrcat_entry)
+        // if Index does not exist for the attribute (check rootBlock == -1)
+        // if (attrCatEntry.rootBlock == -1) :
+            // if the op is reset
+            if (op == RST) {
+                // assign the previous record id (prevRecId) to {block_num=-1, slot_num=-1}
+
+                /* update the previous record id (prev_recid) in the relation cache entry
+                 * corresponding to the relation with Id = relid by using method from the cache layer */
+               
+                // return SUCCESS;
+            }
+
+            // search for the record id (recid) corresponding to the attribute with attribute name attrName, with value attrval
+            // and satisfying the condition op using linearSearch()
+            
+        // else:
+            // else Index exists for the attribute
+            // if (op == RST):
+                // assign the previous index id (prevIndexId variable) to {block_num=-1, index_num=-1}
+                
+                /* update the previous index id (prev_recid) in the attribute cache corresponding
+                   to the relation with Id relid and attribute name with attrName
+                   using appropriate method of cache layer */
+                
+
+                // return SUCCESS
+            
+            // search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
+            
+			// recid = bplus_search(relId, attrName, attval, op);
+	}
+
+	// if it fails to find a record satisfying the given condition (recId = {-1, -1}) return E_NOTFOUND;
+
+	/* Copy the record with record id (recId) to the record buffer (record)
+	   For this Instantiate a RecBuffer class object by passing the recId and
+	   call the appropriate method to fetch the record
+	*/
+
+	// return SUCCESS
 }
 ```
 
