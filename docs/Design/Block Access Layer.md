@@ -101,61 +101,75 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 		// If slot is free skip the loop and continue to the next record slot
 		// (i.e. check if slot'th entry in slot map contains SLOT_UNOCCUPIED
 
-		// compare record's attribute value to the the given attrVal as below:
-		/*
-		    firstly get the attribute offset for the attrName attribute
-		    from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
-		*/
-		// use the attribute offset to get the value of the attribute from current record
-		// perform comparison using compare function and store the outcome of comparison in the variable flag
+		if ( op != PRJCT ) {
+			// compare record's attribute value to the the given attrVal as below:
+			/*
+				firstly get the attribute offset for the attrName attribute
+				from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
+			*/
+			// use the attribute offset to get the value of the attribute from current record
+			// perform comparison using compare function and store the outcome of comparison in the variable flag
 
-		// initialize cond = UNSET
+			// initialize cond = UNSET
 
-		// Next task is to check whether this record satisfies the given condition.
-		// It is determined based on the output of previous comparison and the op value received.
-		// The following code sets the cond variable if the condition is satisfied.
-		switch (op) {
+			// Next task is to check whether this record satisfies the given condition.
+			// It is determined based on the output of previous comparison and the op value received.
+			// The following code sets the cond variable if the condition is satisfied.
+			switch (op) {
 
-			case NE: //if op is "not equal to"
-				if (flag != 0) { //i.e if the record's attribute value is not equal to the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case NE:
+					// if op is "not equal to"
+					// if the record's attribute value is not equal to the given attrVal
+					if (flag != 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
 
-			case LT: //if op is "less than"
-				if (flag < 0) { //i.e if the record's attribute value is less than the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case LT:
+					// if op is "less than"
+					// if the record's attribute value is less than the given attrVal
+					if (flag < 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
 
-			case LE: //if op is "less than or equal to"
-				if (flag <= 0) { //i.e if the record's attribute value is less than or equal to the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case LE:
+					// if op is "less than or equal to"
+					// if the record's attribute value is less than or equal to the given attrVal
+					if (flag <= 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
 
-			case EQ: //if op is "equal to"
-				if (flag == 0) { //i.e if the record's attribute value is equal to the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case EQ:
+					// op is "equal to"
+					// if the record's attribute value is equal to the given attrVal
+					if (flag == 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
 
-			case GT: //if op is "greater than"
-				if (flag > 0) { //i.e if the record's attribute value is greater than the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case GT:
+					// if op is "greater than"
+					// if the record's attribute value is greater than the given attrVal
+					if (flag > 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
 
-			case GE: //if op is "greater than or equal to"
-				if (flag >= 0) { //i.e if the record's attribute value is greater than or equal to the given attrVal
-					// SET the cond variable (i.e. cond = SET)
-				}
-				break;
+				case GE:
+					// if op is "greater than or equal to"
+					// if the record's attribute value is greater than or equal to the given attrVal
+					if (flag >= 0) {
+						// SET the cond variable (i.e. cond = SET)
+					}
+					break;
+			}
 		}
 
-		if (cond == SET) {
+		if (cond == SET || op == PRJCT) {
 			/*
-				set the previous record id in the relation cache as
+				set the search index in the relation cache as
 			    the record id of the record that satisfies the given condition
 			    (use RelCacheTable::setSearchIndex function)
 		    */
@@ -163,23 +177,18 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 			return recId;
 		}
 
-	    // --- Getting the next record id by adjusting the block and slot ---
-		if (slot = last slot slot in the current block) {
-			// block = block's right block in the linked list of record blocks
+	}
 
-			if(block = -1) {
-				// break;
-			}
-
-			// start from first slot in the block (i.e. assign 0 to slot)
-			// create a RecBuffer object for the this block
-			// get the header and slot map of the block
-		}
+	// --- Getting the next record id by adjusting the block and slot ---
+	if (slot = last slot slot in the current block) {
+		// block = block's right block in the linked list of record blocks
+		// start from first slot in the block (i.e. assign 0 to slot)
+	} else {
+		// increment slot by one
 	}
 
 	// no record in the relation with Id relid satisfies the given condition
 	return {-1, -1};
-}
 ```
 
 
