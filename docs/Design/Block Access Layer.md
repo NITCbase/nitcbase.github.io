@@ -66,42 +66,58 @@ This method searches the relation specified linearly to find the next record tha
 #### Algorithm
 ```cpp
 RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
-	/*
-		get the previous record id from the relation cache corresponding to the relation with Id=relId
-	    (use RelCacheTable::getSearchIndex function)
-	*/
+	// get the previous search index of the relation relId from the relation cache
+	// (use RelCacheTable::getSearchIndex() function)
 
 	// let block and slot denote the record id of the record being currently checked
 
-	if (prevRecId.block == -1 && prevRecId.slot == -1) {
-
-		// It is the first time that linear search search for the record with the attribute value attrval
+	// if the current search index record is invalid(i.e. both block and slot = -1)
+	if (prevRecId.block == -1 && prevRecId.slot == -1)
+	{
+		// (no hits from previous search; search should start from the first record itself)
 
 		// get the first record block of the relation from the relation cache
-		//  (use RelCacheTable::getRelCatEntry function of Cache Layer)
+		// (use RelCacheTable::getRelCatEntry() function of Cache Layer)
 
 		// block = first record block of the relation
 		// slot = 0
+	}
+	else 
+	{
+		//	(there is a hit from previous search; search should start from the record next to the search index record)
 
-	} else {
-		// there is a hit from previous search
-
-		// block = previous record id's block
-		// slot = previous record id's slot + 1
+		// block = search index's block
+		// slot = search index's slot + 1
 	}
 
 	// The following code searches for the next record in the relation that satisfies the given condition
-	// Start from block and iterate over the records of the relation
+	// Start from the record id (block, slot) and iterate over the remaining records of the relation
+	while (block != -1)
 	{
+
 		// create a RecBuffer object for block (use RecBuffer Constructor for existing block)
 
-		// get the record of the relation using RecBuffer::getRecord function
-		// get the slot map of the relation using RecBuffer::getSlotMap function
+		// get the record with id (block, slot) using RecBuffer::getRecord() function
+		// get header of the block using RecBuffer::getHeader() function
+		// get slot map of the block using RecBuffer::getSlotMap() function
 
-		// If slot is free skip the loop and continue to the next record slot
-		// (i.e. check if slot'th entry in slot map contains SLOT_UNOCCUPIED
+		// If slot >= the number of slots per block(i.e. no more slots in this block)
+		{
+			// update block = right block of block
+			// update slot = 0
+		}
 
-		if ( op != PRJCT ) {
+		// if slot is free skip the loop
+		// (i.e. check if slot'th entry in slot map of block contains SLOT_UNOCCUPIED)
+		{
+			// and continue to the next record slot
+			// (i.e. increment slot and continue)
+		}
+
+		// let cond be a variable of int type
+		
+		if ( op != PRJCT ) 
+		{
 			// compare record's attribute value to the the given attrVal as below:
 			/*
 				firstly get the attribute offset for the attrName attribute
@@ -112,6 +128,7 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 
 			// initialize cond = UNSET
 
+		
 			// Next task is to check whether this record satisfies the given condition.
 			// It is determined based on the output of previous comparison and the op value received.
 			// The following code sets the cond variable if the condition is satisfied.
@@ -174,17 +191,9 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 			    (use RelCacheTable::setSearchIndex function)
 		    */
 
-			return recId;
+			return RecId{block, slot};
 		}
 
-	}
-
-	// --- Getting the next record id by adjusting the block and slot ---
-	if (slot = last slot slot in the current block) {
-		// block = block's right block in the linked list of record blocks
-		// start from first slot in the block (i.e. assign 0 to slot)
-	} else {
-		// increment slot by one
 	}
 
 	// no record in the relation with Id relid satisfies the given condition
