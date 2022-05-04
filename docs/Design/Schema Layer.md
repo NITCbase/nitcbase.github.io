@@ -26,8 +26,8 @@ public:
 
 	static int createRel(char relName[], int numOfAttributes, char attrNames[][ATTR_SIZE], int attrType[]);
 	static int deleteRel(char relName[ATTR_SIZE]);
-	static int createIndex(char relName[ATTR_SIZE], char attr[ATTR_SIZE]);
-	static int dropIndex(char relName[ATTR_SIZE], char attr[ATTR_SIZE]);
+	static int createIndex(char relName[ATTR_SIZE], char attrName[ATTR_SIZE]);
+	static int dropIndex(char relName[ATTR_SIZE], char attrName[ATTR_SIZE]);
 	static int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]);
 	static int renameAttr(char relName[ATTR_SIZE], char oldAttrName[ATTR_SIZE], char newAttrName[ATTR_SIZE]);
 	static int openRel(char relName[ATTR_SIZE]);
@@ -151,26 +151,26 @@ int Schema::deleteRel(char *relName) {
 
 ## Schema :: createIndex()
 #### Description
-This method creates a bplus indexing on an attribute attr in a relation relName as specified in arguments.
+This method creates a bplus indexing on an attribute attrName in a relation relName as specified in arguments.
 #### Arguments
 |Name|Type|Description|
 |----------|--------------------|-------------------------------------------------------------|
 | relName  | `char[ATTR_SIZE]`    | Name of the Relation.                                       |
-| attr	   | `char [ATTR_SIZE]`	| Name of the Attribute.                                      |
+| attrName	   | `char [ATTR_SIZE]`	| Name of the Attribute.                                      |
 
 #### Return value
 |Value|Description|
 |----------------|-----------------------------------------------------------------------------------------------------------|
 | `SUCCESS`        | On successful creation of B+ tree.                                                                        |
 | `E_RELNOTOPEN`   | If the relation is not open.                                                                              |
-| `E_ATTRNOTEXIST` | If the attribute with name attr does not exist.                                                           |
+| `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist.                                                           |
 | `E_DISKFULL`     | If there is no enough space in the disk to create the tree                                                |
 | `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to create an index for catalogs. |
 
 #### Algorithm
 
 ```cpp
-int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
+int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
     // get the relation's open relation id using OpenRelTable::getRelId() method
 
 	// if relation is not open in open relation table, return E_RELNOTOPEN
@@ -185,30 +185,30 @@ int createIndex(char relName[ATTR_SIZE],char attr[ATTR_SIZE]){
 
 ## Schema :: dropIndex()
 #### Description
-This method drops the bplus indexing on an attribute attr in a relation relName as specified in arguments.
+This method drops the bplus indexing on an attribute attrName in a relation relName as specified in arguments.
 #### Arguments
 |Name|Type|Description|
 |----------|--------------------|-------------------------------------------------------------|
 | relName  | `char[ATTR_SIZE]`    | Name of the Relation.                                       |
-| attr	   | `char [ATTR_SIZE]`	| Name of the Attribute.                                      |
+| attrName	   | `char [ATTR_SIZE]`	| Name of the Attribute.                                      |
 
 #### Return value
 |Value|Description|
 |------------------|-------------------------------------------------|
 | `SUCCESS`        | On successful deletion of the B+ tree           |
 | `E_RELNOTOPEN`   | If the relation is not open.                    |
-| `E_ATTRNOTEXIST` | If the attribute with name attr does not exist. |
+| `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist. |
 | `E_INVALID`      | If the relName is either "relcat" or "attrcat". |
 
 
 #### Algorithm
 ```cpp
-int Schema::dropIndex(char *relName, char *attr) {
+int Schema::dropIndex(char *relName, char *attrName) {
 	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
 
 	// if relation is opened in open relation table, return E_RELOPEN
 
-	// ret = bplus_destroy(relid,attr);
+	// ret = bplus_destroy(relid,attrName);
     
 	// return ret
 }

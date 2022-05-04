@@ -29,22 +29,22 @@ NITCbase follows an Object-Oriented design for Block Access Layer. The class def
 class BlockAccess {
 public:
 
-    static int ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName);
+	static int search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName);
 
-    static int ba_insert(int relId, union Attribute *record);
+	static int insert(int relId, union Attribute *record);
 
-	static int ba_renameRelation(char *oldName, char *newName);
+	static int renameRelation(char *oldName, char *newName);
 
-	static int ba_renameAttribute(char *relName, char *oldName, char *newName);
+	static int renameAttribute(char *relName, char *oldName, char *newName);
 
-	static int ba_deleteRelation(char *relName);
+	static int deleteRelation(char *relName);
 
-    static RecId ba_linearSearch(int relId, char *attrName, Attribute attrVal, int op);
+	static RecId linearSearch(int relId, char *attrName, Attribute attrVal, int op);
 
 };
 ```
 
-### BlockAccess :: ba_linearSearch()
+### BlockAccess :: linearSearch()
 
 #### Description
 This method searches the relation specified linearly to find the next record that satisfies the specified condition on attribute attrVal and returns the recId of the next record satisfying the condition.
@@ -65,7 +65,7 @@ This method searches the relation specified linearly to find the next record tha
 
 #### Algorithm
 ```cpp
-RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
+RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attribute attrVal, int op) {
 	// get the previous search index of the relation relId from the relation cache
 	// (use RelCacheTable::getSearchIndex() function)
 
@@ -201,7 +201,7 @@ RecId BlockAccess::ba_linearSearch(int relId, char attrName[ATTR_SIZE], union At
 ```
 
 
-### BlockAccess :: ba_search()
+### BlockAccess :: search()
 
 #### Description
 This method searches the relation specified to find the next record that satisfies the specified condition on attribute attrVal and updates the recId of next record satisfying the condition in cache.(uses the b+ tree if target attribute is indexed, otherwise, it does linear search).
@@ -224,14 +224,14 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName) {
+int BlockAccess::search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName) {
     // Declare a variable called recid to store the searched record
     RecId recId;
 
     // If op = PRJCT:
         // search for the next record id (recid) corresponding for the relation
         // by passing op = PRJCT and dummy attrName, attrVal.
-        recId = ba_linearSearch(relId, attrName, attrVal, op);
+        recId = linearSearch(relId, attrName, attrVal, op);
 
     // else {
         // if (flagValidAttrName == false && op == RST):
@@ -292,7 +292,7 @@ int BlockAccess::ba_search(int relId, Attribute *record, char *attrName, Attribu
 ```
 
 
-### BlockAccess :: ba_insert()
+### BlockAccess :: insert()
 
 #### Description
 This method inserts the Record into Relation as specified in arguments.
@@ -313,7 +313,7 @@ This method inserts the Record into Relation as specified in arguments.
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_insert(int relId, union Attribute *record){
+int BlockAccess::insert(int relId, union Attribute *record){
 	// get the relation catalog entry from relation cache
 	// ( use RelCacheTable::getRelCatEntry() of Cache Layer)
 	
@@ -446,7 +446,7 @@ int BlockAccess::ba_insert(int relId, union Attribute *record){
 }
 ```
 
-### BlockAccess :: ba_renameRelation()
+### BlockAccess :: renameRelation()
 
 #### Description
 This method changes the relation name of specified relation to the new name specified in arguments.
@@ -468,15 +468,15 @@ This method changes the relation name of specified relation to the new name spec
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
+int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
 	Attribute newRelationName;
 	strcpy(newRelationName.sVal, newName);
 
 	// Reset the Search Index by using RelCacheTable and setting value to {-1, -1}
     RecId searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
-	// search for the relation with name newName in relation catalog using ba_linearSearch()
-	relcat_recid = ba_linearSearch(RELCAT_RELID, "RelName", newRelationName, EQ ); 
+	// search for the relation with name newName in relation catalog using linearSearch()
+	relcat_recid = linearSearch(RELCAT_RELID, "RelName", newRelationName, EQ ); 
 	// note: newRelationName is of type Attribute (to be constructed from newName)
 	
 	// If relation with name newName already exits
@@ -491,7 +491,7 @@ int BlockAccess::ba_renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SI
     searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
 	// search for the relation with name oldName in relation catalog 
-	relcat_recid = ba_linearSearch( ---fill the arguments--- );
+	relcat_recid = linearSearch( ---fill the arguments--- );
 
 	// If relation with name relName does not exits
 	if(relcat_recid == {-1,-1}) {
@@ -519,7 +519,7 @@ int BlockAccess::ba_renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SI
 ```
 
 
-### BlockAccess :: ba_renameAttribute()
+### BlockAccess :: renameAttribute()
 
 #### Description
 This method changes the name of an attribute/column present in a specified relation, to the new name specified in arguments.
@@ -542,7 +542,7 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Algorithm
 ```cpp
-int BlockAccess::ba_renameAttribute(char *relName, char *oldName, char *newName) {
+int BlockAccess::renameAttribute(char *relName, char *oldName, char *newName) {
 	// Search for the relation with name relName in relation catalog using Linear Search and store it in relcatRecId
 	// Hint: relid is RELCAT_RELID, attribute name to search will be "RelName", op = EQ
 	// Make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
@@ -552,7 +552,7 @@ int BlockAccess::ba_renameAttribute(char *relName, char *oldName, char *newName)
 
     RecId searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
-	RecId relcatRecId = ba_linearSearch(RELCAT_RELID, "RelName", attrValueRelName, EQ);
+	RecId relcatRecId = linearSearch(RELCAT_RELID, "RelName", attrValueRelName, EQ);
 
 	//If relation with name relName does not exits (relcatRecird == {-1,-1})
 	//    return E_RELNOTEXIST;
@@ -576,7 +576,7 @@ int BlockAccess::ba_renameAttribute(char *relName, char *oldName, char *newName)
 	
 	// Iterate over all the attributes corresponding to the relation
     for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
-        attrcatRecId = ba_linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
+        attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
 
         if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
             // Continue to search for more attributes
@@ -600,7 +600,7 @@ int BlockAccess::ba_renameAttribute(char *relName, char *oldName, char *newName)
 ```
 
 
-### BlockAccess :: ba_deleteRelation()
+### BlockAccess :: deleteRelation()
 
 #### Description
 This method deletes the Relation with the name specified in arguments.
@@ -622,15 +622,15 @@ If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap()
 :::
 
 ```cpp
-int BlockAccess::ba_deleteRelation(char *relName) {
+int BlockAccess::deleteRelation(char *relName) {
 	/* search for relation with name relName in relation catalog using Linear Search and store the relcatRecId */
 	// Hint: relid is RELCAT_RELID attribute name to search will be "RelName" op = EQ
 	// Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
-	// NOTE: Reset the Search Index by using RelCacheTable and setting value to {-1, -1} before callign the ba_linearSearch()
+	// NOTE: Reset the Search Index by using RelCacheTable and setting value to {-1, -1} before callign the linearSearch()
 	RecId searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
 	
-	RecId relcatRecId = ba_linearSearch(RELCAT_RELID, "RelName", attrvalRelName, EQ);
+	RecId relcatRecId = linearSearch(RELCAT_RELID, "RelName", attrvalRelName, EQ);
 
 	// If relation with relName does not exits (relcatRecId == {-1, -1}), return E_RELNOTEXIST
 
@@ -682,7 +682,7 @@ int BlockAccess::ba_deleteRelation(char *relName) {
 	// Iterate over all the attributes corresponding to the relation
     for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
         // search for all the attributes corresponding to the relation with relName in attribute catalog
-        attrcatRecId = ba_linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
+        attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
         if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
             // Continue, check for more attributes
             continue;
