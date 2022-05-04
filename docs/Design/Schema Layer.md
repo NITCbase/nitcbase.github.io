@@ -22,8 +22,16 @@ NITCbase follows an Object-Oriented design for Schema Layer. The class definitio
 
 ```cpp
 class Schema {
-    public:
-    static int createRel(char relname[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
+public:
+
+	static int createRel(char relName[], int numOfAttributes, char attrNames[][ATTR_SIZE], int attrType[]);
+	static int deleteRel(char relName[ATTR_SIZE]);
+	static int createIndex(char relName[ATTR_SIZE], char attr[ATTR_SIZE]);
+	static int dropIndex(char relName[ATTR_SIZE], char attr[ATTR_SIZE]);
+	static int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]);
+	static int renameAttr(char relName[ATTR_SIZE], char oldAttrName[ATTR_SIZE], char newAttrName[ATTR_SIZE]);
+	static int openRel(char relName[ATTR_SIZE]);
+	static int closeRel(char relName[ATTR_SIZE]);
 };
 ```
 
