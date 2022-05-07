@@ -90,7 +90,11 @@ const config = {
             position: 'left',
             label: 'NITCbase Commands',
           },
-          // {to: '/blog', label: 'Blog', position: 'left'},
+          {
+            label: 'TODO(Work left)',
+            to: 'TODO',
+            position: 'right',
+          },
           {
             label: 'About Us',
             to: 'AboutUs',
