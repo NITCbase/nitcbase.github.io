@@ -12,15 +12,12 @@ The algebra layer functions process the basic **insert** and **retrieval** reque
 *Retrieval functions will create a **target relation** into which the retrieved data will be stored.*
 
 The functions of the Algebra layer are:
-1. *Insert*
-2. *Project*
-3. *Select*
-4. *Join*
+1. [**Insert**](#insert)
+2. [**Project**](#select)
+3. [**Select**](#project)
+4. [**Join**](#join)
 
-The *Join* function of NITCbase supports only [Equi-Join](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) of the two relations.
-
-NITCbase follows an Object-Oriented design for Algebra Layer. The class definition is as shown below.
-
+The *Join* function of NITCbase supports only [Equi-Join](https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join) of the two relations. NITCbase follows an Object-Oriented design for Algebra Layer. The class definition is as shown below:
 
 ## class Algebra
 ```cpp
@@ -42,7 +39,7 @@ public:
 ## Insert
 
 #### Description
-This method inserts the given record into the specified Relation. This function inserts a record into the Relation, only if the Relation is opened.
+This method **inserts the given record** into the specified Relation. Insertion is only done if the Relation is open and attribute number and types match.
 #### Arguments
  **Attribute** | **Type**          | **Description**                                                                                                                            
 ---------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------
@@ -52,17 +49,17 @@ This method inserts the given record into the specified Relation. This function 
 #### Return values
  **Value**          | **Description**
 --------------------|---------------------------------------------------------------------------------------------------------------------
- SUCCESS            | On successful insert of the given record into the relation                                                          
- E_RELNOTOPEN       | If the relation is not open.                                                                                        
- E_NATTRMISMATCH    | If the actual number of attributes in the relation is different from the provided number of attributes              
- E_ATTRTYPEMISMATCH | If the actual type of the attribute in the relation is different from the type of provided attribute in the record. 
- E_DISKFULL         | If disk space is not sufficient for inserting the record / index   
- E_INVALID          | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs.                                                  
+ `SUCCESS`            | On successful insert of the given record into the relation                                                          
+ `E_RELNOTOPEN`       | If the relation is not open.                                                                                        
+ `E_NATTRMISMATCH`    | If the actual number of attributes in the relation is different from the provided number of attributes              
+ `E_ATTRTYPEMISMATCH` | If the actual type of the attribute in the relation is different from the type of provided attribute in the record. 
+ `E_DISKFULL`         | If disk space is not sufficient for inserting the record / index   
+ `E_NOTPERMITTED`          | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs.                                                  
 #### Algorithm
 ```cpp
 int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
     // if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
-	// return E_INVALID;
+	// return E_NOTPERMITTED;
 
 	// get the relation's open relation id using OpenRelTable::getRelId() method
 	int relId = OpenRelTable::getRelId(relName);
@@ -106,7 +103,7 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 
 				// if ch == null character(i.e. '\0') exit the loop
 				
-				// if ch is an invalid character return E_INVALID;
+				// if ch is an invalid character return E_NOTPERMITTED;
 				// (check this using checkIfInvalidCharacter() function)
 			}
 			// copy record[i] to recordValues[i].sVal
@@ -123,7 +120,7 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 ---
 ## Select
 #### Description
-This function creates a new target relation with attributes as that of source relation. It inserts the records of source relation which satisfies the given condition into the Target Relation.
+This function creates a new target relation with attributes as that of source relation. It inserts the records of source relation which **satisfies the given condition** into the target Relation.
 #### Arguments
  **Attribute** | **Type**         | **Description**                                                                                                                                                  
 ---------------|------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -135,18 +132,19 @@ This function creates a new target relation with attributes as that of source re
 #### Return values
  **Value**          | **Description**                                                                                                       
 --------------------|-----------------------------------------------------------------------------------------------------------------------
- SUCCESS            | On successful creation of new relation.                                                                               
- E_RELNOTOPEN       | If the source relation is not open.                                                                                   
- E_RELEXIST         | If a relation with name targetrel already exists.                                                                     
- E_ATTRNOTEXIST     | If a attribute with name attr does not exist.                                                                         
- E_ATTRTYPEMISMATCH | If the actual type of the attribute in the relation is different from the type of provided attribute.                 
- E_CACHEFULL        | If the openRel() fails because of no free slots in open relation table                                                
- E_DISKFULL         | If disk space is not sufficient for creating the new relation.                                                        
- E_INVALID          | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
+ `SUCCESS`            | On successful creation of new relation.                                                                               
+ `E_RELNOTOPEN`       | If the source relation is not open.                                                                                   
+ `E_RELEXIST`         | If a relation with name targetrel already exists.                                                                     
+ `E_ATTRNOTEXIST`     | If a attribute with name attr does not exist.                                                                         
+ `E_ATTRTYPEMISMATCH` | If the actual type of the attribute in the relation is different from the type of provided attribute.                 
+ `E_CACHEFULL`        | If the openRel() fails because of no free slots in open relation table                                                
+ `E_DISKFULL`         | If disk space is not sufficient for creating the new relation.          
+  `E_NOTPERMITTED`       | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs.                                               
+
 #### Algorithm
 ```cpp
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
-// get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
+    // get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
     // get the attribute catalog entry for attr, using getAttrcatEntry() method of AttrCacheTable in cache layer.
@@ -182,7 +180,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     */
 
 
-    // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    // Create the relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
     // if the createRel returns an error code, then return that value.
     // Hint: ret = Schema::createRel(targetrel,src_nAttrs,attr_name,attr_type)
 
@@ -227,7 +225,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 ---
 ## Project
 #### Description
-This function creates a new target relation with list of Attributes specified in the arguments. For each record of the source relation, it inserts a new record into the Target relation with the attribute values corresponding to the attributes specified in the attribute list.
+This function creates a new target relation with list of attributes specified in the arguments. For each record of the source relation, it inserts a new record into the target relation **with the attribute values corresponding to the attributes specified in the attribute list.**
 
 #### Arguments
  **Attribute** | **Type**          | **Description**                                                                                                            
@@ -240,14 +238,14 @@ This function creates a new target relation with list of Attributes specified in
 #### Return values
  **Value**       | **Description**                                                                                                       
 -----------------|-----------------------------------------------------------------------------------------------------------------------
- SUCCESS         | On successful creation of new relation.                                                                               
- E_RELNOTOPEN    | If the source relation is not open.                                                                                   
- E_RELEXIST      | If a relation with name targetrel already exists.                                                                     
- E_ATTRNOTEXIST  | If any attribute with name given in attr array does not exist.                                                        
- E_DUPLICATEATTR | If two any two attributes have same name in the target relation                                                       
- E_DISKFULL      | If disk space is not sufficient for creating the new relation.                                                        
- E_CACHEFULL     | If the openRel() fails because of no free slots in open relation table                                                
- E_INVALID       | If the relName is either "relcat" or "attrcat". i.e, when the user tries to insert a record into any of the catalogs. 
+ `SUCCESS`         | On successful creation of new relation.                                                                               
+ `E_RELNOTOPEN`    | If the source relation is not open.                                                                                   
+ `E_RELEXIST`      | If a relation with name targetrel already exists.                                                                     
+ `E_ATTRNOTEXIST`  | If any attribute with name given in attr array does not exist.                                                        
+ `E_DUPLICATEATTR` | If two any two attributes have same name in the target relation                                                       
+ `E_DISKFULL`      | If disk space is not sufficient for creating the new relation.                                                        
+ `E_CACHEFULL`     | If the openRel() fails because of no free slots in open relation table                                                
+ `E_NOTPERMITTED`       | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. 
 #### Algorithm
 ```cpp
 int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]) {
@@ -334,7 +332,7 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 ---
 ## Join
 #### Description
-This function creates a new target relation with attributes constituting from both the source relations(excluding specified attribute from 2nd src relation).It inserts the records obtained by Equi-join of both the source Relations(an attribute from each Relation specified in arguments are used for equi-join) into the Target Relation.
+This function creates a new target relation with *attributes constituting from both the source relations (excluding the specified join-attribute from the second source relation)*. It inserts the records obtained by ***Equi-join*** of both the source relations into the target relation. An attribute from each relation specified in arguments is used for *equi-join called the join-attributes.*
 #### Arguments
  **Attribute** | **Type**         | **Description**                   
 ---------------|------------------|-----------------------------------
@@ -348,13 +346,13 @@ This function creates a new target relation with attributes constituting from bo
 #### Return values
  **Value**          | **Description**                                                                                                       
 --------------------|-----------------------------------------------------------------------------------------------------------------------
- SUCCESS            | On successful creation of new relation.                                                                               
- E_RELNOTOPEN       | If any of the source relations is not open.                                                                           
- E_RELEXIST         | If a relation with name targetrel already exists.                                                                     
- E_ATTRNOTEXIST     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        
- E_DISKFULL         | If disk space is not sufficient for creating the new relation.                                                        
- E_ATTRTYPEMISMATCH | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. 
- E_CACHEFULL        | If the openRel() fails because of no free slots in open relation table                                                
+ `SUCCESS`            | On successful creation of new relation.                                                                               
+ `E_RELNOTOPEN`       | If any of the source relations is not open.                                                                           
+ `E_RELEXIST`         | If a relation with name targetrel already exists.                                                                     
+ `E_ATTRNOTEXIST`     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        
+ `E_DISKFULL`         | If disk space is not sufficient for creating the new relation.                                                        
+ `E_ATTRTYPEMISMATCH` | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. 
+ `E_CACHEFULL`        | If the openRel() fails because of no free slots in open relation table                                                
 #### Algorithm
 ```cpp
 int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char targetRelation[ATTR_SIZE], char attribute1[ATTR_SIZE], char attribute2[ATTR_SIZE]) {

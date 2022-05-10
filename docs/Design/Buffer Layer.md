@@ -24,9 +24,18 @@ The Buffer Layer code is to be written in 2 pairs of files:
 
 ## Layout
 
-Whenever NITCbase needs to work on a disk block, the block has to be first fetched from the **secondary memory storage** (`disk`) to the **primary memory**. A large pool of memory (called `buffer` in the documentation) is pre-allocated and managed to hold copies of disk blocks in the primary memory. When a request involving access/update of a disk block comes from any of the higher layers, the corresponding disk block is loaded into the buffer. After performing updates, the block has to be committed back to the disk.
+Whenever NITCbase needs to work on a disk block, the block has to be first fetched from the *secondary memory storage* (`disk`) to the **primary memory**. *A large pool of memory* (called *buffer* in the documentation) is pre-allocated and managed to *hold copies of disk blocks in the primary memory*. When a request involving *access/update* of a disk block comes from any of the higher layers, the corresponding disk block is loaded into the buffer. After performing updates, the block is committed back to the disk from the buffer.
 
-NITCbase uses a dedicated **Buffer Layer** for the above task. All the requests involving disk blocks go through the Buffer Layer. The interface provided by the Buffer Layer gives a memory disk abstraction to higher layers. NITCbase has pre-allocated memory for holding `32 blocks` in its buffer memory at a given time. Buffer Layer is responsible for maintaining the buffer memory and making replacements and writebacks as required. The disk class functions are used by the Buffer Layer to load blocks from the disk to the buffer and back. A single object of the disk class needs to be declared at the start of the session. Its purpose is to run the constructor and the destructor of the class.
+NITCbase uses a dedicated **Buffer Layer** for the above functionality. 
+*All the requests involving disk blocks go through the Buffer Layer.* The interface provided by the ***Buffer Layer*** gives a memory address space abstraction to the higher layers, hiding the complexities involved in the reads and writes to the actual physical disk blocks.
+
+
+NITCbase has pre-allocated memory for holding **32 disk blocks** in its ***buffer memory*** at a given time. Buffer Layer is responsible for maintaining the buffer memory and making *replacements* and *writebacks* as required. The disk class functions are used by the Buffer Layer to load blocks from the disk to the buffer and also to write back blocks as and when necessary. A single object of the disk class needs to be declared at the start of the session. Its purpose is to run the constructor and the destructor of the class.
+
+:::tip Note
+The `Disk` class *constructor* will create a new ***Run Copy*** of the actual disk and all disk accesses during runtime of NITCbase is done via this *Run Copy*. At the close of the system, the `Disk` class *destructor* will write back the *Run Copy* of disk to the actual disk.
+:::
+
 
 NITCbase follows an Object-Oriented design for Buffer Layer. The class diagram is as shown below.
 
@@ -54,39 +63,52 @@ The Buffer Layer defines the following block data structures.
 * [InternalEntry](#internalentry)
 * [Index](#index)
 
-Each structure is designed to store a subset of the data stored in a disk block. A disk block contains `2048` bytes of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](./Cache%20Layer), the [Block Access Layer](./Block%20Access%20Layer), and the [B+ Tree Layer](./B+%20Tree%20Layer).
+Each structure is designed to store **a subset of the data stored in a disk block**. A disk block contains ***2048 bytes*** of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](./Cache%20Layer), the [Block Access Layer](./Block%20Access%20Layer), and the [B+ Tree Layer](./B+%20Tree%20Layer).
 
 ### HeadInfo
-NITCbase maintains a `32 bytes` fixed-size header for every disk block. This header stores meta-information, like the type of the block, and a few block specific information, like `#Attrs` and `#Slots`. Though the header has many fields, usage of the fields depends on the type of the block. The structure `HeadInfo` is used to collect all the entries of the header, as shown below. The `setHeader()` and the `getHeader()` methods take a pointer to `struct HeadInfo` as argument.
+**NITCbase maintains a *32 byte* *fixed-size* header for every disk block.** This header stores *meta-information*, like the type of the block, and a few block specific information, like `#Attrs` and `#Slots`. Though the header has many fields, usage of the fields depends on the type of the block. The structure `HeadInfo` is used to collect all the entries of the header, as shown below. The `setHeader()` and the `getHeader()` methods take a pointer to `struct HeadInfo` as argument.
 
 :::caution Implementation Note
 `getHeader()` and `setHeader()` methods expect the higher layers to allocate memory for the `struct HeadInfo` before calling them.
 :::
 
 ```cpp
-struct HeadInfo{
-	int32_t blockType;
-	int32_t pBlock;
-	int32_t lBlock;
-	int32_t rBlock;
-	int32_t numEntries;
-	int32_t numAttrs;
-	int32_t numSlots;
-	unsigned char reserved[4];
+struct HeadInfo {
+    int32_t blockType;
+    int32_t pblock;
+    int32_t lblock;
+    int32_t rblock;
+    int32_t numEntries;
+    int32_t numAttrs;
+    int32_t numSlots;
+    unsigned char reserved[4];
 };
 	/* #include <cstdint> must be done */ 
 ```
 
 ### Attribute
-According to the [Physical Layer storage model](../Design/Physical%20Layer#disk-model), a Record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, `Attribute` is a union of the two types. The size of an Attribute is fixed at `16 bytes`. A `record` will be an array of Attributes whose size is equal to the number of attributes in the relation. An `attribute` being a fundamental unit of data in a `record`, the `Attribute` block data structure is used in several functions of NITCbase.
+According to the [Physical Layer storage model](../Design/Physical%20Layer#disk-model), a Record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, `**Attribute**` is a *union* containing the two types. The size of an Attribute is fixed at ***16 bytes***. A `**record**` will be an array of Attributes whose size is equal to the number of attributes in the relation. 
+
+:::tip
+Attribute is the fundamental unit of data in a record. Hence, the `Attribute` data structure is used in several functions of NITCbase.
+:::
+
+
+The definition for `union Attribute` is given below:
 ```cpp
-typedef union Attribute{
-	float nVal;
-	char strVal[ATTR_SIZE];
+typedef union Attribute {
+    double nVal;
+    char sVal[ATTR_SIZE];
 } Attribute;
 ```
 ### InternalEntry
-Each `Internal Index block` of a `B+ Tree` consists of many `attribute values` and `child pointers`. This data is arranged in the block in such a way that an attribute value is stored between its left child and right child pointers. The `right child pointer` of one attribute value will be the same as the `left child pointer` of the next attribute value. Hence to avoid redundancy, only one copy is stored, making the data overlapped. The combination of `left child`, `attribute value`, and `right child` makes up the `InternalEntry` structure, as shown below. An Internal Index block is a combination of `100 such overlapped entries`. The getEntry() and setEntry() methods of the class IndInternal take a pointer to struct InternalEntry as an argument.
+Each **Internal Index** block of a *B+ Tree* consists of many *attribute values* and the *child pointers*. This data is arranged in the block in such a way that an attribute value is stored **between** its left child and right child pointers. 
+
+:::info Note
+The `right child pointer` of one attribute value will be the **same** as the `left child pointer` of the next attribute value. Hence to avoid redundancy, only one copy is stored, *making the data overlapped.* 
+:::
+
+The combination of `left child`, `attribute value`, and `right child` makes up the `InternalEntry` structure, as shown below. An Internal Index block is a combination of `100 such overlapped entries`. The `getEntry()` and `setEntry()` methods of the class `IndInternal` take a pointer to struct `InternalEntry` as an argument.
 
 :::caution Implementation Note
 The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class IndInternal`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for struct InternalEntry before calling them.
@@ -94,35 +116,42 @@ The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` 
 
 
 ```cpp
-struct InternalEntry{
-	int32_t lChild;
-	union Attribute attrVal;
-	int32_t rChild;
+struct InternalEntry {
+    int32_t lChild;
+    union Attribute attrVal;
+    int32_t rChild;
 };
 /* #include <cstdint> must be done */
 ```
 ### Index
-An `index` of a relation should store a reference to its record along with the corresponding attribute value. NITCbase uses `RecId`, which is a `(block#, slot#)` pair, for referencing any record. In NITCbase, an `Index` structure is a combination of `attribute value`, `block#`, and `slot#`, followed by some unused space left for future use, as shown below. Each `Leaf Index block` is a combination of `63 such Index entries`. The `getEntry()` and the `setEntry()` methods of the `class IndLeaf` take a pointer to `struct Index` as an argument.
+An *index* of a relation should store a reference to its record along with the corresponding attribute value. NITCbase uses `**RecId**`, which is a `(block#, slot#)` pair, for referencing any record. In NITCbase, an `Index` structure is a combination of `attribute value`, `block#`, and `slot#`, followed by some unused space left for future use, as shown below. 
+
+Each `Leaf Index block` is a combination of **63 such Index entries**. The `getEntry()` and the `setEntry()` methods of the `class IndLeaf` take a pointer to `struct Index` as an argument.
 
 :::caution Implementation Note
 The `getEntry()` and `setEntry()` methods are declared in the `class IndBuffer` but are overridden in the `class LeafBuffer`. `getEntry()` and `setEntry()` methods expect the higher layers to allocate memory for `struct Index` before calling them.
 :::
 
 ```cpp
-struct Index{
-	union Attribute attrVal;
-	int32_t block;
-	int32_t slot;
-	unsigned char unused[8];
+struct Index {
+    union Attribute attrVal;
+    int32_t block;
+    int32_t slot;
+    unsigned char unused[8];
 };
 /* #include <cstdint> must be done */
 ```
 ---
 
 ## Buffer Structure
-The `Buffer Layer` also defines a `buffer` structure. `StaticBuffer class` maintains meta-information for each block loaded to a buffer. The `BufferMetaInfo` structure is used for storing this meta-information. This structure contains `four fields`: a `free flag` which indicates whether the buffer is occupied, a `dirty flag` which indicates whether the block has been modified, a `blockNum field` which is the block number of the block that is stored in the given buffer and a `timeStamp` field which indicates the last time the buffer had been accessed. `Replacement` is done using a simple `Least Recently Used(LRU)` algorithm, which has been implemented in the `getFreeBuffer()` method. The `timeStamp` field has to be updated each time the buffer is accessed, as is done in the `getBufferPtr()` method.
+The Buffer Layer also defines a *buffer* structure. `StaticBuffer class` maintains meta-information for each block loaded to a buffer. 
+
+The `BufferMetaInfo` structure is used for storing this meta-information. This structure contains **four fields**: a `free flag` which indicates whether the buffer is occupied, a `dirty flag` which indicates whether the block has been modified, a `blockNum` field which is the block number of the block that is stored in the given buffer and a `timeStamp` field which indicates the last time the buffer had been accessed. 
+
+*Block Replacement* is done using a simple **Least Recently Used (LRU)** algorithm, which has been implemented in the `getFreeBuffer()` method. The `timeStamp` field has to be updated each time the buffer is accessed, as is done in the `getBufferPtr()` method.
+
 ```cpp
-struct BufferMetaInfo{
+struct BufferMetaInfo {
 	bool free;
 	bool dirty;
 	int blockNum;
@@ -146,7 +175,7 @@ C++ allows static methods to be accessed using the semantics `class_name::functi
 :::
 
 ```cpp
-class StaticBuffer{
+class StaticBuffer {
 				
 friend class BlockBuffer;
 

@@ -543,56 +543,52 @@ This method changes the name of an attribute/column present in a specified relat
 #### Algorithm
 ```cpp
 int BlockAccess::renameAttribute(char *relName, char *oldName, char *newName) {
-	// Search for the relation with name relName in relation catalog using Linear Search and store it in relcatRecId
-	// Hint: relid is RELCAT_RELID, attribute name to search will be "RelName", op = EQ
-	// Make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
-    // Also, before doing the search reset the Search Index by using RelCacheTable and setting value to {-1, -1}
-	 Attribute attrValueRelName;
+	// Search for the relation with name relName in relation catalog using Linear Search
+	Attribute attrValueRelName;
 	strcpy(attrValueRelName.sVal, relName);
-
     RecId searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(RELCAT_RELID, &searchIndex);
 	RecId relcatRecId = linearSearch(RELCAT_RELID, "RelName", attrValueRelName, EQ);
 
-	//If relation with name relName does not exits (relcatRecird == {-1,-1})
+	// If relation with name relName does not exits (relcatRecId == {-1,-1})
 	//    return E_RELNOTEXIST;
 
-    // Declare Attribute* relcatEntryRecord to store the relation catalog entry corresponding to the relcat entry.
-    Attribute *relcatEntryRecord;
-
-    /* Get the relation catalog entry record corresponding to relation with relName using the relcatRecId */
-    // Hint: instantiate RecBuffer class using relcatRecId.block and then use appropriate class method to get the record.
-
-    // get the number of attributes corresponding to the relation (numAttrs) using the relation catalog entry record
-
-	/* Declare attrcatRecId and attractEntryRecord variables to store
-	   record id of the attrcat entry and to store the attrcat entry record respectively.
-	 */
-
-	// Declare and assign integer attrExistFlag = 0
- 	// Reset the Search Index by using RelCacheTable and setting value to {-1, -1}
-    searchIndex = {-1, -1};
-    RelCacheTable::setSearchIndex(ATTRCAT_RELID, &searchIndex);
+	/*** 
+		Iterating over all Attribute Catalog Entry record corresponding to relation to find the required attribute 
+	***/
+	// Reset the Search Index by using RelCacheTable and setting value to {-1, -1}
+	searchIndex = {-1, -1};
+	RelCacheTable::setSearchIndex(ATTRCAT_RELID, &searchIndex);
 	
-	// Iterate over all the attributes corresponding to the relation
-    for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
-        attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
+	// Define RecId attrId {-1, -1} - used to check if an attribute of oldName exists or not.
+ 	RecId attrId{-1, -1};
+	Attribute attrcatEntryRecord[ATTRCAT_NO_ATTRS];
+  	while (true) {
+		RecId attrcatEntryRecId = linearSearch(ATTRCAT_RELID, "RelName", relationName, EQ);
 
-        if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
-            // Continue to search for more attributes
-            continue;
-        }
+		if (attrcatEntryRecId.block == -1) {
+			break;
+		}
 
-        // Set attrExistFlag = 1 to denote that the attribute exists.
+		// Get the attribute catalog record from the attribute catalog
+		// Hint: instantiate RecBuffer Class with appropriate block number and use getRecord method to store the record into attrcatEntryRecord.
 
-        // get the attribute catalog record from the attribute catalog
-        // (recid of the attribute record = attrcat_recid)
+    	// if (strcmp(attrcatEntryRecord[1].sVal, oldName) == 0) attrId = attrcatEntryRecId;
 
-        // update the attribute catalog record in the attribute catalog with attribute name newName
-    	// and set the record back
-    }
+    	// if (strcmp(attrcatEntryRecord[1].sVal, newName) == 0) return E_ATTREXIST;
 
-	// If attrExistFlag = 0, return E_ATTRNOTEXIST
+    	
+  	}
+	
+	// if (attrId.block == -1) return E_ATTRNOTEXIST;
+
+	// Update the entry corresponding to the attribute in the Attribute Catalog Relation.
+	/* Hint: Instantiate RecBuffer class by passing appropriate block number = attrId.block
+		Get the record corresponding to the entry by using getRecord method by passing attrId.slot
+		as argument.
+		Use setRecord method to set the record back after updating the entry appropriately.
+	*/
+
 
 	// return SUCCESS
 }
@@ -663,9 +659,10 @@ int BlockAccess::deleteRelation(char *relName) {
 
 	}
 
-	/* Deleting attribute catalog entries corresponding the relation and
-	   index blocks corresponding to the relation with relName on its attributes
-
+	/*** 
+		Deleting attribute catalog entries corresponding the relation and index blocks corresponding to the relation with relName on its attributes
+	***/ 
+	/*
 	   Declare attrcatRecId and attractEntryRecord variables to store
 	   record id of the attrcat entry and to store the attrcat entry record respectively.
 	   Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
@@ -679,25 +676,26 @@ int BlockAccess::deleteRelation(char *relName) {
     searchIndex = {-1, -1};
     RelCacheTable::setSearchIndex(ATTRCAT_RELID, &searchIndex);
 
+	int numberOfAttributesDeleted = 0;
 	// Iterate over all the attributes corresponding to the relation
-    for (int attrIter = 0; attrIter < numAttrs; attrIter++) {
+    while (true) {
         // search for all the attributes corresponding to the relation with relName in attribute catalog
         attrcatRecId = linearSearch(ATTRCAT_RELID, "RelName", attrValueRelName, EQ);
         if (attrcatRecId.block == -1 && attrcatRecId.slot == -1) {
-            // Continue, check for more attributes
-            continue;
+            // No more attributes to iterate over.
+			break;
         }
 
-        /*** Deleting the attribute catalog entry corresponding to the attribute from attribute catalog ***/
+		numberOfAttributesDeleted++;
+
+        /*** 
+			Deleting the attribute catalog entry corresponding to the attribute from attribute catalog 
+		***/
 
         // Get the header by Instantiating a RecBuffer instance (attrcatRecBuffer) and calling appropriate methods
         RecBuffer attrcatRecBuffer = RecBuffer(attrcatRecId.block);
         HeadInfo attrcatRecBufferBlockHeader;
         int ret = attrcatRecBuffer.getHeader(&attrcatRecBufferBlockHeader);
-        // Return the error code incase getHeader function call fails
-        if (ret != SUCCESS) {
-            return ret;
-        }
 
         // get the rootBlock from attribute catalog (use attrcatRecBuffer object to call appropriate method
         // to get record corresponding to the attribute catalog entry)
@@ -722,12 +720,15 @@ int BlockAccess::deleteRelation(char *relName) {
             // Set the previous header's rblock to the block's header's rblock
 
             if (attrcatRecBufferBlockHeader.rblock != -1) {
-								// Get the header of the next block (right block)
-								// Hint: instantiate a RecBuffer class corresponding to the lblock and call appropriate methods
-								 
-								// Set the next block's header's lblock to the block's header's lblock
+				// Get the header of the next block (right block)
+				// Hint: instantiate a RecBuffer class corresponding to the lblock and call appropriate methods
+					
+				// Set the next block's header's lblock to the block's header's lblock
 
-            }
+            } else {
+				// the block being released is the "Last Block" of the relation.
+				// Update the Relation Catalog entry's LastBlock field for this relation with the block number of the previous block.
+			}
 
             // call releaseBlock()
 
@@ -735,26 +736,28 @@ int BlockAccess::deleteRelation(char *relName) {
 
         // if index exists for the attribute (rootBlock != -1), call bplus destroy
         if (rootBlock != -1) {
-            // TODO: bplus_destroy(rootBlock); //delete the index blocks corresponding to the attribute
+            // bplus_destroy(rootBlock); //delete the index blocks corresponding to the attribute
         }
     }
 
 	/*** Delete the relation catalog entry corresponding to the relation from relation catalog ***/
 	// Fetch the header of Relcat block
 
-  // Adjust the number of entries in the header of the block (decrease by 1) corresponding to the relation catalog entry
+	// Adjust the number of entries in the header of the block (decrease by 1) corresponding to the relation catalog entry
+		// and set it back
+
+	// Get the slotmap in relation catalog, update it by marking the slot as free(use SLOT_UNOCCUPIED) and set it back.
+		
+	/*** Updating the Relation Cache Table ***/
+	/** Update relation catalog record entry (number of records in relation catalog is decreased by 1) **/
+	// Hint: Get the entry corresponding to relation catalog from the relation cache and update the number of records
 	// and set it back
 
-  // Get the slotmap in relation catalog, update it by marking the slot as free(use SLOT_UNOCCUPIED) and set it back.
-    
-	/*** Updating the Relation Cache Table ***/
-    /** Update relation catalog record entry (number of records in relation catalog is decreased by 1) **/
-    // Hint: Get the entry corresponding to relation catalog from the relation cache and update the number of records
-    // and set it back
+	/** Update attribute catalog entry (number of records in attribute catalog is decreased by numberOfAttributesDeleted) **/
+	i.e., #Records = #Records - numberOfAttributesDeleted
 
-    /** Update attribute catalog entry (number of records in attribute catalog is decreased by numAttrs) **/
-    // Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records
-    // and set it back
+	// Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records
+	// and set it back
 
 	// return SUCCESS;
 }

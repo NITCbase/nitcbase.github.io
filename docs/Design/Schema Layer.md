@@ -15,15 +15,25 @@ The Schema Layer code is to be written in `Schema.cpp` and it's header file `Sch
 
 ## Layout
 
-The SQL-Like queries that alter the schema of the database are converted into a sequence of schema layer function calls by front end. These schema layer function calls processes the **basic schema alteration requests to the database.** The functions of Schema layer include `createRel`, `deleteRel`, `renameRel`, `renameAttr`, `createIndex`, `deleteIndex`. The Schema layer function also include `openRel` to the open the relations, `closeRel` to close the relation and `getSchema` to get the schema of the relation.
+The SQL-Like queries that alter the schema of the database are converted into a sequence of schema layer function calls by front end. These schema layer function calls processes the **basic schema alteration requests to the database.** 
 
-NITCbase follows an Object-Oriented design for Schema Layer. The class definition is as shown below.
+The functions of Schema layer include:
+1. [**createRel**](#schema--createrel)
+2. [**deleteRel**](#schema--deleterel)
+3. [**renameRel**](#schema--renamerel)
+4. [**renameAttr**](#schema--renameattr)
+5. [**createIndex**](#schema--createindex)
+6. [**deleteIndex**](#schema--dropindex)
+7. [**openRel**](#schema--openrel)
+8. [**closeRel**](#schema--closerel)
+9. [**getSchema**](#schema--getschema) - YET TO BE DESIGNED
+
+The method `openRel` is used to the open a relations for access, `closeRel` to close a relation and `getSchema` to get the schema of the relation. NITCbase follows an Object-Oriented design for Schema Layer. The class definition is as shown below:
 ## class Schema
 
 ```cpp
 class Schema {
 public:
-
 	static int createRel(char relName[], int numOfAttributes, char attrNames[][ATTR_SIZE], int attrType[]);
 	static int deleteRel(char relName[ATTR_SIZE]);
 	static int createIndex(char relName[ATTR_SIZE], char attrName[ATTR_SIZE]);
@@ -34,6 +44,8 @@ public:
 	static int closeRel(char relName[ATTR_SIZE]);
 };
 ```
+
+---
 
 ## Schema :: createRel()
 #### Description
@@ -111,6 +123,8 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 }
 ```
 
+---
+
 ## Schema :: deleteRel()
 #### Description
 This method deletes the Relation with name as specified in arguments.
@@ -124,7 +138,7 @@ This method deletes the Relation with name as specified in arguments.
 | `SUCCESS`       | On successful deletion of the relation.                                                       |
 | `E_RELOPEN`     | If the relation is open.                                                                      |
 | `E_RELNOTEXIST` | If the relation does not exist                                                                |
-| `E_NOTPERMITTED`     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e., when the user tries to delete the catalogs. |
+| `E_NOTPERMITTED`     | If relName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 ```cpp
@@ -148,6 +162,7 @@ int Schema::deleteRel(char *relName) {
 
 }
 ```
+---
 
 ## Schema :: createIndex()
 #### Description
@@ -165,12 +180,15 @@ This method creates a bplus indexing on an attribute attrName in a relation relN
 | `E_RELNOTOPEN`   | If the relation is not open.                                                                              |
 | `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist.                                                           |
 | `E_DISKFULL`     | If there is no enough space in the disk to create the tree                                                |
-| `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to create an index for catalogs. |
+| `E_NOTPERMITTED`      | If the relName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. i.e, when the user tries to create an index for catalogs. |
 
 #### Algorithm
 
 ```cpp
 int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
+	// if the relation name is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
+		// compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
+		// OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
     // get the relation's open relation id using OpenRelTable::getRelId() method
 
 	// if relation is not open in open relation table, return E_RELNOTOPEN
@@ -182,6 +200,8 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
 	// return DISK_FULL;
 }
 ```
+
+---
 
 ## Schema :: dropIndex()
 #### Description
@@ -198,12 +218,15 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 | `SUCCESS`        | On successful deletion of the B+ tree           |
 | `E_RELNOTOPEN`   | If the relation is not open.                    |
 | `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist. |
-| `E_INVALID`      | If the relName is either "relcat" or "attrcat". |
+| `E_NOTPERMITTED` | If the relName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. |
 
 
 #### Algorithm
 ```cpp
 int Schema::dropIndex(char *relName, char *attrName) {
+	// if the relation name is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
+        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
+        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
 	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
 
 	// if relation is opened in open relation table, return E_RELOPEN
@@ -213,6 +236,8 @@ int Schema::dropIndex(char *relName, char *attrName) {
 	// return ret
 }
 ```
+
+---
 
 ## Schema :: renameRel()
 #### Description
@@ -230,11 +255,14 @@ This method changes the relation name of specified relation to new name as speci
 | `E_RELOPEN`     | If the relation is open.                                                                                      |
 | `E_RELNOTEXIST` | If the relation with name oldRelName does not exist                                                           |
 | `E_RELEXIST`    | If the relation with name newRelName already exists                                                           |
-| `E_INVALID`     | If the oldrelName is either "relcat" or "attrcat". i.e, when the user tries to rename either of the catalogs. |
+| `E_NOTPERMITTED`     | If the oldrelName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. i.e, when the user tries to rename either of the catalogs. |
 
 #### Algorithm
 ```cpp
-int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
+int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]) {
+	// if the oldRelName or newRelName is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
+        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
+        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
 	// get the relation's open relation id using OpenRelTable::getRelId() method
 
 	// if relation is open in open relation table, return E_RELOPEN
@@ -244,6 +272,9 @@ int renameRel(char oldRelName[ATTR_SIZE],char newRelName[ATTR_SIZE]){
 	// return retVal
 }
 ```
+
+---
+
 ## Schema :: renameAttr()
 #### Description
 This method changes the name of an attribute/column present in a specified relation, to new name as specified in arguments.
@@ -261,10 +292,14 @@ This method changes the name of an attribute/column present in a specified relat
 | `E_RELNOTEXIST`  | If the relation with name relName does not exist                                                                                  |
 | `E_ATTRNOTEXIST` | If the attribute with name oldAttrName does not exist                                                                             |
 | `E_ATTREXIST`    | If the attribute with name newAttrName already exists                                                                             |
-| `E_INVALID`      | If the relName is either "relcat" or "attrcat". i.e, when the user tries to rename any attribute value of either of the catalogs. |
+| `E_NOTPERMITTED`      | If the relName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. i.e, when the user tries to rename any attribute value of either of the catalogs. |
 #### Algorithm
 ```cpp
 int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
+	// if the relName is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
+        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
+        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
+
 	// get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
 
 	// if relation is opened in open relation table, return E_RELOPEN
@@ -274,6 +309,9 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
 	// return the value returned by the above ba_renameAttribute() call
 }
 ```
+
+---
+
 ## Schema :: openRel()
 #### Description
 This method opens the relation specified as name in cache/OpenRelTable.
@@ -298,6 +336,9 @@ int Schema::openRel(char *relName) {
 	return ret;
 }
 ```
+
+---
+
 ## Schema :: closeRel()
 #### Description
 This method closes the relation specified as name in cache/OpenRelTable.
@@ -310,13 +351,15 @@ This method closes the relation specified as name in cache/OpenRelTable.
 |-----------|-----------------------------------------------------------------------------------------------------------|
 | `SUCCESS`   | On successful closing of the relation                                                                     |
 | `E_NOTOPEN` | If relation with given name is not open                                                                   |
-| `E_INVALID` | If the relName is either "relcat" or "attrcat". i.e, when the user tries to close either of the catalogs. |
+| `E_NOTPERMITTED` | If the relName is either *"RELATIONCAT"* or *"ATTRIBUTECAT"*. i.e, when the user tries to close either of the catalogs. |
 
 
 #### Algorithm
 
 ```cpp
 int closeRel(char relName[ATTR_SIZE]) {
+	// check if relName is either "RELATIONCAT" or "ATTRIBUTECAT". If so then return E_NOTPERMITTED.
+
     // get the relation's open relation id using OpenRelTable::getRelationId() method
 
 	// if relation is not open in open relation table, return E_RELNOTOPEN
@@ -327,5 +370,7 @@ int closeRel(char relName[ATTR_SIZE]) {
 	// return retVal;
 }
 ```
+
+---
 ## Schema :: getSchema()
 YET TO BE DESIGNED
