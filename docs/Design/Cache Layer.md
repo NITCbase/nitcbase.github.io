@@ -2,7 +2,7 @@
 sidebar_position: 6
 title: 'Cache Layer'
 ---
-https://nitcbase.github.io/archived-site/cache.html
+https://nitcbase.github.io/archived-site/design/cache.html
 
 import CacheClasses from '../../static/img/cache_classes.png';
 import CacheTables from '../../static/img/cache_tables.png';

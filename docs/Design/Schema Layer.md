@@ -2,7 +2,7 @@
 sidebar_position: 4
 title: 'Schema Layer'
 ---
-https://nitcbase.github.io/archived-site/schema.html
+https://nitcbase.github.io/archived-site/design/schema.html
 
 import Link from '@docusaurus/Link';
 

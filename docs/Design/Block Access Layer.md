@@ -2,7 +2,7 @@
 sidebar_position: 5
 title: 'Block Access Layer'
 ---
-https://nitcbase.github.io/archived-site/blockaccess.html
+https://nitcbase.github.io/archived-site/design/blockaccess.html
 
 import Link from '@docusaurus/Link';
 
@@ -55,13 +55,13 @@ This method searches the relation specified linearly to find the next record tha
 | relId |	`int` |	Relation Id of Relation to which search has to be made. |
 | attrName |	`char[ATTR_SIZE]` |	Attribute/column name to which condition need to be checked with. |
 | attrVal |	`union Attribute` |	value of attribute that has to be checked against the operater. |
-| op |	`int` |	Conditional Operator(can be one among `EQ,LE,LT,GE,GT,NE,RST,PRJCT` corresponding to *equal,less than or equal, less than ,greater than or equal, greater than, not equal, reset, projet operators respectively). |
+| op |	`int` |	The conditional operator (which can be one among `EQ, LE, LT, GE, GT, NE, RST, PRJCT` corresponding to the following operators: *equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to, reset, project* |
 
 #### Return Values
 | Value | Description |
 |-----------|-----------------|
-| recId (block#, slot#) |	returns (block#, slot#) of the record corresponding to the next hit.
- |(-1, -1) |	If no valid next hit is found.
+| `{block#, slot#}` |	returns the *block number and slot number* of the record corresponding to the next hit. This corresponds to type `RecId`.
+|`{-1, -1}`|	If no valid next hit is found. This corresponds to type `RecId`.
 
 #### Algorithm
 ```cpp
