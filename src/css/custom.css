@@ -17,13 +17,13 @@
 } */
 
 :root {
-  --ifm-color-primary: #3578e5; /*#25c2a0;*/
-  --ifm-color-primary-dark: #1277eb; /*rgb(33, 175, 144);*/
-  --ifm-color-primary-darker: #1b65d4; /*rgb(31, 165, 136);*/
-  --ifm-color-primary-darkest: #0c47b6; /*rgb(26, 136, 112);*/
-  --ifm-color-primary-light: #4e89e8; /*rgb(70, 203, 174);*/
-  --ifm-color-primary-lighter: #5a91ea; /*rgb(102, 212, 189);*/
-  --ifm-color-primary-lightest: #80aaef; /*rgb(146, 224, 208);*/
+  --ifm-color-primary: #dd0f68; /*#25c2a0;*/
+  --ifm-color-primary-dark: rgb(250, 43, 119); /*rgb(33, 175, 144);*/
+  --ifm-color-primary-darker: #eb146a; /*rgb(31, 165, 136);*/
+  --ifm-color-primary-darkest: #da005e; /*rgb(26, 136, 112);*/
+  --ifm-color-primary-light: #fa3b91; /*rgb(70, 203, 174);*/
+  --ifm-color-primary-lighter: #fb62a2; /*rgb(102, 212, 189);*/
+  --ifm-color-primary-lightest: #fa9abf; /*rgb(146, 224, 208);*/
   --ifm-code-font-size: 90%; /*95%;*/
   --doc-sidebar-width: 195px !important;
 }
