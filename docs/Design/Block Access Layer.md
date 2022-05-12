@@ -29,17 +29,18 @@ NITCbase follows an Object-Oriented design for Block Access Layer. The class def
 class BlockAccess {
 public:
 
-	static int search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName);
+	static int search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op, 
+		int flagValidAttrName);
 
 	static int insert(int relId, union Attribute *record);
 
-	static int renameRelation(char *oldName, char *newName);
+	static int renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]);
 
-	static int renameAttribute(char *relName, char *oldName, char *newName);
+	static int renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE], char newName[ATTR_SIZE]);
 
-	static int deleteRelation(char *relName);
+	static int deleteRelation(char relName[ATTR_SIZE]);
 
-	static RecId linearSearch(int relId, char *attrName, Attribute attrVal, int op);
+	static RecId linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op);
 
 };
 ```
@@ -225,7 +226,7 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Algorithm
 ```cpp
-int BlockAccess::search(int relId, Attribute *record, char *attrName, Attribute attrVal, int op, int flagValidAttrName) {
+int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op, int flagValidAttrName) {
     // Declare a variable called recid to store the searched record
     RecId recId;
 
@@ -453,7 +454,7 @@ This method changes the relation name of specified relation to the new name spec
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|-----------------------|
-| oldName	| `char[ATTR_SIZE`	| Old Name of Relation to which name has to be changed | 
+| oldName	| `char[ATTR_SIZE]`	| Old Name of Relation to which name has to be changed | 
 | newName	| `char[ATTR_SIZE]`	| New name for the Relation | 
  
 
@@ -526,8 +527,8 @@ This method changes the name of an attribute/column present in a specified relat
 #### Arguments
 | Name | Type | Description |
 |-----------|------------------|-----------------------|
-| relName	| `char[ATTR_SIZE`	| Name of the Relation | 
-| oldName	| `char[ATTR_SIZE`	| Old Name of attribute | 
+| relName	| `char[ATTR_SIZE]`	| Name of the Relation | 
+| oldName	| `char[ATTR_SIZE]`	| Old Name of attribute | 
 | newName	| `char[ATTR_SIZE]`	| New name for attribute | 
 
 
@@ -541,7 +542,7 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Algorithm
 ```cpp
-int BlockAccess::renameAttribute(char *relName, char *oldName, char *newName) {
+int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE], char newName[ATTR_SIZE]) {
 	// Search for the relation with name relName in relation catalog using Linear Search
 	Attribute attrValueRelName;
 	strcpy(attrValueRelName.sVal, relName);
@@ -617,7 +618,7 @@ If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap()
 :::
 
 ```cpp
-int BlockAccess::deleteRelation(char *relName) {
+int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
 	/* search for relation with name relName in relation catalog using Linear Search and store the relcatRecId */
 	// Hint: relid is RELCAT_RELID attribute name to search will be "RelName" op = EQ
 	// Also make an Attribute (attrValueRelName) with sval = relName and then pass that as the argument to linear search
