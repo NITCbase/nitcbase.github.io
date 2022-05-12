@@ -76,9 +76,9 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
 	/*
 		Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute
-	    using ba_search() of Block Access Layer with OP = EQ and flagValidAttrName = True
-	    Let the return value of ba_search be retVal
-		Hint: retVal = BlockAccess::ba_search(RELCAT_RELID, relCatSearchResultRecord, "RelName",
+	    using search() of Block Access Layer with OP = EQ and flagValidAttrName = True
+	    Let the return value of search be retVal
+		Hint: retVal = BlockAccess::search(RELCAT_RELID, relCatSearchResultRecord, "RelName",
                                         relNameAsAttribute, EQ, true);
 	*/
 	
@@ -97,8 +97,8 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 	// offset RELCAT_LAST_BLOCK_INDEX: -1
 	// offset RELCAT_NO_SLOTS_PER_BLOCK_INDEX: floor((2016 / (16 * nAttrs + 1)))
 
-	// retVal = ba_insert(RELCAT_RELID(=0), relCatRecord);
-	// if ba_insert fails return retVal
+	// retVal = BlockAccess::insert(RELCAT_RELID(=0), relCatRecord);
+	// if BlockAccess::insert fails return retVal
 
 	// iterate through 0 to numOfAttributes - 1 :
 	{
@@ -112,8 +112,8 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 		// offset ATTRCAT_ROOT_BLOCK_INDEX: -1
 		// offset ATTRCAT_OFFSET_INDEX: i
 
-		// retVal = BlockAccess::ba_insert(ATTRCAT_RELID(=1), attrCatRecord);
-		/* if ba_insert fails:
+		// retVal = BlockAccess::insert(ATTRCAT_RELID(=1), attrCatRecord);
+		/* if insert fails:
 			delete the relation by calling deleteRel(targetrel) of schema layer
 			return E_DISKFULL
 		*/
@@ -152,10 +152,10 @@ int Schema::deleteRel(char *relName) {
 
 	// if relation is opened in open relation table, return E_RELOPEN
 
-	// Call ba_deleteRelation method of the Block Access Layer by passing appropriate argument.
+	// Call deleteRelation method of the Block Access Layer by passing appropriate argument.
 
-	// return the value returned by the above ba_deleteRelation() call
-    // Errors from ba_deleteRelation -> E_RELNOTEXIST
+	// return the value returned by the above deleteRelation() call
+    // Errors from deleteRelation -> E_RELNOTEXIST
         //  AS OF NOW, It can return E_OUT_OF_BOUND from loadBlockAndGetBufferPtr call,
         //  but if done properly we will not reach this point
         //  this comes up only when BlockBuffer(or RecBuffer) was initialized with an Invalid Block Number
@@ -268,7 +268,7 @@ int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]) {
 	// if relation is open in open relation table, return E_RELOPEN
 	// (check if the value returned from getRelId function call != E_RELNOTOPEN)
 
-	// retVal = BlockAccess::ba_renameRelation(oldRelName, newRelName);
+	// retVal = BlockAccess::renameRelation(oldRelName, newRelName);
 	// return retVal
 }
 ```
@@ -304,9 +304,9 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
 
 	// if relation is opened in open relation table, return E_RELOPEN
 
-	// Call ba_renameAttribute method of Block Access Layer by passing appropriate arguments.
+	// Call renameAttribute method of Block Access Layer by passing appropriate arguments.
 
-	// return the value returned by the above ba_renameAttribute() call
+	// return the value returned by the above renameAttribute() call
 }
 ```
 

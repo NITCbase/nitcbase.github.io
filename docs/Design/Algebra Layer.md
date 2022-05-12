@@ -109,8 +109,8 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 		}
 	}
 
-	// insert the record by calling BlockAccess::ba_insert() function of Block Access Layer
-	// let retVal denote the return value of ba_insert call
+	// insert the record by calling BlockAccess::insert() function of Block Access Layer
+	// let retVal denote the return value of insert call
 
 	return retVal;        
 }
@@ -189,22 +189,22 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
     /*** Selecting and inserting records into the target relation ***/
     // Before calling the search function, reset the search to start from the first hit
-    // by calling ba_search of block access layer with op = RST and dummy values for attr, val
+    // by calling search of block access layer with op = RST and dummy values for attr, val
 
     Attribute record[src_nAttrs];
     Attribute val;
     strcpy(val.sVal, "RST");
 
-    // Hint: do BlockAccess::ba_search(srcRelId, record, attr, val, RST, true);
+    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST, true);
 
     /*
     while (true) {
-        // For doing projection call ba_search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::ba_search(srcRelId, record, attr, attrVal, op, true)
+        // For doing projection call search of Block Access layer with the following arguments:
+        // int ret = BlockAccess::search(srcRelId, record, attr, attrVal, op, true)
 
-        if (ba_search call returns SUCCESS):
-            ret = BlockAccess::ba_insert(targetRelId, record);
-            if (ba_insert fails) {
+        if (search call returns SUCCESS):
+            ret = BlockAccess::insert(targetRelId, record);
+            if (insert fails) {
                 close the targetrel(by calling closeRel(targetrel) method of schema layer)
                 delete targetrel (by calling deleteRel(targetrel) of schema layer)
                 return ret;
@@ -291,26 +291,26 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
     strcpy(attr, "RST");
     strcpy(val.sVal, "RST");
 
-    // call ba_search with op = RST by passing dummy attr and val.
+    // call search with op = RST by passing dummy attr and val.
     // Also pass flagValidAttrName = false to indicate that attribute name passed is dummy.
-    // Hint: do BlockAccess::ba_search(srcRelId, record, attr, val, RST, false);
-    BlockAccess::ba_search(srcRelId, record, attr, val, RST, false);
+    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST, false);
+    BlockAccess::search(srcRelId, record, attr, val, RST, false);
 
     /*
     while (true) :
-        // For doing projection call ba_search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT, false) with variables defined as below.
+        // For doing projection call search of Block Access layer with the following arguments:
+        // int ret = BlockAccess::search(srcRelId, record, attr, val, PRJCT, false) with variables defined as below.
         strcpy(val.sVal, "PRJCT");
         strcpy(attr, "PRJCT");
 
-        if (BlockAccess::ba_search(srcRelId, record, attr, val, PRJCT, false) returns SUCCESS):
+        if (BlockAccess::search(srcRelId, record, attr, val, PRJCT, false) returns SUCCESS):
             // record will contain the searched record
             Attribute proj_record[tar_nAttrs];
 
             iterate through 0 to tar_attrs-1:
                 proj_record[attr_iter] = record[attr_offset[attr_iter]];
             
-            ret = BlockAccess::ba_insert(targetRelId, proj_record);
+            ret = BlockAccess::insert(targetRelId, proj_record);
             
             if (insert fails) {
                 close the targetrel by calling closeRel() method of schema layer
@@ -424,17 +424,17 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
 	Attribute dummy;
 
 	// this loop is to get every record of the srcRelation1 one by one
-	while (BlockAccess::ba_search(srcRelId1, record1, "PROJECT", dummy, PRJCT) == SUCCESS) {
+	while (BlockAccess::search(srcRelId1, record1, "PROJECT", dummy, PRJCT) == SUCCESS) {
 
 		// this loop is to get every record of the srcRelation2 which satisfies the following condition:
 		// record1.attribute1 = record2.attribute2 (i.e. Equi-Join condition)
-		while (BlockAccess::ba_search(srcRelId2, record2, attribute2, record1[attrCatEntry1.offset], EQ) == SUCCESS) {
+		while (BlockAccess::search(srcRelId2, record2, attribute2, record1[attrCatEntry1.offset], EQ) == SUCCESS) {
 
 			// copy srcRelation1's and srcRelation2's attribute values(except for attribute2 in rel2) from
 			// record1 and record2 to targetRecord
 			// (iterate offset from 0 to numOfAttributes1-1 in record1 and 0 to numOfAttributes2-1 in record2
 
-			// insert the current record into the target relation by calling BlockAccess::ba_insert()
+			// insert the current record into the target relation by calling BlockAccess::insert()
 
 			// if insert fails (insert should fail only due to DISK being FULL)
 			{
