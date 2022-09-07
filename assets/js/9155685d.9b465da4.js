@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase_beta=self.webpackChunknitcbase_beta||[]).push([[4284],{8508:function(e){e.exports=JSON.parse('{"name":"Programming Interface","permalink":"/docs/tags/programming-interface","docs":[{"id":"Design/Frontend","title":"Frontend Interface","description":"Introduction","permalink":"/docs/Design/Frontend"}],"allTagsPath":"/docs/tags"}')}}]);

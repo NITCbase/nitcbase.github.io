@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase_beta=self.webpackChunknitcbase_beta||[]).push([[7862],{6941:function(a){a.exports=JSON.parse('{"name":"diagram","permalink":"/docs/tags/diagram","docs":[{"id":"intro","title":"Introduction","description":"Overall Design/Architecture","permalink":"/docs/intro"}],"allTagsPath":"/docs/tags"}')}}]);
