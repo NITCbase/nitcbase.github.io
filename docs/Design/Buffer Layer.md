@@ -387,7 +387,7 @@ int StaticBuffer::getFreeBuffer(int blockNum){
 	
     // if a free buffer is available, bufferNum is the index of that free buffer.
     
-    // if a free buffer is not available, write back the buffer with the largest timeStamp using Disk::writeBlock() and set it as bufferNum.
+    // if a free buffer is not available, write back the buffer with the largest timeStamp (if it's dirty) using Disk::writeBlock() and set it as bufferNum.
     
     // update the metaInfo entry corresponding to bufferNum with free:false, dirty:false, blockNum:the input block number and timeStamp:0.
     
@@ -758,11 +758,9 @@ int BlockBuffer::getFreeBlock(int blockType){
 	//set the object's blockNum to the block number of the free block.
 
 	//find a free buffer using StaticBuffer::getFreeBuffer() .
-	
-	//initialize the header of the block with pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0 using setHeader().	
 
-	//update StaticBuffer.blockAllocMap to indicate the occupancy of the free block with corresponding input block type 
-	
+	//initialize the header of the block with pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0 using setHeader().
+
 	//update the block type of the block to the input block type using setBlockType().
 
 	//return block number of the free block.
@@ -1357,14 +1355,18 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 #### Algorithm
 ```cpp
 int IndLeaf::setEntry(void *ptr, int indexNum) {
+	unsigned char *bufferPtr;
+	// get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
 
-	// get the starting address of the buffer containing the block using BlockBuffer.getBufferPtr().
+	// if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
+			// return the value returned by the call.
 
 	// if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
 
 	// copy the struct Index pointed by ptr to indexNum'th entry in block.
 
-	//update dirty bit.
+	// update dirty bit.
+	// if setDirtyBit failed, return the value returned by the call
 
 	//return SUCCESS
 }
