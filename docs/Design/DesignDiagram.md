@@ -1,6 +1,6 @@
 ---
 sidebar_position: 1
-title: 'System Design'
+title: "System Design"
 tags:
   - Design
   - System
