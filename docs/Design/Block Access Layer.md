@@ -94,7 +94,7 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
     }
     else
     {
-        //	(there is a hit from previous search; search should start from the record next to the search index record)
+        // (there is a hit from previous search; search should start from the record next to the search index record)
 
         // block = search index's block
         // slot = search index's slot + 1
@@ -308,10 +308,10 @@ int BlockAccess::insert(int relId, Attribute *record) {
         // update blockNum = header.rblock (next element in the linked list of record blocks)
     }
 
-    //	if no free slot is found in existing record blocks
+    //  if no free slot is found in existing record blocks
     {
         // if relation is RELCAT, do not allocate any more blocks (i.e. if relId = RELCAT_RELID)
-        //	    return E_MAXRELATIONS;
+        //     return E_MAXRELATIONS;
 
         // Otherwise,
         // get a new record block by calling RecBuffer Constructor for new block
