@@ -50,14 +50,19 @@ public:
 #### Description
 
 This method searches the relation specified linearly to find the next record that satisfies the specified condition on attribute attrVal and returns the recId of the next record satisfying the condition.
+The function checks for
+
+```
+value-in-record `op` attrVal
+```
 
 #### Arguments
 
 | Name     | Type              | Description                                                                                                                                                                                                                                        |
 | -------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relId    | `int`             | Relation Id of Relation to which search has to be made.                                                                                                                                                                                            |
-| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked with.                                                                                                                                                                                  |
-| attrVal  | `union Attribute` | value of attribute that has to be checked against the operater.                                                                                                                                                                                    |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                                               |
+| attrVal  | `union Attribute` | value of attribute that has to be checked against the value in the record.                                                                                                                                                                         |
 | op       | `int`             | The conditional operator (which can be one among `EQ, LE, LT, GE, GT, NE, RST, PRJCT` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to, reset, project_ |
 
 #### Return Values
@@ -110,13 +115,13 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
         {
             // update block = right block of block
             // update slot = 0
+            // continue to the next execution
         }
 
         // if slot is free skip the loop
         // (i.e. check if slot'th entry in slot map of block contains SLOT_UNOCCUPIED)
         {
-            // and continue to the next record slot
-            // (i.e. increment slot and continue)
+            // increment slot and continue to the next record slot
         }
 
         // let cond be a variable of int type
@@ -129,80 +134,44 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
                 from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
             */
             // use the attribute offset to get the value of the attribute from current record
-            // perform comparison using compare function and store the outcome of comparison in the variable flag
 
-            // initialize cond = UNSET
+            int cmpVal;
+            // store the difference between the record's attribute value and attrVal in cmpVal
+            // If attribute is a STRING, use strcmp
+            // If attribute is a NUMBER, subtract the values
 
+            // set cond = UNSET
 
             // Next task is to check whether this record satisfies the given condition.
             // It is determined based on the output of previous comparison and the op value received.
             // The following code sets the cond variable if the condition is satisfied.
-            switch (op) {
-
-                case NE:
-                    // if op is "not equal to"
-                    // if the record's attribute value is not equal to the given attrVal
-                    if (flag != 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
-
-                case LT:
-                    // if op is "less than"
-                    // if the record's attribute value is less than the given attrVal
-                    if (flag < 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
-
-                case LE:
-                    // if op is "less than or equal to"
-                    // if the record's attribute value is less than or equal to the given attrVal
-                    if (flag <= 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
-
-                case EQ:
-                    // op is "equal to"
-                    // if the record's attribute value is equal to the given attrVal
-                    if (flag == 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
-
-                case GT:
-                    // if op is "greater than"
-                    // if the record's attribute value is greater than the given attrVal
-                    if (flag > 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
-
-                case GE:
-                    // if op is "greater than or equal to"
-                    // if the record's attribute value is greater than or equal to the given attrVal
-                    if (flag >= 0) {
-                        // SET the cond variable (i.e. cond = SET)
-                    }
-                    break;
+            if (
+                (op == NE && cmpVal != 0) ||    // if op is "not equal to"
+                (op == LT && cmpVal < 0) ||     // if op is "less than"
+                (op == LE && cmpVal <= 0) ||    // if op is "less than or equal to"
+                (op == EQ && cmpVal == 0) ||    // if op is "equal to"
+                (op == GT && cmpVal > 0) ||     // if op is "greater than"
+                (op == GE && cmpVal >= 0)       // if op is "greater than or equal to"
+            ) {
+                // SET the cond variable (i.e. cond = SET)
             }
         }
 
         if (cond == SET || op == PRJCT) {
             /*
-                set the search index in the relation cache as
-                the record id of the record that satisfies the given condition
-                (use RelCacheTable::setSearchIndex function)
+            set the search index in the relation cache as
+            the record id of the record that satisfies the given condition
+            (use RelCacheTable::setSearchIndex function)
             */
 
             return RecId{block, slot};
         }
 
+        slot++;
     }
 
     // no record in the relation with Id relid satisfies the given condition
-    return {-1, -1};
+    return RecId{-1, -1};
 }
 ```
 
