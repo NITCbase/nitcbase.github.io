@@ -600,12 +600,18 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     ***/
     // reset the searchIndex of the attribute catalog to {-1, -1} using RelCacheTable::setSearchIndex()
 
+    // store the number of attributes deleted, because in case all the attributes were not successfully
+    // added, we need to keep track of the deleted attributes
+    int numberOfAttributesDeleted = 0;
+
     while(true) {
         RecId attrCatRecId;
         // attrCatRecId = linearSearch on attribute catalog for RelName = relNameAttr
 
         // if no more attributes to iterate over (attrCatRecId == {-1, -1})
         //     break;
+
+        numberOfAttributesDeleted++;
 
         // create a RecBuffer for attrCatRecId.block
         // get the header of the block
@@ -662,7 +668,7 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     // Hint: Get the entry corresponding to relation catalog from the relation cache and update the number of records and set it back
 
     /** Update attribute catalog entry (number of records in attribute catalog is decreased by numberOfAttributesDeleted) **/
-    // i.e., #Records = #Records - numberOfAttributesOfRelation
+    // i.e., #Records = #Records - numberOfAttributesDeleted
 
     // Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records and set it back
 
