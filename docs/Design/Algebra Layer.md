@@ -7,7 +7,7 @@ title: "Algebra Layer"
 
 ## Layout
 
-The Front End parses SQL-Like queries and coverts them into a sequence of algebra layer and schema layer method calls.
+The Front End parses SQL-Like queries and converts them into a sequence of algebra layer and schema layer method calls.
 The algebra layer functions process the basic **insert** and **retrieval** requests **to** and **from** the database.
 _Retrieval functions will create a **target relation** into which the retrieved data will be stored._
 
@@ -214,12 +214,12 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     Attribute val;
     strcpy(val.sVal, "RST");
 
-    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST, true);
+    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST);
 
     /*
     while (true) {
         // For doing projection call search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::search(srcRelId, record, attr, attrVal, op, true)
+        // int ret = BlockAccess::search(srcRelId, record, attr, attrVal, op)
 
         if (search call returns SUCCESS):
             ret = BlockAccess::insert(targetRelId, record);
@@ -319,17 +319,17 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     // call search with op = RST by passing dummy attr and val.
     // Also pass flagValidAttrName = false to indicate that attribute name passed is dummy.
-    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST, false);
-    BlockAccess::search(srcRelId, record, attr, val, RST, false);
+    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST);
+    BlockAccess::search(srcRelId, record, attr, val, RST);
 
     /*
     while (true) :
         // For doing projection call search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::search(srcRelId, record, attr, val, PRJCT, false) with variables defined as below.
+        // int ret = BlockAccess::search(srcRelId, record, attr, val, PRJCT) with variables defined as below.
         strcpy(val.sVal, "PRJCT");
         strcpy(attr, "PRJCT");
 
-        if (BlockAccess::search(srcRelId, record, attr, val, PRJCT, false) returns SUCCESS):
+        if (BlockAccess::search(srcRelId, record, attr, val, PRJCT) returns SUCCESS):
             // record will contain the searched record
             Attribute proj_record[tar_nAttrs];
 
@@ -423,7 +423,7 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
     */
 
     // let numOfAttributesInTarget = numOfAttributes1 + numOfAttributes2 - 1
-    // let targetRelAttrNames[numOfAttributesInTarget][numOfAttributesInTarget] be an array of type char
+    // let targetRelAttrNames[numOfAttributesInTarget][ATTR_SIZE] be an array of type char
     // let targetRelAttrTypes[numOfAttributesInTarget] be an array of type int
     // Note: The target relation has number of attributes one less than nAttrs1+nAttrs2 (Why?)
 

@@ -84,11 +84,11 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
     // let targetRelId be of type recId
 
     /*
-        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute
-        using search() of Block Access Layer with OP = EQ and flagValidAttrName = True
+        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute using search() of Block Access Layer with OP = EQ
         Let the return value of search be retVal
+        // Reset the searchIndex  using search() of Block Access Layer with OP = RST and
         Hint: retVal = BlockAccess::search(RELCAT_RELID, relCatSearchResultRecord, "RelName",
-                                        relNameAsAttribute, EQ, true);
+                                        relNameAsAttribute, EQ);
     */
 
     // if retVal == SUCCESS (i.e relation with relation name as relName already exists)
@@ -404,7 +404,7 @@ This method closes the relation specified as name in cache/OpenRelTable.
 | Value            | Description                                                                                                             |
 | ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | `SUCCESS`        | On successful closing of the relation                                                                                   |
-| `E_NOTOPEN`      | If relation with given name is not open                                                                                 |
+| `E_RELNOTOPEN`   | If relation with given name is not open                                                                                 |
 | `E_NOTPERMITTED` | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to close either of the catalogs. |
 
 #### Algorithm
