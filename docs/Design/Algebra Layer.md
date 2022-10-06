@@ -96,9 +96,9 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
         if (type == NUMBER)
         {
             // if the char array record[i] can be converted to a number
-            // (check this using checkAttrTypeOfValue() function)
+            // (check this using isNumber() function)
             {
-                // convert the char array to numeral and store it at recordValues[i].nVal
+                // convert the char array to numeral and store it at recordValues[i].nVal using atof()
             }
             // else
             {
@@ -114,7 +114,7 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
                 // if ch == null character(i.e. '\0') exit the loop
 
                 // if ch is an invalid character return E_NOTPERMITTED;
-                // (check this using checkIfInvalidCharacter() function)
+                // (check this using isInvalidCharacter() function)
             }
             // copy record[i] to recordValues[i].sVal
         }
@@ -479,5 +479,78 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
 
     // close the target relation by calling OpenRelTable::closeRel() of Cache layer
     // return SUCCESS;
+}
+```
+
+## Miscellaneous
+
+Given below are the definitions of two functions which have been used in this layer for validation of various inputs.
+
+### isNumber()
+
+#### Description
+
+This function takes a string and checks whether it can be parsed as a floating point number. Leading and trailing whitespace is ignored. It can be used to validate if a given input corresponds to the `NUMBER` type.
+
+#### Arguments
+
+| Name | Type              | Description              |
+| ---- | ----------------- | ------------------------ |
+| str  | `char[ATTR_SIZE]` | The string to be checked |
+
+#### Return Values
+
+| Value | Description                                     |
+| ----- | ----------------------------------------------- |
+| true  | Value in `str` is parse-able as a `NUMBER`.     |
+| false | Value in `str` is not parse-able as a `NUMBER`. |
+
+```cpp
+bool isNumber(char *str) {
+    int len;
+    float ignore;
+    /*
+        sscanf returns the number of elements read, so if there is no float matching
+        the first %f, ret will be 0, else it'll be 1
+
+        %n gets the number of characters read. this scanf sequence will read the
+        first float ignoring all the whitespace before and after. and the number of
+        characters read that far will be stored in len. if len == strlen(str), then
+        the string only contains a float with/without whitespace. else, there's other
+        characters.
+    */
+    int ret = sscanf(str, "%f %n", &ignore, &len);
+    return ret == 1 && len == strlen(str);
+}
+```
+
+### isInvalidCharacter()
+
+#### Description
+
+This function takes a character and checks if it is allowed as part of a record value.
+
+#### Arguments
+
+| Name      | Type   | Description                 |
+| --------- | ------ | --------------------------- |
+| character | `char` | The character to be checked |
+
+#### Return Values
+
+| Value | Description                                 |
+| ----- | ------------------------------------------- |
+| true  | character is allowed in a record value.     |
+| false | character is not allowed in a record value. |
+
+```cpp
+bool isInvalidCharacter(char character) {
+    // check if the character satisfies any of the below conditions
+    // '0' <= character <= '9'
+    // 'A' <= character <= 'Z'
+    // 'a' <= character <= 'z'
+    // character = '-'
+    // character = '_'
+    // and return true. else return false
 }
 ```
