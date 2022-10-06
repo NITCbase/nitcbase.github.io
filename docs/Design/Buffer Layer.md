@@ -165,7 +165,7 @@ struct BufferMetaInfo {
 
 ## class StaticBuffer
 
-The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32` disk blocks in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as buffer block in the NITCbase documentation. Buffer blocks will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains meta-information for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the **Block Allocation Map** in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the Block Allocation Map specifies whether the ith block is occupied or free. If occupied, it stores the type(`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) of the block.
+The `class StaticBuffer` contains as its member field, `blocks[BUFFER_CAPACITY][BLOCK_SIZE]`, a two-dimensional array of unsigned characters with size sufficient to store `32` disk blocks in memory at any given time. Logically `blocks[i]` can be used to buffer one disk block for each `0 ≤ i ≤ 31`. Each entry of blocks, i.e., `blocks[i]`, is referred to as buffer block in the NITCbase documentation. Buffer blocks will be committed back to the `disk` as and when required. In addition to storing the data of a block, `class StaticBuffer` also maintains meta-information for each loaded block in an array of `BufferMetaInfo` structures through the `metaInfo[BUFFER_CAPACITY]` field. `StaticBuffer class` also maintains a copy of the **Block Allocation Map** in its `blockAllocMap[DISK_BLOCKS]` field. The ith entry of the Block Allocation Map specifies whether the ith block is occupied or free. If occupied, it stores the type (`REC`/`IND_INTERNAL`/`IND_LEAF`) of the block, else it stores `UNUSED_BLK`.
 
 All these data fields are **private** to the `StaticBuffer class` and can only be accessed through **public** methods. This class provides the basic disk fetch and commit interfaces to the higher layers, creating an illusion of having the entire disk in memory at all times. `StaticBuffer` is a **static class**, i.e., all member fields and methods are declared static. By doing so, memory will be allocated statically for all member fields of the class, and any access to them will refer to the same statically allocated memory. Also static methods in a class are allowed to access only static members of the class. Consequently, there needs to exist only a single static object of the class(see implementation tip below). The class definition of `StaticBuffer` is as given below:
 
@@ -173,7 +173,7 @@ All these data fields are **private** to the `StaticBuffer class` and can only b
 
 - The `class BlockBuffer` is a **friend class** to `StaticBuffer class`. This allows all methods in `BlockBuffer` to access the private fields and methods of the `StaticBuffer class`.
 - At the same time, **friendship is not inherited in C++**, i.e., if a base class has a friend class, then the class doesn’t become a friend of the derived classes. This is explained in detail in the next section.
-  :::
+:::
 
 :::tip Implementation Tip
 C++ allows static methods to be accessed using the semantics `class_name::function_name()`, instead of `object_instance->function_name()` as in the case of methods that are not declared statically. Since the class is static, only a single object of the class needs to be created when NITCbase is running, whose sole purpose is to run the `constructor` and the `destructor`.
@@ -281,7 +281,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 - This function is useful in cases where, given a block number, its block type is not known. Hence it is also not known which type of record object (`Record`, `Internal Index`, or `Leaf Index`) needs to be used to store the block.
 - This function has been used in the B+ Tree Layer, where the block number of the constituent blocks of a B+ Tree is known, but it is not known whether the block is of type `IndInternal` or `IndLeaf`.
-  :::
+:::
 
 #### Arguments
 
@@ -291,10 +291,10 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 #### Return Values
 
-| Value                        | Description                                                        |
-| ---------------------------- | ------------------------------------------------------------------ |
-| blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED`) |
-| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                |
+| Value                        | Description                                                            |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`) |
+| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                    |
 
 #### Algorithm
 
@@ -324,7 +324,7 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 | Value                              | Description                                  |
 | ---------------------------------- | -------------------------------------------- |
-| [`SUCCESS`]/constants              | successfully set dirty bit                   |
+| [`SUCCESS`](/constants)            | successfully set dirty bit                   |
 | [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range          |
 | [`E_BLOCKNOTINBUFFER`](/constants) | block with blockNum is not present in Buffer |
 
@@ -338,7 +338,7 @@ int StaticBuffer::setDirtyBit(int blockNum){
 
         // set the dirty bit of that buffer in the metaInfo to true.
 
-    // else Buffer is ivalid
+    // else Buffer is invalid
 
         // return the returned error code from getBufferNum call
 
@@ -364,11 +364,11 @@ Returns the buffer number of the buffer to which the block with the given block 
 
 #### Return Values
 
-| Value                        | Description                                       |
-| ---------------------------- | ------------------------------------------------- |
-| bufferNum                    | Buffer number to which the given block is loaded. |
-| [`FAILURE`](/constants)      | Block is not loaded to any buffer.                |
-| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range               |
+| Value                              | Description                                       |
+| ---------------------------------- | ------------------------------------------------- |
+| bufferNum                          | Buffer number to which the given block is loaded. |
+| [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range               |
+| [`E_BLOCKNOTINBUFFER`](/constants) | block with blockNum is not present in Buffer      |
 
 #### Algorithm
 
@@ -398,7 +398,8 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 - This function never fails - a buffer is always assigned to the block.
 - The `timeStamp` is reset to `0` each time the buffer block is accessed and incremented when other buffer blocks are accessed. Thus the buffer block with the largest `timeStamp` is the one that is least recently used.
 - The function allots a free buffer block, fills its `metaInfo` with relevant information, and updates the `timeStamp`. The caller is responsible for actually loading the block into the buffer.
-  :::
+
+:::
 
 #### Arguments
 
@@ -438,14 +439,15 @@ int StaticBuffer::getFreeBuffer(int blockNum){
 
 ## class BlockBuffer
 
-The `class BlockBuffer` is a generic class for representing a disk block of any type (`Record`, `Internal Index`, or `Leaf Index`). Its only field is `blockNum`. The field `blockNum` stores the disk block number corresponding to the block object. The block has to be loaded and stored in one of the `32` buffers of the `StaticBuffer class` before its data can be accessed. Adding to the complexity is the fact that the block, once loaded, may not even be present in the buffer memory later on because of the **buffer replacement algorithm** implemented by Buffer Layer. In order to work with data of the block, any method of the `BlockBuffer class` or its descendent classes need to know the address of the buffer memory to which the block has been loaded. Hence any method of this class operating on the block data should first get the pointer to the buffer memory that holds the contents of the block. The `getBufferPtr()` method is used for this purpose. The public methods of `BlockBuffer` deal with information like **header** and **block type**, which are generic to all blocks. `RecBuffer` and `IndBuffer` classes extend the `class BlockBuffer`, thereby, inheriting all the fields and methods of `BlockBuffer`.
+The `class BlockBuffer` is a generic class for representing a disk block of any type (`Record`, `Internal Index`, or `Leaf Index`). Its only field is `blockNum`. The field `blockNum` stores the disk block number corresponding to the block object. The block has to be loaded and stored in one of the `32` buffers of the `StaticBuffer class` before its data can be accessed. Adding to the complexity is the fact that the block, once loaded, may not even be present in the buffer memory later on because of the **buffer replacement algorithm** implemented by Buffer Layer. In order to work with data of the block, any method of the `BlockBuffer class` or its descendent classes need to know the address of the buffer memory to which the block has been loaded. Hence any method of this class operating on the block data should first get the pointer to the buffer memory that holds the contents of the block. The `loadBlockAndGetBufferPtr()` method is used for this purpose. The public methods of `BlockBuffer` deal with information like **header** and **block type**, which are generic to all blocks. `RecBuffer` and `IndBuffer` classes extend the `class BlockBuffer`, thereby, inheriting all the fields and methods of `BlockBuffer`.
 
 :::info Note
 
 - If the class definition of a class (say A) declares another class (say B) as a **friend class**, then an instance of class B can access the private fields and methods of class A. **This friendship is, however, not inherited by the child classes of B.**
 - As per the NITCbase design, the definition of the `class StaticBuffer` contains the declaration: `friend class BlockBuffer`. Hence, the methods in `BlockBuffer` can access the private fields and methods of the `class StaticBuffer`.
 - On the other hand, `RecBuffer` and `IndBuffer` classes can access them only through the public functions of `StaticBuffer class` and through the public and protected functions of `BlockBuffer class`.
-  :::
+
+:::
 
 ```cpp
 class BlockBuffer{
@@ -649,7 +651,7 @@ Gives the header of the block.
 
 - Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `getHeader()` method is kept in abstract `BlockBuffer class`.
 - Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
-  :::
+:::
 
 #### Arguments
 
@@ -691,7 +693,7 @@ Sets the header of the block.
 
 - Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `setHeader()` method is kept in abstract `BlockBuffer class`.
 - Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
-  :::
+:::
 
 #### Arguments
 
@@ -786,7 +788,7 @@ Nil
 - **This also ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
 - This function will NOT check if the block already exists in disk or not, rather will copy whatever content is there in that disk block to the buffer.
 - Only call this if the Block exists in disk already, otherwise call constructor 1 to allocate space for a new block.
-  :::
+:::
 
 #### Algorithm
 
@@ -953,7 +955,7 @@ Nil
 
 - The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 - The higher layers must allocate memory for the `unsigned char` array before calling the function.
-  :::
+:::
 
 #### Algorithm
 
@@ -995,7 +997,7 @@ Nil
 
 - The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 - The higher layers must allocate memory for the `unsigned char` array before calling the function.
-  :::
+:::
 
 ```cpp
 int RecBuffer::setSlotMap(unsigned char *slotMap) {
@@ -1045,7 +1047,7 @@ Gives the slotNumth record entry of the block.
 
 - The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 - The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
-  :::
+:::
 
 ```cpp
 int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
@@ -1096,7 +1098,7 @@ Sets the slotNumth record entry of the block with the input record contents.
 
 - The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 - The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
-  :::
+:::
 
 #### Algorithm
 
@@ -1297,7 +1299,7 @@ Gives the indexNumth entry of the block.
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
-  :::
+:::
 
 #### Algorithm
 
@@ -1342,7 +1344,7 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` method of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
-  :::
+:::
 
 #### Algorithm
 
@@ -1462,7 +1464,7 @@ Gives the indexNum<sup>th</sup> entry of the block.
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the _IndLeaf_ class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the `struct Index` before calling this function.
-  :::
+:::
 
 #### Algorithm
 
@@ -1507,7 +1509,7 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the struct Index before calling this function.
-  :::
+:::
 
 #### Algorithm
 
@@ -1599,4 +1601,4 @@ int compare(union Attribute attr1, union Attribute attr2, int attrType) {
 
 - Both the attributes given as input must be of the same type as the input type.
 - For string type, the comparision is performed with respect to _lexicographic order_.
-  :::
+:::
