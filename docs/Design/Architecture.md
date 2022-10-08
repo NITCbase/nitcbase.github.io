@@ -5,8 +5,6 @@ tags:
   - Architecture
 ---
 
-import ArchitectureSvg from "../../static/img/Architecture.svg";
-
 NITCbase has a seven layer design. This section provides documentation for each of the seven layers and certain additional design specific details.
 Contents include:
 
@@ -24,4 +22,4 @@ This layer is responsible for translating the SQL-like queries given as input to
 The following diagram shows the organization of different layers of NITCbase and important C++ classes present within them.
 You can use this diagram to navigate to different parts of this section by clicking on the relevant layers.
 
-<ArchitectureSvg className="themedDocusaurus" />
+![Architecture](../../static/img/Architecture.svg)

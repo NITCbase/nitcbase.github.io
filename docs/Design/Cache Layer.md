@@ -5,11 +5,6 @@ title: "Cache Layer"
 
 https://nitcbase.github.io/archived-site/design/cache.html
 
-import CacheClasses from '../../static/img/cache_classes.png';
-import CacheTables from '../../static/img/cache_tables.png';
-import CacheStructures from '../../static/img/cache_structures.png';
-import Link from '@docusaurus/Link';
-
 :::info note
 The Cache Layer code is to be written in 3 pairs of files:
 
@@ -17,7 +12,7 @@ The Cache Layer code is to be written in 3 pairs of files:
 - `AttrCacheTable.cpp` and it's header file `AttrCacheTable.h`
 - `OpenRelTable.cpp` and it's header file `OpenRelTable.h`
 
-**<Link to="/cache_stub">The stub code for these files can be found here.</Link >**
+**[The stub code for these files can be found here](/cache_stub)**
 :::
 
 ## Layout
@@ -28,15 +23,13 @@ Almost all operations on a relation require access to its corresponding **Relati
 Three tables are used by NITCbase for caching Catalogs - the **Relation Cache Table** for _Relation Catalog_ entries, the **Attribute Cache Table** for _Attribute Catalog_ entries and the **Open Relation Table** for operations that include both _Relation_ and _Attribute_ Catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
-<img src={CacheClasses} alt="CacheClasses" width="1600"/>
+![CacheClasses](../../static/img/cache_classes.png)
 
 ---
 
 Various structures used in the cache layer are outlined in the below diagrams.
 
-<img src={CacheStructures} alt="CacheStructures" width="1600"/>
-
----
+## ![CacheStructures](../../static/img/cache_structures.png)
 
 ## relId
 
@@ -162,7 +155,7 @@ typedef struct OpenRelTableMetaInfo {
 ---
 
 The following diagram summarizes the design of this module.
-<img src={CacheTables} alt="CacheTables" width="1600"/>
+![CacheTables](../../static/img/cache_tables.png)
 
 ---
 

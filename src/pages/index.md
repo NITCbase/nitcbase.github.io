@@ -2,9 +2,6 @@
 
 ---
 
-import HomepageFigPNGSource from '../../static/img/HomepageFigure.png';
-import HomepageFigSvg from '../../static/img/HomepageFigure.svg';
-
 # NITCbase : RDBMS Implementation Project
 
 ## Introduction
@@ -22,7 +19,9 @@ The seven layer design of NITCbase starts with the Physical layer at the bottom,
 The following diagram gives an idea of the system that we are building and its components on a high level.
 
 <br/>
-<img src={HomepageFigPNGSource} alt="Overview Diagram"/>
+
+![Overview Diagram](../../static/img/HomepageFigure.png)
+
 <br/><br/><br/>
 
 There are two command-line interfaces for NITCbase:
@@ -37,11 +36,26 @@ Since NITCbase is a relational database, it supports execution of SQL-like queri
 This project assumes that you are working on a Unix/Linux system. The documentation specifies how the NITCBase RDBMS system can be implemented in C++ Language.
 The following are provided to you to get started on the project:
 
-1. **A complete implementation of a command line user interface called XFS-interface** that allows a user to _access the system’s simulated disk from the host_ (Linux/Unix environment) and allows operations such as - <br/> (a) formatting the disk to the NITCbase file system format<br/> (b) transferring files to and from the host system to the NITCbase file system<br/> (c) supporting standard NITCBase - [Data Definition language (DDL)](/docs/NITCbase_Commands#data-definition-language-commands) and [Data Manipulation language (DML)](/docs/NITCbase_Commands#data-manipulation-language-commands) operations on the database file system and so on.
+1. **A complete implementation of a command line user interface called XFS-interface** that allows a user to _access the system’s simulated disk from the host_ (Linux/Unix environment) and allows operations such as
+
+   - formatting the disk to the NITCbase file system format
+   - transferring files to and from the host system to the NITCbase file system
+   - supporting standard NITCBase - [Data Definition language (DDL)](/docs/NITCbase_Commands#data-definition-language-commands) and [Data Manipulation language (DML)](/docs/NITCbase_Commands#data-manipulation-language-commands) operations on the database file system and so on.
+
+   <br/>
 
 2. **A complete implementation of the Disk class**, implemented in `Disk.cpp`, that provides a bare minimum C++ programming interface to the NITCBase disk. The code for the methods `write()` & `read()` in this class, that allows for the transfer of one block of data between a C++ program and the disk, is given to you.
 
-3. **Class definitions for various intermediate layers** of the database system are provided. These are: (a) Buffer layer (Buffer.cpp), (b) Block Access layer (BlockAccess.cpp), (c) Cache layer (Cache.cpp), (d) B+ Tree layer (BPlusTree.cpp), (e) Schema layer (Schema.cpp) and (f) Algebra layer (Algebra.cpp). **`The code for the methods in these classes are not supplied.`** However, the documentation provides detailed descriptions of the algorithms corresponding to the non-trivial methods in these classes so that you can read and understand the algorithms and translate them to working C++ code.
+3. **Class definitions for various intermediate layers** of the database system are provided. These are
+
+   1. Buffer layer (Buffer.cpp)
+   2. Block Access layer (BlockAccess.cpp)
+   3. Cache layer (Cache.cpp)
+   4. B+ Tree layer (BPlusTree.cpp)
+   5. Schema layer (Schema.cpp)
+   6. Algebra layer (Algebra.cpp)<br/><br/>
+
+   **`The code for the methods in these classes are not supplied.`** However, the documentation provides detailed descriptions of the algorithms corresponding to the non-trivial methods in these classes so that you can read and understand the algorithms and translate them to working C++ code.
 
 4. **A partial implementation of the top-most layer of NITCbase design - the Frontend Interface**. The front-end interface of NITCbase is divided into two sub-modules: (a) Frontend user interface (`frontend-runner.cpp`) and (b) Frontend programming interface (`Frontend.cpp`). The frontend user interface code is completely given to you. **`However, only the class declaration and functional specification of the frontend programming interface sub-module is provided`**.
 

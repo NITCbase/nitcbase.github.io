@@ -5,12 +5,10 @@ title: "Schema Layer"
 
 https://nitcbase.github.io/archived-site/design/schema.html
 
-import Link from '@docusaurus/Link';
-
 :::info note
 The Schema Layer code is to be written in `Schema.cpp` and it's header file `Schema.h`
 
-**<Link to="/schema_stub">The stub code for these files can be found here.</Link >**
+**[The stub code for these files can be found here.](/schema_stub)**
 :::
 
 ## Layout

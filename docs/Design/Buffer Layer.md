@@ -3,11 +3,6 @@ sidebar_position: 8
 title: "Buffer Layer"
 ---
 
-import BufferClassesSvg from '../../static/img/buffer_classes.svg'
-import BufferClasses from '../../static/img/buffer_classes.png';
-import BufferStructures from '../../static/img/buffer_structures.png';
-import Link from '@docusaurus/Link';
-
 https://nitcbase.github.io/archived-site/design/buffer.html
 
 :::info note
@@ -16,7 +11,7 @@ The Buffer Layer code is to be written in 2 pairs of files:
 - `StaticBuffer.cpp` and it's header file `StaticBuffer.h`
 - `BlockBuffer.cpp` and it's header file `BlockBuffer.h`.
 
-**<Link to="/buffer_stub">The stub code for these files can be found here. </Link >**
+**[The stub code for these files can be found here.](/buffer_stub)**
 :::
 
 ## Layout
@@ -34,16 +29,14 @@ The `Disk` class _constructor_ will create a new **_Run Copy_** of the actual di
 
 NITCbase follows an Object-Oriented design for Buffer Layer. The class diagram is as shown below.
 
-<!-- <BufferClassesSvg className="themedDocusaurus" /> -->
-
 ---
 
-<img src={BufferClasses} alt="BufferClasses" width="1600"/>
+![BufferClasses](../../static/img/buffer_classes.png)
 
 ---
 
 Various structures used in the buffer layer are outlined in the below diagrams.
-<img src={BufferStructures} alt="BufferStructures" width="800" />
+![BufferStructures](../../static/img/buffer_structures.png)
 
 ---
 
@@ -1535,7 +1528,7 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](Cache%20Layer.md), [Block access layer](Block%20Access%20Layer.md) and [B+ tree](B+%20Tree%20Layer.md) layer, to name a few.
 
 :::note
-The code for RecId class and IndexId class can be found in the `id.h` file defined inside `define/` directory, **<Link to="/idHeader">the code for which can be can be found here. </Link >**
+The code for RecId class and IndexId class can be found in the `id.h` file defined inside `define/` directory, **[the code for which can be can be found here.](/idHeader)**
 :::
 
 ### RecId

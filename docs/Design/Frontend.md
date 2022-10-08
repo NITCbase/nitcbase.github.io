@@ -9,8 +9,6 @@ tags:
   - fint
 ---
 
-import FrontendExplanation from '../../static/img/FrontendExplanation.svg';
-
 ## Introduction
 
 The RDBMS code must include a frontend code that interacts with the user and accepts user commands to the RDBMS. This frontend code needs to translate the Data Definition Language (DDL), Data Manipulation Language (DML) and script commands from the user to function calls at the lower layers.
@@ -26,7 +24,7 @@ _The frontend user interface translates each high level DDL and DML commands fro
 
 The code implementing the functions of the front end programming interface sub-module is **not** supplied as part of the documentation. Each function of this sub-module must be designed by the student to invoke lower layer functions of schema layer and algebra layer for meeting their functional requirements, and must return appropriate values to the front end user interface sub-module.
 
-<FrontendExplanation />
+![FrontendExplanation](../../static/img/FrontendExplanation.svg)
 
 ## Frontend User Interface
 
