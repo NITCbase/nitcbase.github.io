@@ -1,31 +1,11 @@
-# Website
+![Nitcbase Intro Pic](./static/img/FrontBannerLogo.png)
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+# NITCbase : RDBMS Implementation Project
 
-### Installation
+## Introduction
 
-```
-$ yarn
-```
+NITCbase is a Relational Database Management System Implementation (RDBMS) project that is intended to help an undergraduate student understand the design and data structures of an elementary RDBMS by implementing one herself.
 
-### Local Development
+NITCbase follows a seven layer design, with the basic capabilities of a standard relational database management system which includes, creation and deletion of tables, inserting records, selection queries and indexing using B+ Tree. The final RDBMS implemented by you will support elementary SQL queries such as create, drop, alter, insert, select, project, equi-join and also the queries for B+ Tree based Indexing such as create index and drop index. Currently NITCbase does not support concurrency.
 
-```
-$ yarn start
-```
-
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-```
-$ GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
-```
+More details can be found on the [website](https://nitcbase.github.io)
