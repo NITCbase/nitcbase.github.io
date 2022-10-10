@@ -9,8 +9,6 @@ tags:
   - fint
 ---
 
-import FrontendExplanation from '../../static/img/FrontendExplanation.svg';
-
 ## Introduction
 
 The RDBMS code must include a frontend code that interacts with the user and accepts user commands to the RDBMS. This frontend code needs to translate the Data Definition Language (DDL), Data Manipulation Language (DML) and script commands from the user to function calls at the lower layers.
@@ -26,22 +24,22 @@ _The frontend user interface translates each high level DDL and DML commands fro
 
 The code implementing the functions of the front end programming interface sub-module is **not** supplied as part of the documentation. Each function of this sub-module must be designed by the student to invoke lower layer functions of schema layer and algebra layer for meeting their functional requirements, and must return appropriate values to the front end user interface sub-module.
 
-<FrontendExplanation />
+![FrontendExplanation](../../static/img/FrontendExplanation.svg)
 
 ## Frontend User Interface
 
 The Frontend user interface sub-module supplied to you interacts with the user and translates the SQL-like queries given as input to a set of lower-layer function calls by extracting the arguments and calling the appropriate methods of the Frontend Class / Frontend Programming Interface sub-module.
 Frontend User Interface supports the following types of commands:
 
-1. [Data Definition Language(DDL) Commands ](../NITCbase_Commands.md#data-definition-language-commands)
-2. [Data Manipulation Language(DML) Commands](../NITCbase_Commands.md#data-manipulation-language-commands)
-3. [Script Commands](../NITCbase_Commands.md#script-commands)
+1. [Data Definition Language(DDL) Commands ](../User%20Interface%20Commands/ddl.md)
+2. [Data Manipulation Language(DML) Commands](../User%20Interface%20Commands/dml.md)
+3. [Script Commands](../User%20Interface%20Commands/script-cmds.md)
 
-All the above command documents are linked to various sections of the [NITCbase Commands page](../NITCbase_Commands.md).
+All the above command documents are linked to various sections of the [NITCbase Commands page](../User%20Interface%20Commands/introduction.md).
 
 Among the above commands, the script command `run` helps the user to execute a sequence of commands from a file - hence translating them into a sequence of calls to other commands supported by Frontend interface. The echo command simply echoes back the message typed in by the user back to the console. **The translation and execution of lower layer method calls corresponding to these script commands have already been implemented and provided to you**. Hence further documentation for Frontend Class focusses only on the specifications for DDL and DML commands.
 
-For installation and setup of frontend user interface follow the instructions [given here](../XFS%20Interface/Installation%20Guidelines.md#frontend-interface-setup).
+For installation and setup of frontend user interface follow the instructions [given here](../Misc/XFS%20Interface/Installation%20Guidelines.md#frontend-interface-setup).
 
 ## Frontend Programming Interface
 

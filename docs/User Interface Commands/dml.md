@@ -1,5 +1,5 @@
 ---
-sidebar_position: 5
+sidebar_position: 3
 title: "Data Manipulation Language Commands"
 tags:
   - Data
@@ -9,7 +9,7 @@ tags:
   - interface
 ---
 
-The Data Manipulation Language(DML) commands are used to manipulate the data stored in the relations of the database. DML Commands are supported by both XFS Interface and Frontend Interface. The following are the DML commands supported by NITCBase:
+The Data Manipulation Language(DML) commands are used to manipulate the data stored in the relations of the database. DML Commands are supported by both XFS Interface and Frontend Interface. The following are the DML commands supported by NITCBase.
 
 ### INSERT INTO TABLE VALUES
 
@@ -72,7 +72,7 @@ INSERT INTO tablename VALUES FROM filename
 - The order of attribute values in each line of the CSV file must be same as that of the attributes of the relation.
 - The number and types of attribute values in each row should match the number and types of the attributes of the specified relation.
 - The CSV file should not contain any `null` values.
-- The CSV file from which the values are to be inserted, must be stored in the path `$HOME/NITCBase/Files/`.
+- The CSV file from which the values are to be inserted, must be stored in the path `NITCBase/Files/Input_Files`.
   :::
   :::note Example
   Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:

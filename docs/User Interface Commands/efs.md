@@ -1,5 +1,5 @@
 ---
-sidebar_position: 3
+sidebar_position: 4
 title: "External File System Commands"
 tags:
   - External
@@ -24,6 +24,12 @@ The External File System commands are used to format the disk, dump disk data st
 
 This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCBase. The disk is simulated on a binary file called `disk` which is located at `$HOME/NITCBase/Disk/` once it is created.
 
+:::note Important Details
+
+- The **first four blocks of the disk** is used for storing the Block Allocation Map and hence _the first 4 entries in the Block Allocation Map is marked as occupied during the initialization of the disk._
+- Blocks 4 and 5 used for storing relation catalog and attribute catalog are also marked as `REC` type in the newly initialized Block Allocation Map as part of the fdisk routine.
+  :::
+
 #### Syntax
 
 ```bash
@@ -44,6 +50,7 @@ The CSV file **must follow** the following format:
 - The first line must contain the names of the attributes of the relation separated by commas.
 - Second line onwards records are specified as _comma-seperated attribute values_, in the **same order** as the attrbiutes listed in the first line.
 - Only **one record is allowed per line.**
+- The CSV file must be stored in the path `NITCBase/Files/Input_Files`.
 
 #### Syntax
 
@@ -58,7 +65,7 @@ import filename
 - First **15 characters of name of file is taken as the relation name**. Similarly, only the first 15 characters of attributes listed in first line of the CSV file is taken as the name for each attribute.
 - The CSV file **should not contain any null values.**
 - If a relation with the same name as that of the CSV file already exists, then the import will _fail, without any changes to disk._
-- All files to be imported should be stored in the path `$HOME/NITCBase/Files/`.
+- All files to be imported should be stored in the path `NITCBase/Files/Input_Files`.
 - The _order of attribute values in each line of the CSV file must be same as that of the attributes of the relation._
 - The number of attribute values in each row should match the number of attributes specified in the first line of the file.
 - The types of attribute values in each row should match the attribute types inferred from the second line of the file.
