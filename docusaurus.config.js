@@ -30,7 +30,9 @@ const config = {
 					rehypePlugins: [katex],
 				},
 				blog: {
-					showReadingTime: true,
+					showReadingTime: false,
+					path: "feedback",
+					routeBasePath: "feedback",
 				},
 				theme: {
 					customCss: require.resolve("./src/css/custom.css"),
@@ -54,6 +56,7 @@ const config = {
 				hashed: true,
 				indexPages: true,
 				searchBarShortcut: false,
+				indexBlog: false,
 				highlightSearchTermsOnTargetPage: true,
 			},
 		],
