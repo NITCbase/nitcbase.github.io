@@ -1,5 +1,5 @@
 ---
-sidebar_position: 2
+sidebar_position: 5
 title: "Script Commands"
 tags:
   - Script
@@ -14,6 +14,11 @@ Script commands are available for both XFS interface and frontend interface. The
 
 This command is used to run multiple commands in sequence by reading the commands line-by-line from an external file. For example the `run` command given below will execute commands present in `filename`. If there is an error on running a command at a given line, all commands after that **will not be excuted** and the `run` command fails by giving the line number of the command in which error occurred.
 
+:::note
+
+- File name given as input to `run` command is fetched from the `/Files/Batch_Execution_Files/` directory and hence are required to be placed in that folder.
+  :::
+
 #### Syntax
 
 ```bash
@@ -21,8 +26,10 @@ run filename
 ```
 
 :::tip
-This is useful to execute multiple commonly used commands while debugging.
-:::
+
+- This is useful to execute multiple commonly used commands while debugging.
+- We can use folders within `/Files/Batch_Execution_Files/` to organize the run files. In that case, `run folder_name/run_file` format can be used.
+  :::
 
 ### Echo
 

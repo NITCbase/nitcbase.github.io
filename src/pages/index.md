@@ -27,7 +27,7 @@ The following diagram gives an idea of the system that we are building and its c
 There are two command-line interfaces for NITCbase:
 
 - [Frontend Interface](/docs/Design/Frontend)
-- [XFS Interface](/docs/XFS%20Interface/introduction)
+- [XFS Interface](/docs/Misc/XFS%20Interface/introduction)
 
 Since NITCbase is a relational database, it supports execution of SQL-like queries on these command-line interfaces. The NITCbase Disk is the single storage unit for all data present in NITCbase. In addition to storing the relations, records and indexes, the disk also stores meta data necessary for organizing, accessing, indexing and modifying the data.
 

@@ -72,10 +72,10 @@ const config = {
 			navbar: {
 				hideOnScroll: true,
 				title: "NITCbase",
-				// logo: {
-				//   alt: 'NITCbase',
-				//   src: 'img/logo.svg',
-				// },
+				logo: {
+					alt: "NITCbase",
+					src: "img/logo.svg",
+				},
 				items: [
 					{
 						type: "doc",
@@ -89,23 +89,23 @@ const config = {
 						position: "left",
 						label: "Roadmap",
 					},
+					// {
+					// 	type: "doc",
+					// 	docId: "XFS Interface/introduction",
+					// 	position: "left",
+					// 	label: "XFS Interface",
+					// },
 					{
 						type: "doc",
-						docId: "Tutorials/Indexing",
-						position: "left",
-						label: "Tutorials",
-					},
-					{
-						type: "doc",
-						docId: "XFS Interface/introduction",
-						position: "left",
-						label: "XFS Interface",
-					},
-					{
-						type: "doc",
-						docId: "NITCbase_Commands",
+						docId: "User Interface Commands/introduction",
 						position: "left",
 						label: "NITCbase Commands",
+					},
+					{
+						type: "doc",
+						docId: "Misc/Indexing",
+						position: "left",
+						label: "Miscellaneous",
 					},
 					{
 						label: "TODO(Work left)",
@@ -143,15 +143,6 @@ const config = {
 							},
 						],
 					},
-					// {
-					//   title: 'Community',
-					//   items: [
-					//     {
-					//       label: 'Stack Overflow',
-					//       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-					//     },
-					//   ],
-					// },
 					{
 						title: "More",
 						items: [
