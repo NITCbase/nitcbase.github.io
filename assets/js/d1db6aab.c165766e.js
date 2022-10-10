@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[6453],{7229:e=>{e.exports=JSON.parse('{"label":"fint","permalink":"/docs/tags/fint","allTagsPath":"/docs/tags","count":1,"items":[{"id":"Design/Frontend","title":"Frontend Interface","description":"Introduction","permalink":"/docs/Design/Frontend"}]}')}}]);

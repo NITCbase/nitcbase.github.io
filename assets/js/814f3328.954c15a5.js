@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"2022 Feedback","permalink":"/feedback/2022"}]}')}}]);

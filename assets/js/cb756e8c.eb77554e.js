@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[5745],{1958:e=>{e.exports=JSON.parse('{"label":"overall design","permalink":"/docs/tags/overall-design","allTagsPath":"/docs/tags","count":1,"items":[{"id":"intro","title":"Introduction","description":"Overall Design/Architecture","permalink":"/docs/intro"}]}')}}]);

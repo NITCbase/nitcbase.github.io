@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknitcbase_beta=self.webpackChunknitcbase_beta||[]).push([[6453],{7229:function(e){e.exports=JSON.parse('{"name":"fint","permalink":"/docs/tags/fint","docs":[{"id":"Design/Frontend","title":"Frontend Interface","description":"Introduction","permalink":"/docs/Design/Frontend"}],"allTagsPath":"/docs/tags"}')}}]);
