@@ -8,7 +8,7 @@ https://nitcbase.github.io/archived-site/design/schema.html
 :::info note
 The Schema Layer code is to be written in `Schema.cpp` and it's header file `Schema.h`
 
-**[The stub code for these files can be found here.](/schema_stub)**
+**[The stub code for these files can be found here.](/stub/schema_stub)**
 :::
 
 ## Layout

@@ -11,7 +11,7 @@ The Buffer Layer code is to be written in 2 pairs of files:
 - `StaticBuffer.cpp` and it's header file `StaticBuffer.h`
 - `BlockBuffer.cpp` and it's header file `BlockBuffer.h`.
 
-**[The stub code for these files can be found here.](/buffer_stub)**
+**[The stub code for these files can be found here.](/stub/buffer_stub)**
 :::
 
 ## Layout

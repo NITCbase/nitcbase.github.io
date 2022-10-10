@@ -12,7 +12,7 @@ The Cache Layer code is to be written in 3 pairs of files:
 - `AttrCacheTable.cpp` and it's header file `AttrCacheTable.h`
 - `OpenRelTable.cpp` and it's header file `OpenRelTable.h`
 
-**[The stub code for these files can be found here](/cache_stub)**
+**[The stub code for these files can be found here](/stub/cache_stub)**
 :::
 
 ## Layout

@@ -8,7 +8,7 @@ https://nitcbase.github.io/archived-site/design/blockaccess.html
 :::info note
 The Block Access Layer code is to be written in `BlockAccess.cpp` and it's header file `BlockAccess.h`
 
-[**The stub code for these files can be found here.**](/block_access_stub)
+[**The stub code for these files can be found here.**](/stub/block_access_stub)
 :::
 
 ## Layout
