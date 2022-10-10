@@ -40,7 +40,7 @@ The following are provided to you to get started on the project:
 
    - formatting the disk to the NITCbase file system format
    - transferring files to and from the host system to the NITCbase file system
-   - supporting standard NITCBase - [Data Definition language (DDL)](/docs/NITCbase_Commands#data-definition-language-commands) and [Data Manipulation language (DML)](/docs/NITCbase_Commands#data-manipulation-language-commands) operations on the database file system and so on.
+   - supporting standard NITCBase - [Data Definition language (DDL)](/docs/User%20Interface%20Commands/ddl) and [Data Manipulation language (DML)](/docs/User%20Interface%20Commands/dml) operations on the database file system and so on.
 
    <br/>
 

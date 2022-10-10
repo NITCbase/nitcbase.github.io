@@ -23,7 +23,7 @@ NITCbase assumes that the disk is a sequence of blocks, and a block is a sequenc
 Blocks 0-3 are reserved for storing _Block Allocation Map_, whereas Blocks 4 and 5 are reserved for storing the block of [Relation Catalog](#relation-catalog) and the first block of [Attribute Catalog](#attribute-catalog), respectively.
 
 The first four blocks of the disk are used for storing the Block Allocation Map and hence **the first four entries in the Block Allocation Map are marked as occupied.**
-This is done when the XFS interface command of [`fdisk`](../NITCbase_Commands.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
+This is done when the XFS interface command of [`fdisk`](../User%20Interface%20Commands/efs.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
 
 <br/>
 <img src={diskModel} alt="DiskModel" width="650"/>
@@ -254,7 +254,7 @@ A record block has the maximum number of slots when number of attributes of the 
 
 ### Internal Index Block Structure
 
-NITCbase uses the [B+ tree](../Tutorials/B+%20Trees.md) data structure for indexing records in a relation. _The DBMS may maintain zero or more indices per relation_. There are **two types** of nodes for a B+ tree. These are called internal nodes and leaf nodes. A disk block that stores an internal node of the B+ tree is called an **Internal Index block**.
+NITCbase uses the [B+ tree](../Misc/B+%20Trees.md) data structure for indexing records in a relation. _The DBMS may maintain zero or more indices per relation_. There are **two types** of nodes for a B+ tree. These are called internal nodes and leaf nodes. A disk block that stores an internal node of the B+ tree is called an **Internal Index block**.
 
 _Each internal index block in NITCbase stores a maximum of 100 attribute(key) values. Each of these values has an associated pair of left and right child pointers. Hence each internal index block is also required to store 101 child pointers (Only 101 Child pointers are required because the right child of one value is the same as the left child of the next value)._
 
@@ -386,7 +386,7 @@ For example to do linear search on the attribute catalog where attribute name ma
 
 `RelName` is the name of the relation corresponding to the attribute, `AttributeName` is the name of the attribute and `AttributeType` is the data type of the attribute. Only two data types are permitted in NITCbase- numbers (`NUM`) and strings (`STR`) of maximum length 16. The `PrimaryFlag` is presently unused \*.
 
-NITCbase employes [B+ tree](../Tutorials/B+%20Trees.md) for indexing. `RootBlock` stores the root block number of the B+ tree if there is an index created on the attribute; and contains `-1` otherwise. `Offset` is an integer that specifies the relative offset of the attribute in the record (0 for the first attribute, 1 for the second attribute and so on).
+NITCbase employes [B+ tree](../Misc/B+%20Trees.md) for indexing. `RootBlock` stores the root block number of the B+ tree if there is an index created on the attribute; and contains `-1` otherwise. `Offset` is an integer that specifies the relative offset of the attribute in the record (0 for the first attribute, 1 for the second attribute and so on).
 
 \* At present, **NITCbase does not support the notion of a [primary key](https://en.wikipedia.org/wiki/Primary_key)**. The `flag` is kept in the slot for future support of primary keys.
 
