@@ -23,3 +23,9 @@ The content in the website and the documentation has been authored in the [Depar
 | :------------------------------------------------------------------------------------------------------------------------------------------: |
 | [Jessiya Joy](https://www.linkedin.com/in/jessiya-joy-03184b198/), [Gokul Sreekumar](https://www.linkedin.com/in/gokul-sreekumar-63581b174/) |
 |                                            [Shiva Hegde](https://www.linkedin.com/in/shivahegde/)                                            |
+
+## 2022 - 2023
+
+|                   👤 Team Members                   |
+| :-------------------------------------------------: |
+| [Cliford Joshy](https://www.clifordjoshy.github.io) |
