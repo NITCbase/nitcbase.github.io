@@ -42,6 +42,8 @@ public:
 
     static RecId linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op);
 
+    static int project(int relId, Attribute *record);
+
 };
 ```
 
@@ -58,12 +60,12 @@ value-in-record `op` attrVal
 
 #### Arguments
 
-| Name     | Type              | Description                                                                                                                                                                                                                                        |
-| -------- | ----------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relId    | `int`             | Relation Id of Relation to which search has to be made.                                                                                                                                                                                            |
-| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                                               |
-| attrVal  | `union Attribute` | value of attribute that has to be checked against the value in the record.                                                                                                                                                                         |
-| op       | `int`             | The conditional operator (which can be one among `EQ, LE, LT, GE, GT, NE, RST, PRJCT` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to, reset, project_ |
+| Name     | Type              | Description                                                                                                                                                                                                            |
+| -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| relId    | `int`             | Relation Id of Relation to which search has to be made.                                                                                                                                                                |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                   |
+| attrVal  | `union Attribute` | value of attribute that has to be checked against the value in the record.                                                                                                                                             |
+| op       | `int`             | The conditional operator (which can be one among `EQ, LE, LT, GE, GT, NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_ |
 
 #### Return Values
 
@@ -115,7 +117,7 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
         {
             // update block = right block of block
             // update slot = 0
-            // continue to the next execution
+            continue;  // continue to the beginning of this while loop
         }
 
         // if slot is free skip the loop
@@ -125,39 +127,38 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
         }
 
         // let cond be a variable of int type
+        // it will store if the given condition is satisfied based on the comparison
 
-        if ( op != PRJCT )
-        {
-            // compare record's attribute value to the the given attrVal as below:
-            /*
-                firstly get the attribute offset for the attrName attribute
-                from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
-            */
-            // use the attribute offset to get the value of the attribute from current record
 
-            int cmpVal;
-            // store the difference between the record's attribute value and attrVal in cmpVal
+        // compare record's attribute value to the the given attrVal as below:
+        /*
+            firstly get the attribute offset for the attrName attribute
+            from the attribute cache entry of the relation using AttrCacheTable::getAttrCatEntry
+        */
+        // use the attribute offset to get the value of the attribute from current record
+
+        int cmpVal = // difference between the record's attribute value and attrVal
             // If attribute is a STRING, use strcmp
             // If attribute is a NUMBER, subtract the values
 
-            // set cond = UNSET
+        // set cond = UNSET
 
-            // Next task is to check whether this record satisfies the given condition.
-            // It is determined based on the output of previous comparison and the op value received.
-            // The following code sets the cond variable if the condition is satisfied.
-            if (
-                (op == NE && cmpVal != 0) ||    // if op is "not equal to"
-                (op == LT && cmpVal < 0) ||     // if op is "less than"
-                (op == LE && cmpVal <= 0) ||    // if op is "less than or equal to"
-                (op == EQ && cmpVal == 0) ||    // if op is "equal to"
-                (op == GT && cmpVal > 0) ||     // if op is "greater than"
-                (op == GE && cmpVal >= 0)       // if op is "greater than or equal to"
-            ) {
-                // SET the cond variable (i.e. cond = SET)
-            }
+        // Next task is to check whether this record satisfies the given condition.
+        // It is determined based on the output of previous comparison and the op value received.
+        // The following code sets the cond variable if the condition is satisfied.
+        if (
+            (op == NE && cmpVal != 0) ||    // if op is "not equal to"
+            (op == LT && cmpVal < 0) ||     // if op is "less than"
+            (op == LE && cmpVal <= 0) ||    // if op is "less than or equal to"
+            (op == EQ && cmpVal == 0) ||    // if op is "equal to"
+            (op == GT && cmpVal > 0) ||     // if op is "greater than"
+            (op == GE && cmpVal >= 0)       // if op is "greater than or equal to"
+        ) {
+            // SET the cond variable (i.e. cond = SET)
         }
 
-        if (cond == SET || op == PRJCT) {
+
+        if (cond == SET) {
             /*
             set the search index in the relation cache as
             the record id of the record that satisfies the given condition
@@ -183,13 +184,13 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Arguments
 
-| Name     | Type               | Description                                                                                                                                                                                                                                       |
-| -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relId    | `int`              | Relation Id of Relation to which search has to be made.                                                                                                                                                                                           |
-| record   | `union Attribute*` | pointer to record where next found record satisfying given condition is to be placed.                                                                                                                                                             |
-| attrName | `char[ATTR_SIZE]`  | Attribute/column name to which condition need to be checked with.                                                                                                                                                                                 |
-| attrVal  | `union Attribute`  | value of attribute that has to be checked against the operater.                                                                                                                                                                                   |
-| op       | `int`              | Conditional Operator (can be one among `EQ` , `LE` , `LT` , `GE` , `GT` , `NE` , `RST` , `PRJCT` corresponding to equal, less or than equal, less than ,greater than or equal, greater than, not equal, reset and projet operators respectively). |
+| Name     | Type               | Description                                                                                                                                                                                                   |
+| -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| relId    | `int`              | Relation Id of Relation to which search has to be made.                                                                                                                                                       |
+| record   | `union Attribute*` | pointer to record where next found record satisfying given condition is to be placed.                                                                                                                         |
+| attrName | `char[ATTR_SIZE]`  | Attribute/column name to which condition need to be checked with.                                                                                                                                             |
+| attrVal  | `union Attribute`  | value of attribute that has to be checked against the operater.                                                                                                                                               |
+| op       | `int`              | Conditional Operator (can be one among `EQ` , `LE` , `LT` , `GE` , `GT` , `NE` corresponding to equal, less or than equal, less than ,greater than or equal, greater than, not equal operators respectively). |
 
 #### Return Values
 
@@ -205,36 +206,23 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
     // Declare a variable called recid to store the searched record
     RecId recId;
 
-    if (op == PRJCT){
-        // search for the next record id (recid) corresponding for the relation
-        // by passing op = PRJCT and dummy attrName, attrVal.
-        recId = linearSearch(relId, attrName, attrVal, op);
+    /* get the attribute catalog entry from the attribute cache corresponding
+    to the relation with Id=relid and with attribute_name=attrName  */
+
+    // get rootBlock from the attribute catalog entry
+    /* if Index does not exist for the attribute (check rootBlock == -1) */ {
+
+        // search for the record id (recid) corresponding to the attribute with attribute name attrName, with value attrval
+        // and satisfying the condition op using linearSearch()
     }
-    else if (op == RST){
-        /*
-        reset the searchIndex corresponding to the relation with id=relId in the
-        relation cache to {-1, -1}
-        */
-        return SUCCESS;
+
+    /* else */ {
+        // (index exists for the attribute)
+
+        // search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
+        // recid = bplus_search(relId, attrName, attval, op);
     }
-    else {
-        /* get the attribute catalog entry from the attribute cache corresponding
-        to the relation with Id=relid and with attribute_name=attrName  */
 
-        // get rootBlock from the attribute catalog entry
-        /* if Index does not exist for the attribute (check rootBlock == -1) */ {
-
-            // search for the record id (recid) corresponding to the attribute with attribute name attrName, with value attrval
-            // and satisfying the condition op using linearSearch()
-        }
-
-        /* else */ {
-            // (index exists for the attribute)
-
-            // search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
-            // recid = bplus_search(relId, attrName, attval, op);
-        }
-    }
 
     // if it fails to find a record satisfying the given condition (recId = {-1, -1}) return E_NOTFOUND;
 
@@ -425,7 +413,7 @@ This method changes the relation name of specified relation to the new name spec
 
 ```cpp
 int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
-    // reset the searchIndex of the relation catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
     Attribute newRelationName;
 
@@ -435,7 +423,7 @@ int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]
     //    return E_RELEXIST;
 
 
-    // reset the searchIndex of the relation catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
     Attribute oldRelationName;
 
@@ -455,7 +443,7 @@ int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]
     to the relation with relation name oldName to the relation name newName
     */
 
-    // reset the searchIndex of the attribute catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the attribute catalog using RelCacheTable::resetSearchIndex()
 
     //for i = 0 to numberOfAttributes :
     //    linearSearch on the attribute catalog for relName = oldRelationName
@@ -496,7 +484,7 @@ This method changes the name of an attribute/column present in a specified relat
 ```cpp
 int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE], char newName[ATTR_SIZE]) {
 
-    // reset the searchIndex of the relation catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
     Attribute relNameAttr;
 
@@ -507,7 +495,7 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
     /***
         Iterating over all Attribute Catalog Entry record corresponding to relation to find the required attribute
     ***/
-    // reset the searchIndex of the attribute catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the attribute catalog using RelCacheTable::resetSearchIndex()
 
     // declare attrToRenameRecId used to store the attr-cat recId of the attribute to rename
     RecId attrToRenameRecId{-1, -1};
@@ -570,7 +558,7 @@ If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap()
 
 ```cpp
 int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
-    // reset the searchIndex of the relation catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
     Attribute relNameAttr;
 
@@ -598,7 +586,7 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     /***
         Deleting attribute catalog entries corresponding the relation and index blocks corresponding to the relation with relName on its attributes
     ***/
-    // reset the searchIndex of the attribute catalog to {-1, -1} using RelCacheTable::setSearchIndex()
+    // reset the searchIndex of the attribute catalog using RelCacheTable::resetSearchIndex()
 
     // store the number of attributes deleted, because in case all the attributes were not successfully
     // added, we need to keep track of the deleted attributes
@@ -671,6 +659,99 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     // i.e., #Records = #Records - numberOfAttributesDeleted
 
     // Hint: Get the entry corresponding to attribute catalog from the relation cache and update the number of records and set it back
+
+    return SUCCESS;
+}
+```
+
+### BlockAccess :: project()
+
+#### Description
+
+This method iterates over the relation specified to fetch the next record (until all records are fetched) and updates the recId of next record in cache.
+
+#### Arguments
+
+| Name   | Type               | Description                                                 |
+| ------ | ------------------ | ----------------------------------------------------------- |
+| relId  | `int`              | Relation Id of Relation to which projection has to be done. |
+| record | `union Attribute*` | pointer to record where next record is to be placed.        |
+
+#### Return Values
+
+| Value                      | Description                                                 |
+| -------------------------- | ----------------------------------------------------------- |
+| [`SUCCESS`](/constants)    | On successful copy of record to _record_                    |
+| [`E_NOTFOUND`](/constants) | If there are no more records to be fetched for the relation |
+
+#### Algorithm
+
+```cpp
+int BlockAccess::project(int relId, Attribute *record) {
+    // get the previous search index of the relation relId from the relation cache
+    // (use RelCacheTable::getSearchIndex() function)
+
+    // let block and slot denote the record id of the record being currently checked
+
+    // if the current search index record is invalid(i.e. both block and slot = -1)
+    if (prevRecId.block == -1 && prevRecId.slot == -1)
+    {
+        // (new project operation. start from beginning)
+
+        // get the first record block of the relation from the relation cache
+        // (use RelCacheTable::getRelCatEntry() function of Cache Layer)
+
+        // block = first record block of the relation
+        // slot = 0
+    }
+    else
+    {
+        // (a project operation is already in progress)
+
+        // block = previous search index's block
+        // slot = previous search index's slot + 1
+    }
+
+
+    // The following code finds the next record of the relation
+    // Start from the record id (block, slot) and iterate over the remaining records of the relation
+    while (block != -1)
+    {
+        // create a RecBuffer object for block (use RecBuffer Constructor for existing block)
+
+        // get header of the block using RecBuffer::getHeader() function
+        // get slot map of the block using RecBuffer::getSlotMap() function
+
+        if(/* slot >= the number of slots per block*/)
+        {
+            // (no more slots in this block)
+            // update block = right block of block
+            // update slot = 0
+        }
+        else if (/* slot is free (i.e slot-th entry in slotMap contains SLOT_UNOCCUPIED) */)
+        {
+            // increment slot
+        }
+        else {
+            // (the next occupied slot / record has been found)
+            break;
+        }
+    }
+
+    if (block == -1){
+        // (a record was not found. all records exhausted)
+        return E_NOTFOUND;
+    }
+
+    // declare nextRecId to store the RecId of the record found
+    RecId nextRecId{block, slot};
+
+    // set the search index to nextRecId using RelCacheTable::setSearchIndex
+
+    /* Copy the record with record id (nextRecId) to the record buffer (record)
+       For this Instantiate a RecBuffer class object by passing the recId and
+       call the appropriate method to fetch the record
+    */
 
     return SUCCESS;
 }

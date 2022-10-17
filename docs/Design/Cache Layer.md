@@ -197,6 +197,7 @@ public:
     static int setRelCatEntry(int relId, RelCatEntry *relCatBuf);
     static int getSearchIndex(int relId, RecId *searchIndex);
     static int setSearchIndex(int relId, RecId *searchIndex);
+    static int resetSearchIndex(int relId);
 
 private:
     //field
@@ -397,6 +398,37 @@ int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
 
     return SUCCESS;
 
+}
+```
+
+### RelCacheTable :: resetSearchIndex
+
+#### Description
+
+Resets the value of `searchIndex` field of the given relation in _Relation Cache_ Table to {-1, -1}. This is used so that the linear search can be restarted from the first record.
+
+#### Arguments
+
+| Name  | Type  | Description                                                   |
+| ----- | ----- | ------------------------------------------------------------- |
+| relId | `int` | The relation id of the relation in the _Relation Cache_ Table |
+
+#### Return Values
+
+| Value                        | Description                                                                                                                                 |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
+| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+
+#### Algorithm
+
+```cpp
+int RelCacheTable::resetSearchIndex(int relId) {
+
+    // declare a RecId having value {-1, -1}
+    // set the search index to {-1, -1} using RelCacheTable::setSearchIndex
+    // return the value returned by setSearchIndex
 }
 ```
 
