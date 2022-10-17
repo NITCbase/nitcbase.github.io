@@ -55,14 +55,14 @@ This method **inserts the given record** into the specified Relation. Insertion 
 
 #### Return values
 
-| **Value**            | **Description**                                                                                                             |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`            | On successful insert of the given record into the relation                                                                  |
-| `E_RELNOTOPEN`       | If the relation is not open.                                                                                                |
-| `E_NATTRMISMATCH`    | If the actual number of attributes in the relation is different from the provided number of attributes                      |
-| `E_ATTRTYPEMISMATCH` | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.         |
-| `E_DISKFULL`         | If disk space is not sufficient for inserting the record / index                                                            |
-| `E_NOTPERMITTED`     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                          | **Description**                                                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                  |
+| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                                |
+| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                      |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.         |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                            |
+| [`E_NOTPERMITTED`](/constants)     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
 
 #### Algorithm
 
@@ -147,16 +147,16 @@ This function creates a new target relation with attributes as that of source re
 
 #### Return values
 
-| **Value**            | **Description**                                                                                                                 |
-| -------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`            | On successful creation of new relation.                                                                                         |
-| `E_RELNOTOPEN`       | If the source relation is not open.                                                                                             |
-| `E_RELEXIST`         | If a relation with name targetrel already exists.                                                                               |
-| `E_ATTRNOTEXIST`     | If a attribute with name attr does not exist.                                                                                   |
-| `E_ATTRTYPEMISMATCH` | If the actual type of the attribute in the relation is different from the type of provided attribute.                           |
-| `E_CACHEFULL`        | If the openRel() fails because of no free slots in open relation table                                                          |
-| `E_DISKFULL`         | If disk space is not sufficient for creating the new relation.                                                                  |
-| `E_NOTPERMITTED`     | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                          | **Description**                                                                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                                         |
+| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                                             |
+| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                                               |
+| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name attr does not exist.                                                                                   |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute.                           |
+| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                                          |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                                  |
+| [`E_NOTPERMITTED`](/constants)     | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
 
 #### Algorithm
 
@@ -207,8 +207,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
 
     /*** Selecting and inserting records into the target relation ***/
-    // Before calling the search function, reset the search to start from the first hit
-    // by calling search of block access layer with op = RST and dummy values for attr, val
+    // Before calling the search function, reset the search to start from the first using RelCacheTable::resetSearchIndex
 
     Attribute record[src_nAttrs];
     Attribute val;
@@ -259,16 +258,16 @@ This function creates a new target relation with list of attributes specified in
 
 #### Return values
 
-| **Value**         | **Description**                                                                                                                 |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`         | On successful creation of new relation.                                                                                         |
-| `E_RELNOTOPEN`    | If the source relation is not open.                                                                                             |
-| `E_RELEXIST`      | If a relation with name targetrel already exists.                                                                               |
-| `E_ATTRNOTEXIST`  | If any attribute with name given in attr array does not exist.                                                                  |
-| `E_DUPLICATEATTR` | If two any two attributes have same name in the target relation                                                                 |
-| `E_DISKFULL`      | If disk space is not sufficient for creating the new relation.                                                                  |
-| `E_CACHEFULL`     | If the openRel() fails because of no free slots in open relation table                                                          |
-| `E_NOTPERMITTED`  | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                       | **Description**                                                                                                                 |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)         | On successful creation of new relation.                                                                                         |
+| [`E_RELNOTOPEN`](/constants)    | If the source relation is not open.                                                                                             |
+| [`E_RELEXIST`](/constants)      | If a relation with name targetrel already exists.                                                                               |
+| [`E_ATTRNOTEXIST`](/constants)  | If any attribute with name given in attr array does not exist.                                                                  |
+| [`E_DUPLICATEATTR`](/constants) | If two any two attributes have same name in the target relation                                                                 |
+| [`E_DISKFULL`](/constants)      | If disk space is not sufficient for creating the new relation.                                                                  |
+| [`E_CACHEFULL`](/constants)     | If the openRel() fails because of no free slots in open relation table                                                          |
+| [`E_NOTPERMITTED`](/constants)  | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
 
 #### Algorithm
 
@@ -311,26 +310,14 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     /*** Inserting projected records into the target relation ***/
     // Before calling the search function, reset the search to start from the first hit
-    Attribute record[src_nAttrs];
-    Attribute val;
-    char attr[ATTR_SIZE];
-    strcpy(attr, "RST");
-    strcpy(val.sVal, "RST");
 
-    // call search with op = RST by passing dummy attr and val.
-    // Also pass flagValidAttrName = false to indicate that attribute name passed is dummy.
-    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST);
-    BlockAccess::search(srcRelId, record, attr, val, RST);
+    Attribute record[src_nAttrs];
 
     /*
     while (true) :
-        // For doing projection call search of Block Access layer with the following arguments:
-        // int ret = BlockAccess::search(srcRelId, record, attr, val, PRJCT) with variables defined as below.
-        strcpy(val.sVal, "PRJCT");
-        strcpy(attr, "PRJCT");
 
-        if (BlockAccess::search(srcRelId, record, attr, val, PRJCT) returns SUCCESS):
-            // record will contain the searched record
+        if (BlockAccess::project(srcRelId, record) returns SUCCESS):
+            // record will contain the next record
             Attribute proj_record[tar_nAttrs];
 
             iterate through 0 to tar_attrs-1:
@@ -373,15 +360,15 @@ This function creates a new target relation with _attributes constituting from b
 
 #### Return values
 
-| **Value**            | **Description**                                                                                                       |
-| -------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`            | On successful creation of new relation.                                                                               |
-| `E_RELNOTOPEN`       | If any of the source relations is not open.                                                                           |
-| `E_RELEXIST`         | If a relation with name targetrel already exists.                                                                     |
-| `E_ATTRNOTEXIST`     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
-| `E_DISKFULL`         | If disk space is not sufficient for creating the new relation.                                                        |
-| `E_ATTRTYPEMISMATCH` | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
-| `E_CACHEFULL`        | If the openRel() fails because of no free slots in open relation table                                                |
+| **Value**                          | **Description**                                                                                                       |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                               |
+| [`E_RELNOTOPEN`](/constants)       | If any of the source relations is not open.                                                                           |
+| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                                     |
+| [`E_ATTRNOTEXIST`](/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                        |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                                |
 
 #### Algorithm
 
@@ -453,10 +440,9 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
     Attribute record1[numOfAttributes1];
     Attribute record2[numOfAttributes2];
     Attribute targetRecord[numOfAttributesInTarget];
-    Attribute dummy;
 
     // this loop is to get every record of the srcRelation1 one by one
-    while (BlockAccess::search(srcRelId1, record1, "PROJECT", dummy, PRJCT) == SUCCESS) {
+    while (BlockAccess::project(srcRelId1, record1) == SUCCESS) {
 
         // this loop is to get every record of the srcRelation2 which satisfies the following condition:
         // record1.attribute1 = record2.attribute2 (i.e. Equi-Join condition)
