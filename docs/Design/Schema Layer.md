@@ -64,12 +64,12 @@ This method creates a new Relation with the name, attribute/column list as speci
 
 #### Return value
 
-| Value             | Description                                                    |
-| ----------------- | -------------------------------------------------------------- |
-| `SUCCESS`         | On successful creation of the relation                         |
-| `E_RELEXIST`      | If the relation with name relName already exists.              |
-| `E_DUPLICATEATTR` | If two any two of the given attributes have same name.         |
-| `E_DISKFULL`      | If disk space is not sufficient for creating the new relation. |
+| Value                           | Description                                                    |
+| ------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/constants)         | On successful creation of the relation                         |
+| [`E_RELEXIST`](/constants)      | If the relation with name relName already exists.              |
+| [`E_DUPLICATEATTR`](/constants) | If two any two of the given attributes have same name.         |
+| [`E_DISKFULL`](/constants)      | If disk space is not sufficient for creating the new relation. |
 
 #### Algorithm
 
@@ -82,11 +82,10 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
     // let targetRelId be of type recId
 
     /*
-        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute
-        using search() of Block Access Layer with OP = EQ and flagValidAttrName = True
+        Reset the searchIndex using RelCacheTable::resetSearhIndex()
+        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute using search() of Block Access Layer with OP = EQ
         Let the return value of search be retVal
-        Hint: retVal = BlockAccess::search(RELCAT_RELID, relCatSearchResultRecord, "RelName",
-                                        relNameAsAttribute, EQ, true);
+        Hint: retVal = BlockAccess::search(RELCAT_RELID, relCatSearchResultRecord, "RelName", relNameAsAttribute, EQ);
     */
 
     // if retVal == SUCCESS (i.e relation with relation name as relName already exists)
@@ -146,12 +145,12 @@ This method deletes the Relation with name as specified in arguments.
 
 #### Return value
 
-| Value            | Description                                                                                                 |
-| ---------------- | ----------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`        | On successful deletion of the relation.                                                                     |
-| `E_RELOPEN`      | If the relation is open.                                                                                    |
-| `E_RELNOTEXIST`  | If the relation does not exist                                                                              |
-| `E_NOTPERMITTED` | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
+| Value                          | Description                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful deletion of the relation.                                                                     |
+| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                    |
+| [`E_RELNOTEXIST`](/constants)  | If the relation does not exist                                                                              |
+| [`E_NOTPERMITTED`](/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 
@@ -194,13 +193,13 @@ This method creates a bplus indexing on an attribute attrName in a relation relN
 
 #### Return value
 
-| Value            | Description                                                                                                             |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`        | On successful creation of B+ tree.                                                                                      |
-| `E_RELNOTOPEN`   | If the relation is not open.                                                                                            |
-| `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist.                                                                     |
-| `E_DISKFULL`     | If there is no enough space in the disk to create the tree                                                              |
-| `E_NOTPERMITTED` | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to create an index for catalogs. |
+| Value                          | Description                                                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful creation of B+ tree.                                                                                      |
+| [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                                                                            |
+| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name attrName does not exist.                                                                     |
+| [`E_DISKFULL`](/constants)     | If there is no enough space in the disk to create the tree                                                              |
+| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to create an index for catalogs. |
 
 #### Algorithm
 
@@ -238,12 +237,12 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 
 #### Return value
 
-| Value            | Description                                                   |
-| ---------------- | ------------------------------------------------------------- |
-| `SUCCESS`        | On successful deletion of the B+ tree                         |
-| `E_RELNOTOPEN`   | If the relation is not open.                                  |
-| `E_ATTRNOTEXIST` | If the attribute with name attrName does not exist.           |
-| `E_NOTPERMITTED` | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. |
+| Value                          | Description                                                   |
+| ------------------------------ | ------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful deletion of the B+ tree                         |
+| [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                  |
+| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name attrName does not exist.           |
+| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. |
 
 #### Algorithm
 
@@ -279,13 +278,13 @@ This method changes the relation name of specified relation to new name as speci
 
 #### Return value
 
-| Value            | Description                                                                                                                 |
-| ---------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`        | On successful renaming of the relation                                                                                      |
-| `E_RELOPEN`      | If the relation is open.                                                                                                    |
-| `E_RELNOTEXIST`  | If the relation with name oldRelName does not exist                                                                         |
-| `E_RELEXIST`     | If the relation with name newRelName already exists                                                                         |
-| `E_NOTPERMITTED` | If the oldrelName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
+| Value                          | Description                                                                                                                 |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                      |
+| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                    |
+| [`E_RELNOTEXIST`](/constants)  | If the relation with name oldRelName does not exist                                                                         |
+| [`E_RELEXIST`](/constants)     | If the relation with name newRelName already exists                                                                         |
+| [`E_NOTPERMITTED`](/constants) | If the oldrelName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
 
 #### Algorithm
 
@@ -322,14 +321,14 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Return value
 
-| Value            | Description                                                                                                                                     |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`        | On successful renaming of the attribute                                                                                                         |
-| `E_RELOPEN`      | If the relation is open.                                                                                                                        |
-| `E_RELNOTEXIST`  | If the relation with name relName does not exist                                                                                                |
-| `E_ATTRNOTEXIST` | If the attribute with name oldAttrName does not exist                                                                                           |
-| `E_ATTREXIST`    | If the attribute with name newAttrName already exists                                                                                           |
-| `E_NOTPERMITTED` | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename any attribute value of either of the catalogs. |
+| Value                          | Description                                                                                                                                     |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful renaming of the attribute                                                                                                         |
+| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                        |
+| [`E_RELNOTEXIST`](/constants)  | If the relation with name relName does not exist                                                                                                |
+| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name oldAttrName does not exist                                                                                           |
+| [`E_ATTREXIST`](/constants)    | If the attribute with name newAttrName already exists                                                                                           |
+| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename any attribute value of either of the catalogs. |
 
 #### Algorithm
 
@@ -365,11 +364,11 @@ This method opens the relation specified as name in cache/OpenRelTable.
 
 #### Return value
 
-| Value           | Description                                                  |
-| --------------- | ------------------------------------------------------------ |
-| `relId`         | Returns the relId on succesful opening of the relation       |
-| `E_RELNOTEXIST` | If the relation with name relName does not exist in the disk |
-| `E_CACHEFULL`   | If there are no free slots in the Open Relation table.       |
+| Value                         | Description                                                  |
+| ----------------------------- | ------------------------------------------------------------ |
+| `relId`                       | Returns the relId on succesful opening of the relation       |
+| [`E_RELNOTEXIST`](/constants) | If the relation with name relName does not exist in the disk |
+| [`E_CACHEFULL`](/constants)   | If there are no free slots in the Open Relation table.       |
 
 #### Algorithm
 
@@ -399,11 +398,11 @@ This method closes the relation specified as name in cache/OpenRelTable.
 
 #### Return value
 
-| Value            | Description                                                                                                             |
-| ---------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `SUCCESS`        | On successful closing of the relation                                                                                   |
-| `E_NOTOPEN`      | If relation with given name is not open                                                                                 |
-| `E_NOTPERMITTED` | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to close either of the catalogs. |
+| Value                          | Description                                                                                                             |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful closing of the relation                                                                                   |
+| [`E_RELNOTOPEN`](/constants)   | If relation with given name is not open                                                                                 |
+| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to close either of the catalogs. |
 
 #### Algorithm
 
