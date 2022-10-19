@@ -3,8 +3,6 @@ sidebar_position: 9
 title: "Physical Layer"
 ---
 
-import diskModel from '../../static/img/DiskModel.png';
-
 https://nitcbase.github.io/archived-site/storage-model.html
 
 :::info NOTE
@@ -26,7 +24,9 @@ The first four blocks of the disk are used for storing the Block Allocation Map 
 This is done when the XFS interface command of [`fdisk`](../User%20Interface%20Commands/efs.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
 
 <br/>
-<img src={diskModel} alt="DiskModel" width="650"/>
+
+![diskModel](../../static/img/DiskModel.png)
+
 <br/>
 
 ## Disk Class
