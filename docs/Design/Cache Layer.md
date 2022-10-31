@@ -228,7 +228,7 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -242,7 +242,7 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 
     if entry corresponding to the relId in the Relation Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     //copy the corresponding Relation Catalog entry in the Relation Cache Table to relCatBuf.
@@ -275,7 +275,7 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -289,7 +289,7 @@ int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 
     if entry corresponding to the relId in the Relation Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     //copy the relCatBuf to the corresponding Relation Catalog entry in the Relation Cache Table.
@@ -324,7 +324,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -338,7 +338,7 @@ int relCacheTable::getSearchIndex(int relid, recId *recidbuff_ptr) {
 
     if entry corresponding to the relId in the Relation Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // copy the searchIndex field of the Relation Cache entry corresponding to input relId to searchIndex variable.
@@ -370,7 +370,7 @@ The caller should allocate memory for the struct RecId before calling the functi
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -384,7 +384,7 @@ int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
 
     if entry corresponding to the relId in the Relation Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // copy the searchIndex variable to the searchIndex field of the Relation Cache entry corresponding to input relId.
@@ -412,7 +412,7 @@ Resets the value of `searchIndex` field of the given relation in _Relation Cache
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_NOTOPEN`](/constants)    | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -528,7 +528,8 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 - The caller should allocate memory for the `struct AttrCatEntry` before calling the function.
 - This method is overloaded in type of the second argument.
-  :::
+
+:::
 
 #### Arguments
 
@@ -544,7 +545,7 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_NOTOPEN`](/constants)      | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
 
 #### Algorithm
@@ -559,7 +560,7 @@ int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
 
     if entry corresponding to the relId in the Attribute Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
@@ -587,7 +588,8 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 - The caller should allocate memory to the pointer to `struct AttrCatEntry` before calling the function.
 - This method is overloaded in type of the second argument.
-  :::
+
+:::
 
 #### Arguments
 
@@ -603,7 +605,7 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_NOTOPEN`](/constants)      | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
 
 #### Algorithm
@@ -618,7 +620,7 @@ int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
 
     if entry corresponding to the relId in the Attribute Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
@@ -648,7 +650,8 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 - This method is overloaded in type of the second argument.
 - The caller should allocate memory for the `struct IndexId` before calling the function.
-  :::
+
+:::
 
 #### Arguments
 
@@ -664,7 +667,7 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_NOTOPEN`](/constants)      | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
 
 #### Algorithm
@@ -679,7 +682,7 @@ int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
 
     if entry corresponding to the relId in the Attribute Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
@@ -708,7 +711,8 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 - This method is overloaded in type of the second argument
 - The caller should allocate memory for the `struct IndexId` before calling the function.
-  :::
+
+:::
 
 #### Arguments
 
@@ -724,7 +728,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_NOTOPEN`](/constants)      | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 | [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
 
 #### Algorithm
@@ -739,7 +743,7 @@ int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
 
     if entry corresponding to the relId in the Attribute Cache Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
@@ -847,7 +851,8 @@ Initializes the meta information of each entry of the _Open Relation_ Table to i
 
 - The object of the `OpenRelTable` class must be declared **after** the objects of the Physical Layer and the Buffer Layer to ensure that the main memory is properly set up before the constructor initializes cache memory.
 - This function should be called at the **beginning** of the session.
-  :::
+
+:::
 
 #### Arguments
 
@@ -1031,10 +1036,10 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 
 #### Return Values
 
-| Value                     | Description                                                                                                                                                        |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `relId`                   | The relation id of the relation in the Open Relation Table                                                                                                         |
-| [`E_NOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| Value                        | Description                                                                                                                                                        |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `relId`                      | The relation id of the relation in the Open Relation Table                                                                                                         |
+| [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
 #### Algorithm
 
@@ -1163,7 +1168,7 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 | [`SUCCESS`](/constants)        | Successfully closed the entry of the relation in the Open Relation Table                                                                |
 | [`E_NOTPERMITTED`](/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session                                                |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                           |
-| [`E_NOTOPEN`](/constants)      | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
 
 #### Algorithm
 
@@ -1182,7 +1187,7 @@ int OpenRelTable::closeRel(int relId) {
 
     if entry corresponding to the relId in the Open Relation Table is free:
     {
-        return E_NOTOPEN;
+        return E_RELNOTOPEN;
     }
 
     /****** Releasing the Relation Cache entry of the relation ******/

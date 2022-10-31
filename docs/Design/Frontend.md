@@ -255,11 +255,11 @@ int Frontend::open_table(char relname[ATTR_SIZE]) {
 
 #### Return Values
 
-| Value     | Description                                                                                                              |
-| --------- | ------------------------------------------------------------------------------------------------------------------------ |
-| SUCCESS   | Indicates successful closing of the relation                                                                             |
-| E_NOTOPEN | If relation with the given name is not open                                                                              |
-| E_INVALID | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to close either of the catalogs |
+| Value        | Description                                                                                                              |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------ |
+| SUCCESS      | Indicates successful closing of the relation                                                                             |
+| E_RELNOTOPEN | If relation with the given name is not open                                                                              |
+| E_INVALID    | If the relation name is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to close either of the catalogs |
 
 #### Algorithm
 
