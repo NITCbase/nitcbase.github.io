@@ -23,7 +23,7 @@ As index is a collection of attribute values and their corresponding record poin
 
 ## B+Tree Implementation in NITCbase
 
-:::info PREREQUISITE READING
+:::caution PREREQUISITE READING
 
 - [B+ Trees](./B%2B%20Trees.md)
 - [Physical Layer](../Design/Physical%20Layer.md)
