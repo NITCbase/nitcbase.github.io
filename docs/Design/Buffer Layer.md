@@ -166,6 +166,7 @@ All these data fields are **private** to the `StaticBuffer class` and can only b
 
 - The `class BlockBuffer` is a **friend class** to `StaticBuffer class`. This allows all methods in `BlockBuffer` to access the private fields and methods of the `StaticBuffer class`.
 - At the same time, **friendship is not inherited in C++**, i.e., if a base class has a friend class, then the class doesn’t become a friend of the derived classes. This is explained in detail in the next section.
+
 :::
 
 :::tip Implementation Tip
@@ -274,6 +275,7 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 - This function is useful in cases where, given a block number, its block type is not known. Hence it is also not known which type of record object (`Record`, `Internal Index`, or `Leaf Index`) needs to be used to store the block.
 - This function has been used in the B+ Tree Layer, where the block number of the constituent blocks of a B+ Tree is known, but it is not known whether the block is of type `IndInternal` or `IndLeaf`.
+
 :::
 
 #### Arguments
@@ -644,6 +646,7 @@ Gives the header of the block.
 
 - Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `getHeader()` method is kept in abstract `BlockBuffer class`.
 - Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
+
 :::
 
 #### Arguments
@@ -686,6 +689,7 @@ Sets the header of the block.
 
 - Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `setHeader()` method is kept in abstract `BlockBuffer class`.
 - Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
+
 :::
 
 #### Arguments
@@ -781,6 +785,7 @@ Nil
 - **This also ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
 - This function will NOT check if the block already exists in disk or not, rather will copy whatever content is there in that disk block to the buffer.
 - Only call this if the Block exists in disk already, otherwise call constructor 1 to allocate space for a new block.
+
 :::
 
 #### Algorithm
@@ -948,6 +953,7 @@ Nil
 
 - The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 - The higher layers must allocate memory for the `unsigned char` array before calling the function.
+
 :::
 
 #### Algorithm
@@ -990,6 +996,7 @@ Nil
 
 - The array of `unsigned char` to which the pointer in the argument points to should have a size equal to the size of the block's slotmap.
 - The higher layers must allocate memory for the `unsigned char` array before calling the function.
+
 :::
 
 ```cpp
@@ -1040,6 +1047,7 @@ Gives the slotNumth record entry of the block.
 
 - The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 - The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
+
 :::
 
 ```cpp
@@ -1091,6 +1099,7 @@ Sets the slotNumth record entry of the block with the input record contents.
 
 - The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
 - The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
+
 :::
 
 #### Algorithm
@@ -1292,6 +1301,7 @@ Gives the indexNumth entry of the block.
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+
 :::
 
 #### Algorithm
@@ -1337,6 +1347,7 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` method of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+
 :::
 
 #### Algorithm
@@ -1457,6 +1468,7 @@ Gives the indexNum<sup>th</sup> entry of the block.
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the _IndLeaf_ class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the `struct Index` before calling this function.
+
 :::
 
 #### Algorithm
@@ -1502,6 +1514,7 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the struct Index before calling this function.
+
 :::
 
 #### Algorithm
@@ -1555,7 +1568,7 @@ struct IndexId {
 };
 ```
 
-### compare()
+### compareAttrs()
 
 #### Description
 
@@ -1563,11 +1576,11 @@ This function compares two [`union Attribute`](#attribute) values on the basis o
 
 #### Arguments
 
-| Name     | Type                            | Description                                    |
-| -------- | ------------------------------- | ---------------------------------------------- |
-| attr1    | [`union Attribute`](#attribute) | First attribute value to be compared.          |
-| attr2    | [`union Attribute`](#attribute) | Second attribute value to be compared.         |
-| attrType | `int`                           | Type of the attribute [`NUM/STR`](/constants). |
+| Name     | Type                            | Description                                            |
+| -------- | ------------------------------- | ------------------------------------------------------ |
+| attr1    | [`union Attribute`](#attribute) | First attribute value to be compared.                  |
+| attr2    | [`union Attribute`](#attribute) | Second attribute value to be compared.                 |
+| attrType | `int`                           | Type of the attribute [`NUMBER`/`STRING`](/constants). |
 
 #### Return Values
 
@@ -1584,8 +1597,7 @@ int compare(union Attribute attr1, union Attribute attr2, int attrType) {
             return strcmp(attr1.sval, attr2.sval); */
 
     /* else if attrType == NUMBER
-          return -1, 0, 1 depending on whether the value attr1.nval is
-          less than, equal to or greater than the value attr2.nval */
+          return attr1.nval - attr2.nval */
 
 }
 ```
@@ -1594,4 +1606,5 @@ int compare(union Attribute attr1, union Attribute attr2, int attrType) {
 
 - Both the attributes given as input must be of the same type as the input type.
 - For string type, the comparision is performed with respect to _lexicographic order_.
+
 :::
