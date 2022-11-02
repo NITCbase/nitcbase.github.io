@@ -399,13 +399,12 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
     // let numOfAttributes1, numOfAttributes2 be the number of attributes in srcRelation1 and srcRelation2 respectively
     // (note: the number of attributes field is present in relation catalog entry)
 
-    // TODO: Discuss if needed
     // Next step ensures that an index exists for atleast one of the relations
     /* if both the attributes of src rels have B+ tree:
-          if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)
+          if rel1 has more records than rel2, swap srcRelation1 and srcRelation2 (and all associated variables)
         else if none of target attrs has bplus tree:
-          if rel1 has more records than rel2 swap srcrel1, srcrel2(swap srcrelname, relid, target attribute names)
-          create bplus tree on attr2 in rel2 (using create_bplus() method of bplus layer)
+          if rel1 has more records than rel2, swap srcRelation1 and srcRelation2 (and all associated variables)
+          create bplus tree on attr2 in rel2 (using BPlusTree:bPlusCreate())
           If create fails return E_DISKFULL
     */
 

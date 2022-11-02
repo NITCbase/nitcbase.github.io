@@ -761,6 +761,45 @@ int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
 }
 ```
 
+### AttrCacheTable :: resetSearchIndex
+
+#### Description
+
+Resets the value of `searchIndex` field of the given attribute in the specified relation from _Attribute Cache_ Table to `{-1, -1}`. This is used so that the B+ tree search can be restarted from the root.
+
+:::caution note
+
+- This method is overloaded in type of the second argument
+
+:::
+
+#### Arguments
+
+| Name                  | Type                               | Description                                                    |
+| --------------------- | ---------------------------------- | -------------------------------------------------------------- |
+| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table |
+| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                        |
+
+#### Return Values
+
+| Value                          | Description                                                                                                                                  |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+
+#### Algorithm
+
+```cpp
+int AttrCacheTable::resetSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset) {
+
+    // declare an IndexId having value {-1, -1}
+    // set the search index to {-1, -1} using AttrCacheTable::setSearchIndex
+    // return the value returned by setSearchIndex
+}
+```
+
 ### AttrCacheTable :: recordToAttrCacheEntry
 
 #### Description

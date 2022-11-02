@@ -104,7 +104,6 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
     // Start from the record id (block, slot) and iterate over the remaining records of the relation
     while (block != -1)
     {
-
         // create a RecBuffer object for block (use RecBuffer Constructor for existing block)
 
         // get the record with id (block, slot) using RecBuffer::getRecord() function
@@ -124,10 +123,6 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
             // increment slot and continue to the next record slot
         }
 
-        // let cond be a variable of int type
-        // it will store if the given condition is satisfied based on the comparison
-
-
         // compare record's attribute value to the the given attrVal as below:
         /*
             firstly get the attribute offset for the attrName attribute
@@ -135,11 +130,8 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
         */
         // use the attribute offset to get the value of the attribute from current record
 
-        int cmpVal = // difference between the record's attribute value and attrVal
-            // If attribute is a STRING, use strcmp
-            // If attribute is a NUMBER, subtract the values
-
-        // set cond = UNSET
+        int cmpVal;  // will store the difference between the attributes
+        // set cmpVal using compareAttrs()
 
         // Next task is to check whether this record satisfies the given condition.
         // It is determined based on the output of previous comparison and the op value received.
@@ -152,11 +144,6 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
             (op == GT && cmpVal > 0) ||     // if op is "greater than"
             (op == GE && cmpVal >= 0)       // if op is "greater than or equal to"
         ) {
-            // SET the cond variable (i.e. cond = SET)
-        }
-
-
-        if (cond == SET) {
             /*
             set the search index in the relation cache as
             the record id of the record that satisfies the given condition
@@ -218,7 +205,7 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
         // (index exists for the attribute)
 
         // search for the record id (recid) correspoding to the attribute with attribute name attrName and with value attrval
-        // recid = bplus_search(relId, attrName, attval, op);
+        // and satisfying the condition op using BPlusTree::bPlusSearch()
     }
 
 
@@ -372,13 +359,14 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
         // if index exists for the attribute(i.e. rootBlock != -1)
         {
-            // TODO: Update once BPlus Layer algorithms are completed
-            // BPlusTree bPlusTree = BPlusTree(relId, attrName);
-            // int retVal = bPlusTree.bPlusInsert(record[attrOffset], rec_id);
-            // if (retVal == E_DISKFULL) {
-            // delete the b+ tree for the attribute using ? function
+            /* insert the new record into the attribute's bplus tree using
+             BPlusTree::bPlusInsert()*/
+            int retVal = BPlusTree::bPlusInsert(relId, attrCatEntry.attrName, record[attrOffset], rec_id);
 
-            // flag = E_INDEX_BLOCKS_RELEASED
+            if (retVal == E_DISKFULL) {
+                //(index for this attribute has been destroyed)
+                // flag = E_INDEX_BLOCKS_RELEASED
+            }
         }
     }
 
@@ -637,8 +625,7 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
 
         // if index exists for the attribute (rootBlock != -1), call bplus destroy
         if (rootBlock != -1) {
-            // TODO update after bplus
-            // bplus_destroy(rootBlock);
+            // delete the bplus tree rooted at rootBlock using BPlusTree::bPlusDestroy()
         }
     }
 
