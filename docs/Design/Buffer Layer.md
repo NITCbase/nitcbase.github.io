@@ -1596,7 +1596,7 @@ int compare(union Attribute attr1, union Attribute attr2, int attrType) {
     /* 	if attrType == STRING
             return strcmp(attr1.sval, attr2.sval); */
 
-    /* else if attrType == NUMBER
+    /* else
           return attr1.nval - attr2.nval */
 
 }

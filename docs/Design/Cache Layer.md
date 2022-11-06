@@ -906,7 +906,7 @@ Nil
 ```cpp
 OpenRelTable::OpenRelTable() {
 
-    // initialize tableMetaInfo of all the entries of the Open Relation Table with free as true and relName as an empty string.
+    // initialize tableMetaInfo of all the entries of the Open Relation Table with free as true and relName as an empty string. also set all entries in AttrCacheTable::attrCache to nullptr
 
     /************ Setting up Relation Catalog relation in the cache ************/
 

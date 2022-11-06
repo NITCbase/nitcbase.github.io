@@ -9,17 +9,17 @@ The constants used by various algorithms in NITCbase documentation are listed in
 #define NITCBASE_CONSTANTS_H
 
 // Path to disk
-#define DISK_PATH "../Disk/disk"
+#define DISK_PATH "Disk/disk"
 // Path to run copy of the disk
-#define DISK_RUN_COPY_PATH "../Disk/disk_run_copy"
+#define DISK_RUN_COPY_PATH "Disk/disk_run_copy"
 // Path to Files directory
-#define Files_Path "../Files/"
+#define Files_Path "Files/"
 // Path to Input_Files directory inside the Files directory
-#define INPUT_FILES_PATH "../Files/Input_Files/"
+#define INPUT_FILES_PATH "Files/Input_Files/"
 // Path to Output_Files directory inside the Files directory
-#define OUTPUT_FILES_PATH "../Files/Output_Files/"
+#define OUTPUT_FILES_PATH "Files/Output_Files/"
 // Path to Batch_Execution_Files directory inside the Files directory
-#define BATCH_FILES_PATH "../Files/Batch_Execution_Files/"
+#define BATCH_FILES_PATH "Files/Batch_Execution_Files/"
 
 // Size of Block in bytes
 #define BLOCK_SIZE 2048
@@ -111,6 +111,10 @@ The constants used by various algorithms in NITCbase documentation are listed in
 // Not equal to
 #define NE 106  // if considered
 
+// project operator used for project operation
+// todo remove this: only used in xfs
+#define PRJCT 107
+
 // Data types
 // For an Integer or a Floating point number
 #define NUMBER 0
@@ -190,9 +194,6 @@ The constants used by various algorithms in NITCbase documentation are listed in
 #define ATTRCAT_ATTR_PRIMARY_FLAG "PrimaryFlag"
 #define ATTRCAT_ATTR_ROOT_BLOCK "RootBlock"
 #define ATTRCAT_ATTR_OFFSET "Offset"
-
-#define SET 1
-#define UNSET 0
 
 #endif  // NITCBASE_CONSTANTS_H
 ```
