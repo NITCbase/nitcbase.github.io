@@ -103,7 +103,7 @@ const config = {
 					},
 					{
 						type: "doc",
-						docId: "Misc/Indexing",
+						docId: "Misc/Installation Guidelines",
 						position: "left",
 						label: "Miscellaneous",
 					},

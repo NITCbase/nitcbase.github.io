@@ -5,7 +5,7 @@ tags:
   - introduction
 ---
 
-NITCbase supports two user interfaces namely, [XFS Interface](../Misc/XFS%20Interface/introduction.md) and [Frontend Interface](../Design/Frontend.md). The commands supported by the two interfaces fall into the following **four** categories:
+NITCbase supports two user interfaces namely, [XFS Interface](../Misc/XFS%20Interface.md) and [Frontend Interface](../Design/Frontend.md). The commands supported by the two interfaces fall into the following **four** categories:
 
 1. [Data Definition Language(DDL) Commands ](./ddl.md)
 2. [Data Manipulation Language(DML) Commands](./dml.md)

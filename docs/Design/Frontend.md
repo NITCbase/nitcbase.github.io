@@ -39,8 +39,6 @@ All the above command documents are linked to various sections of the [NITCbase 
 
 Among the above commands, the script command `run` helps the user to execute a sequence of commands from a file - hence translating them into a sequence of calls to other commands supported by Frontend interface. The echo command simply echoes back the message typed in by the user back to the console. **The translation and execution of lower layer method calls corresponding to these script commands have already been implemented and provided to you**. Hence further documentation for Frontend Class focusses only on the specifications for DDL and DML commands.
 
-For installation and setup of frontend user interface follow the instructions [given here](../Misc/XFS%20Interface/Installation%20Guidelines.md#frontend-interface-setup).
-
 ## Frontend Programming Interface
 
 Frontend programming interface sub-module is implemented as a C++ Class called `Frontend`. The code for the same is available in `Frontend.cpp` file. Methods of this class are invoked corresponding to each command given as input to the Frontend user interface sub-module.

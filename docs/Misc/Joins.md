@@ -1,5 +1,6 @@
 ---
 title: "Joins"
+sidebar_position: 6
 ---
 
 # Joins
