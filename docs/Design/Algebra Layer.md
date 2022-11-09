@@ -5,6 +5,12 @@ title: "Algebra Layer"
 
 https://nitcbase.github.io/archived-site/design/algebra.html
 
+:::caution PREREQUISITE READING
+
+- [Joins](../Misc/Joins.md)
+
+:::
+
 ## Layout
 
 The Front End parses SQL-Like queries and converts them into a sequence of algebra layer and schema layer method calls.
@@ -14,11 +20,11 @@ _Retrieval functions will create a **target relation** into which the retrieved 
 The functions of the Algebra layer are:
 
 1. [**Insert**](#insert)
-2. [**Project**](#select)
-3. [**Select**](#project)
+2. [**Project**](#project)
+3. [**Select**](#select)
 4. [**Join**](#join)
 
-The _Join_ function of NITCbase supports only [Equi-Join](<https://en.wikipedia.org/wiki/Join_(SQL)#Equi-join>) of the two relations. NITCbase follows an Object-Oriented design for Algebra Layer. The class definition is as shown below:
+NITCbase follows an Object-Oriented design for Algebra Layer. The class definition is as shown below:
 
 ## class Algebra
 
@@ -115,8 +121,6 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 
                 // if ch == null character(i.e. '\0') exit the loop
 
-                // if ch is an invalid character return E_NOTPERMITTED;
-                // (check this using isInvalidCharacter() function)
             }
             // copy record[i] to recordValues[i].sVal
         }
@@ -435,6 +439,12 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
 This function creates a new target relation with _attributes constituting from both the source relations (excluding the specified join-attribute from the second source relation)_. It inserts the records obtained by **_Equi-join_** of both the source relations into the target relation. An attribute from each relation specified in arguments is used for _equi-join called the join-attributes._
 
+:::info NOTE
+
+The resulting relation will have columns ordered such that all the columns of `srcRelOne` come first followed by the columns of `srcRelTwo` excluding the join attribute `attrTwo`.
+
+:::
+
 #### Arguments
 
 | **Attribute** | **Type**           | **Description**                   |
@@ -455,6 +465,7 @@ This function creates a new target relation with _attributes constituting from b
 | [`E_ATTRNOTEXIST`](/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
 | [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                        |
 | [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| [`E_DUPLICATEATTR`](/constants)    | If there are duplicate attribute names between srcrel1 and srcrel2 aside from the join attributes.                    |
 | [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                                |
 
 #### Algorithm
@@ -486,18 +497,8 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
     // let numOfAttributes1, numOfAttributes2 be the number of attributes in srcRelation1 and srcRelation2 respectively
     // (note: the number of attributes field is present in relation catalog entry)
 
-    // Next step ensures that an index exists for atleast one of the relations
-    /* if both the attributes of src rels have B+ tree:
-          if rel1 has more records than rel2, swap srcRelation1 and srcRelation2 (and all associated variables)
-        else if none of target attrs has bplus tree:
-          if rel1 has more records than rel2, swap srcRelation1 and srcRelation2 (and all associated variables)
-          create bplus tree on attr2 in rel2 (using BPlusTree:bPlusCreate())
-          If create fails return E_DISKFULL
-        else if only rel1 has a b+ tree
-          swap srcRelation1 and srcRelation2 (and all associated variables)
-    */
-
-    // NOTE: rel2 has a b+ tree on it's attribute now.
+    // if rel2 does not have an index on attr2
+    //   create it using BPlusTree:bPlusCreate()
 
     // let numOfAttributesInTarget = numOfAttributes1 + numOfAttributes2 - 1
     // let targetRelAttrNames[numOfAttributesInTarget][ATTR_SIZE] be an array of type char
@@ -558,6 +559,8 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
 }
 ```
 
+---
+
 ## Miscellaneous
 
 Given below are the definitions of two functions which have been used in this layer for validation of various inputs.
@@ -597,36 +600,5 @@ bool isNumber(char *str) {
     */
     int ret = sscanf(str, "%f %n", &ignore, &len);
     return ret == 1 && len == strlen(str);
-}
-```
-
-### isInvalidCharacter()
-
-#### Description
-
-This function takes a character and checks if it is allowed as part of a record value.
-
-#### Arguments
-
-| Name      | Type   | Description                 |
-| --------- | ------ | --------------------------- |
-| character | `char` | The character to be checked |
-
-#### Return Values
-
-| Value | Description                                 |
-| ----- | ------------------------------------------- |
-| true  | character is allowed in a record value.     |
-| false | character is not allowed in a record value. |
-
-```cpp
-bool isInvalidCharacter(char character) {
-    // check if the character satisfies any of the below conditions
-    // '0' <= character <= '9'
-    // 'A' <= character <= 'Z'
-    // 'a' <= character <= 'z'
-    // character = '-'
-    // character = '_'
-    // and return true. else return false
 }
 ```

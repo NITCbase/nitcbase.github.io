@@ -25,7 +25,6 @@ The functions of Schema layer include:
 6. [**deleteIndex**](#schema--dropindex)
 7. [**openRel**](#schema--openrel)
 8. [**closeRel**](#schema--closerel)
-9. [**getSchema**](#schema--getschema) - YET TO BE DESIGNED
 
 The method `openRel` is used to the open a relations for access, `closeRel` to close a relation and `getSchema` to get the schema of the relation. NITCbase follows an Object-Oriented design for Schema Layer. The class definition is as shown below:
 
@@ -42,6 +41,7 @@ public:
     static int renameAttr(char relName[ATTR_SIZE], char oldAttrName[ATTR_SIZE], char newAttrName[ATTR_SIZE]);
     static int openRel(char relName[ATTR_SIZE]);
     static int closeRel(char relName[ATTR_SIZE]);
+    static int getSchema(char relName[ATTR_SIZE], AttrCatEntry** attributesPtr, int* numAttrsPtr);
 };
 ```
 
@@ -211,7 +211,7 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
     // get the relation's open relation id using OpenRelTable::getRelId() method
 
     // if relation is not open in open relation table, return E_RELNOTOPEN
-    // (check if the value returned from getRelationId function call = E_RELNOTOPEN)
+    // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
     // create a bplus tree using BPlusTree::bPlusCreate() and return the value
     // return BPlusTree::bPlusCreate();
@@ -238,7 +238,7 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 | Value                          | Description                                                   |
 | ------------------------------ | ------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the B+ tree                         |
-| [`E_RELOPEN`](/constants)      | If the relation is open.                                      |
+| [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                  |
 | [`E_ATTRNOTEXIST`](/constants) | If the attribute with name attrName does not exist.           |
 | [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. |
 
@@ -251,7 +251,8 @@ int Schema::dropIndex(char *relName, char *attrName) {
         // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
     // get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
 
-    // if relation is opened in open relation table, return E_RELOPEN
+    // if relation is not open in open relation table, return E_RELNOTOPEN
+    // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
     // store the relName as an attribute in relNameAttr
     Attribute relNameAttr;
@@ -449,16 +450,10 @@ int closeRel(char relName[ATTR_SIZE]) {
     // get the relation's open relation id using OpenRelTable::getRelationId() method
 
     // if relation is not open in open relation table, return E_RELNOTOPEN
-    // (check if the value returned from getRelationId function call = E_RELNOTOPEN)
+    // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
     // close the relId'th relation using OpenRelTable::closeRelation(relId) of Cache Layer
     // let the return value be retVal
     // return retVal;
 }
 ```
-
----
-
-## Schema :: getSchema()
-
-YET TO BE DESIGNED
