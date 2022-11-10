@@ -63,14 +63,14 @@ This method **inserts the given record** into the specified Relation. Insertion 
 
 #### Return values
 
-| **Value**                          | **Description**                                                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                  |
-| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                                |
-| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                      |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.         |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                            |
-| [`E_NOTPERMITTED`](/constants)     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                          | **Description**                                                                                                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                                                                  |
+| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                                                                                |
+| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                                                                      |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.                                                         |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                                                                            |
+| [`E_NOTPERMITTED`](/constants)     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. Or if the attribute contains invalid characters |
 
 #### Algorithm
 
@@ -121,6 +121,8 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
 
                 // if ch == null character(i.e. '\0') exit the loop
 
+                // if ch is an invalid character return E_NOTPERMITTED;
+                // (check this using isInvalidCharacter() function)
             }
             // copy record[i] to recordValues[i].sVal
         }
@@ -600,5 +602,36 @@ bool isNumber(char *str) {
     */
     int ret = sscanf(str, "%f %n", &ignore, &len);
     return ret == 1 && len == strlen(str);
+}
+```
+
+### isInvalidCharacter()
+
+#### Description
+
+This function takes a character and checks if it is allowed as part of a record value.
+
+#### Arguments
+
+| Name      | Type   | Description                 |
+| --------- | ------ | --------------------------- |
+| character | `char` | The character to be checked |
+
+#### Return Values
+
+| Value | Description                                 |
+| ----- | ------------------------------------------- |
+| true  | character is allowed in a record value.     |
+| false | character is not allowed in a record value. |
+
+```cpp
+bool isInvalidCharacter(char character) {
+    // check if the character satisfies any of the below conditions
+    // '0' <= character <= '9'
+    // 'A' <= character <= 'Z'
+    // 'a' <= character <= 'z'
+    // character = '-'
+    // character = '_'
+    // and return true. else return false
 }
 ```
