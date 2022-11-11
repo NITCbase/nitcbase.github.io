@@ -78,11 +78,8 @@ public:
                                          char attrname_to[ATTR_SIZE]);
 
     // Data Manipulaiton Language (DML) Commands
-    static int insert_into_table_from_file(char relname[ATTR_SIZE],
-                                           char filepath[ATTR_SIZE]);
-
     static int insert_into_table_values(char relname[ATTR_SIZE],
-                                        vector<string> attr_values);
+                                        int attr_count, char attr_values[][ATTR_SIZE]);
 
     static int select_from_table(char relname_source[ATTR_SIZE],
                                  char relname_target[ATTR_SIZE]);
@@ -162,9 +159,9 @@ int Frontend::create_table(char relname[ATTR_SIZE],
                            char attributes[][ATTR_SIZE],
                            int type_attrs[]) {
 
-    // TODO: Call createRel() method of the Schema Layer with correct arguments
+    // Call createRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 
 }
 ```
@@ -197,9 +194,9 @@ int Frontend::create_table(char relname[ATTR_SIZE],
 
 ```cpp
 int Frontend::drop_table(char relname[ATTR_SIZE]) {
-    // TODO: Call deleteRel() method of the Schema Layer with correct arguments
+    // Call deleteRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -230,9 +227,9 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 ```cpp
 int Frontend::open_table(char relname[ATTR_SIZE]) {
-    // TODO: Call openRel() method of the Schema Layer with correct arguments
+    // Call openRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -263,9 +260,9 @@ int Frontend::open_table(char relname[ATTR_SIZE]) {
 
 ```cpp
 int Frontend::close_table(char relname[ATTR_SIZE]) {
-    // TODO: Call closeRel() method of the Schema Layer with correct arguments
+    // Call closeRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -300,9 +297,9 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 
 ```cpp
 int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
-    // TODO: Call createInd() method of the Schema Layer with correct arguments
+    // Call createIndex() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -336,9 +333,9 @@ int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
 
 ```cpp
 int drop_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
-    // TODO: Call deleteRel() method of the Schema Layer with correct arguments
+    // Call dropIndex() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -374,9 +371,9 @@ char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]
 
 ```cpp
 int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]) {
-    // TODO: Call renameRel() method of the Schema Layer with correct arguments
+    // Call renameRel() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -413,9 +410,9 @@ int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[A
 ```cpp
 int Frontend::alter_table_rename_column(char relname[ATTR_SIZE], char attrname_from[ATTR_SIZE],
                                         char attrname_to[ATTR_SIZE]) {
-    // TODO: Call renameAttr() method of the Schema Layer with correct arguments
+    // Call renameAttr() method of the Schema Layer with correct arguments
 
-    // TODO: Return Success and Error values appropriately
+    // Return Success and Error values appropriately
 }
 ```
 
@@ -452,45 +449,9 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE],
   vector<string> attr_values) {
 
 
-    // TODO: Call insert() method of the Algebra Layer with correct arguments
+    // Call insert() method of the Algebra Layer with correct arguments
 
-    // TODO: Return Success or Error values appropriately
-
-}
-```
-
----
-
-### Frontend :: insert_into_table_from_file()
-
-#### Description
-
-- The `INSERT INTO TABLE FROM FILE` command is translated to this method call.
-- This method is used to insert multiple records into the relation from a csv file containing the values for the corresponding attributes. The order of values in the csv file must be the same as the attributes of the relation. Each line in the csv file corresponds to a record to be inserted in to the relation.
-
-#### Arguments
-
-| Attribute   | Type              | Description                                                                            |
-| ----------- | ----------------- | -------------------------------------------------------------------------------------- |
-| relname     | `char[ATTR_SIZE]` | Name of the relation into which insert operation has to be performed                   |
-| attr_values | `vector<string>`  | Vector of type string, whose each string contains value of the corresponding attribute |
-
-#### Return Values
-
-| Value             | Description                                                |
-| ----------------- | ---------------------------------------------------------- |
-| SUCCESS           | Indicating successful insertion of all records in the file |
-| E_RELNOTOPEN      | If the relation is not open                                |
-| E_FILEFORMATERROR | If the CSV file is not in the correct format               |
-
-#### Algorithm
-
-```cpp
-int Frontend::insert_into_table_from_file(char relname[ATTR_SIZE], char filepath[ATTR_SIZE]) {
-
-    // TODO: Call insert() method of the Algebra Layer with correct arguments
-
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 
 }
 ```
@@ -527,9 +488,9 @@ int Frontend::insert_into_table_from_file(char relname[ATTR_SIZE], char filepath
 ```cpp
 int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_target[ATTR_SIZE]) {
 
-    // TODO: Call insert() method of the Algebra Layer with correct arguments
+    // Call project() method of the Algebra Layer
 
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 
 }
 ```
@@ -573,9 +534,9 @@ int attr_count,
 char attr_list[][ATTR_SIZE]) {
 
 
-    // TODO: Call project() method of the Algebra Layer with correct arguments
+    // Call project() method of the Algebra Layer
 
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 
 }
 ```
@@ -620,9 +581,9 @@ char relname_target[ATTR_SIZE],
 char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 
 
-    // TODO: Call select() method of the Algebra Layer with correct arguments
+    // Call select() method of the Algebra Layer with correct arguments
 
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 
 }
 ```
@@ -668,15 +629,15 @@ nt Frontend::select_attrlist_from_table_where(
     char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 
 
-    // TODO: Step 1- Call select() method of the Algebra Layer with correct arguments to create a temporary target relation with name "temp".
-    // "temp" results from the select operation on the source relation (and hence it contains all attributes of the source relations)
+    // Step 1- Call select() method of the Algebra Layer with correct arguments to create a temporary target relation with name ".temp".
+    // ".temp" results from the select operation on the source relation (and hence it contains all attributes of the source relations)
 
-    // TODO: Return Error values, if not successful
+    // Return Error values, if not successful
 
-    // TODO: Step 2- Call project() method of the Algebra Layer with correct arguments to create the actual target relation from the "temp" relation.
+    // Step 2- Call project() method of the Algebra Layer with correct arguments to create the actual target relation from the ".temp" relation.
     // The final target relation contains only those attributes mentioned in attr_list)
 
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 }
 ```
 
@@ -722,10 +683,9 @@ int Frontend::select_from_join_where(char relname_source_one[ATTR_SIZE],
 char relname_source_two[ATTR_SIZE], char relname_target[ATTR_SIZE],
 char join_attr_one[ATTR_SIZE], char join_attr_two[ATTR_SIZE]) {
 
+    // Call join() method of the Algebra Layer with correct arguments
 
-    // TODO: Call join() method of the Algebra Layer with correct arguments
-
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 
 }
 ```
@@ -773,14 +733,14 @@ int Frontend::select_attrlist_from_join_where(
     char relname_target[ATTR_SIZE], char join_attr_one[ATTR_SIZE],
     char join_attr_two[ATTR_SIZE], int attr_count, char attr_list[][ATTR_SIZE]) {
 
-    // TODO: Step 1- Call join() method of the Algebra Layer with correct arguments to create a temporary target relation with name "temp".
-    // "temp" results from the join of the two source relation (and hence it contains all attributes of the source relations except the join attribute of the second source relation)
+    // Step 1- Call join() method of the Algebra Layer with correct arguments to create a temporary target relation with name ".temp".
+    // ".temp" results from the join of the two source relation (and hence it contains all attributes of the source relations except the join attribute of the second source relation)
 
-    // TODO: Return Error values, if not successful
+    // Return Error values, if not successful
 
-    // TODO: Step 2- Call project() method of the Algebra Layer with correct arguments to create the actual target relation from the "temp" relation.
+    // Step 2- Call project() method of the Algebra Layer with correct arguments to create the actual target relation from the ".temp" relation.
     // The final target relation contains only those attributes mentioned in attr_list)
 
-    // TODO: Return Success or Error values appropriately
+    // Return Success or Error values appropriately
 }
 ```
