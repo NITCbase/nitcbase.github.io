@@ -5,12 +5,6 @@ title: "Algebra Layer"
 
 https://nitcbase.github.io/archived-site/design/algebra.html
 
-:::caution PREREQUISITE READING
-
-- [Joins](../Misc/Joins.md)
-
-:::
-
 ## Layout
 
 The Front End parses SQL-Like queries and converts them into a sequence of algebra layer and schema layer method calls.
@@ -444,6 +438,8 @@ This function creates a new target relation with _attributes constituting from b
 :::info NOTE
 
 The resulting relation will have columns ordered such that all the columns of `srcRelOne` come first followed by the columns of `srcRelTwo` excluding the join attribute `attrTwo`.
+
+An example for the join operation can be seen [here](../User%20Interface%20Commands/dml.md#select--from-join-where).
 
 :::
 
