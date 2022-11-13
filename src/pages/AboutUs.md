@@ -28,4 +28,4 @@ The content in the website and the documentation has been authored in the [Depar
 
 |                   👤 Team Members                   |
 | :-------------------------------------------------: |
-| [Cliford Joshy](https://www.clifordjoshy.github.io) |
+| [Cliford Joshy](https://clifordjoshy.github.io) |

@@ -1,34 +1,22 @@
 ---
 sidebar_position: 4
-title: "External File System Commands"
-tags:
-  - External
-  - Commands
-  - File
-  - System
-  - fdisk
-  - run
-  - import
-  - export
-  - dump
-  - exit
-  - ls
-  - XFS
+title: "XFS Commands"
 ---
 
-The External File System commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the NITCbase disk to a UNIX file. These commands are only available for the XFS Interface. The following are the External File System commands supported by NITCBase.
+The XFS commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the NITCbase disk to a UNIX file. These commands are only available for the XFS Interface. The following are the XFS commands supported by NITCBase.
 
 ### Format Disk
 
 #### Description
 
-This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCBase. The disk is simulated on a binary file called `disk` which is located at `$HOME/NITCBase/Disk/` once it is created.
+This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCBase. The disk is simulated on a binary file called `disk` which is located at `Disk/` once it is created.
 
 :::note Important Details
 
 - The **first four blocks of the disk** is used for storing the Block Allocation Map and hence _the first 4 entries in the Block Allocation Map is marked as occupied during the initialization of the disk._
 - Blocks 4 and 5 used for storing relation catalog and attribute catalog are also marked as `REC` type in the newly initialized Block Allocation Map as part of the fdisk routine.
-  :::
+
+:::
 
 #### Syntax
 
@@ -42,15 +30,15 @@ fdisk
 
 This command is used to load relations from the UNIX filesystem to the NITCbase disk. The argument `filename` specifies the name of the [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) (Comma Separated Values) file which contains the contents of the relation to be uploaded. The file names should **not** contain `whitespaces` or any special characters except `-` or `_`. The command checks the size of the relation in the [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) file, allocates the required number of blocks for the relation, updates the `Block allocation map`, `Relation catalog` and `Attribute catalog`.
 
-#### File Fromat
+#### File Format
 
 The records to be added in the relation must be in a [CSV](https://en.wikipedia.org/wiki/Comma-separated_values) file.
 The CSV file **must follow** the following format:
 
 - The first line must contain the names of the attributes of the relation separated by commas.
-- Second line onwards records are specified as _comma-seperated attribute values_, in the **same order** as the attrbiutes listed in the first line.
+- Second line onwards records are specified as _comma-seperated attribute values_, in the **same order** as the attributes listed in the first line.
 - Only **one record is allowed per line.**
-- The CSV file must be stored in the path `NITCBase/Files/Input_Files`.
+- The CSV file must be stored in the path `Files/Input_Files`.
 
 #### Syntax
 
@@ -65,29 +53,53 @@ import filename
 - First **15 characters of name of file is taken as the relation name**. Similarly, only the first 15 characters of attributes listed in first line of the CSV file is taken as the name for each attribute.
 - The CSV file **should not contain any null values.**
 - If a relation with the same name as that of the CSV file already exists, then the import will _fail, without any changes to disk._
-- All files to be imported should be stored in the path `NITCBase/Files/Input_Files`.
+- All files to be imported should be stored in the path `Files/Input_Files`.
 - The _order of attribute values in each line of the CSV file must be same as that of the attributes of the relation._
 - The number of attribute values in each row should match the number of attributes specified in the first line of the file.
 - The types of attribute values in each row should match the attribute types inferred from the second line of the file.
 - All attribute names of the relation must be unique.
-  :::
+
+:::
 
 :::note Example
 
 Consider the sample `Students.csv` file:
 
-```c title="/Files/Students.csv"
+`Files/Input_Files/Students.csv"
 No,Name,Cgpa
 3,Sunny,8.2
 5,Sania,6.0
 7,Ralph,7.5
-```
 
-`import sample.csv` command will import relation `Students` into the disk
+```
+`import Students.csv` command will import relation `Students` into the disk
 
 The first line in the CSV file represents the list of attributes in the relation which in this case are No, Name, Cgpa.
 The datatypes of the attributes are determined from the values of the attributes in the second line.
 An attribute can be an a number or a string. In this example the datatypes will be number, string and number respectively.
+```
+
+:::
+
+### Show Schema
+
+#### Description
+
+This command is used to view the schema of a relation from XFS / NITCbase disk. All the attributes of the relation as well as their type and whether they have an index is printed to the console.
+
+#### Syntax
+
+```bash
+schema tablename
+```
+
+:::note Example
+
+To see the schema of a relation `Students` present in the NITCbase disk, execute the following command:
+
+```bash
+schema Students
+```
 
 :::
 
@@ -95,7 +107,7 @@ An attribute can be an a number or a string. In this example the datatypes will 
 
 #### Description
 
-This command is used to export a relation from XFS / NITCbase disk to UNIX file system. All the records corresponding to the relation `tablename` are written to a CSV file named `filename.csv`, located at the following path: `$HOME/NITCBase/Files/`
+This command is used to export a relation from XFS / NITCbase disk to UNIX file system. All the records corresponding to the relation `tablename` are written to a CSV file named `filename.csv`, located at `Files/Output_Files`
 
 #### Syntax
 
@@ -107,11 +119,12 @@ export tablename filename
 
 - The file to which output is to be written must be a CSV file.
 - The file names should not contain `whitespaces` or any special characters except `-` or `_`.
-  :::
+
+:::
 
 :::note Example
 
-To export a relation `Students` present in the NITCbase disk to a CSV file (named `Marks.csv` located at `$HOME/NITCBase/Files/` directory),
+To export a relation `Students` present in the NITCbase disk to a CSV file (named `Marks.csv` located at `Files/Output_Files` directory),
 execute the following command:
 
 ```bash
@@ -136,7 +149,7 @@ ls
 
 #### Description
 
-This command is used to dump the contents of the `Block allocation map` into an external file named `block_allocation_map.txt` located at the following path: `$HOME/NITCBase/Files/`.
+This command is used to dump the contents of the `Block allocation map` into an external file named `block_allocation_map.txt` located at 'Files/Output_Files`.
 
 #### Syntax
 
@@ -148,7 +161,7 @@ dump bmap
 
 #### Description
 
-This command is used to copy the contents of `Relation catalog` to an external file named `relation_catalog.txt` located at the following path: `$HOME/NITCBase/Files/`.
+This command is used to copy the contents of `Relation catalog` to an external file named `relation_catalog.txt` located at `Files/Output_Files`.
 
 #### Syntax
 
@@ -160,7 +173,7 @@ dump relcat
 
 #### Description
 
-This command is used to copy the contents of `Attribute catalog` to an external file named `attribute_catalog.txt` located at the following path: `$HOME/NITCBase/Files/`.
+This command is used to copy the contents of `Attribute catalog` to an external file named `attribute_catalog.txt` located at `Files/Output_Files`.
 
 #### Syntax
 
@@ -221,7 +234,8 @@ LEVEL 2
 
 > The tree is printed in a level-order manner.
 > In the above B+ tree, `40` is the root node and it's left and right child nodes are `10,20` and `55,65` respectively
-> :::
+
+:::
 
 :::caution
 In the above example, output shown is for a B+ tree which allows that maximum `4` keys in the internal node and maximum `3` keys in the leaf nodes. In NITCbase B+ tree design, maximum `100` keys are allowed in the internal node and maximum `63` keys are allowed in the leaf node.

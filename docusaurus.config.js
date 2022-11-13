@@ -28,6 +28,7 @@ const config = {
 					sidebarPath: require.resolve("./sidebars.js"),
 					remarkPlugins: [math],
 					rehypePlugins: [katex],
+					breadcrumbs: false
 				},
 				blog: {
 					showReadingTime: false,
@@ -89,12 +90,6 @@ const config = {
 						position: "left",
 						label: "Roadmap",
 					},
-					// {
-					// 	type: "doc",
-					// 	docId: "XFS Interface/introduction",
-					// 	position: "left",
-					// 	label: "XFS Interface",
-					// },
 					{
 						type: "doc",
 						docId: "User Interface Commands/introduction",
@@ -108,8 +103,8 @@ const config = {
 						label: "Miscellaneous",
 					},
 					{
-						label: "TODO(Work left)",
-						to: "TODO",
+						label: "Feedback",
+						to: "feedback",
 						position: "right",
 					},
 					{

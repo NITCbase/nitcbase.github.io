@@ -11,7 +11,7 @@ import TabItem from '@theme/TabItem';
 ## Setup
 
 :::info
-The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the environment setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](./DockerSetup.md). 
+The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the environment setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](./DockerSetup.md).
 Note: Windows installation of docker requires WSL2.
 :::
 The following are the instructions for installation in linux/unix environments:

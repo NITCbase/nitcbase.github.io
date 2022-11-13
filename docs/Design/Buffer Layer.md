@@ -1543,7 +1543,8 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](Cache%20Layer.md), [Block access layer](Block%20Access%20Layer.md) and [B+ tree](B+%20Tree%20Layer.md) layer, to name a few.
 
 :::note
-The code for RecId class and IndexId class can be found in the `id.h` file defined inside `define/` directory, **[the code for which can be can be found here.](/idHeader)**
+The code for RecId struct and IndexId struct can be found in the `id.h` file defined inside `define/` directory.
+
 :::
 
 ### RecId
