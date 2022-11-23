@@ -96,12 +96,12 @@ Notable directories / files include:
 - `XFS_Interface/` : Contains the source files for the xfs interface. Once built succesfully, the `xfs-interface` executable will be present here.
 - `mynitcbase` : This is the folder where you'll be working in to implement all the layers of NITCbase. The corresponding folders should be present inside.
 - `mynitcbase/Disk_Class/` : contains the `Disk.cpp` file which encompasses the Disk Class described in the Physical Layer. Students should **only** use the Disk Class Object instantiation for doing disk access (read & write and create & destroy)
+- `mynitcbase/Frontend_Interface` : contains the full implementation of the frontend interface which is responsible for receiving commands from the user and calling the appropriate method in the `Frontend` class.
 - `mynitcbase/define/` : contains the global constants.
 - `Files/`: Within this folder, three sub-directories can be found:
   - `/Batch_Execution_FIles` - files taken as input by `run` command is organized and fetched from here (run files).
   - `/Input_Files` - Input data files for commands like `import`, `insert from file` etc. are organized and fetched from here.
-  - `/Output_Fies` - Output data files generated from `dump` and `export` are organized and placed here.
-  - TODO frontend interface stuff too
+  - `/Output_Files` - Output data files generated from `dump` and `export` are organized and placed here.
 
 :::note
 We can use sub-directories within `/Files/Batch_Execution_Files` to organize the run files. In that case, `run folder_name/run_file` format can be used.

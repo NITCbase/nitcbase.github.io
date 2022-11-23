@@ -1,11 +1,11 @@
 ---
 sidebar_position: 2
-title: "Stage 0 : System Setup"
+title: "Stage 0 : Installation and Preparation"
 ---
 
 :::info Learning Objectives
 
-At the end of this experiment, you will learn how to set up and understand the environment to build NITCbase.
+At the end of this experiment, you will have setup the environment to build NITCbase. You will also have grasped a basic understanding of how to use the XFS Interface and the [GNU Debugger(gdb)](https://www.sourceware.org/gdb/) for the purposes of implementing NITCbase.
 
 :::
 
