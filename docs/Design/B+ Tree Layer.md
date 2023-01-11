@@ -285,12 +285,12 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
     // load the header of newRightBlk in newRightBlkHeader using BlockBuffer::getHeader().
 
-    /*update number of entries in newRightBlkHeader as MAX_KEYS_LEAF/2,
+    /*update number of entries in newRightBlkHeader as (MAX_KEYS_LEAF+1)/2,
         pblock as the pblock of leftBlk, lblock as leftBlkNum and its
         rblock as the rblock of leftBlk
         and set the header of newRightBlk using BlockBuffer::setHeader()*/
 
-    /*update number of entries in leftBlkHeader as MAX_KEYS_LEAF/2,
+    /*update number of entries in leftBlkHeader as (MAX_KEYS_LEAF+1)/2,
         rblock as newRightBlkNum and set the header using BlockBuffer::setHeader().*/
 
     /*set the first 32 entries of leftBlk = the first 32 entries of indices array
@@ -320,9 +320,10 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
         InternalEntry internalEntries[parHeader.numEntries + 1];
 
         /*iterate through all the entries of parBlk and copy them to the array internalEntries.
-         Also insert an InternalEntry entry with attrVal as newAttrVal,
-         lChild as leftBlkNum, and rChild as newRightBlkNum at an appropriate
-         position in the internalEntries array. */
+         Also insert an InternalEntry entry with attrVal as newAttrVal, lChild as leftBlkNum,
+         and rChild as newRightBlkNum at an appropriate position in the internalEntries array.
+         Update the lChild of the internalEntry at the next position in the internalEntries
+         array to rightBlkNum*/
 
         if (parHeader.numEntries != MAX_KEYS_INTERNAL) {
             // (parBlk has not reached max limit)
@@ -370,8 +371,8 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
         // update number of entries of newRightBlkHeader as MAX_KEYS_INTERNAL/2 using BlockBuffer::setHeader().
 
-        /*set the first 50 entries of leftBlk = first 50 entries of internalEntries array and
-            set the first 50 entries of newRightBlk = entries from 51 to 100 of internalEntries array
+        /*set the first 50 entries of leftBlk = index 0 to 49 of internalEntries array and
+            set the first 50 entries of newRightBlk = entries from index 51 to 100 of internalEntries array
             using IndInternal::setEntry().*/
 
         /*store the block type of a child of any entry (say, the rchild of 50th entry) of the

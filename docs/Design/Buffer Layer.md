@@ -1301,6 +1301,7 @@ Gives the indexNumth entry of the block.
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+- The alignment of the `InternalEntry` structure in memory might be different from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
 
 :::
 
@@ -1347,6 +1348,7 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` method of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
+- The alignment of the `InternalEntry` structure in memory might be different from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
 
 :::
 
@@ -1468,6 +1470,7 @@ Gives the indexNum<sup>th</sup> entry of the block.
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the _IndLeaf_ class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the `struct Index` before calling this function.
+- The alignment of the `Index` structure in memory might be different from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
 
 :::
 
@@ -1514,6 +1517,7 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 - The [void pointer](https://en.wikipedia.org/wiki/Void_type) is a generic pointer that can be pointed at objects of any data type. However, because the void pointer does not know what type of object it is pointing to, the void pointer must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `setEntry()` function of the IndLeaf class must ensure that the argument of type `struct Index *` is passed.
 - The higher layers must allocate memory for the struct Index before calling this function.
+- The alignment of the `Index` structure in memory might be different from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
 
 :::
 
