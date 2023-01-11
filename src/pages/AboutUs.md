@@ -26,6 +26,6 @@ The content in the website and the documentation has been authored in the [Depar
 
 ## 2022 - 2023
 
-|                   👤 Team Members                   |
-| :-------------------------------------------------: |
-| [Cliford Joshy](https://clifordjoshy.github.io) |
+|           👤 Team Members            |
+| :----------------------------------: |
+| [Cliford Joshy](https://cliford.net) |
