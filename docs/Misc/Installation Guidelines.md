@@ -22,7 +22,7 @@ The following are the instructions for installation in linux/unix environments:
 1. Install the prerequisites.
    ```bash
    sudo apt update;
-   sudo apt-get install -y build-essential cmake gcc wget curl
+   sudo apt-get install -y build-essential cmake gcc wget curl libreadline libreadline-dev
    ```
 2. Execute the following line in terminal:
 
@@ -35,7 +35,7 @@ The following are the instructions for installation in linux/unix environments:
 
 1. Install the prerequisites.
    ```bash
-   sudo dnf install cmake make automake gcc gcc-c++ kernel-devel wget curl
+   sudo dnf install cmake make automake gcc gcc-c++ kernel-devel wget curl readline readline-devel
    ```
 2. Execute the following line in terminal:
 
@@ -49,7 +49,7 @@ The following are the instructions for installation in linux/unix environments:
 1. Install the prerequisites.
    ```bash
    sudo pacman -Syy
-   sudo pacman -Sy base-devel cmake gcc wget curl
+   sudo pacman -Sy base-devel cmake gcc wget curl readline
    ```
 2. Execute the following line in terminal:
 
