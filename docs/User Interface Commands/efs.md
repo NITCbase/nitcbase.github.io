@@ -241,23 +241,23 @@ LEVEL 2
 In the above example, output shown is for a B+ tree which allows that maximum `4` keys in the internal node and maximum `3` keys in the leaf nodes. In NITCbase B+ tree design, maximum `100` keys are allowed in the internal node and maximum `63` keys are allowed in the leaf node.
 :::
 
-### Print B+ Blocks
+### Export B+ Blocks
 
 #### Description
 
-This command is used to print the data stored in `index blocks`(`internal index blocks` and `leaf index blocks`) of the `B+ tree` corresponding to an attribute of a relation. If index does not exist then an error message of `Index does not exist` is returned.
+This command is used to export the data stored in `index blocks`(`internal index blocks` and `leaf index blocks`) of the `B+ tree` corresponding to an attribute of a relation. If index does not exist then an error message of `Index does not exist` is returned. All the blocks corresponding to the index are written to a TXT file named `filename.txt`, located at `Files/Output_Files`
 
 #### Syntax
 
 ```bash
-print b+ blocks relation_name.attribute_name
+export b+ blocks relation_name.attribute_name filename.txt
 ```
 
 :::note Example
 
 Consider the sample `numbers.csv` file:
 
-```c title="/Files/numbers.csv"
+```c title="Files/Input_Files/numbers.csv"
 key
 10
 5
@@ -269,9 +269,9 @@ key
 ```
 
 Assume an index is created on the attribute `key`. Now to print the index blocks corresponding to that index the following command can be used:
-`print b+ blocks numbers.key`. This will give the following output:
+`export b+ blocks numbers.key numbers.txt`. This will give the following file.
 
-```c
+```plain title="Files/Output_Files/numbers.txt"
 ----- B+ TREE BLOCKS -----
 BLOCK 15
 Block Type: IND_INTERNAL
@@ -345,7 +345,8 @@ key_val: 75
 ```
 
 > The b+ tree blocks is printed in a level-order manner.
-> :::
+
+:::
 
 :::caution
 In the above example, output shown is for a B+ tree which allows that maximum `4` keys in the internal node and maximum `3` keys in the leaf nodes. In NITCbase B+ tree design, maximum `100` keys are allowed in the internal node and maximum `63` keys are allowed in the leaf node.
