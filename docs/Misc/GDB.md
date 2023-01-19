@@ -61,8 +61,18 @@ Now you can confirm the installation of GDB by executing the command `gdb -help`
 You have to tell your compiler to compile your code with symbolic debugging information included. Here's how to do it with gcc, with the -g switch:
 
 ```bash
-g++ -g hello.cpp -o hello
+g++ -g nitcbase.cpp -o nitcbase
 ```
+
+:::tip
+
+The Makefile provided with NITCbase supports compiling in debug mode by running it as
+
+```bash
+make mode=debug
+```
+
+:::
 
 Once you've done that, you should be able to view program listings in the debugger.
 
