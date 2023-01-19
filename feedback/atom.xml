@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://nitcbase.github.io/feedback</id>
-    <title>Nitcbase Blog</title>
+    <title>NITCbase Blog</title>
     <updated>2022-10-10T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://nitcbase.github.io/feedback"/>
-    <subtitle>Nitcbase Blog</subtitle>
+    <subtitle>NITCbase Blog</subtitle>
     <icon>https://nitcbase.github.io/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[2022 Feedback]]></title>
