@@ -8,7 +8,7 @@ const katex = require("rehype-katex");
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-	title: "Nitcbase",
+	title: "NITCbase",
 	tagline: "Relational database project",
 	url: "https://nitcbase.github.io/",
 	baseUrl: "/",

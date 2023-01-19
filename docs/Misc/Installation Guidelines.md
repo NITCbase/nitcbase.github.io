@@ -21,7 +21,7 @@ The following are the instructions for installation in linux/unix environments:
 
 1. Install the prerequisites.
    ```bash
-   sudo apt update;
+   sudo apt-get update
    sudo apt-get install -y build-essential cmake gcc wget curl libreadline libreadline-dev
    ```
 2. Execute the following line in terminal:
