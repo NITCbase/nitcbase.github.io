@@ -8,13 +8,14 @@ title: "Stage 1 : Understanding NITCbase and its filesystem"
 
 - Understand the fundamentals of a relational DBMS.
 - Understand the different types of blocks on our XFS disk - record and index blocks.
+- Learn about the catalog data structures used in NITCbase - relation and attribute catalog.
 - Learn to read and write from the XFS disk.
 
 :::
 
 A database management system is a software that allows us to easily store, organize and retrieve data. Databases can be classified into [various types](https://en.wikipedia.org/wiki/Database_model) depending on the logical structure of data within them. Here, we will only be talking about relational databases.
 
-A [relational database](https://en.wikipedia.org/wiki/Relational_database) models data as rows and columns in a series of tables. Three key terms are used extensively in relational database models: relations, attributes, and domains. A relation is a table with columns and rows. The named columns of the relation are called attributes, and the domain is the set of values the attributes are allowed to take.
+A [relational database](https://en.wikipedia.org/wiki/Relational_database) models data as rows and columns in a series of tables. Three key terms are used extensively in relational database models: _relations_, _attributes_, and _domains_. A **relation** is a table with columns and rows. The named columns of the relation are called **attributes**, and the domain is the set of values the attributes are allowed to take.
 
 A relation in a production database might consist of millions of rows. These records spread across several blocks when stored in the disk. On developing a database of our own, it is essential that we have access to records stored in the disk without much time delay. Disk access is a high-latency operation. Therefore, as the size of relation increases, searching records that satisfy certain conditions by accessing every record in the disk blocks, can adversely affect the performance. This necessitates indexing.
 
@@ -24,15 +25,15 @@ We will get into the implementation details of all these parts as we go further 
 
 ## The Filesystem
 
-In the previous stage, we created the `disk.xfs` file. This file represents a disk in our experimental setup. Similar to a physical disk, the XFS disk too is divided into blocks. As mentioned earlier, we'll be organising the blocks into 2 main types: record blocks and index blocks. Index blocks are further classified as leaf index blocks and internal index blocks.
+In the previous stage, we created the `disk.xfs` file. This file represents a disk in our experimental setup. Similar to a physical disk, the XFS disk too is divided into blocks. As mentioned earlier, we'll be organising the blocks into 2 main types: **record blocks** and index blocks. Index blocks are further classified as **leaf index blocks** and **internal index blocks**.
 
-Read the documentation for [Disk Model](../Design/Physical%20Layer.md#disk-model) before proceeding further.
+**Read the documentation for [Disk Model](../Design/Physical%20Layer.md#disk-model) before proceeding further.**
 
 ## XFS Interface
 
 XFS Interface is a tool that will allow you to interface with the NITCbase filesystem (on `disk.xfs`) from the host system. We can use it to initialize the disk, transfer relations between the host system and the XFS disk, and a variety of other operations. It will be immensely useful for debugging purposes throughout our implementation of NITCbase.
 
-This tool is provided to you and is available in the `XFS_Interface` directory. We will look into the commands provided by the XFS Interface as required. Note that all the filesystem operations that you will be implementing in the course of this project are already made available to you in the XFS Interface. This will aid you in verifying your own implementation.
+This tool is provided to you and is available in the `XFS_Interface` directory. We will look into the commands provided by the XFS Interface in the next stage. Note that all the filesystem operations that you will be implementing in the course of this project are already made available to you in the XFS Interface. This will aid you in verifying your own implementation.
 
 ## The Disk Class
 

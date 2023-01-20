@@ -240,7 +240,8 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
     Index indices[blockHeader.numEntries + 1];
 
     /*iterate through all the entries in the block and copy them to the array indices.
-        Also insert indexval at appropriate position in the indices array.*/
+        Also insert indexval at appropriate position in the indices array maintaining
+        the ascending order.*/
 
     if (blockHeader.numEntries != MAX_KEYS_LEAF) {
         // (leaf block has not reached max limit.)
@@ -309,6 +310,7 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
         this is attribute value which needs to be inserted in the parent block.*/
     Attribute newAttrVal;
 
+    /** internal node traversal loop starts here **/
     while (/* not at the root block ( parBlkNum != -1 ) */) {
         // load the block corresponding to parBlkNum to parBlk using IndInternal::IndInternal().
         IndInternal* parBlk = new IndInternal(parBlkNum);
@@ -321,7 +323,8 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
         /*iterate through all the entries of parBlk and copy them to the array internalEntries.
          Also insert an InternalEntry entry with attrVal as newAttrVal, lChild as leftBlkNum,
-         and rChild as newRightBlkNum at an appropriate position in the internalEntries array.
+         and rChild as newRightBlkNum at an appropriate position in the internalEntries array
+         maintaining the ascending order.
          Update the lChild of the internalEntry at the next position in the internalEntries
          array to rightBlkNum*/
 
@@ -373,7 +376,7 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
         /*set the first 50 entries of leftBlk = index 0 to 49 of internalEntries array and
             set the first 50 entries of newRightBlk = entries from index 51 to 100 of internalEntries array
-            using IndInternal::setEntry().*/
+            using IndInternal::setEntry(). (index 50 will be moving to the parent internal index block) */
 
         /*store the block type of a child of any entry (say, the rchild of 50th entry) of the
             internalEntries array in type, using StaticBuffer::getStaticBlockType().*/
@@ -404,6 +407,7 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
         /*update newAttrVal to the attribute value of 50th entry in the internalEntries array;
             this is attribute value which needs to be inserted in the parent block.*/
     }
+    /** internal node traversal loop ends here **/
 
     // (root block has been split)
 
