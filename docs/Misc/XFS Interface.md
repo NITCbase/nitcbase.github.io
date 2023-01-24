@@ -1,6 +1,5 @@
 ---
 title: "XFS Interface"
-sidebar_position: 3
 ---
 
 XFS Interface is an external command-line interface to access the NITCBase filesystem from the host (UNIX) system.

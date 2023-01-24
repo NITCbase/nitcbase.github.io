@@ -1,66 +1,121 @@
 ---
-sidebar_position: 1
 title: "Installation Guidelines"
 ---
 
-import Tabs from '@theme/Tabs';
-import TabItem from '@theme/TabItem';
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import FetchCodeBlock from "@site/src/components/FetchCodeBlock";
 
-# Installation
+The recommended way to work on NITCbase is using a dedicated docker container. Docker allows us to maintain a consistent experience across all the Linux distros and versions of core utilities you might have installed.
 
-## Setup
+A [manual setup](./ManualSetup.md) guide is also provided, but it is not officially supported and can be followed at your own discretion.
 
-:::info
-The following setup instructions assume that you have a Linux based machine. If you face any difficulties during the environment setup or you are running Windows or Mac operating system and do not want to set up a linux box, you can try the [Docker based setup given here](./DockerSetup.md).
-Note: Windows installation of docker requires WSL2.
+## Install and setup Docker on host machine
+
+Follow the instructions available [here](https://docs.docker.com/get-docker/) to install docker on your machine. You could also go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker .
+
+:::caution WARNING
+The following has **not** been tested on _Windows_.
+If you encounter any issues or have any suggestions, raise an issue [here](https://github.com/nitcbase/nitcbase.github.io/issues/new)
+
 :::
-The following are the instructions for installation in linux/unix environments:
+
+## Setting up the container
+
+We'll assume the following directory structure
+
+```plaintext
+.
+├── Dockerfile
+└── NITCbase/ # <- files will be stored here and mapped to container
+```
+
+We'll store all the required files in `NITCbase` and map the same into the container.
+
+We can create the structure using the below commands
 
 <Tabs>
-<TabItem value="ubuntu" label="Ubuntu / Debian" default>
+<TabItem value='unix/linux' label="Unix/Linux" default>
 
-1. Install the prerequisites.
-   ```bash
-   sudo apt-get update
-   sudo apt-get install -y build-essential gcc wget curl libreadline libreadline-dev
-   ```
-2. Execute the following line in terminal:
-
-   ```bash
-   curl -Sf https://raw.githubusercontent.com/nitcbase/nitcbase-bootstrap/main/setup.sh | sh
-   ```
+```bash
+cd <your directory>
+touch Dockerfile
+mkdir NITCbase
+```
 
 </TabItem>
-<TabItem value="fedora" label="Fedora / Red Hat">
+<TabItem value='windows' label="Windows">
 
-1. Install the prerequisites.
-   ```bash
-   sudo dnf install make gcc gcc-c++ kernel-devel wget curl readline readline-devel
-   ```
-2. Execute the following line in terminal:
-
-   ```bash
-    curl -Sf https://raw.githubusercontent.com/nitcbase/nitcbase-bootstrap/main/setup.sh | sh
-   ```
-
-</TabItem>
-<TabItem value="arch" label="Arch Linux">
-
-1. Install the prerequisites.
-   ```bash
-   sudo pacman -Syy
-   sudo pacman -Sy base-devel make gcc wget curl readline
-   ```
-2. Execute the following line in terminal:
-
-   ```bash
-    curl -Sf https://raw.githubusercontent.com/nitcbase/nitcbase-bootstrap/main/setup.sh | sh
-   ```
+```powershell
+cd <your directory>
+New-Item Dockerfile
+New-Item -path NITCbase -ItemType directory
+```
 
 </TabItem>
 </Tabs>
 
-On successful execution of the script, a new `NITCbase/` directory will be created containing all the necessary components to start the NITCbase project.
+The contents of `Dockerfile` are given below
+
+<FetchCodeBlock
+  link="https://raw.githubusercontent.com/Nitcbase/nitcbase-bootstrap/main/Dockerfile"
+  language="Dockerfile"
+/>
+
+The given `Dockerfile` will setup the NITCbase environment.
+
+### Building the container image
+
+We'll now build the container image using the `Dockerfile`
+
+```bash
+docker build -t nitcbase:ubuntu20.04 .
+```
+
+### Start the container instance
+
+We'll start an instance of the container and map the local folder `NITCbase` into `/home/nitcbase/NITCbase` directory of the container.
+
+<Tabs>
+<TabItem value='unix/linux' label="Unix/Linux" default>
+
+```bash
+docker run -v $PWD/NITCbase:/home/nitcbase/NITCbase -d --name nitcbase -i nitcbase:ubuntu20.04
+```
+
+</TabItem>
+<TabItem value='windows' label="Windows">
+
+```powershell
+docker run -v ${PWD}/NITCbase:/home/nitcbase/NITCbase -d --name nitcbase -i nitcbase:ubuntu20.04
+```
+
+</TabItem>
+</Tabs>
+
+We now have a container instance running in background with the name `nitcbase` and required volume mounts
+
+### Connecting to the container
+
+We can connect to the container instance using the following commands.
+**These are the only commands you will need to connect to the container going forward.**
+
+```bash
+docker start nitcbase # if the container instance is not already running
+
+docker exec -it nitcbase /bin/bash # to get a bash shell inside the container
+```
+
+## Running the setup script
+
+Connect to the container instance as mentioned earlier.
+
+Run the following commands in the terminal connected to the container.
+
+```bash
+cd /home/nitcbase
+./setup.sh
+```
 
 ## Files and Directories
 

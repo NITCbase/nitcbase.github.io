@@ -98,7 +98,7 @@ const config = {
 					},
 					{
 						type: "doc",
-						docId: "Misc/Installation Guidelines",
+						docId: "Misc/index",
 						position: "left",
 						label: "Miscellaneous",
 					},
