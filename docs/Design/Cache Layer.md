@@ -3,8 +3,6 @@ sidebar_position: 6
 title: "Cache Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/cache.html
-
 :::info note
 The Cache Layer code is to be written in 3 pairs of files:
 

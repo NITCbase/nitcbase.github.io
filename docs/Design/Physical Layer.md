@@ -3,8 +3,6 @@ sidebar_position: 9
 title: "Physical Layer"
 ---
 
-https://nitcbase.github.io/archived-site/storage-model.html
-
 :::info NOTE
 
 The `disk` binary file that simulates the NITCbase disk (and the run copy of disk called `disk_run_copy`) is located in the `Disk/` directory.

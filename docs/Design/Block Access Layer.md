@@ -3,8 +3,6 @@ sidebar_position: 5
 title: "Block Access Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/blockaccess.html
-
 :::info note
 The Block Access Layer code is to be written in `BlockAccess.cpp` and it's header file `BlockAccess.h`
 

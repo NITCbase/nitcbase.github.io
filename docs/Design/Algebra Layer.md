@@ -3,8 +3,6 @@ sidebar_position: 3
 title: "Algebra Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/algebra.html
-
 ## Layout
 
 The Front End parses SQL-Like queries and converts them into a sequence of algebra layer and schema layer method calls.

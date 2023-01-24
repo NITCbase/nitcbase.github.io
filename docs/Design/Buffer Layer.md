@@ -3,8 +3,6 @@ sidebar_position: 8
 title: "Buffer Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/buffer.html
-
 :::info note
 The Buffer Layer code is to be written in 2 pairs of files:
 

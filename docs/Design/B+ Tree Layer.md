@@ -3,8 +3,6 @@ sidebar_position: 7
 title: "B+ Tree Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/b+tree.html
-
 :::caution PREREQUISITE READING
 
 - [B+ Trees](../Misc/B%2B%20Trees.md)

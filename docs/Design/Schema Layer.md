@@ -3,8 +3,6 @@ sidebar_position: 4
 title: "Schema Layer"
 ---
 
-https://nitcbase.github.io/archived-site/design/schema.html
-
 :::info note
 The Schema Layer code is to be written in `Schema.cpp` and it's header file `Schema.h`
 
