@@ -6,10 +6,10 @@ title: "Stage 1 : Understanding NITCbase and its filesystem"
 
 :::note Learning Objectives
 
-- Understand the fundamentals of a relational DBMS.
-- Understand the different types of blocks on our XFS disk - record and index blocks.
-- Learn about the catalog data structures used in NITCbase - relation and attribute catalog.
-- Learn to read and write from the XFS disk.
+- Understand the fundamentals of a relational DBMS
+- Gain a basic understanding of the different types of blocks on our XFS disk - record and index blocks
+- Familiarise with the catalog data structures used in NITCbase - relation and attribute catalog
+- Learn to read and write from the XFS disk
 
 :::
 
@@ -17,7 +17,7 @@ A database management system is a software that allows us to easily store, organ
 
 A [relational database](https://en.wikipedia.org/wiki/Relational_database) models data as rows and columns in a series of tables. Three key terms are used extensively in relational database models: _relations_, _attributes_, and _domains_. A **relation** is a table with columns and rows. The named columns of the relation are called **attributes**, and the domain is the set of values the attributes are allowed to take.
 
-A relation in a production database might consist of millions of rows. These records spread across several blocks when stored in the disk. On developing a database of our own, it is essential that we have access to records stored in the disk without much time delay. Disk access is a high-latency operation. Therefore, as the size of relation increases, searching records that satisfy certain conditions by accessing every record in the disk blocks, can adversely affect the performance. This necessitates indexing.
+A relation in a production database might consist of millions of rows(or **records**). These records spread across several blocks when stored in the disk. On developing a database of our own, it is essential that we have access to records stored in the disk without much time delay. Disk access is a high-latency operation. Therefore, as the size of relation increases, searching records that satisfy certain conditions by accessing every record in the disk blocks, can adversely affect the performance. This necessitates indexing.
 
 In essence, a relational database will contain a collection of records corresponding to many relations and a proportional number of indexes to facilitate searching and other operations on the database. There's also need for a data structure to store the schema and metadata of the relations stored in the database. In NITCbase, we have the relation catalog and attribute catalog for these purposes.
 
@@ -33,7 +33,7 @@ In the previous stage, we created the `disk.xfs` file. This file represents a di
 
 XFS Interface is a tool that will allow you to interface with the NITCbase filesystem (on `disk.xfs`) from the host system. We can use it to initialize the disk, transfer relations between the host system and the XFS disk, and a variety of other operations. It will be immensely useful for debugging purposes throughout our implementation of NITCbase.
 
-This tool is provided to you and is available in the `XFS_Interface` directory. We will look into the commands provided by the XFS Interface in the next stage. Note that all the filesystem operations that you will be implementing in the course of this project are already made available to you in the XFS Interface. This will aid you in verifying your own implementation.
+This tool is provided to you and is available in the `XFS_Interface` directory. We will look into the commands provided by the XFS Interface as we go along. Note that all the filesystem operations that you will be implementing in the course of this project are already made available to you in the XFS Interface. This will aid you in verifying your own implementation.
 
 ## The Disk Class
 
@@ -41,7 +41,7 @@ Now, we finally begin working on NITCbase. At the lowest level, our database wil
 
 Read the section on [Disk Class](../Design/Physical%20Layer.md#disk-class) before proceeding further.
 
-An important thing to note about NITCbase is it's runtime disk. **While nitcbase is running, all the disk operations are done on a copy of the disk. All the updates to the disk are only copied to the actual disk on successful termination of the program. This helps us to avoid issues where the actual disk is an indeterminate state due to runtime errors in the program.**
+An important thing to note about NITCbase is it's runtime disk. **While NITCbase is running, all the disk operations are done on a copy of the disk. All the updates to the disk are only copied to the actual disk on successful termination of the program. This helps us to avoid issues where the actual disk is an indeterminate state due to runtime errors in the program.**
 
 The [Disk class](../Design/Physical%20Layer.md#disk-class) has a constructor and destructor that is meant to be run on beginning and end of execution of the program respectively. These functions are responsible for copying to and from the runtime disk as mentioned earlier. So, we will be declaring a single instance of the disk at the very top of our program. The `readBlock` and `writeBlock` methods are static and can be accessed as `Disk::readBlock()`.
 

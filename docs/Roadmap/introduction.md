@@ -12,3 +12,5 @@ This page is under construction. Stages will be added shortly.
 ### [Stage 0 : Installation and Preparation](../Roadmap/Stage00.md)
 
 ### [Stage 1 : Understanding NITCbase and it's filesystem (4 hours)](../Roadmap/Stage01.md)
+
+### [Stage 2 : The Grand Picture (1 week)](../Roadmap/Stage02.md)
