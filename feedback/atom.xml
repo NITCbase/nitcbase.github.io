@@ -9,7 +9,7 @@
     <icon>https://nitcbase.github.io/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[2022 Feedback]]></title>
-        <id>2022</id>
+        <id>https://nitcbase.github.io/feedback/2022</id>
         <link href="https://nitcbase.github.io/feedback/2022"/>
         <updated>2022-10-10T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[We can use this to add the student feedback entries year after year]]></summary>
