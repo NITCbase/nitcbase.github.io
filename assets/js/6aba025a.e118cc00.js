@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[1768],{9275:e=>{e.exports=JSON.parse('{"label":"User Interface","permalink":"/docs/tags/user-interface","allTagsPath":"/docs/tags","count":1,"items":[{"id":"Design/Frontend","title":"Frontend Interface","description":"Introduction","permalink":"/docs/Design/Frontend"}]}')}}]);
