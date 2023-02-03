@@ -1,11 +1,6 @@
 ---
 sidebar_position: 1
 title: "Introduction"
-tags:
-  - overall design
-  - introduction
-  - design
-  - diagram
 ---
 
 ## Overall Design/Architecture

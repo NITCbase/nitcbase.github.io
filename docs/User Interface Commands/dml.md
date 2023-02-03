@@ -1,12 +1,6 @@
 ---
 sidebar_position: 3
 title: "Data Manipulation Language Commands"
-tags:
-  - Data
-  - Manipulation
-  - Commands
-  - xfs
-  - interface
 ---
 
 The Data Manipulation Language(DML) commands are used to manipulate the data stored in the relations of the database. DML Commands are supported by both XFS Interface and Frontend Interface. The following are the DML commands supported by NITCBase.

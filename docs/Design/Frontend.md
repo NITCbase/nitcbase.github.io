@@ -1,12 +1,6 @@
 ---
 sidebar_position: 2
 title: "Frontend Interface"
-tags:
-  - Frontend
-  - Interface
-  - User Interface
-  - Programming Interface
-  - fint
 ---
 
 ## Introduction

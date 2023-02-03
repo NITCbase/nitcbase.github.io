@@ -1,9 +1,6 @@
 ---
 sidebar_position: 5
 title: "Script Commands"
-tags:
-  - Script
-  - commands
 ---
 
 Script commands are available for both XFS interface and frontend interface. These commands help the user to execute mutliple commands sequentially from a file and also to print out custom useful messages into terminal for debugging and informational purposes.

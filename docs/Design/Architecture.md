@@ -1,8 +1,6 @@
 ---
 sidebar_position: 0
 title: "Architecture"
-tags:
-  - Architecture
 ---
 
 NITCbase has a seven layer design. This section provides documentation for each of the seven layers and certain additional design specific details.

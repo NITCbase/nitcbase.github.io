@@ -1,12 +1,6 @@
 ---
 sidebar_position: 2
 title: "Data Definition Language Commands"
-tags:
-  - Data
-  - Definition
-  - Commands
-  - xfs
-  - interface
 ---
 
 The Data Definition Language(DDL) commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. DDL Commands are supported by both XFS Interface and Frontend Interface. The following are the DDL commands supported by NITCBase.

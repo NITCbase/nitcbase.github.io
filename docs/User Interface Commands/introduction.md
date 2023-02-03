@@ -1,8 +1,6 @@
 ---
 sidebar_position: 1
 title: "User Interface Commands"
-tags:
-  - introduction
 ---
 
 NITCbase supports two user interfaces namely, [XFS Interface](../Misc/XFS%20Interface.md) and [Frontend Interface](../Design/Frontend.md). The commands supported by the two interfaces fall into the following **four** categories:
