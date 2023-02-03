@@ -30,7 +30,8 @@ CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 - If the length is greater than 16, **only the first 15 characters will be taken.**
 - All attribute names of the relation must be unique.
 - A relation cannot be named as `temp`, since it is used for internal operations.
-  :::
+
+:::
 
 :::note Example
 

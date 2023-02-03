@@ -23,7 +23,7 @@ This is done when the XFS interface command of [`fdisk`](../User%20Interface%20C
 
 <br/>
 
-![diskModel](../../static/img/DiskModel.png)
+<img src="/img/DiskModel.png" style={{maxWidth: "700px"}}/>
 
 <br/>
 
@@ -254,7 +254,7 @@ A record block has the maximum number of slots when number of attributes of the 
 
 NITCbase uses the [B+ tree](../Misc/B+%20Trees.md) data structure for indexing records in a relation. _The DBMS may maintain zero or more indices per relation_. There are **two types** of nodes for a B+ tree. These are called internal nodes and leaf nodes. A disk block that stores an internal node of the B+ tree is called an **Internal Index block**.
 
-_Each internal index block in NITCbase stores a maximum of 100 attribute(key) values. Each of these values has an associated pair of left and right child pointers. Hence each internal index block is also required to store 101 child pointers (Only 101 Child pointers are required because the right child of one value is the same as the left child of the next value)._
+_Each internal index block in NITCbase stores a maximum of 100 attribute(key) values. Each of these values has an associated pair of left and right child pointers. Hence each internal index block is also required to store 101 child pointers (Only 101 child pointers are required because the right child of one value is the same as the left child of the next value)._
 
 <br/>
 

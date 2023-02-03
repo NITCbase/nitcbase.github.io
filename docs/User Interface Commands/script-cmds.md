@@ -17,7 +17,8 @@ This command is used to run multiple commands in sequence by reading the command
 :::note
 
 - File name given as input to `run` command is fetched from the `/Files/Batch_Execution_Files/` directory and hence are required to be placed in that folder.
-  :::
+
+:::
 
 #### Syntax
 
@@ -29,7 +30,8 @@ run filename
 
 - This is useful to execute multiple commonly used commands while debugging.
 - We can use folders within `/Files/Batch_Execution_Files/` to organize the run files. In that case, `run folder_name/run_file` format can be used.
-  :::
+
+:::
 
 ### Echo
 

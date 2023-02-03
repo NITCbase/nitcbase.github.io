@@ -27,9 +27,11 @@ INSERT INTO tablename VALUES ( value1, value2, value3, ... )
 
 - The attribute values of the record are to be given as comma separated values in the same as the order of attributes in the relation.
 - The number and types of the attribute values of the record to be inserted into relation must match.
-  :::
-  :::note Example
-  Given below are the records of the relation `Students`.
+
+:::
+
+:::note Example
+Given below are the records of the relation `Students`.
 
 | Rollno | Name | CGPA |
 | ------ | ---- | ---- |
@@ -73,9 +75,11 @@ INSERT INTO tablename VALUES FROM filename
 - The number and types of attribute values in each row should match the number and types of the attributes of the specified relation.
 - The CSV file should not contain any `null` values.
 - The CSV file from which the values are to be inserted, must be stored in the path `NITCBase/Files/Input_Files`.
-  :::
-  :::note Example
-  Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:
+
+:::
+
+:::note Example
+Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:
 
 ```c title="/Files/students.csv"
 3,Sunny,8
@@ -146,8 +150,10 @@ SELECT * FROM source_relation INTO target_relation WHERE attrname OP value
 :::info Note
 
 - Here, `OP` should only take a value from the set `{ =, >, <, >=, <=, != }`.
-  :::
-  :::note Example
+
+:::
+
+:::note Example
 
 ```bash
 SELECT * FROM Students INTO Target_Students WHERE CGPA > 8
@@ -170,8 +176,10 @@ SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation WHE
 :::info Note
 
 - Here, `OP` should only take a value from the set `{ =, >, <, >=, <=, != }`.
-  :::
-  :::note Example
+
+:::
+
+:::note Example
 
 ```bash
 SELECT Name, CGPA FROM Students INTO Target_Students WHERE CGPA > 8
@@ -196,9 +204,11 @@ SELECT * FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE 
 - `attribute1` should belong to `source_relation1` and `attribute2` should belong to `source_relation2`.
 - The join attributes (i.e., `attribute1` and `attribute2`) can have the same name.
 - **Excluding the join attributes, there should be no other attributes with the same name in these relations.**
-  :::
-  :::note Example
-  Given below are the records of the relation `Student1`.
+
+:::
+
+:::note Example
+Given below are the records of the relation `Student1`.
 
 | Rollno | Name | Batch |
 | ------ | ---- | ----- |
@@ -248,9 +258,11 @@ SELECT Attribute1, Attribute2, ... FROM source_relation1 JOIN source_relation2 I
 - `attribute1` should belong to `source_relation1` and `attribute2` should belong to `source_relation2`.
 - The join attributes(ie `attribute1` and `attribute2`) can have the same name.
 - Excluding the join attributes, there should be no other attributes with the same name in these relations.
-  :::
-  :::note Example
-  Given below are the records of the relation `Student1`.
+
+:::
+
+:::note Example
+Given below are the records of the relation `Student1`.
 
 | Rollno | Name | Batch |
 | ------ | ---- | ----- |
