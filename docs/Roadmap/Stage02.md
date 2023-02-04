@@ -11,6 +11,7 @@ title: "Stage 2: The Grand Picture"
 - Learn the fundamentals of indexing
 - Learn about the runtime data structures used in NITCbase
 - Learn about the operations on a relational DBMS
+- Learn about the NITCbase architecture
 
 :::
 
@@ -38,7 +39,61 @@ The relation catalog and attribute catalog together allows us to get all the rel
 
 **Read the documentation for [record blocks](../Design/Physical%20Layer.md#record-block-structure) and [catalog structures](../Design/Physical%20Layer.md#catalog-structures) before proceeding further.**
 
-todo questions
+<details>
+<summary>
+Q. Consider the following catalog entries and record for a relation.
+
+<table>
+<thead>
+  <tr><th colspan="6">Relation Catalog Entry</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <th>RelName</th> <th>#Attrs</th> <th>#Records</th> <th>FirstBlock</th> <th>LastBlock</th> <th>#Slots</th>
+  </tr>
+  <tr>
+    <td>Students</td> <td>?</td> <td>?</td> <td>34</td> <td>35</td> <td>?</td>
+  </tr>
+</tbody>
+</table>
+<table>
+<thead>
+  <tr><th colspan="6">Attribute Catalog Entry</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <th>RelName</th> <th>AttrName</th> <th>AttrType</th> <th>PrimaryFlag</th> <th>RootBlock</th> <th>Offset</th>
+  </tr>
+  <tr>
+    <td>Students</td> <td>Name</td> <td>?</td> <td>-</td> <td>-1</td> <td>?</td>
+  </tr>
+  <tr>
+    <td>Students</td> <td>RollNo</td> <td>?</td> <td>-</td> <td>-1</td> <td>?</td>
+  </tr>
+  <tr>
+    <td>Students</td> <td>Marks</td> <td>?</td> <td>-</td> <td>-1</td> <td>?</td>
+  </tr>
+</tbody>
+</table>
+
+<table>
+<thead>
+  <tr><th colspan="6">section from the record block</th></tr>
+</thead>
+<tbody>
+  <tr>
+    <td>...</td> <td>B190539CS</td> <td>Jacques</td> <td>91.08</td> <td>...</td>
+  </tr>
+</tbody>
+</table>
+
+Assume that the relation has only two record blocks and both are fully filled. Find all the missing values (marked with `?`).<br/>
+(click to view answer)<br/>
+
+</summary>
+pending answer. how to: 3 attrs -> 41 slots -> 82 records. attr type and offset from record.
+
+</details>
 
 ### Indexes
 
@@ -53,9 +108,14 @@ In NITCbase, indexes are B+ trees with **internal nodes of size 100**, and **lea
 
 The [attribute catalog](../Design/Physical%20Layer.md#attribute-catalog) stores whether a particular attribute of a relation has an index. If it does, the `RootBlock` field of the attribute catalog will store the block number of the root block of the index.
 
-**Read the documentation for [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure) and [leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure) before proceeding further.**
+**Read the documentation for [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure),[leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure) and (../Misc/Indexing.md) before proceeding further.**
 
-todo questions
+<details>
+<summary>
+Q. Consider the following simplified disk organisation. Write the contents of the involved disk blocks after inserting the following records.
+</summary>
+pending answer
+</details>
 
 ## What's in memory?
 
@@ -71,13 +131,42 @@ We'll learn in detail about this as we implement the [Buffer Layer](../Design/Bu
 
 Almost all operations on a relation require access to its corresponding Relation Catalog and Attribute Catalog entries. We will be pre-allocating memory to cache the catalogs of 12 relations at a given time. A relation is said to be **open** if it's catalog entries are loaded into memory. The **relation catalog and attribute catalog are always open** (recall that the relation and attribute catalog too are just relations in our database) since the values stored in these relations will be frequently used and it's beneficial to avoid the overhead of loading it to memory as required. Any other relation will have to be _opened_ before any operation can be done on it.
 
-We have three data structures to store this information: **the relation cache**, the **attribute cache** and the **open relation table**. The open relation table stores details about the currently open relations. A relation needs to have an entry in the open relation table for it to be considered _open_. The relation cache stores the relation catalog entry of an open relation. The attribute cache stores details about all the attributes of an open relation as a linked list of attribute catalog entries. These caches also store some metadata which are required for search operations on the relation.
+We have three data structures to store this information: **the relation cache**, the **attribute cache** and the **open relation table**. The open relation table stores details about the currently open relations. A relation needs to have an entry in the open relation table for it to be considered _open_. The relation cache stores the relation catalog entry of an open relation. The attribute cache stores details about all the attributes of an open relation as a linked list of attribute catalog entries. These caches also store a `searchIndex` field which saves the block and slot of the last search hit (we'll cover this field later).
 
 We'll learn in detail about this as we implement the [Cache Layer](../Design/Cache%20Layer.md).
 
-todo questions
+## What comes next?
 
-## Operations
+We now understand the low level representation of data in the disk blocks. How is this data saved as so? What do we do with this data? We'll find out.
+
+### Allocating New Blocks
+
+A new block can be obtained by looking at the [Block Allocation Map](../Design/Physical%20Layer.md#disk-model) for a free entry. We can then load this new block into the buffer and initialise the header with the required header values. If it's a record block, we need to make sure that we add it to the linked list by setting `LBlock` and `RBlock`. An index block will have to be added as the appropriate left or right child and `PBlock` needs to be set.
+
+### Search Operations
+
+A search operation involves fetching all records that satisfy some condition. In NITCbase, search can proceed in one of two ways. If an index is present on our search condition attribute, we can do a B+ search; else we'll have to do a linear search on all the records of the relation. We'll implement a function that will do the appropriate search and return to us a record that satisfies our condition each time it's called. Higher levels can call this function until a null condition to fetch all the records satisfying the condition. You will implement this while working on the [Block Access Layer](../Design/Block%20Access%20Layer.md).
+
+You might've realized that the above function would require some global state to work as intended. We'll need to keep track of the previously found record so that we can fetch the next record that satisfies the condition. And that is exactly what the `searchIndex` field in the relation and attribute cache do. `searchIndex` in the relation cache is used to store the last hit during linear search on that relation. `searchIndex` in the attribute cache is used to store the last hit during a B+ search on the index of that attribute. A value of `{-1, -1}` indicates that the search should start over from the beginning again.
+
+**Read through the documentation for [indexing](../Misc/Indexing.md) to learn about the insertion and search operations on indexes.** You will be implementing this while working on the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md).
+
+### Update Operations
+
+All updates to the data are done on the buffer and commited to the disk as required. For a record/index block, the changes in the buffer will be written to the disk when the block is swapped out of the buffer to free up the slot. For operations which require modifications to the relation or attribute catalog, the changes will be written to their respective caches and written back to the disk when an NITCbase session terminates.
+
+### Freeing Blocks
+
+To free a block, we update the block allocation map for that block index to be free and remove the reference to that block from any referencing blocks. Since NITCbase does not support a partial delete operation, we will not need to implement individual freeing of blocks and will only have to free all associated blocks at once.
+
+<details>
+<summary>
+Q. Insert question here
+</summary>
+pending answer
+</details>
+
+## What's at the top?
 
 We've now got a bottom-up view of how NITCbase stores and uses the data. Let's take a top-down look at all the operations our database will support and how we'll implement them.
 
@@ -132,6 +221,15 @@ NITCbase also allows you to do any combination of selection, projection and join
 
 **Read through the documentation for [DML Commands](../User%20Interface%20Commands/dml.md) before proceeding further.** We'll look into detail about the implementation of these features as we develop the [Algebra Layer](../Design/Algebra%20Layer.md).
 
+## Architecture
+
+You must now have an understanding of the functionalities provided to you by NITCbase and how they are represented in a lower level. We can now get into the finer details of our architecture. NITCbase has a 7-layer object-oriented architecture with each layer specialising in some operation. **Take a look at the [architecture](../Design/Architecture.md) page before proceeding further**. You don't need to understand everything mentioned there at this point. You could also take a look at the [system design](../Design/DesignDiagram.md) to get a detailed idea about the flow of information between layers.
+
 ## Exercises
 
-## Architecture
+<details>
+<summary>
+Q1. Insert question here
+</summary>
+pending answer
+</details>

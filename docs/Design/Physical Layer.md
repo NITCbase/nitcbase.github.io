@@ -167,7 +167,7 @@ In NITCbase, _we fix the size of all attributes to the same value to simplify th
 
 - First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](<https://nitcbase.github.io(/constants).html>) represents a record block.
 - Next four bytes (4-7) are used for storing parent block pointer, which has no significance for a record block and can be set to `-1`.
-- Bytes 8-11 and 12-15 are used for storing Left and right block numbers respectively.
+- Bytes 8-11 and 12-15 are used for storing left and right block numbers respectively.
 - Next four bytes are used for storing the number of records currently stored in the block.
 - Bytes 20-23 and 24-27 are used for storing `#Attr` (Number of attributes of the records of the relation that are stored in this block) and `#Slots` (Number of slots in this block) respectively.
 - Bytes 28-31 are reserved for future use.
@@ -176,10 +176,8 @@ In NITCbase, _we fix the size of all attributes to the same value to simplify th
 
 $$
 32+L+L*(16*K) \leq 2048 \\
-                                L*(16*K + 1 ) \leq 2016 \\
-                                \#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
-
-
+L*(16*K + 1 ) \leq 2016 \\
+\#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
 $$
 
 The **slotmap**, which appears at the end of the header is used for _indicating whether a slot is occupied or free_. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be [`SLOT_UNOCCUPIED`](/constants) or else it will be [`SLOT_OCCUPIED`](/constants). Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
