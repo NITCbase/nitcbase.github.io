@@ -12,6 +12,6 @@ This page contains supplementary guides and documentation which are to be refere
 
 ### [XFS Interface](./XFS%20Interface.md)
 
-### [Indexing in NITCbase](./Indexing.md)
-
 ### [B+ Trees](./B%2B%20Trees.md)
+
+### [Indexing in NITCbase](./Indexing.md)

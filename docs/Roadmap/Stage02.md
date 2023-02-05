@@ -108,14 +108,7 @@ In NITCbase, indexes are B+ trees with **internal nodes of size 100**, and **lea
 
 The [attribute catalog](../Design/Physical%20Layer.md#attribute-catalog) stores whether a particular attribute of a relation has an index. If it does, the `RootBlock` field of the attribute catalog will store the block number of the root block of the index.
 
-**Read the documentation for [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure),[leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure) and (../Misc/Indexing.md) before proceeding further.**
-
-<details>
-<summary>
-Q. Consider the following simplified disk organisation. Write the contents of the involved disk blocks after inserting the following records.
-</summary>
-pending answer
-</details>
+**Read the documentation for [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure) and [leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure) before proceeding further.**
 
 ## What's in memory?
 
@@ -161,9 +154,29 @@ To free a block, we update the block allocation map for that block index to be f
 
 <details>
 <summary>
-Q. Insert question here
+
+Q. Assume we have an empty database with no relations. We start it and create a table `LibraryBooks` with attributes (`name`: STR, `id`: NUM, `shelf`: NUM, `borrower`: STR).We then insert 1000 records into the relation `LibraryBooks` in descending order of their `id` (id from 1000 to 1).
+
+1. If we were to do a search for a book with `id` < 500, which book would we get? What's the corresponding record-id?
+2. We then create an index on `id` for `LibraryBooks`. How many index blocks would be created?
+3. How many entries does the root block have? What is the rightmost value in the root block?
+4. If we were to again do a search for a book with `id` > 500, which book would we get? What's the corresponding record-id?
+5. What are the contents of the relation cache and the attribute cache?
+6. What are the contents of the relation catalog and attribute catalog on the disk?
+
+(click to view answer)
+
 </summary>
-pending answer
+
+**Answer**(pending rewrite)
+
+1. book with `id` 1000 because that's the first record
+2. 31 index blocks. 1 internal index.
+3. 30 entries. rightmost value is 969.
+4. we would get the book with `id` 501 because it's in ascending order
+5. it would contain entries for the relation with the appropriate search index filled in.
+6. it would be as if the relation was not created because we have not written back to the disk.
+
 </details>
 
 ## What's at the top?
@@ -221,6 +234,35 @@ NITCbase also allows you to do any combination of selection, projection and join
 
 **Read through the documentation for [DML Commands](../User%20Interface%20Commands/dml.md) before proceeding further.** We'll look into detail about the implementation of these features as we develop the [Algebra Layer](../Design/Algebra%20Layer.md).
 
+<details>
+<summary>
+
+Q. Consider we have a relation `Events` with the attributes (`id`: NUM, `title`: STR, `location`: STR) and a relation `Locations` with the attributes name(`name`: STR, `capacity`: NUM). There are no index blocks on the disk. We run the following commands on our frontend interface.
+
+```
+OPEN TABLE Events;
+SELECT * FROM Events INTO Lectures WHERE location=ELHC;
+OPEN TABLE Locations;
+OPEN TABLE Lectures;
+SELECT title, location, capacity FROM Lectures JOIN INTO LectureCapacities Locations WHERE Lectures.location = Locations.name;
+DROP TABLE Lectures;
+ALTER TABLE RENAME LectureCapacities TO Lectures;
+```
+
+1. What are the entries in the relation cache and attribute cache for the new relation?
+2. What commands could we have run to speed up these operations?
+3. Suppose we add a relation `Participants` with attributes (`regNo`: NUM, `event`: STR). Write commands to filter only the students who are attending the event happening in the location _Auditorium_.
+
+</summary>
+
+**Answer**(Pending)
+
+1. relation lectures with combined attrs
+2. create indexes on join attrs (mention that we'll auto create indexes)
+3. join + select + project operations
+
+</details>
+
 ## Architecture
 
 You must now have an understanding of the functionalities provided to you by NITCbase and how they are represented in a lower level. We can now get into the finer details of our architecture. NITCbase has a 7-layer object-oriented architecture with each layer specialising in some operation. **Take a look at the [architecture](../Design/Architecture.md) page before proceeding further**. You don't need to understand everything mentioned there at this point. You could also take a look at the [system design](../Design/DesignDiagram.md) to get a detailed idea about the flow of information between layers.
@@ -231,5 +273,5 @@ You must now have an understanding of the functionalities provided to you by NIT
 <summary>
 Q1. Insert question here
 </summary>
-pending answer
+only final answers.
 </details>
