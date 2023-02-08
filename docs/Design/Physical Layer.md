@@ -14,18 +14,18 @@ The C++ Disk class that initiates the run copy of disk and also provides read/wr
 
 NITCbase assumes that the disk is a sequence of blocks, and a block is a sequence of bytes. The disk consists of **8192 blocks**, and each block is of **2048 bytes**, resulting in a total of 16MB of storage. Disk blocks are **indexed from 0 to 8191.**
 
-**Block Allocation Map** tells us whether a particular block is **free** or **occupied**. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF`](<https://nitcbase.github.io(/constants).html>)) of the block. _It requires one byte per each block_. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
-
-Blocks 0-3 are reserved for storing _Block Allocation Map_, whereas Blocks 4 and 5 are reserved for storing the block of [Relation Catalog](#relation-catalog) and the first block of [Attribute Catalog](#attribute-catalog), respectively.
-
-The first four blocks of the disk are used for storing the Block Allocation Map and hence **the first four entries in the Block Allocation Map are marked as occupied.**
-This is done when the XFS interface command of [`fdisk`](../User%20Interface%20Commands/efs.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
+**Block Allocation Map** tells us whether a particular block is **free** or **occupied**. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF` / `BMAP`](<https://nitcbase.github.io(/constants).html>)) of the block. _It requires one byte per each block_. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
 
 <br/>
 
 <img src="/img/DiskModel.png" style={{maxWidth: "700px"}}/>
 
 <br/>
+
+Blocks 0-3 are reserved for storing _Block Allocation Map_, whereas Blocks 4 and 5 are reserved for storing the block of [Relation Catalog](#relation-catalog) and the first block of [Attribute Catalog](#attribute-catalog), respectively.
+
+Since the first four blocks of the disk are used for storing the Block Allocation Map, **the first four entries in the Block Allocation Map are marked as occupied** by setting the values to `BMAP`.
+This is done when the XFS interface command of [`fdisk`](../User%20Interface%20Commands/efs.md#format-disk) is executed to generate the disk file. Marking of block 4 and block 5 as `REC` type in Block Allocation Map is also done during the `fdisk` command.
 
 ## Disk Class
 
@@ -91,10 +91,10 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Arguments
 
-| Name     | Type              | Description                                                                    |
-| -------- | ----------------- | ------------------------------------------------------------------------------ |
-| buffer   | `unsigned char *` | Memory pointer of the buffer to which the block contents is to be loaded/read. |
-| blockNum | `int`             | Block number of the disk block to be read.                                     |
+| Name     | Type             | Description                                                                    |
+| -------- | ---------------- | ------------------------------------------------------------------------------ |
+| buffer   | `unsigned char*` | Memory pointer of the buffer to which the block contents is to be loaded/read. |
+| blockNum | `int`            | Block number of the disk block to be read.                                     |
 
 #### Return Values
 
@@ -117,10 +117,10 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Arguments
 
-| Name     | Type              | Description                                                                     |
-| -------- | ----------------- | ------------------------------------------------------------------------------- |
-| buffer   | `unsigned char *` | Memory pointer of the buffer from which contents is to be written to the block. |
-| blockNum | `int`             | Block number of the disk block to be written to.                                |
+| Name     | Type             | Description                                                                     |
+| -------- | ---------------- | ------------------------------------------------------------------------------- |
+| buffer   | `unsigned char*` | Memory pointer of the buffer from which contents is to be written to the block. |
+| blockNum | `int`            | Block number of the disk block to be written to.                                |
 
 #### Return Values
 

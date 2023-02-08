@@ -1,7 +1,7 @@
 # About Us
 
 The content in the website and the documentation has been authored in the [Department of Computer Science and Engineering](https://minerva.nitc.ac.in/),
-[National Institute of Technology Calicut](http://nitc.ac.in/) under the guidance of [Dr. Murali Krishnan K](http://nitc.ac.in/index.php/?url=users/view/474/038/2/0/Murali/5/38/0). The project's activity started in the year 2018 and is currently under progress. Below is a list of co-authors and contributors of the project.
+[National Institute of Technology Calicut](http://nitc.ac.in/) under the guidance of [Dr. Murali Krishnan K](https://people.cse.nitc.ac.in/muralikrishnan/) and [Dr. Gopakumar G](https://people.cse.nitc.ac.in/gopakumar). The project's activity started in the year 2018 and is currently under progress. Below is a list of co-authors and contributors of the project.
 
 ## 2018 - 2019
 
