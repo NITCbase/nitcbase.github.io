@@ -122,3 +122,18 @@ hello
 What we've covered now will form the lowest layer of NITCbase, **the physical layer**.
 
 **Don't forget to undo your changes and revert the `main.c` file to it's [original state](https://github.com/Nitcbase/nitcbase/blob/master/main.cpp) before proceeding further.**
+
+## Exercises
+
+<details><summary>
+
+Q1. Read from the block allocation map and print it's values as we did earlier. Does it align with what you read about the [Disk Model](../Design/Physical%20Layer.md#disk-model)?
+
+</summary>
+
+You'll find that the first 6 values in the block allocation map are the following.<br/>
+4, 4, 4, 4, 0, 0<br/>
+This corresponds to the [BMAP](/constants) and [REC](/constants) constants for the block allocation map and the catalogs.<br/>
+The rest of the values should be all 0.
+
+</details>
