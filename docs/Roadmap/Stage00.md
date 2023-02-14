@@ -17,3 +17,7 @@ After setup of the system is done correctly the directory structure given [here]
 ## GDB
 
 Read the section on [GDB](../Misc/GDB.md) to learn how to use the GNU debugger.
+
+---
+
+**WARNING!** _make sure that you don't get lost in the links as you follow along the roadmap_. You're not expected to read any links other than the ones mentioned specifically on the page.

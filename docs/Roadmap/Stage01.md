@@ -6,7 +6,7 @@ title: "Stage 1 : Understanding the Disk Interface"
 
 :::note Learning Objectives
 
-- Learn to read and write disk blocks to and from the memory and the XFS disk.
+- Learn to read/write disk blocks to/from the XFS disk to memory using the [Disk class](../Design/Physical%20Layer.md#disk-class).
 
 :::
 
@@ -128,6 +128,9 @@ What we've covered now will form the lowest layer of NITCbase, **the physical la
 <details><summary>
 
 Q1. Read from the block allocation map and print it's values as we did earlier. Does it align with what you read about the [Disk Model](../Design/Physical%20Layer.md#disk-model)?
+
+(click to view answer)
+<br/>
 
 </summary>
 
