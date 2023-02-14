@@ -20,9 +20,13 @@ The following diagram gives an idea of the system that we are building and its c
 
 <br/>
 
-![Overview Diagram](../../static/img/HomepageFigure.png)
+![Basic Overview](../../static/img/archibasic.png)
 
-<br/><br/><br/>
+A more detailed overview is given below.
+
+![Overview Diagram](../../static/img/HomepageFigure.svg)
+
+An even more detailed diagram can be found on the [architecture page](/docs/Design/Architecture).
 
 There are two command-line interfaces for NITCbase:
 
