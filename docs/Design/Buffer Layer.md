@@ -169,12 +169,11 @@ struct HeadInfo {
     int32_t numSlots;
     unsigned char reserved[4];
 };
-    /* #include <cstdint> must be done */
 ```
 
 ### Attribute
 
-According to the [Physical Layer storage model](../Design/Physical%20Layer#disk-model), a Record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, `**Attribute**` is a _union_ containing the two types. The size of an Attribute is fixed at **_16 bytes_**. A `**record**` will be an array of Attributes whose size is equal to the number of attributes in the relation.
+According to the [Disk Model](../Design/Physical%20Layer#disk-model), a record block has slots for storing records, and each record contains a set of attributes. The `Attribute` block data structure is used to hold an attribute in memory. Since an attribute can have either `NUMBER` or `STRING` type, **`Attribute`** is a _union_ containing the two types. The size of an Attribute variable is fixed at **16 bytes**. A `**record**` will be an array of Attribute whose size is equal to the number of attributes in the relation.
 
 :::tip
 Attribute is the fundamental unit of data in a record. Hence, the `Attribute` data structure is used in several functions of NITCbase.
@@ -183,10 +182,10 @@ Attribute is the fundamental unit of data in a record. Hence, the `Attribute` da
 The definition for `union Attribute` is given below:
 
 ```cpp
-typedef union Attribute {
+union Attribute {
     double nVal;
     char sVal[ATTR_SIZE];
-} Attribute;
+};
 ```
 
 ### InternalEntry
