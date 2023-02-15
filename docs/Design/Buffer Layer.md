@@ -29,12 +29,111 @@ NITCbase follows an Object-Oriented design for Buffer Layer. The class diagram i
 
 ---
 
-![BufferClasses](../../static/img/buffer_classes.png)
+```mermaid
+classDiagram
+    direction TD
+    StaticBuffer <|.. BlockBuffer : friend
+    BlockBuffer <|-- IndBuffer
+    BlockBuffer <|-- RecBuffer
+    IndBuffer <|-- IndInternal
+    IndBuffer <|-- IndLeaf
+    class StaticBuffer{
+        -blocks[BUFFER_CAPACITY][BLOCK_SIZE]: unsigned char
+        -metainfo[BUFFER_CAPACITY]: struct BufferMetaInfo
+        -blockAllocMap[DISK_BLOCKS]: unsigned char
+        +StaticBuffer()
+        +~StaticBuffer()
+        -getFreeBuffer(int blockNum)$ int
+        -getBufferNum(int blockNum)$ int
+        +getStaticBlockType(int blockNum)$ int
+        +setDirtyBit(int blockNum)$ int
+    }
+    class BlockBuffer{
+        #blockNum: int
+        +BlockBuffer(char blockType)
+        +BlockBuffer(int blockNum)
+        +getBlockNum() int
+        +getBlockType() int
+        +setBlockType(int blockType) int
+        +getHeader(struct HeadInfo *head) int
+        +setHeader(struct HeadInfo *head) int
+        +releaseBlock() void
+        #loadBlockAndGetBufferPtr(unsigned char **buffPtr) int
+        #getFreeBlock(int blockType) int
+    }
+    class IndBuffer{
+        +IndBuffer(char blockType)
+        +IndBuffer(int blockType)
+        +getEntry(void *ptr, int indexNum)* int
+        +setEntry(void *ptr, int indexNum)* int
+    }
+    class RecBuffer{
+        +RecBuffer()
+        +RecBuffer(int blockNum)
+        +getSlotMap(unsigned char *slotMap) int
+        +setSlotMap(unsigned char *slotMap) int
+        +getRecord(union Attribute *rec, int slotNum) int
+        +setRecord(union Attribute *rec, int slotNum) int
+    }
+    class IndInternal{
+        +IndInternal()
+        +IndInternal(int blockNum)
+        +getEntry(void *ptr, int indexNum) int
+        +setEntry(void *ptr, int indexNum) int
+    }
+    class IndLeaf{
+        +IndLeaf()
+        +IndLeaf(int blockNum)
+        +getEntry(void *ptr, int indexNum) int
+        +setEntry(void *ptr, int indexNum) int
+    }
+
+```
 
 ---
 
 Various structures used in the buffer layer are outlined in the below diagrams.
-![BufferStructures](../../static/img/buffer_structures.png)
+
+```mermaid
+classDiagram
+    class BufferMetaInfo{
+        <<struct>>
+        +free: bool
+        +dirty: bool
+        +blockNum: int
+        +timestamp: int
+    }
+    class HeadInfo{
+        <<struct>>
+        +blockType: int32_t
+        +pBlock: int32_t
+        +lBlock: int32_t
+        +rBlock: int32_t
+        +numEntries: int32_t
+        +numAttrs: int32_t
+        +numSlots: int32_t
+        +reserved[4]: unsigned char
+    }
+    class Attribute{
+        <<union>>
+        +nVal: float
+        +sVal[ATTR_SIZE]: char
+    }
+    class InternalEntry{
+        <<struct>>
+        +lChild: int32_t
+        +attrVal: union Attribute
+        +rChild: int32_t
+    }
+    class Index{
+        <<struct>>
+        +attrVal: union Attribute
+        +block: int32_t
+        +slot: int32_t
+        +unused[8]: unsigned char
+    }
+
+```
 
 ---
 

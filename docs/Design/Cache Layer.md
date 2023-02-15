@@ -21,13 +21,98 @@ Almost all operations on a relation require access to its corresponding **Relati
 Three tables are used by NITCbase for caching Catalogs - the **Relation Cache Table** for _Relation Catalog_ entries, the **Attribute Cache Table** for _Attribute Catalog_ entries and the **Open Relation Table** for operations that include both _Relation_ and _Attribute_ Catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
-![CacheClasses](../../static/img/cache_classes.png)
+
+```mermaid
+classDiagram
+    direction TD
+    RelCacheTable <|.. OpenRelTable : friend
+    AttrCacheTable <|.. OpenRelTable : friend
+
+    class RelCacheTable{
+        -relCache[MAX_OPEN] : RelCacheEntry*
+        -recordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry)$ void
+        -relCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry)$ void
+        +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int
+        +setRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int
+        +getSearchIndex(int relId, RecId *searchIndex)$ int
+        +setSearchIndex(int relId, RecId *searchIndex)$ int
+        +resetSearchIndex(int relId)$ int
+
+    }
+    class AttrCacheTable{
+        -attrCache[MAX_OPEN] : AttrCacheEntry*
+        -recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry)$ void
+        -attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry)$ void
+        +getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int
+        +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int
+        +setAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int
+        +setAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int
+        +getSearchIndex(int relId, char attrName[ATTR_SIZE], IndexId *searchIndex)$ int
+        +getSearchIndex(int relId, int attrOffset, IndexId *searchIndex)$ int
+        +setSearchIndex(int relId, char attrName[ATTR_SIZE], IndexId *searchIndex)$ int
+        +setSearchIndex(int relId, int attrOffset, IndexId *searchIndex)$ int
+        +resetSearchIndex(int relId, char attrName[ATTR_SIZE])$ int
+        +resetSearchIndex(int relId, int attrOffset)$ int
+
+    }
+    class OpenRelTable{
+        -tableMetaInfo[MAX_OPEN] : OpenRelTableMetaInfo
+        -getFreeOpenRelTableEntry()$: int
+        +OpenRelTable()
+        +~OpenRelTable()
+        +getRelId(char relName[ATTR_SIZE])$ int
+        +openRel(char relName[ATTR_SIZE])$ int
+        +closeRel(int relId)$ int
+    }
+
+```
 
 ---
 
 Various structures used in the cache layer are outlined in the below diagrams.
 
-## ![CacheStructures](../../static/img/cache_structures.png)
+```mermaid
+classDiagram
+    class RelCacheEntry{
+        <<struct>>
+        +relCatEntry: RelCatEntry
+        +dirty: bool
+        +recId: RecId
+        +searchIndex: RecId
+    }
+    class AttrCacheEntry{
+        <<struct>>
+        +attrCatEntry: AttrCatEntry
+        +dirty: bool
+        +recId: RecId
+        +searchIndex: IndexId
+        +next: AttrCacheEntry*
+    }
+    class RelCatEntry{
+        <<struct>>
+        +relName[ATTR_SIZE]: char
+        +numAttrs: int
+        +numRecs: int
+        +firstBlk: int
+        +lastBlk: int
+        +numSlotsPerBlk: int
+    }
+    class AttrCatEntry{
+        <<struct>>
+        +relName[ATTR_SIZE]: char
+        +attrName[ATTR_SIZE]: char
+        +attrType: int
+        +primaryFlag: bool
+        +rootBlock: int
+        +offset: int
+    }
+    class OpenRelTableMetaInfo{
+        <<struct>>
+        +free: bool
+        +relName[ATTR_SIZE]: char
+    }
+
+```
 
 ## relId
 

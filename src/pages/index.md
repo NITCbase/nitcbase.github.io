@@ -52,12 +52,12 @@ The following are provided to you to get started on the project:
 
 3. **Class definitions for various intermediate layers** of the database system are provided. These are
 
-   1. Buffer layer (Buffer.cpp)
-   2. Block Access layer (BlockAccess.cpp)
-   3. Cache layer (Cache.cpp)
-   4. B+ Tree layer (BPlusTree.cpp)
-   5. Schema layer (Schema.cpp)
-   6. Algebra layer (Algebra.cpp)<br/><br/>
+   1. Buffer Layer (`StaticBuffer.cpp`, `BlockBuffer.cpp`)
+   2. Block Access Layer (`BlockAccess.cpp`)
+   3. Cache Layer (`OpenRelTable.cpp`, `RelCacheTable.cpp`, `AttrCacheTable.cpp`)
+   4. B+ Tree Layer (`BPlusTree.cpp`)
+   5. Schema Layer (`Schema.cpp`)
+   6. Algebra Layer (`Algebra.cpp`)<br/><br/>
 
    **`The code for the methods in these classes are not supplied.`** However, the documentation provides detailed descriptions of the algorithms corresponding to the non-trivial methods in these classes so that you can read and understand the algorithms and translate them to working C++ code.
 

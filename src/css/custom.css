@@ -4,37 +4,20 @@
  * work well for content-centric websites.
  */
 
-/* You can override the default Infima variables here. */
-/* :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
-  --ifm-code-font-size: 95%;
-} */
 
-:root {
-  --ifm-color-primary: #dd0f68; /*#25c2a0;*/
-  --ifm-color-primary-dark: rgb(250, 43, 119); /*rgb(33, 175, 144);*/
-  --ifm-color-primary-darker: #eb146a; /*rgb(31, 165, 136);*/
-  --ifm-color-primary-darkest: #da005e; /*rgb(26, 136, 112);*/
-  --ifm-color-primary-light: #fa3b91; /*rgb(70, 203, 174);*/
-  --ifm-color-primary-lighter: #fb62a2; /*rgb(102, 212, 189);*/
-  --ifm-color-primary-lightest: #fa9abf; /*rgb(146, 224, 208);*/
-  --ifm-code-font-size: 90%; /*95%;*/
-  --doc-sidebar-width: 195px !important;
+ :root {
+  --ifm-color-primary: #dd0f68;
+  --ifm-color-primary-dark: rgb(250, 43, 119);
+  --ifm-color-primary-darker: #eb146a;
+  --ifm-color-primary-darkest: #da005e;
+  --ifm-color-primary-light: #fa3b91;
+  --ifm-color-primary-lighter: #fb62a2;
+  --ifm-color-primary-lightest: #fa9abf;
+  --ifm-code-font-size: 90%;
+  --doc-sidebar-width: 225px !important;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
 }
 
-.docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.1);
-  display: block;
-  margin: 0 calc(-1 * var(--ifm-pre-padding));
-  padding: 0 var(--ifm-pre-padding);
-}
-
-html[data-theme='dark'] .docusaurus-highlight-code-line {
-  background-color: rgba(0, 0, 0, 0.3);
+[data-theme='dark'] {
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.2);
 }

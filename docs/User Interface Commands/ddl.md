@@ -13,7 +13,7 @@ This command is used to create a relation of the given name, with given attribut
 
 #### Syntax
 
-```bash
+```sql
 CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 ```
 
@@ -23,7 +23,6 @@ CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 - Since relation names and attribute names are attributes themselves in the catalog structures, the table name and attribute names in the queries must only have a maximum of 15 characters.
 - If the length is greater than 16, **only the first 15 characters will be taken.**
 - All attribute names of the relation must be unique.
-- A relation cannot be named as `temp`, since it is used for internal operations.
 
 :::
 
@@ -31,7 +30,7 @@ CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 
 The following command will create a Relation called `sample` with `RollNo`, `Name` and `CGPA` as the attributes of types number, string and number respectively:
 
-```bash
+```sql
 CREATE TABLE sample(Rollno NUM, Name STR, CGPA NUM)
 ```
 
@@ -45,14 +44,14 @@ This command is used to delete the relation of the given name. It deletes all th
 
 #### Syntax
 
-```bash
+```sql
 DROP TABLE tablename
 ```
 
 :::note Example
 The following command will delete the relation called `sample`:
 
-```bash
+```sql
 DROP TABLE sample
 ```
 
@@ -66,14 +65,14 @@ This command is used to open the relation specified for manipulation by updating
 
 #### Syntax
 
-```bash
+```sql
 OPEN TABLE tablename
 ```
 
 :::note Example
 The following command will open the relation called `sample`:
 
-```bash
+```sql
 OPEN TABLE sample
 ```
 
@@ -87,14 +86,14 @@ This command is used to close the relation specified by updating the Cache/OpenR
 
 #### Syntax
 
-```bash
+```sql
 CLOSE TABLE tablename
 ```
 
 :::note Example
 The following command will close the relation called `sample`:
 
-```bash
+```sql
 CLOSE TABLE sample
 ```
 
@@ -108,14 +107,14 @@ This command is used to create an index on a given attribute of a relation. [B+ 
 
 #### Syntax
 
-```bash
+```sql
 CREATE INDEX ON tablename.attributename
 ```
 
 :::note Example
 The following command will create an index on the `Rollno` attribute of the `sample` relation:
 
-```bash
+```sql
 CREATE INDEX ON sample.Rollno
 ```
 
@@ -129,14 +128,14 @@ This command is used to drop/delete the B+ tree indexing on the given attribute 
 
 #### Syntax
 
-```bash
+```sql
 DROP INDEX ON tablename.attributename
 ```
 
 :::note Example
 The following command will drop the index on the `Rollno` attribute of the `sample` relation:
 
-```bash
+```sql
 DROP INDEX ON sample.Rollno
 ```
 
@@ -150,14 +149,14 @@ This command is used to rename an existing relation to the given new name.
 
 #### Syntax
 
-```bash
+```sql
 ALTER TABLE RENAME tablename TO new_tablename
 ```
 
 :::note Example
 The following command will rename the existing relation `sample` to `Students`:
 
-```bash
+```sql
 ALTER TABLE RENAME sample TO Students
 ```
 
@@ -171,14 +170,14 @@ This command is used to rename an attribute of an existing relation to the given
 
 #### Syntax
 
-```bash
+```sql
 ALTER TABLE RENAME tablename COLUMN column_name TO new_column_name
 ```
 
 :::note Example
 The following command will rename the the attribute of an existing relation `sample` from `CGPA` to `SGPA`:
 
-```bash
+```sql
 ALTER TABLE RENAME sample COLUMN CGPA TO SGPA
 ```
 

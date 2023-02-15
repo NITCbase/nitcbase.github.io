@@ -62,7 +62,11 @@ const config = {
         highlightSearchTermsOnTargetPage: true,
       },
     ],
+    "@docusaurus/theme-mermaid",
   ],
+  markdown: {
+    mermaid: true,
+  },
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({

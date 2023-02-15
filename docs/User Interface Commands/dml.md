@@ -13,7 +13,7 @@ This command is used to insert a single record into the given relation.
 
 #### Syntax
 
-```bash
+```sql
 INSERT INTO tablename VALUES ( value1, value2, value3, ... )
 ```
 
@@ -36,7 +36,7 @@ Suppose that we need to insert a new record `2, Amy, 9.5` into the relation `Stu
 
 The query for doing that will be the following:
 
-```bash
+```sql
 INSERT INTO Students VALUES (2, Amy, 9.5)
 ```
 
@@ -58,7 +58,7 @@ This command is used to insert multiple records into an already existing relatio
 
 #### Syntax
 
-```bash
+```sql
 INSERT INTO tablename VALUES FROM filename
 ```
 
@@ -83,7 +83,7 @@ Here is an example of a CSV file, `students.csv` containing the records for inse
 
 The query to insert all records contained in above file to the `Students` relation will be:
 
-```bash
+```sql
 INSERT INTO Students VALUES FROM students.csv
 ```
 
@@ -97,13 +97,13 @@ This command creates a new target relation with the same attributes as that of s
 
 #### Syntax
 
-```bash
+```sql
 SELECT * FROM source_relation INTO target_relation
 ```
 
 :::note Example
 
-```bash
+```sql
 SELECT * FROM Students INTO Target_Students
 ```
 
@@ -117,13 +117,13 @@ This command creates a new target relation with the attributes specified in `Att
 
 #### Syntax
 
-```bash
+```sql
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation
 ```
 
 :::note Example
 
-```bash
+```sql
 SELECT Name, CGPA FROM Students INTO Target_Students
 ```
 
@@ -137,7 +137,7 @@ This command is used to retrieve all records of a given source relation, and ins
 
 #### Syntax
 
-```bash
+```sql
 SELECT * FROM source_relation INTO target_relation WHERE attrname OP value
 ```
 
@@ -149,7 +149,7 @@ SELECT * FROM source_relation INTO target_relation WHERE attrname OP value
 
 :::note Example
 
-```bash
+```sql
 SELECT * FROM Students INTO Target_Students WHERE CGPA > 8
 ```
 
@@ -163,7 +163,7 @@ This command creates a new target relation with the attributes specified in `Att
 
 #### Syntax
 
-```bash
+```sql
 SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation WHERE attrname OP value
 ```
 
@@ -175,7 +175,7 @@ SELECT Attribute1, Attribute2, ... FROM source_relation INTO target_relation WHE
 
 :::note Example
 
-```bash
+```sql
 SELECT Name, CGPA FROM Students INTO Target_Students WHERE CGPA > 8
 ```
 
@@ -189,7 +189,7 @@ This command creates a new target relation with attributes constituting from bot
 
 #### Syntax
 
-```bash
+```sql
 SELECT * FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2
 ```
 
@@ -221,7 +221,7 @@ Given below are the records of the relation `Student2`.
 
 An example for a join query is:
 
-```bash
+```sql
 SELECT * FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = Students2.Rollno
 ```
 
@@ -243,7 +243,7 @@ This command creates a new target relation with attributes given in `Attrlist`. 
 
 #### Syntax
 
-```bash
+```sql
 SELECT Attribute1, Attribute2, ... FROM source_relation1 JOIN source_relation2 INTO target_relation WHERE source_relation1.attribute1 = source_relation2.attribute2
 ```
 
@@ -275,7 +275,7 @@ Given below are the records of the relation `Student2`.
 
 An example for a join query is:
 
-```bash
+```sql
 SELECT Rollno, Name, Marks FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = Students2.Rollno
 ```
 
