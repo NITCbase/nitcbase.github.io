@@ -13,6 +13,6 @@ This page is under construction. Stages will be added shortly.
 
 ### [Stage 1 : Understanding the Disk Interface (2 hours)](../Roadmap/Stage01.md)
 
-### [Stage 2 : Disk Data Structures and Operations (6 hours)](../Roadmap/Stage02.md)
+### [Stage 2](../Roadmap/Stage02.md)
 
-### [Stage 3 : The Frontend Interface (6 hours)](../Roadmap/Stage03.md)
+### [Stage 3](../Roadmap/Stage03.md)

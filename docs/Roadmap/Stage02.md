@@ -6,10 +6,10 @@ title: "Stage 2: Record Blocks and Catalogs"
 
 :::note Learning Objectives
 
-- Understand in detail about record blocks in NITCbase
-- Learn in detail about the catalog data structures used in NITCbase - relation and attribute catalog
-- Learn to create relations using the XFS interface
-- Learn to read from record blocks and display the values
+- Understand the storage model for **records** in NITCbase
+- Understand the structure of the **relation catalog** and **attribute catalog**
+- Learn to **create relations** using the XFS interface
+- Implement a program to **display the names and attributes of all the relations** in the database by reading the catalogs
 
 :::
 
@@ -23,7 +23,7 @@ So, now we have a lot of relations each having their own records stored on the d
 
 We now have a provision to keep track of the list of relations that we have stored in the database. But we don't have any information regarding the attributes of each relation. In a production database, an attribute can be one of a myriad of possible types, but here in NITCbase, we'll restrict that to two possible **types**: `NUM` and `STR`. Numbers and strings, as the name would suggest. Both of these types are fixed at a size **16 bytes** for the sake of simplicity. The **attribute catalog** stores these details of all the attributes of every relation in the database. It also stores details about indices created on attributes. We'll get into the details of indexing later.
 
-The relation catalog and attribute catalog together allows us to get all the relations and their respective schemas from our disk. If you didn't realise it yet, the relation and attribute catalog themselves are just relations on our disk! And as such, the blocks storing all the data we mentioned are just record blocks. The first entries in the relation catalog are for itself and the attribute catalog. And the first entries in the attribute catalog are the attributes of the relation catalog and the attributes of itself. Recall the [Disk Model](../Design/Physical%20Layer.md#disk-model) where you read that the first few blocks are reserved for these data structures.
+The relation catalog and attribute catalog together allows us to get all the relations and their respective schemas from our disk. If you didn't realise it yet, the relation and attribute catalog themselves are just relations on our disk! And as such, the blocks storing all the data we mentioned are just record blocks. _The first entry of the relation catalog is that of the relation catalog itself. The second entry is for the attribute catalog. And the first entries in the attribute catalog are the attributes of the relation catalog and the attributes of itself._ Recall the [Disk Model](../Design/Physical%20Layer.md#disk-model) where you read that the first few blocks are reserved for these data structures.
 
 **Read the documentation for [record blocks](../Design/Physical%20Layer.md#record-block-structure) and [catalog structures](../Design/Physical%20Layer.md#catalog-structures) before proceeding further.**
 
@@ -77,25 +77,9 @@ From looking at the record block, we can infer the attribute catalog entries as 
 
 </details>
 
-## Architecture
-
-What we just covered is part of the [Physical Layer](../Design/Physical%20Layer.md) of NITCbase. NITCbase follows a 7-layer object oriented architecture. The layers are as described below:
-
-1. Algebra Layer: Handles the high level relational algebraic operations of our database
-2. Schema Layer: Handles the schema operations such as creation, deletion
-3. Block Access Layer: Handles high-level operations on the disk such as search and insert
-4. B+ Tree Layer: Handles all index related operations.
-5. Cache Layer: Handles caching of the relation and attribute catalog
-6. Buffer Layer: Handles buffered operations on all disk blocks
-7. Physical Layer: Provides the low-level operations on the disk blocks.
-
-We also have a frontend interface which is responsible for calling the appropriate function in the Schema/Algebra layer.
-
-**Read the [home page](/) and [architecture page](../Design/Architecture.md) if you have not done so already.**
-
 ## Creating Relations
 
-One of the critical features of a database is creating tables. In NITCbase, we can use the `CREATE TABLE` command to create a table. **Read [the documentation](../User%20Interface%20Commands/ddl.md#create-table) for the command before proceeding further.**
+One of the critical features of a database is creating tables (relations). In NITCbase, we can use the `CREATE TABLE` command to create a table. **Read [the documentation](../User%20Interface%20Commands/ddl.md#create-table) for the command before proceeding further.**
 
 At this stage, we will not be implementing this functionality and will instead be using the XFS Interface to do this operation. Recall that the XFS interface already implements all the functionality of NITCbase.
 
@@ -127,8 +111,38 @@ Class            STR  no
 
 We have some relations in our DBMS now. Let's try to implement a way to see all the relations we created. To see the details of a relation, we just need to read the records stored in the relation and attribute catalogs. How do we do that?
 
-Since we want to handle any number of relations, we need to be able to fetch the total number of relations on the disk. Where do we find this information? Recall that the header of each record block stores the number of entries in that block. Checking the header of the relation catalog should give us this number. Once we have this value (let it be `N`), we can get the names of the relations by reading the records at the first `N` slots of the relation catalog block. We will be implementing a rudimentary version of the `getHeader()` and `getRecord()` function of the [Buffer Layer](../Design/Buffer%20Layer.md) to do these operations.<br/>
-A simplified class diagram with the functions we need to implement is shown below.
+<!-- grand picture -->
+
+:::info A DIGRESSION
+<sub>
+
+**WARNING**: This section is a quick detour to give you an overall picture of the experiment before we start with building it.
+This section links to various pages of the documentation. You do not need to follow any of these at this stage and they are only provided for your information. Do not spend more than 15 minutes here.
+</sub>
+
+A proper DBMS consists will implement a large number of operations. Here, we are starting with the implementation of one of the most rudimentary features of a relational database; printing the details of the relations. Before we get into that, let us take a quick look at the architecture of our database.
+
+NITCbase follows a 7-layer object oriented architecture. In the course of this project, you will be implementing all these layers. They are described below.
+
+1. [**Algebra Layer**](../Design/Algebra%20Layer.md): Handles the high level relational algebraic operations of our database
+2. [**Schema Layer**](../Design/Schema%20Layer.md): Handles the schema operations such as creation, deletion
+3. [**Block Access Layer**](../Design/Block%20Access%20Layer.md): Handles high-level operations on the disk such as search and insert
+4. [**B+ Tree Layer**](../Design/B%2B%20Tree%20Layer.md): Handles all index related operations.
+5. [**Cache Layer**](../Design/Cache%20Layer.md): Handles caching of the relation and attribute catalog
+6. [**Buffer Layer**](../Design/Buffer%20Layer.md): Handles buffered operations on all disk blocks
+7. [**Physical Layer**](../Design/Physical%20Layer.md): Provides the low-level operations on the disk blocks.
+
+We also have a [**frontend interface**](../Design/Frontend.md) which is responsible for interacting with the user, receiving the commands, and translating them to the appropriate function in the Schema/Algebra layer. Most of this layer has already been implemented and provided to you. You will only need to make minor additions to this layer.
+
+**Read the [home page](/) and [architecture page](../Design/Architecture.md) if you have not done so already.**
+
+:::
+
+Let's come back to the task of displaying the relations on the database.
+
+Since we want to handle the display of any number of relations, we need to be able to fetch the total number of relations on the disk. Where do we find this information? Recall that the header of each record block stores the number of entries in that block. Checking the header of the relation catalog block should give us this number. Once we have this value (let it be `N`), we can get the names of the relations by reading the records at the first `N` slots of the relation catalog block. We will be implementing a rudimentary version of the `getHeader()` and `getRecord()` function of the [Buffer Layer](../Design/Buffer%20Layer.md) to do these operations.
+
+A simplified class diagram with the functions we need to implement is shown below. The classes will eventually implement a lot of functionality of the [Buffer Layer](../Design/Buffer%20Layer.md). In this section, we will only implement a subset of the methods of [BlockBuffer](../Design/Buffer%20Layer.md#class-blockbuffer) and [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) classes.
 
 ```mermaid
 classDiagram
@@ -143,18 +157,64 @@ classDiagram
   }
 ```
 
-We have two classes, `BlockBuffer` and `RecBuffer`. An object of either of those classes allows us to work with a particular disk block (the `blockNum` member field). The `BlockBuffer` class implements the common operations available to all disk blocks. The `RecBuffer` class extends `BlockBuffer` to add functionality specific to a record block. We will implement the `BlockBuffer::getHeader()` and `RecBuffer::getRecord()` functions using the Disk operations that we are familiar with. These functions will assume that memory for it's arguments has been already allocated by the calling function.
+<br/>
 
-We will also be makings use of two data structures for representing the data. **Read the documentation for [struct HeadInfo](../Design/Buffer%20Layer.md#headinfo) and [union Attribute](../Design/Buffer%20Layer.md#attribute) before proceeding further.**
+We have two classes, `BlockBuffer` and `RecBuffer`. An object of either of those classes allows us to work with a particular disk block (stored in the `blockNum` member field). The `BlockBuffer` class implements the common operations available to all disk blocks. The `RecBuffer` class extends `BlockBuffer` to add functionality specific to a record block. We will implement the `BlockBuffer::getHeader()` and `RecBuffer::getRecord()` functions using the disk read and write operations that we covered in the previous stage. **Note that these functions will assume that memory for its arguments has been already allocated by the calling function.**
+
+We will also be making use of two data structures for representing the data. **Read the documentation for [struct HeadInfo](../Design/Buffer%20Layer.md#headinfo) and [union Attribute](../Design/Buffer%20Layer.md#attribute) before proceeding further.**
 
 :::info NOTE
 All commonly used values have already been defined as [constants](/constants) and can be used throughout your implementation.
 
 :::
 
-Open the `BlockAccess.cpp` file in the `Buffer` folder and complete the following.
+<br/>
 
-```cpp title="Buffer/BlockAccess.cp"
+Let us edit our `main.cpp` to see a top-down view on how to use these functions for our goal of printing all the relations on our DBMS.
+
+```cpp title=main.cpp
+int main(int argc, char *argv[]) {
+  Disk disk_run;
+
+  // create objects for the relation catalog and attribute catalog
+  RecBuffer relCatBuffer(RELCAT_BLOCK);
+  RecBuffer attrCatBuffer(ATTRCAT_BLOCK);
+
+  HeadInfo relCatHeader;
+  HeadInfo attrCatHeader;
+
+  // load the headers of both the blocks into relCatHeader and attrCatHeader.
+  // (we will implement these functions later)
+  relCatBuffer.getHeader(&relCatHeader);
+  attrCatBuffer.getHeader(&attrCatHeader);
+
+  for (/* i = 0 to total relation count */) {
+
+    Attribute relCatRecord[RELCAT_NO_ATTRS]; // will store the record from the relation catalog
+
+    relCatBuffer.getRecord(relCatRecord, i);
+
+    printf("Relation: %s\n", relCatRecord[RELCAT_REL_NAME_INDEX].sVal);
+
+    for (/* j = 0 to number of entries in the attribute catalog */) {
+
+      // declare attrCatRecord and load the attribute catalog entry into it
+
+      if (/* attribute catalog entry corresponds to the current relation */) {
+        const char *attrType = attrCatRecord[ATTRCAT_ATTR_TYPE_INDEX].nVal == NUMBER ? "NUM" : "STR";
+        printf("  %s: %s\n", /* get the attribute name */, attrType);
+      }
+    }
+    printf("\n");
+  }
+
+  return 0;
+}
+```
+
+Now, let us implement the functions that we invoked from the `main()` function. Open the `BlockAccess.cpp` file in the `Buffer` folder and complete the following.
+
+```cpp title="Buffer/BlockAccess.cpp"
 
 BlockBuffer::BlockBuffer(int blockNum) {
   // initialise this.blockNum with the argument
@@ -204,45 +264,6 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
 }
 ```
 
-Now that we have these functions, we'll just need to make use of them in our `main.cpp` file to access the data.
-
-```cpp title=main.cpp
-int main(int argc, char *argv[]) {
-  Disk disk_run;
-
-  // create objects for the relation catalog and attribute catalog
-  RecBuffer relCatBuffer(RELCAT_BLOCK);
-  RecBuffer attrCatBuffer(ATTRCAT_BLOCK);
-
-  HeadInfo relCatHeader;
-  HeadInfo attrCatHeader;
-
-  // load the headers of both the blocks into relCatHeader and attrCatHeader
-
-  for (/* i = 0 to total relation count */) {
-
-    Attribute relCatRecord[RELCAT_NO_ATTRS]; // will store the record from the relation catalog
-
-    relCatBuffer.getRecord(relCatRecord, i);
-
-    printf("Relation: %s\n", relCatRecord[RELCAT_REL_NAME_INDEX].sVal);
-
-    for (/* j = 0 to number of entries in the attribute catalog */) {
-
-      // declare attrCatRecord and load the attribute catalog entry into it
-
-      if (/* attribute catalog entry corresponds to the current relation */) {
-        const char *attrType = attrCatRecord[ATTRCAT_ATTR_TYPE_INDEX].nVal == NUMBER ? "NUM" : "STR";
-        printf("  %s: %s\n", /* get the attribute name */, attrType);
-      }
-    }
-    printf("\n");
-  }
-
-  return 0;
-}
-```
-
 On compiling (run `make`) and executing this program, you should see the following output.
 
 ```plain
@@ -272,12 +293,12 @@ Relation: Students
 Try creating more relations using the XFS interface and you'll see the schema of all those relations when you run NITCbase.
 
 :::caution
-The attribute catalog can span across multiple disk blocks. We are only reading from one block of the attribute catalog. If the total number of attributes exceeds 19, we will not be able to read past that.
+The attribute catalog can span across multiple disk blocks. We are only reading from one block of the attribute catalog. If the total number of attributes exceeds 19 (Why?), another block will be allocated for the attribute catalog. Your code will have to be modified to read the other blocks if needed.
 
 :::
 
 ## Exercises
 
-**Q1**. Modify this program to read across two blocks of the attribute catalog. Insert 4 more relations into the DBMS and print the details using NITCbase. (Hint: the `rblock` field in the header of the attribute catalog block gives the next block.)
+**Q1**. Modify this program to read across multiple blocks of the attribute catalog. Insert the relations _Events(`id`: `NUM`, `title`: `STR`, `location`: `STR`), Locations(`name`: `STR`, `capacity`: `NUM`)_ and _Participants(`regNo`: `NUM`, `event`: `STR`)_ into the database using the XFS interface. Print the details using NITCbase. (Hint: the `rblock` field in the header of the attribute catalog block gives the next block.)
 
-**Q2**. Modify the `main` function to update the schema of the Student relation. Change the name of the `Class` attribute to `Batch` and confirm that the change has been made by running the program.
+**Q2**. Modify the `main` function to update the schema of the Student relation. Change the name of the `Class` attribute to `Batch` and confirm that the change has been made by printing the relation again.
