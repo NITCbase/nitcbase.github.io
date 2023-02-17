@@ -144,7 +144,13 @@ Since we want to handle the display of any number of relations, we need to be ab
 
 A simplified class diagram with the functions we need to implement is shown below. The classes will eventually implement a lot of functionality of the [Buffer Layer](../Design/Buffer%20Layer.md). In this section, we will only implement a subset of the methods of [BlockBuffer](../Design/Buffer%20Layer.md#class-blockbuffer) and [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) classes.
 
-**NOTE**: The methods that will reach their final state are denoted by the green circles. The methods that we will update in the later stages are denoted by the orange circles.
+> **NOTE**: The functions are denoted with circles as follows.<br/>
+> 🔵 -> methods that are already in their final state<br/>
+> 🟢 -> methods that will attain their final state in this stage<br/>
+> 🟠 -> methods that we will modify in this stage, but will require more work<br/>
+> 🟤 -> methods that require more work, but we will leave as is in this stage
+
+<br/>
 
 ```mermaid
 classDiagram
