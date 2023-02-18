@@ -85,7 +85,7 @@ const config = {
         items: [
           {
             type: "doc",
-            docId: "Roadmap/introduction",
+            docId: "Roadmap/index",
             position: "left",
             label: "Roadmap",
           },

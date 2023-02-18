@@ -180,7 +180,10 @@ All commonly used values have already been defined as [constants](/constants) an
 
 Let us edit our `main.cpp` to see a top-down view on how to use these functions for our goal of printing all the relations on our DBMS.
 
-```cpp title=main.cpp
+<details>
+<summary>main.cpp</summary>
+
+```cpp
 int main(int argc, char *argv[]) {
   Disk disk_run;
 
@@ -220,9 +223,14 @@ int main(int argc, char *argv[]) {
 }
 ```
 
+</details>
+
 Now, let us implement the functions that we invoked from the `main()` function. Open the `BlockAccess.cpp` file in the `Buffer` folder and complete the following.
 
-```cpp title="Buffer/BlockAccess.cpp"
+<details>
+<summary>Buffer/BlockAccess.cpp</summary>
+
+```cpp
 
 BlockBuffer::BlockBuffer(int blockNum) {
   // initialise this.blockNum with the argument
@@ -271,6 +279,8 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
   return SUCCESS;
 }
 ```
+
+</details>
 
 On compiling (run `make`) and executing this program, you should see the following output.
 
