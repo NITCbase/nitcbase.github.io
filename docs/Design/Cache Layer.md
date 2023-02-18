@@ -30,8 +30,8 @@ classDiagram
 
     class RelCacheTable{
         -relCache[MAX_OPEN] : RelCacheEntry*
-        -recordToRelCacheEntry(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry)$ void
-        -relCacheEntryToRecord(union Attribute record[RELCAT_NO_ATTRS], RelCacheEntry *relCacheEntry)$ void
+        -recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry)$ void
+        -relCatEntryToRecord(RelCatEntry *relCatEntry, union Attribute record[RELCAT_NO_ATTRS])$ void
         +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int
         +setRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int
         +getSearchIndex(int relId, RecId *searchIndex)$ int
@@ -41,8 +41,8 @@ classDiagram
     }
     class AttrCacheTable{
         -attrCache[MAX_OPEN] : AttrCacheEntry*
-        -recordToAttrCacheEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry)$ void
-        -attrCacheEntryToRecord(union Attribute record[ATTRCAT_NO_ATTRS], AttrCacheEntry *attrCacheEntry)$ void
+        -recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry)$ void
+        -attrCatEntryToRecord(AttrCatEntry *attrCatEntry, union Attribute record[ATTRCAT_NO_ATTRS])$ void
         +getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int
         +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int
         +setAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int
@@ -230,7 +230,7 @@ The `struct OpenRelTableMetaInfo` stores whether the given entry in the `OpenRel
 typedef struct OpenRelTableMetaInfo {
 
     bool free;
-    unsigned char rel_name[ATTR_SIZE];
+    unsigned char relName[ATTR_SIZE];
 
 } OpenRelTableMetaInfo;
 ```
@@ -250,7 +250,7 @@ The class contains a `private` member field, `relCache`, which is an array of po
 
 The class provides `public` methods - `getRelCatEntry()` and `setRelCatEntry()` to retrieve and update the _Relation Catalog_ Entry of a relation in the _Relation Cache_ Table. The class also provides `public` methods `getSearchIndex()` and `setSearchIndex()` for retrieving and updating the `searchIndex` field of _Relation Cache_ Entry.
 
-The `private` method `recordToRelCacheEntry()` is used to convert a _record_ (implemented as an array of `union Attribute`) to `RelCacheEntry` structure. This function is called by the friend class, `OpenRelTable`, while opening a relation. Similarly, the `private` method `relCacheEntryToRecord()` is used to convert `RelCacheEntry` structure to a record. This function is also called from the friend class, `OpenRelTable`, while closing a relation.
+The `private` method `recordToRelCatEntry()` is used to convert a _record_ (implemented as an array of `union Attribute`) to `RelCatEntry` structure. This function is called by the friend class, `OpenRelTable`, while opening a relation. Similarly, the `private` method `relCatEntryToRecord()` is used to convert `RelCatEntry` structure to a record. This function is also called from the friend class, `OpenRelTable`, while closing a relation.
 
 :::note C++ Static Classes
 `RelCacheTable` is a _static class_, that is, all member fields and methods are declared `static`. Memory is allocated statically for all member fields of the class. This _static methods_ in this class is used to access its _static member fields_. C++ allows static methods to be accessed using the semantics `class_name :: function_name()`.
@@ -280,8 +280,8 @@ private:
     static RelCacheEntry* relCache[MAX_OPEN];
 
     //methods
-    static void RecordToRelCacheEntry(union Attribute record[RELCAT_SIZE], RelCacheEntry* relCacheEntry);
-    static void RelCacheEntryToRecord(union Attribute record[RELCAT_SIZE], RelCacheEntry* relCacheEntry);
+    static void recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry);
+    static void relCatEntryToRecord(RelCatEntry *relCatEntry, union Attribute record[RELCAT_NO_ATTRS]);
 
 };
 ```
@@ -508,43 +508,43 @@ int RelCacheTable::resetSearchIndex(int relId) {
 }
 ```
 
-### RelCacheTable :: recordToRelCacheEntry
+### RelCacheTable :: recordToRelCatEntry
 
 #### Description
 
-A utility function that converts a record, implemented as an array of `union Attribute`, to `RelCacheEntry` structure. The record content is used to populate the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex `fields are initialised with default values of `false`, `{-1, -1}`, and `{-1, -1}`, respectively. This function can be used to convert a record in a _Relation Catalog_ block to the corresponding _Relation Cache_ entry when caching a relation in _Relation Cache_ Table. The details of the implementation are left to you.
+A utility function that converts a record, implemented as an array of `union Attribute`, to `RelCatEntry` structure. This function can be used to convert a record in a _Relation Catalog_ block to the corresponding _Relation Cache_ entry when caching a relation in _Relation Cache_ Table. The details of the implementation are left to you.
 
 :::caution note
-The caller should allocate memory for the `struct RelCacheEntry` and array of `union Attribute` before calling the function.
+The caller should allocate memory for the `struct RelCatEntry` and array of `union Attribute` before calling the function.
 :::
 
 #### Arguments
 
-| Name          | Type                            | Description                                                                               |
-| ------------- | ------------------------------- | ----------------------------------------------------------------------------------------- |
-| record        | `union Attribute[RELCAT_SIZE`]` | The record which is to be converted to a _Relation Cache_ Entry                           |
-| RelCacheEntry | `RelCacheEntry*`                | Pointer to struct RelCacheEntry to which the contents of the input record is to be copied |
+| Name        | Type                           | Description                                                                               |
+| ----------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
+| record      | `union Attribute[RELCAT_SIZE`] | The record which is to be converted to a `RelCatEntry`                                    |
+| RelCatEntry | `RelCatEntry*`                 | Pointer to struct `RelCatEntry` to which the contents of the input record is to be copied |
 
 #### Return Values
 
 Nil
 
-### RelCacheTable :: relCacheEntryToRecord
+### RelCacheTable :: relCatEntryToRecord
 
 #### Description
 
-A utility function that converts `RelCacheEntry` structure to a record, implemented as an array of `union Attribute`. The record is populated with the contents of the `relCatEntry` field. The `dirty`, `recId`, and `searchIndex` fields are used only during runtime and are not written to the disk. This function can be used to convert the _Relation Cache_ entry to the corresponding record that can be written back to _Relation Catalog_ block when closing a relation in the cache memory. The details of the implementation are left to you.
+A utility function that converts `RelCatEntry` structure to a record, implemented as an array of `union Attribute`. This function can be used to convert the _Relation Cache_ entry to the corresponding record that can be written back to _Relation Catalog_ block when closing a relation in the cache memory. The details of the implementation are left to you.
 
 :::caution note
-The caller should allocate memory for the struct RelCacheEntry and array of union Attribute before calling the function.
+The caller should allocate memory for the struct RelCatEntry and array of union Attribute before calling the function.
 :::
 
 #### Arguments
 
-| Name          | Type                           | Description                                                                          |
-| ------------- | ------------------------------ | ------------------------------------------------------------------------------------ |
-| record        | `union Attribute[RELCAT_SIZE]` | The record to which the contents of the input _Relation Cache_ Entry is to be copied |
-| RelCacheEntry | `RelCacheEntry*`               | Pointer to struct RelCacheEntry which is to be converted to a record.                |
+| Name        | Type                           | Description                                                                 |
+| ----------- | ------------------------------ | --------------------------------------------------------------------------- |
+| RelCatEntry | `RelCatEntry*`                 | Pointer to struct `RelCatEntry` which is to be converted to a record.       |
+| record      | `union Attribute[RELCAT_SIZE]` | The record to which the contents of the input `RelCatEntry` is to be copied |
 
 #### Return Values
 
@@ -560,7 +560,7 @@ The class contains a `private` member field, `attrCache`, which is an array of p
 
 The class provides `public` _overloaded methods_ - `getAttrCatEntry()` and `setAttrCatEntry()` to retrieve and update the _Attribute Catalog_ entry of a relation's attribute in the _Attribute Cache_ Table. The class also provides _overloaded_ `public` methods - `getSearchIndex()` and `setSearchIndex()` for retrieving and updating the `searchIndex` field of _Attribute Cache_ Entry.
 
-The `private` method `recordToAttrCacheEntry()` is used to convert a record (implemented as an array of union Attribute) to `AttrCacheEntry` structure. This function is called by the _friend class_, `OpenRelTable`, while opening a relation. Similarly, the `private` method `attrCacheEntryToRecord()` is used to convert `AttrCacheEntry` structure in to a record. This function is also called from the _friend class_, `OpenRelTable`, while closing a relation.
+The `private` method `recordToAttrCatEntry()` is used to convert a record (implemented as an array of union Attribute) to `AttrCatEntry` structure. This function is called by the _friend class_, `OpenRelTable`, while opening a relation. Similarly, the `private` method `attrCatEntryToRecord()` is used to convert `AttrCatEntry` structure in to a record. This function is also called from the _friend class_, `OpenRelTable`, while closing a relation.
 
 :::info C++ STATIC CLASSES
 AttrCacheTable is a _static class_, i.e., all member fields and methods are declared static. Memory is allocated statically for all member fields of the class. This class uses _static methods_ to access the _static member fields_. C++ allows static methods to be accessed using the semantics `class_name :: function_name()`.
@@ -593,8 +593,8 @@ private:
     static AttrCacheEntry* attrCache[MAX_OPEN];
 
     //methods
-    static void recordToAttrCacheEntry(union Attribute record[ATTRCAT_SIZE], AttrCacheEntry *attrCacheEntry);
-    static void attrCacheEntryToRecord(union Attribute record[ATTRCAT_SIZE], AttrCacheEntry *attrCacheEntry);
+    static void recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
+    static void attrCatEntryToRecord(AttrCatEntry *attrCatEntry, union Attribute record[ATTRCAT_NO_ATTRS]);
 
 };
 ```
@@ -883,32 +883,32 @@ int AttrCacheTable::resetSearchIndex(int relId, unsigned char attrName[ATTR_SIZE
 }
 ```
 
-### AttrCacheTable :: recordToAttrCacheEntry
+### AttrCacheTable :: recordToAttrCatEntry
 
 #### Description
 
-A utility function that converts a record, implemented as an array of `union Attribute`, to `AttrCacheEntry` structure. The record content is used to populate the `attrCatEntry` field. The `dirty`, `recId`, `searchIndex`, and next fields are initialized with default values of `false`, `{-1, -1}`, `{-1, -1}`, and `NULL`, respectively. This function can be used to convert the records in _Attribute Catalog_ block/blocks to the corresponding _Attribute Cache_ entries when caching a relation in _Attribute Cache_ Table. The details of the implementation are left to you.
+A utility function that converts a record, implemented as an array of `union Attribute`, to `AttrCatEntry` structure. This function can be used to convert the records in _Attribute Catalog_ block/blocks to the corresponding _Attribute Cache_ entries when caching a relation in _Attribute Cache_ Table. The details of the implementation are left to you.
 
 :::caution note
-The caller should allocate memory for the `struct AttrCacheEntry` and array of `union Attribute` before calling the function.
+The caller should allocate memory for the `struct AttrCatEntry` and array of `union Attribute` before calling the function.
 :::
 
 #### Arguments
 
-| Name           | Type                            | Description                                                                                 |
-| -------------- | ------------------------------- | ------------------------------------------------------------------------------------------- |
-| record         | `union Attribute[ATTRCAT_SIZE]` | The record which is to be converted to a _Attribute Cache_ entry.                           |
-| attrCacheEntry | `AttrCacheEntry*`               | Pointer to struct AttrCacheEntry to which the contents of the input record is to be copied. |
+| Name         | Type                            | Description                                                                                 |
+| ------------ | ------------------------------- | ------------------------------------------------------------------------------------------- |
+| record       | `union Attribute[ATTRCAT_SIZE]` | The record which is to be converted to an `AttrCatEntry`.                                   |
+| attrCatEntry | `AttrCatEntry*`                 | Pointer to struct `AttrCatEntry` to which the contents of the input record is to be copied. |
 
 #### Return Values
 
 Nil
 
-### AttrCacheTable :: attrCacheEntryToRecord
+### AttrCacheTable :: attrCatEntryToRecord
 
 #### Description
 
-A utility function that converts `AttrCacheEntry` structure to a record, implemented as an array of `union Attribute`. The record is populated with the contents of the `attrCatEntry` field. The `dirty`, `recId`, `searchIndex`, and next fields are used only during runtime and are not written to the disk. This function can be used to convert the _Attribute Cache_ entries to corresponding records that can be written back to _Attribute Catalog_ block/blocks when closing a relation in the cache memory. The details of the implementation are left to you.
+A utility function that converts `AttrCatEntry` structure to a record, implemented as an array of `union Attribute`. This function can be used to convert the _Attribute Cache_ entries to corresponding records that can be written back to _Attribute Catalog_ block/blocks when closing a relation in the cache memory. The details of the implementation are left to you.
 
 :::caution note
 The caller should allocate memory for the `struct AttrCacheEntry` and array of `union Attribute` before calling the function.
@@ -916,10 +916,10 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 
 #### Arguments
 
-| Name           | Type                            | Description                                                            |
-| -------------- | ------------------------------- | ---------------------------------------------------------------------- |
-| attrCacheEntry | `AttrCacheEntry*`               | Pointer to struct AttrCacheEntry which is to be converted to a record. |
-| record         | `union Attribute[ATTRCAT_SIZE]` | The record to which the given _Attribute Cache_ entry is to be copied. |
+| Name         | Type                            | Description                                                            |
+| ------------ | ------------------------------- | ---------------------------------------------------------------------- |
+| attrCatEntry | `AttrCatEntry*`                 | Pointer to struct `AttrCatEntry` which is to be converted to a record. |
+| record       | `union Attribute[ATTRCAT_SIZE]` | The record to which the given `AttrCatEntry` entry is to be copied.    |
 
 #### Return Values
 
@@ -996,7 +996,7 @@ OpenRelTable::OpenRelTable() {
     /**** setting up Relation Catalog relation in the Relation Cache Table ****/
 
     /* read the record entry at index 0 from block 4, the block corresponding to Relation Catalog in the disk, and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCacheEntry().
+       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
        update the recId field of this Relation Cache entry to {4,0}.
        use it to set the 0th index entry of the RelCacheTable.*/
 
@@ -1009,7 +1009,7 @@ OpenRelTable::OpenRelTable() {
     {
 
              /* read the ith record entry from block 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCacheEntry().
+           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
            update the recId field of this Attribute Cache entry to {5,i}.
            add the Attribute Cache entry to the linked list of listHead .*/
     }
@@ -1025,7 +1025,7 @@ OpenRelTable::OpenRelTable() {
     /**** setting up Attribute Catalog relation in the Relation Cache Table ****/
 
     /* read the record entry at index 1 from block 4, the block corresponding to Relation Catalog in the disk, and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCacheEntry().
+       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
        update the recId field of this Relation Cache entry to {4,1}.
        use it to set the 1st index entry of the RelCacheTable.*/
 
@@ -1037,7 +1037,7 @@ OpenRelTable::OpenRelTable() {
     {
 
              /* read the ith record entry from bock 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCacheEntry().
+           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
            update the recId field of this Attribute Cache entry to {5,i}.
            add the Attribute Cache entry to the linked list of listHead .*/
     }
@@ -1090,7 +1090,7 @@ OpenRelTable::~OpenRelTable() {
 
     // if the Relation Catalog entry of the ATTRCAT_RELIDth Relation Cache entry has been modified:
     {
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
         Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
     }
 
@@ -1100,7 +1100,7 @@ OpenRelTable::~OpenRelTable() {
     {
         if the entry has been modified:
         {
-            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
              Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
         }
@@ -1118,7 +1118,7 @@ OpenRelTable::~OpenRelTable() {
 
     // if the Relation Catalog entry of the RELCAT_RELIDth Relation Cache entry has been modified:
     {
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
         Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
     }
 
@@ -1128,7 +1128,7 @@ OpenRelTable::~OpenRelTable() {
     {
         if the entry has been modified:
         {
-            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
 
@@ -1232,7 +1232,7 @@ int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
     }
 
     /* read the record entry corresponding to relcatRecId and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCacheEntry().
+       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
        update the recId field of this Relation Cache entry to relcatRecId.
        use the Relation Cache entry to set the relIdth entry of the RelCacheTable.*/
 
@@ -1251,7 +1251,7 @@ int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
         RecId attrcatRecId;
 
              /* read the record entry corresponding to attrcatRecId and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCacheEntry().
+           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
            update the recId field of this Attribute Cache entry to attrcatRecId.
            add the Attribute Cache entry to the linked list of listHead .*/
     }
@@ -1316,7 +1316,7 @@ int OpenRelTable::closeRel(int relId) {
 
     // if the Relation Catalog entry of the relIdth Relation Cache entry has been modified:
     {
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCacheEntryToRecord().
+        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
         Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
     }
 
@@ -1329,7 +1329,7 @@ int OpenRelTable::closeRel(int relId) {
     {
         if the entry has been modified:
         {
-            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCacheEntryToRecord().
+            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
              Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
 
         }
