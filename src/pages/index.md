@@ -65,11 +65,11 @@ The following are provided to you to get started on the project:
 
 5. [Documentation](/docs/Design/Architecture) containing detailed specification and design of each of the above modules, specification of the database disk organization, specification of the system’s high-level user-interface, descriptions of the algorithms used in various modules, and a detailed tutorial on B+tree implementation are provided. _You will be required to refer to appropriate parts of the documentation while implementing various components of the RDBMS._
 
-6. A [roadmap](/docs/Roadmap/Introduction) that guides you in implementing the system through a sequence of stages. The stages are of roughly ascending complexity. Each stage builds on the previous stages and guides you to relevant parts of the documentation which you need to read and understand for the implementation of the stage. You will have built a fully functional implementation of the RDBMS at the end of all the stages.
+6. A [roadmap](/docs/Roadmap) that guides you in implementing the system through a sequence of stages. The stages are of roughly ascending complexity. Each stage builds on the previous stages and guides you to relevant parts of the documentation which you need to read and understand for the implementation of the stage. You will have built a fully functional implementation of the RDBMS at the end of all the stages.
 
 The project assumes that you have adequate background in programming in C/C++ and data structures.
 At the end of the project, your code(approximately 3000 lines of C++ code) will allow the user to execute all NITCbase commands through the front-end interface.
 
 Though not required to be read to get started on the project, a detailed design of the NITCbase system that will eventually be built at the end of all the stages is given in the design documentation linked [here](/docs/Design/Architecture).
 
-To begin with the project, continue to the [Roadmap](/docs/Roadmap/Introduction).
+To begin with the project, continue to the [Roadmap](/docs/Roadmap).

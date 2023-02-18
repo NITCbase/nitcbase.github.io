@@ -29,7 +29,7 @@ Frontend User Interface supports the following types of commands:
 2. [Data Manipulation Language(DML) Commands](../User%20Interface%20Commands/dml.md)
 3. [Script Commands](../User%20Interface%20Commands/script-cmds.md)
 
-All the above command documents are linked to various sections of the [NITCbase Commands page](../User%20Interface%20Commands/introduction.md).
+All the above command documents are linked to various sections of the [NITCbase Commands page](../User%20Interface%20Commands).
 
 Among the above commands, the script command `run` helps the user to execute a sequence of commands from a file - hence translating them into a sequence of calls to other commands supported by Frontend interface. The echo command simply echoes back the message typed in by the user back to the console. **The translation and execution of lower layer method calls corresponding to these script commands have already been implemented and provided to you**. Hence further documentation for Frontend Class focusses only on the specifications for DDL and DML commands.
 

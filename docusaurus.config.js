@@ -97,7 +97,7 @@ const config = {
           },
           {
             type: "doc",
-            docId: "User Interface Commands/introduction",
+            docId: "User Interface Commands/index",
             position: "left",
             label: "NITCbase Commands",
           },
