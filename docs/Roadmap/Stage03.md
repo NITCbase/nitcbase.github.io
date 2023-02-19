@@ -35,8 +35,7 @@ This functionality is implemented in the [StaticBuffer](../Design/Buffer%20Layer
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
-> 🟠 -> methods that we will modify in this stage, but will require more work<br/>
-> 🟤 -> methods that require more work, but we will leave as is in this stage
+> 🟠 -> methods that we will modify in this stage, but will require more work
 
 <br/>
 
