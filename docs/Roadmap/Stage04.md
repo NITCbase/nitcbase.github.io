@@ -20,7 +20,7 @@ A relation that has it's rleation and attribute catalog entries stored in the re
 
 We discussed about the [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) classes in the preceeding stage. Here, we introduce the class [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) class. This class manages the open and closing of relations and handles the caching operations. It has a member `tableMetaInfo` which is a [MAX_OPEN](/constants) sized array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer.md#openreltablemetainfo). `tableMetaInfo` is used to store which entries of the caches are free and the relation to which an occupied entry belongs.
 
-For any index `i` that is occupied in the caches, the entries at index `i` in `relCache`, `attrCache` and `tableMetaInfo` will correspond to the same relation. Recall that this index `i` is called the relation's rel-id. These three tables comprise the core functionality of the [Cache Layer](../Design/Cache%20Layer.md) of NITCbase.
+For any index `i` that is occupied in the caches, the entries at index `i` in `relCache`, `attrCache` and `tableMetaInfo` will correspond to the same relation. Recall that this index `i` is called the relation's rel-id. These three tables comprise the core functionality of the [Cache Layer](../Design/Cache%20Layer.md) of NITCbase. A table can be opened by the user with the [OPEN TABLE](../User%20Interface%20Commands/ddl.md#open-table) command.
 
 ### Searching
 
@@ -34,7 +34,7 @@ The search functionality is implemented in the [Block Access Layer](../Design/Bl
 
 The difficulty in implementation here comes from the fact that these two operations are intertwined. Opening a relation requires us to search for the corresponding records in the catalogs. To search through the records of a relation, we require that the relation be open. You must see now why the relation catalog and attribute catalog are always kept open.
 
-A sequence diagram documenting the flow of data between the layers is shown below.
+Sequence diagrams documenting the flow of data between the layers is shown below.
 
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
@@ -49,9 +49,48 @@ sequenceDiagram
     actor User
     participant Frontend Interface
     participant Frontend
+    participant Schema Layer
+    participant Cache Layer
+    participant Block Access Layer
+    participant Buffer Layer
+    User->>Frontend Interface: OPEN TABLE
+    activate Frontend Interface
+    Frontend Interface->>Frontend:open_table()🟢
+    activate Frontend
+    Frontend->>Schema Layer:openRel()🟠
+    activate Schema Layer
+    Schema Layer->>Cache Layer:openRel()🟢
+    activate Cache Layer
+    loop until all catalog entries are read
+      Cache Layer->>Block Access Layer:linearSearch()🟢
+      activate Block Access Layer
+      Block Access Layer-->>Cache Layer: recId
+      deactivate Block Access Layer
+      Cache Layer->>Buffer Layer:getHeader()🔵, getRecord()🔵, getSlotmap()🟢
+      activate Buffer Layer
+      Buffer Layer-->>Cache Layer: record block info
+      deactivate Buffer Layer
+    end
+    Cache Layer-->>User:operation status
+    deactivate Cache Layer
+    deactivate Schema Layer
+    deactivate Frontend
+    deactivate Frontend Interface
+
+```
+
+<br/>
+
+```mermaid
+ %%{init: { 'sequence': {'mirrorActors':false} } }%%
+sequenceDiagram
+    actor User
+    participant Frontend Interface
+    participant Frontend
     participant Algebra Layer
     participant Block Access Layer
     participant Cache Layer
+    participant Buffer Layer
     User->>Frontend Interface: SELECT
     activate Frontend Interface
     Frontend Interface->>Frontend:select_from_table_where()🟢
@@ -59,12 +98,16 @@ sequenceDiagram
     Frontend->>Algebra Layer:select()🟠
     activate Algebra Layer
     loop until all records found
-      Algebra Layer->>Block Access Layer:search()🟢
+      Algebra Layer->>Block Access Layer:linearSearch()🟢
       activate Block Access Layer
       Block Access Layer->>Cache Layer:cache functions
       activate Cache Layer
       Cache Layer-->>Block Access Layer:relCatEntry, attrCatEntry
       deactivate Cache Layer
+      Block Access Layer->>Buffer Layer:getHeader()🔵, getRecord()🔵, getSlotmap()🟢
+      activate Buffer Layer
+      Buffer Layer-->>Block Access Layer: record block info
+      deactivate Buffer Layer
       Block Access Layer-->>Algebra Layer:recId
       deactivate Block Access Layer
     end
@@ -89,6 +132,9 @@ classDiagram
     -relCache[MAX_OPEN] : RelCacheEntry*
     -recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry)$ void🔵
     +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int🟢
+    +getSearchIndex(int relId, RecId *searchIndex)$ int🟢
+    +setSearchIndex(int relId, RecId *searchIndex)$ int🟢
+    +resetSearchIndex(int relId)$ int🟢
   }
   class AttrCacheTable{
       -attrCache[MAX_OPEN] : AttrCacheEntry*
