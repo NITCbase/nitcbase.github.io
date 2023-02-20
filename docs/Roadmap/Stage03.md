@@ -187,7 +187,7 @@ Compile the program and execute it. You should get output identical to what you 
 
 Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
 
-An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata.
+An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about this in later stages.
 
 **Take a quick look at the documentation for [relation cache table structures](../Design/Cache%20Layer.md#relation-cache-table-structures) and [attribute cache table structures](../Design/Cache%20Layer.md#attribute-cache-table-structures) before proceeding further.** You don't need to understand any of the fields not mentioned here explicitly.
 
@@ -205,12 +205,12 @@ classDiagram
     class RelCacheTable{
         -relCache[MAX_OPEN] : RelCacheEntry*
         -recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry)$ void 🟢
-        +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int 🟠
+        +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int 🟢
     }
     class AttrCacheTable{
         -attrCache[MAX_OPEN] : AttrCacheEntry*
         -recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry)$ void 🟢
-        +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int 🟠
+        +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int 🟢
     }
     class OpenRelTable{
         +OpenRelTable() 🟠
@@ -232,6 +232,11 @@ RelCacheEntry* RelCacheTable::relCache[MAX_OPEN];
 int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
   if (relId < 0 || relId >= MAX_OPEN) {
     return E_OUTOFBOUND;
+  }
+
+  // if there's no entry at the rel-id
+  if (relCache[relId] == nullptr) {
+    return E_RELNOTOPEN;
   }
 
   // copy the value to the relCatBuf argument
@@ -262,6 +267,8 @@ AttrCacheEntry* AttrCacheTable::attrCache[MAX_OPEN];
 
 int AttrCacheTable::getAttrCatEntry(int relId, int attrOffset, AttrCatEntry* attrCatBuf) {
   // check if 0 <= relId < MAX_OPEN and return E_OUTOFBOUND otherwise
+
+  // check if attrCache[relId] == nullptr and return E_RELNOTOPEN if true
 
   // traverse the linked list of attribute cache entries
   for (AttrCacheEntry* entry = attrCache[relId]; entry != nullptr; entry = entry->next) {
@@ -314,13 +321,20 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-You must now have an idea of the general flow of data between various functions. The only thing left to implement now is the constructor (and destructor) of class `OpenRelTable`. We'll use this constructor to read our `RELCAT` and `ATTRCAT` records from the disk into the cache. Recall that the index of a relation in the caches is called it's rel-id. The relation catalog has rel-id 0 ([RELCAT_RELID](/constants)) and the attribute catalog has rel-id 1([ATTRCAT_RELID](/constants)).
+You must now have an idea of the general flow of data between various functions. The only thing left to implement now is the constructor (and destructor) of class `OpenRelTable`. We'll use this constructor to read our `RELCAT` and `ATTRIBUTECAT` records from the disk into the cache. Recall that the index of a relation in the caches is called it's rel-id. The relation catalog has rel-id 0 ([RELCAT_RELID](/constants)) and the attribute catalog has rel-id 1([ATTRCAT_RELID](/constants)).
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>
 
 ```cpp
 OpenRelTable::OpenRelTable() {
+
+  // initialize relCache and attrCache with nullptr
+  for (int i = 0; i < MAX_OPEN; ++i) {
+    RelCacheTable::relCache[i] = nullptr;
+    AttrCacheTable::attrCache[i] = nullptr;
+  }
+
   /************ Setting up Relation Cache entries ************/
 
   /**** setting up Relation Catalog relation in the Relation Cache Table****/
