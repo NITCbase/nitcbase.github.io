@@ -124,7 +124,7 @@ _This common index is called the **`relId`** of the relation and all further ope
 
 ## Relation Cache Table Structures
 
-The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the _Relation Catalog_ entry of every open relation is loaded to the cache memory for easy access and for better performance. This is implemented using _Relation Cache_ Table. _Each entry in the Relation Cache Table stores all the attribute values of the relation's entry from the Relation Catalog block along with some additional meta-data._
+The Relation Catalog block in the disk **stores metadata corresponding to all the relations in the database**. In addition to this, the _Relation Catalog_ entry of every open relation is loaded to the Relation Cache for easy access and for better performance. The Relation Cache is implemented in [class RelCacheTable](#class-relcachetable). _Each entry in the Relation Cache stores all the attribute values of the relation's entry from the Relation Catalog along with some additional meta-data._
 
 NITCbase caches _Relation Catalog_ using two structures: `RelCatEntry` and `RelCacheEntry`.
 
@@ -152,7 +152,7 @@ The structure `RelCacheEntry` stores the _Relation Catalog_ entry of the relatio
 The `RelCacheEntry` data field details are as follows:
 
 - `relCatEntry`: Stores the relation's cached _Relation Catalog_ entry.
-- `dirty`: Indicates whether the _Relation Catalog_ entry has been modified. The _Relation Catalog_ entries with the set dirty bit are written back to disk when an open relation is closed in the cache memory.
+- `dirty`: Indicates whether the _Relation Catalog_ entry has been modified. The _Relation Catalog_ entries with the dirty bit set are written back to disk when an open relation is closed.
 - `recId`: Stores the _record id_ `{blockNum, slotNum}` of the relation's entry in the _Relation Catalog_ block on the disk. This is useful during the write back of the catalog entry to disk if it had been modified.
 - `searchIndex`: Stores the _record id_ `{blockNum, slotNum}` of the record block corresponding to the last (previous) search hit in the relation. Linear search algorithm of the Block Access Layer starts searching for the next hit from the previous hit location. The entries are initialized to `{-1, -1}` each time the relation is loaded to the cache memory. When every record of the relation has been searched, the linear search algorithm resets the `searchIndex` value to `{-1, -1}`.
 

@@ -6,9 +6,10 @@ title: "Stage 3 : The Disk Buffer and Catalog Caches"
 
 :::note Learning Objectives
 
-- Learn about the runtime data structures of NITCbase
-- Implement a read-only buffer for record blocks
-- Implement a read-only cache for the relation and attribute catalog
+- Understand the NITCbase buffer and it's structure
+- Understand the structure and functionality of the relation cache and attribute cache
+- Implement disk read operations using the buffer
+- Initialise the relation and attribute caches and display the values stored in it
 
 :::
 
@@ -30,12 +31,12 @@ However, in the present stage, we will not be implementing the write-back functi
 
 ### Using the disk buffer
 
-This functionality is implemented in the [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) class. This class declares a static two dimensional array of size [BUFFER_CAPACITY](/constants) × [BLOCK_SIZE](/constants). The methods relevant to adding this functionality are shown in the class diagram below.
+The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) class. This class declares a static two dimensional array **`unsigned char blocks[][]`** of size [BUFFER_CAPACITY](/constants) × [BLOCK_SIZE](/constants) (= 32 × 2048). The methods relevant to adding this functionality are shown in the class diagram below.
 
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
-> 🟠 -> methods that we will modify in this stage, but will require more work
+> 🟠 -> methods that we will modify in this stage, and in subsequent stages
 
 <br/>
 
@@ -61,12 +62,14 @@ classDiagram
 
 <br/>
 
-Modify your `BlockBuffer.cpp` file to read from the buffer instead of the disk directly. We will be making use of the `loadBlockAndGetBufferPtr()` method instead of `Disk::readBlock()`. This function will call the appropriate `StaticBuffer` functions to load the block to a free buffer and get a pointer to it.
+Modify your `BlockBuffer.cpp` file to read from the buffer instead of the disk directly(as we did in the previous stage). We will be making use of the `loadBlockAndGetBufferPtr()` method instead of `Disk::readBlock()`. This function will call the appropriate `StaticBuffer` functions to load the block from the disk to a free buffer block and get a pointer to it.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
 ```cpp
+// the declarations for these functions can be found in "BlockBuffer.h"
+
 int BlockBuffer::getHeader(struct HeadInfo *head) {
 
   unsigned char *bufferPtr;
@@ -75,10 +78,10 @@ int BlockBuffer::getHeader(struct HeadInfo *head) {
     return ret;   // return any errors that might have occured in the process
   }
 
-  // ...
+  // ... (the rest of the logic is as in stage 2)
 
   memcpy(&head->numSlots, bufferPtr + 24, 4);
-  // ...
+  // ... (the rest of the logic is as in stage 2)
 }
 
 int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
@@ -88,7 +91,7 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
   if (ret != SUCCESS) {
     return ret;
   }
-  // ...
+  // ... (the rest of the logic is as in stage 2
 }
 
 int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr) {
@@ -114,12 +117,14 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr) {
 
 </details>
 
-Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer.md#buffer-structure) which is used to store the metadata of the [BUFFER_CAPACITY](/constants) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a block is free or if it belongs to a particular block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
+Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer.md#buffer-structure) which is used to store the metadata of the 32 (=[BUFFER_CAPACITY](/constants)) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a buffer block is free or if it is storing a particular disk block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>
 
 ```cpp
+// the declarations for this class can be found at "StaticBuffer.h"
+
 unsigned char StaticBuffer::blocks[BUFFER_CAPACITY][BLOCK_SIZE];
 struct BufferMetaInfo StaticBuffer::metainfo[BUFFER_CAPACITY];
 
@@ -131,7 +136,11 @@ StaticBuffer::StaticBuffer() {
   }
 }
 
-// override the default destructor. we'll write this function later.
+/*
+At this stage, we are not writing back from the buffer to the disk since we are
+not modifying the buffer. So, we will define an empty destructor for now. In
+subsequent stages, we will implement the write-back functionality here.
+*/
 StaticBuffer::~StaticBuffer() {}
 
 int StaticBuffer::getFreeBuffer(int blockNum) {
@@ -140,7 +149,9 @@ int StaticBuffer::getFreeBuffer(int blockNum) {
   }
   int allocatedBuffer;
 
-  // find the first free buffer and assign it's index to allocatedBuffer (check metainfo)
+  // iterate through all the blocks in the StaticBuffer
+  // find the first free block in the buffer (check metainfo)
+  // assign allocatedBuffer = index of the free block
 
   metainfo[allocatedBuffer].free = false;
   metainfo[allocatedBuffer].blockNum = blockNum;
@@ -149,7 +160,7 @@ int StaticBuffer::getFreeBuffer(int blockNum) {
 }
 
 int StaticBuffer::getBufferNum(int blockNum) {
-  // Check if blockNum is valid (non zero and less than number of disk blocks)
+  // Check if blockNum is valid (between zero and DISK_BLOCKS)
   // and return E_OUTOFBOUND if not valid.
 
   // find and return the bufferIndex which corresponds to blockNum (check metainfo)
@@ -187,7 +198,7 @@ Compile the program and execute it. You should get output identical to what you 
 
 Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
 
-An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about this in later stages.
+An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about the `open` operation in later stages.
 
 **Take a quick look at the documentation for [relation cache table structures](../Design/Cache%20Layer.md#relation-cache-table-structures) and [attribute cache table structures](../Design/Cache%20Layer.md#attribute-cache-table-structures) before proceeding further.** You don't need to understand any of the fields not mentioned here explicitly.
 
@@ -245,13 +256,21 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
   return SUCCESS;
 }
 
-// convert a relation catalog record to RelCatEntry struct
-void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry* relCatEntry) {
+/* Converts a relation catalog record to RelCatEntry struct
+    We get the record as Attribute[] from the BlockBuffer.getRecord() function.
+    This function will convert that to a struct RelCatEntry type.
+*/
+void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
+                                        RelCatEntry* relCatEntry) {
   strcpy(relCatEntry->relName, record[RELCAT_REL_NAME_INDEX].sVal);
   relCatEntry->numAttrs = (int)record[RELCAT_NO_ATTRIBUTES_INDEX].nVal;
 
-  // fill the rest of the relCatEntry struct with the values at RELCAT_NO_RECORDS_INDEX,
-  // RELCAT_FIRST_BLOCK_INDEX, RELCAT_LAST_BLOCK_INDEX, RELCAT_NO_SLOTS_PER_BLOCK_INDEX
+  /* fill the rest of the relCatEntry struct with the values at
+      RELCAT_NO_RECORDS_INDEX,
+      RELCAT_FIRST_BLOCK_INDEX,
+      RELCAT_LAST_BLOCK_INDEX,
+      RELCAT_NO_SLOTS_PER_BLOCK_INDEX
+  */
 }
 ```
 
@@ -265,6 +284,7 @@ Similarly, in [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable),
 ```cpp
 AttrCacheEntry* AttrCacheTable::attrCache[MAX_OPEN];
 
+// returns the attrOffset-th attribute for the relation corresponding to relId
 int AttrCacheTable::getAttrCatEntry(int relId, int attrOffset, AttrCatEntry* attrCatBuf) {
   // check if 0 <= relId < MAX_OPEN and return E_OUTOFBOUND otherwise
 
@@ -282,7 +302,12 @@ int AttrCacheTable::getAttrCatEntry(int relId, int attrOffset, AttrCatEntry* att
   return E_ATTRNOTEXIST;
 }
 
-void AttrCacheTable::recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry* attrCatEntry) {
+/* Converts a attribute catalog record to AttrCatEntry struct
+    We get the record as Attribute[] from the BlockBuffer.getRecord() function.
+    This function will convert that to a struct AttrCatEntry type.
+*/
+void AttrCacheTable::recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS],
+                                          AttrCatEntry* attrCatEntry) {
   strcpy(attrCatEntry->relName, record[ATTRCAT_REL_NAME_INDEX].sVal);
 
   // copy the rest of the fields in the record to the attrCacheEntry struct
@@ -336,6 +361,8 @@ OpenRelTable::OpenRelTable() {
   }
 
   /************ Setting up Relation Cache entries ************/
+  // (we need to populate relation cache with entries for the relation catalog
+  //  and attribute catalog.)
 
   /**** setting up Relation Catalog relation in the Relation Cache Table****/
   RecBuffer relCatBlock(RELCAT_BLOCK);
@@ -361,6 +388,8 @@ OpenRelTable::OpenRelTable() {
 
 
   /************ Setting up Attribute cache entries ************/
+  // (we need to populate attribute cache with entries for the relation catalog
+  //  and attribute catalog.)
 
   /**** setting up Relation Catalog relation in the Attribute Cache Table ****/
   RecBuffer attrCatBlock(ATTRCAT_BLOCK);

@@ -29,7 +29,7 @@ A sequence diagrams documenting the flow of data between the layers is shown bel
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
-> 🟠 -> methods that we will modify in this stage, but will require more work <br/>
+> 🟠 -> methods that we will modify in this stage, and in subsequent stages <br/>
 > 🟤 -> methods that require more work, but we will leave as is in this stage
 
 <br/>
@@ -351,4 +351,4 @@ Selected successfully into null
 
 ## Exercises
 
-**Q1**. In the exercises of the previous stages, you created a relation Students(). Insert records into it and do a search operation. (pending)
+**Q1**. In the exercises of the previous stages, you created a relation (Students(RollNumber STR, Name STR, Marks NUM, Batch STR). Insert records into it and do a search operation. (pending)

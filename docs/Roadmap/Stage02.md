@@ -147,7 +147,7 @@ A simplified class diagram with the functions we need to implement is shown belo
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
-> 🟠 -> methods that we will modify in this stage, but will require more work
+> 🟠 -> methods that we will modify in this stage, and in subsequent stages
 
 <br/>
 
@@ -230,6 +230,7 @@ Now, let us implement the functions that we invoked from the `main()` function. 
 <summary>Buffer/BlockBuffer.cpp</summary>
 
 ```cpp
+// the declarations for these functions can be found in "BlockBuffer.h"
 
 BlockBuffer::BlockBuffer(int blockNum) {
   // initialise this.blockNum with the argument
@@ -307,7 +308,7 @@ Relation: Students
   Class: STR
 ```
 
-Try creating more relations using the XFS interface and you'll see the schema of all those relations when you run NITCbase.
+Try creating more relations using the XFS interface and you'll see the schema of all those relations when you run the executable that we just built.
 
 :::caution
 The attribute catalog can span across multiple disk blocks. We are only reading from one block of the attribute catalog. If the total number of attributes exceeds 19 (Why?), another block will be allocated for the attribute catalog. Your code will have to be modified to read the other blocks if needed.
@@ -316,6 +317,6 @@ The attribute catalog can span across multiple disk blocks. We are only reading 
 
 ## Exercises
 
-**Q1**. Modify this program to read across multiple blocks of the attribute catalog. Insert the relations _Events(`id`: `NUM`, `title`: `STR`, `location`: `STR`), Locations(`name`: `STR`, `capacity`: `NUM`)_ and _Participants(`regNo`: `NUM`, `event`: `STR`)_ into the database using the XFS interface. Print the details using NITCbase. (Hint: the `rblock` field in the header of the attribute catalog block gives the next block.)
+**Q1**. Modify this program to **read across multiple blocks of the attribute catalog**. Create the relations _Events(`id`: `NUM`, `title`: `STR`, `location`: `STR`), Locations(`name`: `STR`, `capacity`: `NUM`)_ and _Participants(`regNo`: `NUM`, `event`: `STR`)_ into the database using the XFS interface. Print the details using NITCbase. (Hint: the `rblock` field in the header of the attribute catalog block gives the next block.)
 
 **Q2**. Modify the `main` function to update the schema of the Student relation. Change the name of the `Class` attribute to `Batch` and confirm that the change has been made by printing the relation again.
