@@ -92,8 +92,8 @@ classDiagram
   class AttrCacheTable{
       -attrCache[MAX_OPEN] : AttrCacheEntry*
       -recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry)$ void🔵
-      +getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int🟢
       +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int🔵
+      +getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int🟢
   }
   class OpenRelTable{
       +OpenRelTable(): 🟤
@@ -351,4 +351,22 @@ Selected successfully into null
 
 ## Exercises
 
-**Q1**. In the exercises of the previous stages, you created a relation (Students(RollNumber STR, Name STR, Marks NUM, Batch STR). Insert records into it and do a search operation. (pending)
+**Q1**. In the exercises of the previous stages, you created a relation `Students(RollNumber STR, Name STR, Marks NUM, Batch STR)`. Insert the following values into the relation using the [INSERT](../User%20Interface%20Commands/dml.md#insert-into-table-values) command in the **XFS Interface**.
+
+```plain
+B220502CS, Keerthana, 99, J
+B220983CS, Gokul,     84, B
+B221002CS, Jessiya,   84, B
+B220763CS, Cliford,   90, J
+B220110CS, James,     74, B
+B220439CS, Anna,      89, J
+B220287CS, Arun,      93, B
+```
+
+Now, run the following search queries **in your NITCbase** and confirm whether it is working.
+
+```sql
+SELECT * FROM Students INTO null WHERE Batch=J;
+SELECT * FROM Students INTO null WHERE Batch!=J;
+SELECT * FROM Students INTO null WHERE Marks>=90;
+```

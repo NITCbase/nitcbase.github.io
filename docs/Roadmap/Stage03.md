@@ -25,7 +25,7 @@ We have seen record blocks, the way they are represented on the NITCbase disk, a
 
 ## Disk Buffer
 
-Following the [principle of locality](https://en.wikipedia.org/wiki/Locality_of_reference), NITCbase buffers all the disk i/o operations. We will be pre-allocating memory for holding 32 disk blocks in memory at a given time. Whenever a disk block is accessed for the first time, it will be loaded into the buffer. All subsequent operations on that block will be done on that buffer until that disk block is swapped out by a more recently required disk block. All the changes done to the buffer will be commited back to the disk at that point.
+Following the [principle of locality](https://en.wikipedia.org/wiki/Locality_of_reference), NITCbase buffers all the disk i/o operations. We will be pre-allocating memory for holding 32 disk blocks in memory at a given time. Whenever a disk block is accessed for the first time, it will be loaded into the buffer. All subsequent operations on that block will be done on that buffer until that disk block is swapped out by a more recently required disk block. All the changes done to the buffer will be commited back to the disk at that point. This functionality is implemented as part of the [Buffer Layer](../Design/Buffer%20Layer.md) of NITCbase.
 
 However, in the present stage, we will not be implementing the write-back functionality. Here, we will modify our disk read operations to work from a buffer instead of the disk directly. This allows all subsequent read operations to be much quicker than repeatedly reading from the disk.
 
@@ -70,6 +70,11 @@ Modify your `BlockBuffer.cpp` file to read from the buffer instead of the disk d
 ```cpp
 // the declarations for these functions can be found in "BlockBuffer.h"
 
+
+/*
+Used to get the header of the block into the location pointed to by `head`
+NOTE: this function expects the caller to allocate memory for `head`
+*/
 int BlockBuffer::getHeader(struct HeadInfo *head) {
 
   unsigned char *bufferPtr;
@@ -84,6 +89,10 @@ int BlockBuffer::getHeader(struct HeadInfo *head) {
   // ... (the rest of the logic is as in stage 2)
 }
 
+/*
+Used to get the record at slot `slotNum` into the array `rec`
+NOTE: this function expects the caller to allocate memory for `rec`
+*/
 int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
   // ...
   unsigned char *bufferPtr;
@@ -94,6 +103,10 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
   // ... (the rest of the logic is as in stage 2
 }
 
+/*
+Used to load a block to the buffer and get a pointer to it.
+NOTE: this function expects the caller to allocate memory for the argument
+*/
 int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr) {
   // check whether the block is already present in the buffer using StaticBuffer.getBufferNum()
   int bufferNum = StaticBuffer::getBufferNum(this->blockNum);
@@ -159,6 +172,9 @@ int StaticBuffer::getFreeBuffer(int blockNum) {
   return allocatedBuffer;
 }
 
+/* Get the buffer index where a particular block is stored
+   or E_BLOCKNOTINBUFFER otherwise
+*/
 int StaticBuffer::getBufferNum(int blockNum) {
   // Check if blockNum is valid (between zero and DISK_BLOCKS)
   // and return E_OUTOFBOUND if not valid.
@@ -196,7 +212,9 @@ Compile the program and execute it. You should get output identical to what you 
 
 ## Caches
 
-Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
+Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The [Cache Layer](../Design/Cache%20Layer.md) handles the implementation of these structures.
+
+The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
 
 An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about the `open` operation in later stages.
 
@@ -240,6 +258,10 @@ We'll start by implementing [RelCacheTable](../Design/Cache%20Layer.md#class-rel
 ```cpp
 RelCacheEntry* RelCacheTable::relCache[MAX_OPEN];
 
+/*
+Get the relation catalog entry for the relation with rel-id `relId` from the cache
+NOTE: this function expects the caller to allocate memory for `*relCatBuf`
+*/
 int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
   if (relId < 0 || relId >= MAX_OPEN) {
     return E_OUTOFBOUND;
@@ -259,6 +281,7 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry* relCatBuf) {
 /* Converts a relation catalog record to RelCatEntry struct
     We get the record as Attribute[] from the BlockBuffer.getRecord() function.
     This function will convert that to a struct RelCatEntry type.
+NOTE: this function expects the caller to allocate memory for `*relCatEntry`
 */
 void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
                                         RelCatEntry* relCatEntry) {
