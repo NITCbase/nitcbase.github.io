@@ -6,9 +6,9 @@ title: "Stage 3 : The Disk Buffer and Catalog Caches"
 
 :::note Learning Objectives
 
-- Understand the NITCbase buffer and it's structure
+- Understand disk buffering in NITCbase in the Buffer Layer
 - Understand the structure and functionality of the relation cache and attribute cache
-- Implement disk read operations using the buffer
+- Implement disk read operations through the Buffer Layer
 - Initialise the relation and attribute caches and display the values stored in it
 
 :::
@@ -42,11 +42,18 @@ The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer.md
 
 ```mermaid
 classDiagram
-  direction RL
+  direction TD
+  BlockBuffer <|-- RecBuffer
+  StaticBuffer<|..RecBuffer : uses
+  StaticBuffer<|..BlockBuffer : uses
   class RecBuffer{
     +RecBuffer(int blockNum) 🔵
-    +getRecord(union Attribute *rec, int slotNum) int🟠
-    +getHeader(union Attribute *rec, int slotNum) int🟢
+    +getRecord(union Attribute *rec, int slotNum) int🟢
+  }
+  class BlockBuffer{
+    -int blockNum
+    +BlockBuffer(int blockNum) 🔵
+    +getHeader(struct HeadInfo *head) int🟢
     -loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟠
   }
   class StaticBuffer{
@@ -57,7 +64,6 @@ classDiagram
     -getFreeBuffer(int blockNum)$ int🟠
     -getBufferNum(int blockNum)$ int🟢
   }
-  StaticBuffer<|..RecBuffer : uses
 ```
 
 <br/>
@@ -228,6 +234,7 @@ The next feature that we will add to NITCbase is a rudimentary version of the re
 
 ```mermaid
 classDiagram
+    direction RL
     RelCacheTable <|.. OpenRelTable : friend
     AttrCacheTable <|.. OpenRelTable : friend
 
@@ -247,6 +254,47 @@ classDiagram
     }
 
 ```
+
+<br/>
+
+A diagram showing the sequence of operations at system start is shown below.
+
+```mermaid
+ %%{init: { 'sequence': {'mirrorActors':false} } }%%
+sequenceDiagram
+    actor User
+    participant Cache Layer
+    participant Buffer Layer
+    User-->>Buffer Layer:*start system*
+    activate Buffer Layer
+    Note right of Buffer Layer: set up the static buffer
+    Buffer Layer-->>User: *initialization complete*
+    deactivate Buffer Layer
+    User-->>Cache Layer:*start system*
+    activate Cache Layer
+    Note right of Cache Layer: create a RecBuffer for the catalogs
+    activate Buffer Layer
+    Cache Layer->>Buffer Layer: getRecord()🔵
+    Buffer Layer-->>Cache Layer: catalog block info
+    deactivate Buffer Layer
+    Note right of Cache Layer: set up the caches with the values from the record
+    Cache Layer-->>User: *initialization complete*
+    deactivate Cache Layer
+
+```
+
+<br/>
+
+:::note A NOTE ABOUT STATIC CLASSES
+A class is called static if all its member fields and functions are declared static. In the case of such classes, memory is allocated [statically](https://en.wikipedia.org/wiki/Static_variable). Generally, static classes arise when only one instance of the class is required during run time. [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable), [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) are examples of static classes.
+
+Generally, there is no need to create an instance of a static class (by defining a variable of the class) as the declaration of the class itself fixes the storage and access to the members and methods of the class.
+
+However, there is one exception to this rule. The exception arises when we wish to run a constructor and destructor for the class for initialization. In such cases, an instance of the class needs to be declared. [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) are examples of classes that require such instantiation. On the other hand, [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) require no initializer code to run and hence, no instance variables are declared.
+
+Many of the classes encapsulating the implementation of higher layers of NITCbase are static classes that require no initializer code to run, and hence do not require instances to be created.
+
+:::
 
 <br/>
 
@@ -307,7 +355,9 @@ Similarly, in [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable),
 ```cpp
 AttrCacheEntry* AttrCacheTable::attrCache[MAX_OPEN];
 
-// returns the attrOffset-th attribute for the relation corresponding to relId
+/* returns the attrOffset-th attribute for the relation corresponding to relId
+NOTE: this function expects the caller to allocate memory for `*attrCatBuf`
+*/
 int AttrCacheTable::getAttrCatEntry(int relId, int attrOffset, AttrCatEntry* attrCatBuf) {
   // check if 0 <= relId < MAX_OPEN and return E_OUTOFBOUND otherwise
 
@@ -468,7 +518,3 @@ Relation: ATTRIBUTECAT
 ## Exercises
 
 **Q1**. Modify the program to cache and print the catalog entries for the relation `Students` we created in the last stage.
-
----
-
-We will be working with the [Frontend Interface](../Design/Architecture.md) in all subsequent stages. All the functionality we implemented in the main function will be reimplemented in the appropriate handler function later. **Undo your changes and revert the `main.c` file to it's [original state](https://github.com/Nitcbase/nitcbase/blob/master/main.cpp) calling the `handleFrontend()` function.**

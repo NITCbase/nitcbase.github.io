@@ -12,15 +12,15 @@ title: "Stage 4 : Looking at the Records"
 
 ## Introduction
 
-We discussed about the relation and attribute cache in the previous stage. Your implementation must now be able to read the rows and columns of the relations `RELCAT` and `ATTRIBUTECAT` from the caches and display the attributes for these relations. In this stage, we'll implement a search functionality so that we can search through all the records of these relations too.
+We discussed the relation and attribute cache in the previous stage. Your implementation must now be able to read the rows and columns of the relations `RELCAT` and `ATTRIBUTECAT` from the caches and display the attributes for these relations. In this stage, we'll implement a search functionality so that we can search through all the records of these relations too.
 
 ## The Search Operation
 
 A search operation involves fetching all records that satisfy some condition. This is also known as a selection operation in [relational algebra](https://en.wikipedia.org/wiki/Relational_algebra). NITCbase supports selection with the following operators: `=`, `!=`, `>`, `>=`, `<` `>=`. We'll implement a function that will do the appropriate search and return to us a record that satisfies our condition each time it's called. Higher levels can call this function repeatedly until there are no more records to be found.
 
-You might've realized that the above function would require some global state to work as intended. We'll need to keep track of the previously found record so that we can fetch the next record that satisfies the condition. And that is exactly what the `searchIndex` field in the caches do. `searchIndex` in the relation cache entry is used to store the last hit during linear search on that relation. A value of `{-1, -1}` indicates that the search should start over from the beginning again.
+You might've realized that the above function would require some global state to work as intended. We'll need to keep track of the previously found record so that we can fetch the next record that satisfies the condition. And that is exactly what the `searchIndex` field in the relation cache does. `searchIndex` in a relation cache entry stores the `rec-id = {block, slot}` of the last hit during linear search on that relation. A value of `rec-id = {-1, -1}` indicates that the search should start over from the beginning again.
 
-The search functionality is implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md) of NITCbase and made available to the user through the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command in the [Algebra Layer](../Design/Algebra%20Layer.md).
+The search functionality is implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md) of NITCbase and made available to the user through the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command. This command will be parsed and handled by the [Frontend Interface](../Design/Frontend.md#frontend-programming-interface) which will call the [Algebra Layer](../Design/Algebra%20Layer.md). The `searchIndex` field and it's operations will be implemented in the [Cache Layer](../Design/Cache%20Layer.md).
 
 ## Implementation
 
@@ -30,7 +30,7 @@ A sequence diagrams documenting the flow of data between the layers is shown bel
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
 > 🟠 -> methods that we will modify in this stage, and in subsequent stages <br/>
-> 🟤 -> methods that require more work, but we will leave as is in this stage
+> 🟤 -> methods that we built earlier and require more work later, but will leave as is in this stage
 
 <br/>
 
@@ -38,17 +38,17 @@ A sequence diagrams documenting the flow of data between the layers is shown bel
  %%{init: { 'sequence': {'mirrorActors':false} } }%%
 sequenceDiagram
     actor User
-    participant Frontend Interface
-    participant Frontend
+    participant Frontend User Interface
+    participant Frontend Programming Interface
     participant Algebra Layer
     participant Block Access Layer
     participant Cache Layer
     participant Buffer Layer
-    User->>Frontend Interface: SELECT
-    activate Frontend Interface
-    Frontend Interface->>Frontend:select_from_table_where()🟢
-    activate Frontend
-    Frontend->>Algebra Layer:select()🟠
+    User->>Frontend User Interface: SELECT
+    activate Frontend User Interface
+    Frontend User Interface->>Frontend Programming Interface:select_from_table_where()🟢
+    activate Frontend Programming Interface
+    Frontend Programming Interface->>Algebra Layer:select()🟠
     activate Algebra Layer
     loop until all records found
       Algebra Layer->>Block Access Layer:linearSearch()🟢
@@ -66,8 +66,8 @@ sequenceDiagram
     end
     Algebra Layer-->>User:operation status
     deactivate Algebra Layer
-    deactivate Frontend
-    deactivate Frontend Interface
+    deactivate Frontend Programming Interface
+    deactivate Frontend User Interface
 
 ```
 
@@ -105,9 +105,24 @@ classDiagram
 
 <br/>
 
-We will be working with the [Frontend Interface](../Design/Architecture.md) from this stage onwards. If you have not done so already, clear your `main.cpp` file to it's [original state](https://github.com/Nitcbase/nitcbase/blob/master/main.cpp). It should only have declarations of `Disk`, `StaticBuffer` and `OpenRelTable` classes and a call to the `handleFrontend()` function.
+We will be working with the [Frontend Interface](../Design/Architecture.md) from this stage onwards. For all subsequent stages, your `main.cpp` only needs to have declarations of `Disk`, `StaticBuffer` and `OpenRelTable` classes and a call to the `handleFrontend()` function as shown below.
 
-As shown in the sequence diagram above, the Frontend Interface will parse the `SELECT` command and call the `Frontend::select_from_table()` function. This function will in turn call the `Algebra::select()` function.
+<details>
+<summary>main.cpp</summary>
+
+```cpp
+int main(int argc, char *argv[]) {
+  Disk disk_run;
+  StaticBuffer buffer;
+  OpenRelTable cache;
+
+  return FrontendInterface::handleFrontend(argc, argv);
+}
+```
+
+</details>
+
+As shown in the sequence diagram above, the Frontend User Interface will parse the `SELECT` command and call the `Frontend::select_from_table()` function in the Frontend Programming Interface. The actual _select_ functionality is implemented in the Algebra Layer. Hence, the implementation of the `Frontend::select_from_table()` function only involves a call to the `Algebra::select()` function.
 
 <details>
 <summary>Frontend/Frontend.cpp</summary>
@@ -121,13 +136,20 @@ int Frontend::select_from_table_where(char relname_source[ATTR_SIZE], char relna
 
 </details>
 
-Before we can get into implementing search, we need to learn about searchIndex and implement the associated functions. Each entry in the relation cache has a `searchIndex` field (see [struct RelCatEntry](../Design/Cache%20Layer.md#relcacheentry)). By default, this field stores a value of `{-1, -1}`. Once a linear search operation is executed and a record is found, we update `searchIndex` with the rec-id(`{block, slot}`) of that record. The next time `linearSearch()` is called, search will resume from this block until a successful block is found. To start the search from the first record, `searchIndex` will have to be reset. The [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) defines methods to provide this functionality.
+Before we can get into implementing search, we need to understand `searchIndex` and implement the associated functions in the [Cache Layer](../Design/Cache%20Layer.md).
+
+Each entry in the relation cache has a `searchIndex` field (see [struct RelCatEntry](../Design/Cache%20Layer.md#relcacheentry)). To start a search operation from the first record, we initialise this field with `{-1, -1}` with the `RelCacheTable::resetSearchIndex()` function. Once a linear search operation is executed and a record is found, we update `searchIndex` with the rec-id(`{block, slot}`) of that record using `RelCacheTable::setSearchIndex()`. The next time `linearSearch()` is called, search will resume from this block until a successful block is found.
+
+The [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) defines methods to provide this functionality.
 
 <details>
 <summary>Cache/RelCacheTable.cpp</summary>
 
 ```cpp
 
+/* will return the searchIndex for the relation corresponding to `relId
+NOTE: this function expects the caller to allocate memory for `*searchIndex`
+*/
 int RelCacheTable::getSearchIndex(int relId, RecId* searchIndex) {
   // check if 0 <= relId < MAX_OPEN and return E_OUTOFBOUND otherwise
 
@@ -139,12 +161,12 @@ int RelCacheTable::getSearchIndex(int relId, RecId* searchIndex) {
   return SUCCESS;
 }
 
+// sets the searchIndex for the relation corresponding to relId
 int RelCacheTable::setSearchIndex(int relId, RecId* searchIndex) {
 
   // check if 0 <= relId < MAX_OPEN and return E_OUTOFBOUND otherwise
 
   // check if relCache[relId] == nullptr and return E_RELNOTOPEN if true
-
 
   // update the searchIndex value in the relCache for the relId to the searchIndex argument
 
@@ -159,13 +181,15 @@ int RelCacheTable::resetSearchIndex(int relId) {
 
 </details>
 
-The [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command specifies a condition to check for in all the records. While checking for this condition, we will need to have the details of the attribute which is part of the condition. In the previous stage, we had implemented the `getAttrCatEntry()` function which returned to us the attribute at a particular offset. Here, we overload that function to find an attribute of a relation with a particular name.
+The [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command specifies a condition expecting to fetch all the records that satisfy the condition. While checking for this condition, we will need to have the details of the attribute which is part of the condition. In the previous stage, we had implemented the `AttrCacheTable::getAttrCatEntry()` function in the [Cache Layer](../Design/Cache%20Layer.md) which returned to us the attribute at a particular offset. Here, we overload that function to find an attribute of a relation with a particular name.
 
 <details>
 <summary>Cache/AttrCacheTable.cpp</summary>
 
 ```cpp
-
+/* returns the attribute with name `attrName` for the relation corresponding to relId
+NOTE: this function expects the caller to allocate memory for `*attrCatBuf`
+*/
 int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry* attrCatBuf) {
 
   // check that relId is valid and corresponds to an open relation
@@ -182,12 +206,15 @@ int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCat
 
 </details>
 
-One last thing we will need before implementing search is the ability to read the slotmap so that we can iterate through all the valid records of the relation. Let's add that function to our [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) implementation.
+One last thing we will need before implementing search is the ability to read the slotmap so that we can iterate through all the valid records of the relation. Let's add that function to our [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) implementation in the [Buffer Layer](../Design/Buffer%20Layer.md).
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
 ```cpp
+/* used to get the slotmap from a record block
+NOTE: this function expects the caller to allocate memory for `*slotMap`
+*/
 int RecBuffer::getSlotMap(unsigned char *slotMap) {
   unsigned char *bufferPtr;
 
@@ -216,40 +243,36 @@ int RecBuffer::getSlotMap(unsigned char *slotMap) {
 
 Now, we finally implement linear search on our database. As mentioned earlier, NITCbase supports 6 operators in our search operation (`=`, `!=`, `>`, `>=`, `<` `>=`).
 
-An attribute in NITCbase can be either a string or a number. In case the attribute is a number, the operators work as you'd expect. If it is a string, the operation is performed with respect to lexicographic order (i.e `>` would be checked on the first differing letter between two strings). It would be convenient in our operation to abstract this implementation detail to a separate function. That is exactly what the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` does. **Implement this function before proceeding further.**
+An attribute in NITCbase can be either a string or a number. In case the attribute is a number, the operators work as you'd expect. If it is a string, the operation is performed with respect to lexicographic order (i.e `>` would be checked on the first differing letter between two strings). It would be convenient in our operation to abstract this implementation detail to a separate function. That is exactly what the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` does.
+
+> **TASK**: Implement the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) before proceeding further.
+
+Now, we implement the `BlockAccess::linearSearch()` function in the [Block Access Layer](../Design/Block%20Access%20Layer.md).
 
 <details>
 <summary>BlockAccess/BlockAccess.cpp</summary>
 
-Implement this function by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--linearsearch).
+Implement this function by looking at the algorithm given in the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--linearsearch).
 
 </details>
 
-The last piece of this puzzle is to make use of the records that we get from linearSearch and print it to the console so that we can see it. In actuality, NITCbase only allows you to _select_ records into another relation. But, at this stage we will ignore the target relation and just print the selected records onto the console.
+The last thing we need to do is to make use of the records that we get from `BlockAccess::linearSearch()` and print it to the console so that we can see it. This functionality is implemented in the `Algebra::select()` function in the [Algebra Layer](../Design/Algebra%20Layer.md).
+
+In actuality, NITCbase only allows you to _select_ records into another relation. But, at this stage we will ignore the target relation and just print the selected records onto the console. This will be modified later according to the actual specification.
 
 <details>
 <summary>Algebra/Algebra.cpp</summary>
 
 ```cpp
 
-// will return if a string can be parsed as a floating point number
-bool isNumber(char *str) {
-  int len;
-  float ignore;
-  /*
-    sscanf returns the number of elements read, so if there is no float matching
-    the first %f, ret will be 0, else it'll be 1
-
-    %n gets the number of characters read. this scanf sequence will read the
-    first float ignoring all the whitespace before and after. and the number of
-    characters read that far will be stored in len. if len == strlen(str), then
-    the string only contains a float with/without whitespace. else, there's other
-    characters.
-  */
-  int ret = sscanf(str, "%f %n", &ignore, &len);
-  return ret == 1 && len == strlen(str);
-}
-
+/* used to select all the records that satisfy a condition.
+the arguments of the function are
+- srcRel - the source relation we want to select from
+- targetRel - the relation we want to select into. (ignore for now)
+- attr - the attribute that the condition is checking
+- op - the operator of the condition
+- strVal - the value that we want to compare against (represented as a string)
+*/
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
   int srcRelId = OpenRelTable::getRelId(srcRel);
   if (srcRelId == E_RELNOTOPEN) {
@@ -265,7 +288,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
   int type = attrCatEntry.attrType;
   Attribute attrVal;
   if (type == NUMBER) {
-    if (isNumber(strVal)) {
+    if (isNumber(strVal)) {       // the isNumber() functoin is implemented below
       attrVal.nVal = atof(strVal);
     } else {
       return E_ATTRTYPEMISMATCH;
@@ -307,6 +330,25 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
   }
 
   return SUCCESS;
+}
+
+
+// will return if a string can be parsed as a floating point number
+bool isNumber(char *str) {
+  int len;
+  float ignore;
+  /*
+    sscanf returns the number of elements read, so if there is no float matching
+    the first %f, ret will be 0, else it'll be 1
+
+    %n gets the number of characters read. this scanf sequence will read the
+    first float ignoring all the whitespace before and after. and the number of
+    characters read that far will be stored in len. if len == strlen(str), then
+    the string only contains a float with/without whitespace. else, there's other
+    characters.
+  */
+  int ret = sscanf(str, "%f %n", &ignore, &len);
+  return ret == 1 && len == strlen(str);
 }
 
 ```
