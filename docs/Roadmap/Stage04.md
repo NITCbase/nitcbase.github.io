@@ -73,7 +73,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the Cache Layer is shown below.
+A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -122,7 +122,7 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-As shown in the sequence diagram above, the Frontend User Interface will parse the `SELECT` command and call the `Frontend::select_from_table()` function in the Frontend Programming Interface. The actual _select_ functionality is implemented in the Algebra Layer. Hence, the implementation of the `Frontend::select_from_table()` function only involves a call to the `Algebra::select()` function.
+As shown in the sequence diagram above, the Frontend User Interface will parse the `SELECT` command and call the `Frontend::select_from_table()` function in the Frontend Programming Interface. The actual _select_ functionality is implemented in the [Algebra Layer](../Design/Algebra%20Layer.md). Hence, the implementation of the `Frontend::select_from_table()` function only involves a call to the `Algebra::select()` function.
 
 <details>
 <summary>Frontend/Frontend.cpp</summary>
@@ -245,7 +245,7 @@ Now, we finally implement linear search on our database. As mentioned earlier, N
 
 An attribute in NITCbase can be either a string or a number. In case the attribute is a number, the operators work as you'd expect. If it is a string, the operation is performed with respect to lexicographic order (i.e `>` would be checked on the first differing letter between two strings). It would be convenient in our operation to abstract this implementation detail to a separate function. That is exactly what the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` does.
 
-> **TASK**: Implement the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) before proceeding further.
+> **TASK**: Implement the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` before proceeding further.
 
 Now, we implement the `BlockAccess::linearSearch()` function in the [Block Access Layer](../Design/Block%20Access%20Layer.md).
 
@@ -274,7 +274,7 @@ the arguments of the function are
 - strVal - the value that we want to compare against (represented as a string)
 */
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
-  int srcRelId = OpenRelTable::getRelId(srcRel);
+  int srcRelId = OpenRelTable::getRelId(srcRel);      // we'll implement this later
   if (srcRelId == E_RELNOTOPEN) {
     return E_RELNOTOPEN;
   }
@@ -288,7 +288,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
   int type = attrCatEntry.attrType;
   Attribute attrVal;
   if (type == NUMBER) {
-    if (isNumber(strVal)) {       // the isNumber() functoin is implemented below
+    if (isNumber(strVal)) {       // the isNumber() function is implemented below
       attrVal.nVal = atof(strVal);
     } else {
       return E_ATTRTYPEMISMATCH;
