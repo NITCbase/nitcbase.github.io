@@ -53,13 +53,12 @@ classDiagram
         +BlockBuffer(char blockType)
         +BlockBuffer(int blockNum)
         +getBlockNum() int
-        +getBlockType() int
-        +setBlockType(int blockType) int
         +getHeader(struct HeadInfo *head) int
         +setHeader(struct HeadInfo *head) int
         +releaseBlock() void
         #loadBlockAndGetBufferPtr(unsigned char **buffPtr) int
         #getFreeBlock(int blockType) int
+        #setBlockType(int blockType) int
     }
     class IndBuffer{
         +IndBuffer(char blockType)
@@ -547,8 +546,6 @@ public:
     BlockBuffer(char blockType);
     BlockBuffer(int blockNum);
     int getBlockNum();
-    int getBlockType();
-    int setBlockType(int blockType);
     int getHeader(struct HeadInfo* head);
     int setHeader(struct HeadInfo* head);
     void releaseBlock();
@@ -560,8 +557,8 @@ protected:
     //methods
     unsigned char *getBufferPtr();
     int getBlock();
-    int getFreeBlock(int BlockType);
-
+    int getFreeBlock(int blockType);
+    int setBlockType(int blockType);
 };
 ```
 
@@ -660,78 +657,6 @@ int BlockBuffer::getBlockNum(){
 }
 ```
 
-### BlockBuffer :: getBlockType()
-
-#### Description
-
-Returns the type of the block corresponding to the block object.
-
-#### Arguments
-
-Nil
-
-#### Return Values
-
-| Value     | Description                                        |
-| --------- | -------------------------------------------------- |
-| blockType | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
-
-#### Algorithm
-
-```cpp
-int BlockBuffer::getBlockType(){
-
-    unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
-
-    // if the call to loadBlockAndGetBufferPtr(&bufferPtr) return SUCCESS
-
-        // return the first 4 bytes of the buffer that stores the block type. (Hint: cast using int32_t)
-
-    // else load failed due to E_OUTOFBOUND, invalid block number, return the value returned by the call.
-
-}
-```
-
-### BlockBuffer :: setBlockType()
-
-#### Description
-
-Sets the type of the block with the input block type. This method sets the type in both the header of the block and also in the block allocation map.
-
-#### Arguments
-
-| Name      | Type  | Description                                        |
-| --------- | ----- | -------------------------------------------------- |
-| blockType | `int` | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
-
-#### Return Values
-
-Nil
-
-#### Algorithm
-
-```cpp
-int BlockBuffer::setBlockType(int blockType){
-
-    unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
-
-    // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-        // return the value returned by the call.
-
-    // store the input block type in the first 4 bytes of the buffer.
-
-    // update the StaticBuffer::blockAllocMap entry corresponding to the object's block number.
-
-    // update dirty bit by calling appropriate method of StaticBuffer class.
-    // if setDirtyBit() failed
-        // return the returned value from the call
-
-    // return SUCCESS
-}
-```
-
 ### BlockBuffer :: getHeader()
 
 #### Description
@@ -785,6 +710,7 @@ Sets the header of the block.
 
 - Any type of block(`Record`, `Internal Index`, or `Leaf Index`) of NITCbase has the same header structure. Therefore, `setHeader()` method is kept in abstract `BlockBuffer class`.
 - Higher layer must allocate memory for the `struct HeadInfo` variable before calling this function.
+- After the `blockType` is set at block allocation, the `setHeader()` function should not be used to change the `blockType`. The block will need to freed and reallocated to reuse it as a different block type.
 
 :::
 
@@ -951,6 +877,45 @@ int BlockBuffer::getFreeBlock(int blockType){
 
     //return block number of the free block.
 
+}
+```
+
+### BlockBuffer :: setBlockType()
+
+#### Description
+
+Sets the type of the block with the input block type. This method sets the type in both the header of the block and also in the block allocation map.
+
+#### Arguments
+
+| Name      | Type  | Description                                        |
+| --------- | ----- | -------------------------------------------------- |
+| blockType | `int` | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+
+#### Return Values
+
+Nil
+
+#### Algorithm
+
+```cpp
+int BlockBuffer::setBlockType(int blockType){
+
+    unsigned char *bufferPtr;
+    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+
+    // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
+        // return the value returned by the call.
+
+    // store the input block type in the first 4 bytes of the buffer.
+
+    // update the StaticBuffer::blockAllocMap entry corresponding to the object's block number.
+
+    // update dirty bit by calling appropriate method of StaticBuffer class.
+    // if setDirtyBit() failed
+        // return the returned value from the call
+
+    // return SUCCESS
 }
 ```
 
