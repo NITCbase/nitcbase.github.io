@@ -103,6 +103,33 @@ classDiagram
 
 ```
 
+```mermaid
+classDiagram
+  direction LR
+  BlockBuffer <|-- RecBuffer
+  class RecBuffer{
+    +RecBuffer(int blockNum) 🔵
+    +getRecord(union Attribute *rec, int slotNum) int🔵
+    +getSlotMap(unsigned char *slotMap) int🟢
+  }
+  class BlockBuffer{
+    -int blockNum
+    +BlockBuffer(int blockNum) 🔵
+    +getHeader(struct HeadInfo *head) int🔵
+    -loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟤
+  }
+```
+
+```mermaid
+classDiagram
+  class BlockAccess{
+    +linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op)$ RecId🟢
+  }
+  class Algebra{
+    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟠
+  }
+```
+
 <br/>
 
 We will be working with the [Frontend Interface](../Design/Architecture.md) from this stage onwards. For all subsequent stages, your `main.cpp` only needs to have declarations of `Disk`, `StaticBuffer` and `OpenRelTable` classes and a call to the `handleFrontend()` function as shown below.
@@ -123,6 +150,17 @@ int main(int argc, char *argv[]) {
 </details>
 
 As shown in the sequence diagram above, the Frontend User Interface will parse the `SELECT` command and call the `Frontend::select_from_table()` function in the Frontend Programming Interface. The actual _select_ functionality is implemented in the [Algebra Layer](../Design/Algebra%20Layer.md). Hence, the implementation of the `Frontend::select_from_table()` function only involves a call to the `Algebra::select()` function.
+
+:::caution NOTE
+In the current stage, we will only be implementing the handler for a command of the form
+
+```sql
+SELECT * FROM RelName INTO TargetName WHERE attribute `op` value;
+```
+
+Any other variation of the `SELECT` command is not being handled and will just plainly show a success message.
+
+:::
 
 <details>
 <summary>Frontend/Frontend.cpp</summary>
@@ -300,9 +338,17 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
   /*** Selecting records from the source relation ***/
 
   // Before calling the search function, reset the search to start from the first hit
+  // using RelCacheTable::resetSearchIndex()
 
   RelCatEntry relCatEntry;
   // get relCatEntry using RelCacheTable::getRelCatEntry()
+
+  /************************
+  The following code prints the contents of a relation directly to the output
+  console. Direct console output is not permitted by the actual the NITCbase
+  specification and the output can only be inserted into a new relation. We will
+  be modifying it in the later stages to match the specification.
+  ************************/
 
   printf("|");
   for (int i = 0; i < relCatEntry.numAttrs; ++i) {
@@ -361,6 +407,11 @@ In the above function, we made use of the function `OpenRelTable::getRelId()` to
 <summary>Cache/OpenRelTable.cpp</summary>
 
 ```cpp
+/* This function will open a relation having name `relName`.
+Since we are currently only working with the relation and attribute catalog, we
+will just hardcode it. In subsequent stages, we will loop through all the relations
+and open the appropriate one.
+*/
 int OpenRelTable::getRelId(char relName[ATTR_SIZE]) {
 
   // if relname is RELCAT_RELNAME, return RELCAT_RELID
@@ -372,7 +423,7 @@ int OpenRelTable::getRelId(char relName[ATTR_SIZE]) {
 
 </details>
 
-And that's it! Your NITCbase should now support searching through records. Let's try it out. Execute `make` and run the `nitcbase` executable. You should see the following.
+And that's it! Your NITCbase should now support searching through records. Let's try it out. Execute `make` and run the program. Run the following commands.
 
 ```
 # SELECT * FROM ATTRIBUTECAT INTO null WHERE RelName=RELATIONCAT;
@@ -405,7 +456,7 @@ B220439CS, Anna,      89, J
 B220287CS, Arun,      93, B
 ```
 
-Now, run the following search queries **in your NITCbase** and confirm whether it is working.
+Modify the code to get the rel-id of this relation too and run the following search queries **in your NITCbase** and confirm whether it is working.
 
 ```sql
 SELECT * FROM Students INTO null WHERE Batch=J;

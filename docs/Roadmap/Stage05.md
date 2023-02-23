@@ -28,6 +28,11 @@ Opening a relation requires us to search for the corresponding records in the ca
 
 A sequence diagrams documenting the flow of data between the layers is shown below.
 
+> **NOTE**: The functions are denoted with circles as follows.<br/>
+> 🔵 -> methods that are already in their final state<br/>
+> 🟢 -> methods that will attain their final state in this stage<br/>
+> 🟠 -> methods that we will modify in this stage, and in subsequent stages <br/>
+
 <br/>
 
 ```mermaid
@@ -44,7 +49,7 @@ sequenceDiagram
     activate Frontend User Interface
     Frontend User Interface->>Frontend Programming Interface:open_table()🟢
     activate Frontend Programming Interface
-    Frontend Programming Interface->>Schema Layer:openRel()🟠
+    Frontend Programming Interface->>Schema Layer:openRel()🟢
     activate Schema Layer
     Schema Layer->>Cache Layer:openRel()🟢
     activate Cache Layer
@@ -69,11 +74,6 @@ sequenceDiagram
 <br/>
 
 A class diagram showing the methods relevant to this functionality in the Cache Layer is shown below.
-
-> **NOTE**: The functions are denoted with circles as follows.<br/>
-> 🔵 -> methods that are already in their final state<br/>
-> 🟢 -> methods that will attain their final state in this stage<br/>
-> 🟠 -> methods that we will modify in this stage, and in subsequent stages <br/>
 
 ```mermaid
 classDiagram
@@ -147,4 +147,14 @@ int Schema::closeRel(char relName[ATTR_SIZE]) {
 
 </details>
 
+(pending)
+
 ## Exercises
+
+**Q1.** Open the relation `Students` and do a select query on the relation with the following commands.
+
+```sql
+OPEN TABLE Students;
+SELECT * FROM Students INTO null WHERE Batch=J;
+CLOSE TABLE Students;
+```

@@ -42,7 +42,7 @@ The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer.md
 
 ```mermaid
 classDiagram
-  direction TD
+  direction LR
   BlockBuffer <|-- RecBuffer
   StaticBuffer<|..RecBuffer : uses
   StaticBuffer<|..BlockBuffer : uses
