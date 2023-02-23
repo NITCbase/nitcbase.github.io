@@ -72,6 +72,8 @@ The Makefile provided with NITCbase supports compiling in debug mode by running 
 make mode=debug
 ```
 
+This will create the `nitcbase-debug` executable.
+
 :::
 
 Once you've done that, you should be able to view program listings in the debugger.
@@ -90,7 +92,7 @@ Your text editor/IDE might already come with debug functionality built-in. You c
       "cwd": "${workspaceFolder}",
       "type": "cppdbg",
       "request": "launch",
-      "program": "${workspaceFolder}/nitcbase", // Binary to exec
+      "program": "${workspaceFolder}/nitcbase-debug", // Binary to exec
       "stopAtEntry": false,
       "environment": [],
       "externalConsole": false,
@@ -116,15 +118,13 @@ Your text editor/IDE might already come with debug functionality built-in. You c
       "type": "shell",
       "label": "Build debug nitcbase",
       "command": "/usr/bin/make",
-      "args": ["debug=true"],
+      "args": ["mode=debug"],
       "group": {
         "kind": "build",
         "isDefault": true
-      },
-      "problemMatcher": []
+      }
     }
-  ],
-  "version": "2.0.0"
+  ]
 }
 ```
 
@@ -137,7 +137,7 @@ The "Debug nitcbase" task can be launched from the "Run and Debug" menu.
 If you prefer to keep it within the terminal itself, you can use gdb with the `-tui` flag.
 
 ```bash
-gdb -tui nitcbase
+gdb -tui nitcbase-debug
 # nitcbase is the executable here
 ```
 
