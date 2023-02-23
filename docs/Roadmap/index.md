@@ -7,12 +7,9 @@ This roadmap is divided into stages. From [Stage 2](./Stage02.md), you will buil
 
 _It is very important that you proceed with the roadmap on a regular schedule and not get lost in the links_. Hence, an approximate amount of time (in hours) which you are expected to spend on each stage is noted along with the stage. If you find that reading a particular documentation/link takes too much time, skip it for the time being and come back to it only when needed.
 
-This page is under construction. Stages will be added shortly.
-
-### [Stage 0 : Installation and Preparation](../Roadmap/Stage00.md)
-
-### [Stage 1 : Understanding the Disk Interface (2 hours)](../Roadmap/Stage01.md)
-
-### [Stage 2: Record Blocks and Catalogs (6 hours)](../Roadmap/Stage02.md)
-
-### [Stage 3 : The Disk Buffer and Catalog Caches(10 hours)](../Roadmap/Stage03.md)
+- [**Stage 0 : Installation and Preparation**](../Roadmap/Stage00.md)
+- [**Stage 1 : Understanding the Disk Interface (2 hours)**](../Roadmap/Stage01.md)
+- [**Stage 2: Record Blocks and Catalogs (6 hours)**](../Roadmap/Stage02.md)
+- [**Stage 3 : The Disk Buffer and Catalog Caches(10 hours)**](../Roadmap/Stage03.md)
+- [**Stage 4 : Linear Search on Relations (10 hours)**](../Roadmap/Stage04.md)
+- [**Stage 5 : Opening Relations (10 hours)**](../Roadmap/Stage05.md)

@@ -1,12 +1,13 @@
 ---
-title: "Stage 4 : Looking at the Records"
+title: "Stage 4 : Linear Search on Relations"
 ---
 
-# Stage 4 : Looking at the Records (10 hours)
+# Stage 4 : Linear Search on Relations (10 hours)
 
 :::note Learning Objectives
 
-- Learn
+- Familiarise with the mechanism of receiving commands from the Frontend User Interface and calling the appropriate function in the lower layers through the Frontend Programming Interface
+- Implement linear search on a relation whose metadata is available in the relation and attribute caches to display the records
 
 :::
 
@@ -73,7 +74,21 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md), [Buffer Layer](../Design/Buffer%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Algebra Layer](../Design/Algebra%20Layer.md) is shown below.
+
+```mermaid
+classDiagram
+  class Algebra{
+    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟠
+  }
+  class BlockAccess{
+    +linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op)$ RecId🟢
+  }
+```
+
+---
+
+**Cache Layer**
 
 ```mermaid
 classDiagram
@@ -103,6 +118,10 @@ classDiagram
 
 ```
 
+---
+
+**Buffer Layer**
+
 ```mermaid
 classDiagram
   direction LR
@@ -117,16 +136,6 @@ classDiagram
     +BlockBuffer(int blockNum) 🔵
     +getHeader(struct HeadInfo *head) int🔵
     -loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟤
-  }
-```
-
-```mermaid
-classDiagram
-  class BlockAccess{
-    +linearSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op)$ RecId🟢
-  }
-  class Algebra{
-    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟠
   }
 ```
 
@@ -155,10 +164,18 @@ As shown in the sequence diagram above, the Frontend User Interface will parse t
 In the current stage, we will only be implementing the handler for a command of the form
 
 ```sql
-SELECT * FROM RelName INTO TargetName WHERE attribute `op` value;
+SELECT * FROM RelName INTO TargetName WHERE Attribute `op` value;
 ```
 
-Any other variation of the `SELECT` command is not being handled and will just plainly show a success message.
+There are other versions of the `SELECT` command which map to different handlers as shown below:
+
+| Frontend User Interface Command                                                         | Frontend Programming Interface Handler         |
+| --------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `SELECT Attribute1,Attribute2 FROM RelName INTO TargetName WHERE Attribute `op` value;` | `Frontend::select_attrlist_from_where()`       |
+| `SELECT * FROM RelName INTO TargetName;`                                                | `Frontend::select_from_table()`                |
+| `SELECT Attribute1,Attribute2 FROM RelName INTO TargetName;`                            | `Frontend::select_attrlist_from_table_where()` |
+
+Since we have only implemented the `Frontend::select_from_table()` function, the other commands do not currently do anything.
 
 :::
 
@@ -456,7 +473,7 @@ B220439CS, Anna,      89, J
 B220287CS, Arun,      93, B
 ```
 
-Modify the code to get the rel-id of this relation too and run the following search queries **in your NITCbase** and confirm whether it is working.
+Populate the entries of the relation in the caches (by updating the `OpenRelTable` constructor) and update the `OpenRelTable::getRelId()` function to return the rel-id of the same. Then, run the following search queries **in your NITCbase** and confirm whether it is working.
 
 ```sql
 SELECT * FROM Students INTO null WHERE Batch=J;
