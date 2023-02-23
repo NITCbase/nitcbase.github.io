@@ -401,7 +401,7 @@ This method opens the relation specified as name in cache/OpenRelTable.
 
 | Value                         | Description                                                  |
 | ----------------------------- | ------------------------------------------------------------ |
-| `relId`                       | Returns the relId on succesful opening of the relation       |
+| [`SUCCESS`](/constants)       | On successful opening of the relation                        |
 | [`E_RELNOTEXIST`](/constants) | If the relation with name relName does not exist in the disk |
 | [`E_CACHEFULL`](/constants)   | If there are no free slots in the Open Relation table.       |
 
@@ -410,10 +410,10 @@ This method opens the relation specified as name in cache/OpenRelTable.
 ```cpp
 int Schema::openRel(char *relName) {
     // Call openRelation method of OpenRelTable by passing appropriate arguments
-    int ret = OpenRelTable::openRel(relName);
+    int relId = OpenRelTable::openRel(relName);
 
-    // return the value returned by the above openRelation() call
-    return ret;
+    // if relId is valid (>= 0) return SUCCESS
+    // else return the error
 }
 ```
 

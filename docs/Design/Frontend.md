@@ -213,7 +213,7 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 | Value         | Description                                                  |
 | ------------- | ------------------------------------------------------------ |
-| relId         | relId is returned upon succesful opening of the relation     |
+| SUCCESS       | Indicates successful deletionopening of the relation         |
 | E_RELNOTEXIST | If the relation with the given name does not exist           |
 | E_CACHEFULL   | If there are no free slots left in the `Open Relation table` |
 
