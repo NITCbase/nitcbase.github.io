@@ -16,9 +16,10 @@ The Cache Layer code is to be written in 3 pairs of files:
 ## Layout
 
 Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the _Cache Layer_ **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of [MAX_OPEN](/constants) number of relations at any given time.
+
 **NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.**
 
-Three tables are used by NITCbase for caching Catalogs - the **Relation Cache Table** for _Relation Catalog_ entries, the **Attribute Cache Table** for _Attribute Catalog_ entries and the **Open Relation Table** for operations that include both _Relation_ and _Attribute_ Catalogs.
+Three tables are used by NITCbase for caching Catalogs - the **Relation Cache Table** for _Relation Catalog_ entries, the **Attribute Cache Table** for _Attribute Catalog_ entries and the **Open Relation Table** to keep track of the entries stored in the other two catalogs.
 
 NITCbase follows an Object-Oriented design for Cache Layer. The class diagram is as shown below.
 
@@ -158,7 +159,6 @@ The `RelCacheEntry` data field details are as follows:
 
 ```cpp
 typedef struct RelCacheEntry {
-
     RelCatEntry relCatEntry;
     bool dirty;
     RecId recId;
@@ -181,7 +181,6 @@ The structure `AttrCatEntry` stores in its data fields all the attribute values 
 
 ```cpp
 typedef struct AttrCatEntry {
-
     unsigned char relName[ATTR_SIZE];
     unsigned char attrName[ATTR_SIZE];
     int attrType;
@@ -206,7 +205,6 @@ The `AttrCacheEntry` data field details are as follows:
 
 ```cpp
 typedef struct AttrCacheEntry {
-
     AttrCatEntry attrCatEntry;
     bool dirty;
     RecId recId;
@@ -224,11 +222,10 @@ A relation must have an entry in the _Open Relation Table_ for its _Relation Cat
 
 ### OpenRelTableMetaInfo
 
-The `struct OpenRelTableMetaInfo` stores whether the given entry in the `OpenRelTable`, the _Relation Cache Table_, and _Attribute Cache Table_ is occupied and also stores the name of the relation if occupied.
+The `struct OpenRelTableMetaInfo` stores whether the given entry in the `OpenRelTable`, the _Relation Cache Table_, and _Attribute Cache Table_ are occupied, and also stores the name of the relation if occupied.
 
 ```cpp
 typedef struct OpenRelTableMetaInfo {
-
     bool free;
     unsigned char relName[ATTR_SIZE];
 
@@ -268,20 +265,20 @@ class RelCacheTable {
 friend class OpenRelTable;
 
 public:
-    //methods
-    static int getRelCatEntry(int relId, RelCatEntry *relCatBuf);
-    static int setRelCatEntry(int relId, RelCatEntry *relCatBuf);
-    static int getSearchIndex(int relId, RecId *searchIndex);
-    static int setSearchIndex(int relId, RecId *searchIndex);
-    static int resetSearchIndex(int relId);
+  //methods
+  static int getRelCatEntry(int relId, RelCatEntry *relCatBuf);
+  static int setRelCatEntry(int relId, RelCatEntry *relCatBuf);
+  static int getSearchIndex(int relId, RecId *searchIndex);
+  static int setSearchIndex(int relId, RecId *searchIndex);
+  static int resetSearchIndex(int relId);
 
 private:
-    //field
-    static RelCacheEntry* relCache[MAX_OPEN];
+  //field
+  static RelCacheEntry* relCache[MAX_OPEN];
 
-    //methods
-    static void recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry);
-    static void relCatEntryToRecord(RelCatEntry *relCatEntry, union Attribute record[RELCAT_NO_ATTRS]);
+  //methods
+  static void recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry);
+  static void relCatEntryToRecord(RelCatEntry *relCatEntry, union Attribute record[RELCAT_NO_ATTRS]);
 
 };
 ```
@@ -318,19 +315,17 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 ```cpp
 int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
-    {
-        return E_OUTOFBOUND;
-    }
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
 
-    if entry corresponding to the relId in the Relation Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
+  if(/*entry corresponding to the relId in the Relation Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
 
-    //copy the corresponding Relation Catalog entry in the Relation Cache Table to relCatBuf.
+  //copy the corresponding Relation Catalog entry in the Relation Cache Table to relCatBuf.
 
-    return SUCCESS;
+  return SUCCESS;
 
 }
 ```
@@ -365,21 +360,19 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 ```cpp
 int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
-    {
-        return E_OUTOFBOUND;
-    }
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
 
-    if entry corresponding to the relId in the Relation Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
+  if(/*entry corresponding to the relId in the Relation Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
 
-    //copy the relCatBuf to the corresponding Relation Catalog entry in the Relation Cache Table.
+  //copy the relCatBuf to the corresponding Relation Catalog entry in the Relation Cache Table.
 
-    //set the dirty flag of the corresponding Relation Cache entry in the Relation Cache Table.
+  //set the dirty flag of the corresponding Relation Cache entry in the Relation Cache Table.
 
-    return SUCCESS;
+  return SUCCESS;
 
 }
 ```
@@ -414,19 +407,18 @@ The caller should allocate memory for the struct RecId before calling the functi
 ```cpp
 int relCacheTable::getSearchIndex(int relid, recId *recidbuff_ptr) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
-    {
-        return E_OUTOFBOUND;
-    }
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
 
-    if entry corresponding to the relId in the Relation Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
+  if(/*entry corresponding to the relId in the Relation Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
 
-    // copy the searchIndex field of the Relation Cache entry corresponding to input relId to searchIndex variable.
+  // copy the searchIndex field of the Relation Cache entry corresponding to
+  // input relId to searchIndex variable.
 
-    return SUCCESS;
+  return SUCCESS;
 }
 ```
 
@@ -460,19 +452,18 @@ The caller should allocate memory for the struct RecId before calling the functi
 ```cpp
 int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
-    {
-        return E_OUTOFBOUND;
-    }
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
 
-    if entry corresponding to the relId in the Relation Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
+  if(/*entry corresponding to the relId in the Relation Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
 
-    // copy the searchIndex variable to the searchIndex field of the Relation Cache entry corresponding to input relId.
+  // copy the searchIndex variable to the searchIndex field of the Relation
+  // Cache entry corresponding to input relId.
 
-    return SUCCESS;
+  return SUCCESS;
 
 }
 ```
@@ -502,9 +493,9 @@ Resets the value of `searchIndex` field of the given relation in _Relation Cache
 ```cpp
 int RelCacheTable::resetSearchIndex(int relId) {
 
-    // declare a RecId having value {-1, -1}
-    // set the search index to {-1, -1} using RelCacheTable::setSearchIndex
-    // return the value returned by setSearchIndex
+  // declare a RecId having value {-1, -1}
+  // set the search index to {-1, -1} using RelCacheTable::setSearchIndex
+  // return the value returned by setSearchIndex
 }
 ```
 
@@ -578,23 +569,23 @@ class AttrCacheTable {
 friend class OpenRelTable;
 
 public:
-    //methods
-    static int getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
-    static int getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
-    static int setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
-    static int setAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
-    static int getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
-    static int getSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
-    static int setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
-    static int setSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
+  //methods
+  static int getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
+  static int getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
+  static int setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
+  static int setAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
+  static int getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
+  static int getSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
+  static int setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
+  static int setSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
 
 private:
-    //field
-    static AttrCacheEntry* attrCache[MAX_OPEN];
+  //field
+  static AttrCacheEntry* attrCache[MAX_OPEN];
 
-    //methods
-    static void recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
-    static void attrCatEntryToRecord(AttrCatEntry *attrCatEntry, union Attribute record[ATTRCAT_NO_ATTRS]);
+  //methods
+  static void recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry);
+  static void attrCatEntryToRecord(AttrCatEntry *attrCatEntry, union Attribute record[ATTRCAT_NO_ATTRS]);
 
 };
 ```
@@ -636,27 +627,25 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 ```cpp
 int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
+
+  if(/*entry corresponding to the relId in the Attribute Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
+
+  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  {
+    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
     {
-        return E_OUTOFBOUND;
+      // copy that Attribute Catalog entry in the Attribute Cache Table to attrCatBuf.
+
+      return SUCCESS;
     }
+  }
 
-    if entry corresponding to the relId in the Attribute Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
-
-    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
-    {
-        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
-        {
-            // copy that Attribute Catalog entry in the Attribute Cache Table to attrCatBuf.
-
-            return SUCCESS;
-        }
-    }
-
-    return E_ATTRNOTEXIST;
+  return E_ATTRNOTEXIST;
 
 }
 ```
@@ -696,29 +685,29 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 ```cpp
 int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
+
+  if(/*entry corresponding to the relId in the Attribute Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
+
+  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  {
+    if(/* the attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
     {
-        return E_OUTOFBOUND;
+      // copy the attrCatBuf to the corresponding Attribute Catalog entry in
+      //the Attribute Cache Table.
+
+      // set the dirty flag of the corresponding Attribute Cache entry in the
+      // Attribute Cache Table.
+
+      return SUCCESS;
     }
+  }
 
-    if entry corresponding to the relId in the Attribute Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
-
-    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
-    {
-        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
-        {
-            // copy the attrCatBuf to the corresponding Attribute Catalog entry in the Attribute Cache Table.
-
-            // set the dirty flag of the corresponding Attribute Cache entry in the Attribute Cache Table.
-
-            return SUCCESS;
-        }
-    }
-
-    return E_ATTRNOTEXIST;
+  return E_ATTRNOTEXIST;
 
 }
 ```
@@ -758,28 +747,26 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 ```cpp
 int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
+
+  if(/*entry corresponding to the relId in the Attribute Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
+
+  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  {
+    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
     {
-        return E_OUTOFBOUND;
+      //copy the searchIndex field of the corresponding Attribute Cache entry in
+      //the Attribute Cache Table to input searchIndex variable.
+
+      return SUCCESS;
     }
+  }
 
-    if entry corresponding to the relId in the Attribute Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
-
-    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
-    {
-        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
-        {
-
-            //copy the searchIndex field of the corresponding Attribute Cache entry in the Attribute Cache Table to input searchIndex variable.
-
-            return SUCCESS;
-        }
-    }
-
-    return E_ATTRNOTEXIST;
+  return E_ATTRNOTEXIST;
 
 }
 ```
@@ -819,27 +806,26 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 ```cpp
 int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 
-    if relId is outside the range [0, MAX_OPEN-1]:
+  if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
+    return E_OUTOFBOUND;
+  }
+
+  if(/*entry corresponding to the relId in the Attribute Cache Table is free*/) {
+    return E_RELNOTOPEN;
+  }
+
+  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  {
+    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
     {
-        return E_OUTOFBOUND;
+      // copy the input searchIndex variable to the searchIndex field of the
+      //corresponding Attribute Cache entry in the Attribute Cache Table.
+
+      return SUCCESS;
     }
+  }
 
-    if entry corresponding to the relId in the Attribute Cache Table is free:
-    {
-        return E_RELNOTOPEN;
-    }
-
-    // iterate over all the attributes in the Attribute Cache Table corresponding to the relation with relId.
-    {
-        // if the attrName/offset field of the Attribute Catalog entry is equal to the input attrName/attrOffset:
-        {
-            // copy the input searchIndex variable to the searchIndex field of the corresponding Attribute Cache entry in the Attribute Cache Table.
-
-            return SUCCESS;
-        }
-    }
-
-    return E_ATTRNOTEXIST;
+  return E_ATTRNOTEXIST;
 
 }
 ```
@@ -877,9 +863,9 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 ```cpp
 int AttrCacheTable::resetSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset) {
 
-    // declare an IndexId having value {-1, -1}
-    // set the search index to {-1, -1} using AttrCacheTable::setSearchIndex
-    // return the value returned by setSearchIndex
+  // declare an IndexId having value {-1, -1}
+  // set the search index to {-1, -1} using AttrCacheTable::setSearchIndex
+  // return the value returned by setSearchIndex
 }
 ```
 
@@ -944,19 +930,19 @@ class OpenRelTable {
 
 public:
 
-    //methods
-    OpenRelTable();
-    ~OpenRelTable();
-    static int getRelId(unsigned char relName[ATTR_SIZE]);
-    static int openRel(unsigned char relName[ATTR_SIZE]);
-    static int closeRel(int relId);
+  //methods
+  OpenRelTable();
+  ~OpenRelTable();
+  static int getRelId(unsigned char relName[ATTR_SIZE]);
+  static int openRel(unsigned char relName[ATTR_SIZE]);
+  static int closeRel(int relId);
 
 private:
-    //field
-    static OpenRelTableMetaInfo tableMetaInfo[MAX_OPEN];
+  //field
+  static OpenRelTableMetaInfo tableMetaInfo[MAX_OPEN];
 
-    //method
-    static int getFreeOpenRelTableEntry();
+  //method
+  static int getFreeOpenRelTableEntry();
 
 };
 ```
@@ -973,6 +959,7 @@ Initializes the meta information of each entry of the _Open Relation_ Table to i
 
 - The object of the `OpenRelTable` class must be declared **after** the objects of the Physical Layer and the Buffer Layer to ensure that the main memory is properly set up before the constructor initializes cache memory.
 - This function should be called at the **beginning** of the session.
+- All the relation and attribute cache entries need to be dynamically allocated using `malloc`
 
 :::
 
@@ -989,64 +976,75 @@ Nil
 ```cpp
 OpenRelTable::OpenRelTable() {
 
-    // initialize tableMetaInfo of all the entries of the Open Relation Table with free as true and relName as an empty string. also set all entries in AttrCacheTable::attrCache to nullptr
+    /* initialize tableMetaInfo of all the entries of the Open Relation Table with
+    free as true and relName as an empty string. also set all entries in
+    AttrCacheTable::attrCache to nullptr */
 
-    /************ Setting up Relation Catalog relation in the cache ************/
+    /************ Setting up the Relation Cache ************/
 
-    /**** setting up Relation Catalog relation in the Relation Cache Table ****/
+    /**** setting up Relation Catalog relation in the Relation Cache ****/
 
-    /* read the record entry at index 0 from block 4, the block corresponding to Relation Catalog in the disk, and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
-       update the recId field of this Relation Cache entry to {4,0}.
-       use it to set the 0th index entry of the RelCacheTable.*/
+    /* read the record entry at index 0 from block 4, the block corresponding to
+     Relation Catalog in the disk, and create a Relation Cache entry on it
+     using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
+     update the recId field of this Relation Cache entry to {4,0}.
+     use it to set the 0th index entry of the RelCacheTable. */
+    // NOTE: use malloc to create the RelCacheEntry
 
-    /**** setting up Relation Catalog relation in the Attribute Cache Table ****/
+    /**** setting up Attribute Catalog relation in the Relation Cache ****/
+
+    /* read the record entry at index 1 from block 4, the block corresponding to
+     Relation Catalog in the disk, and create a Relation Cache entry on it
+     using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
+     update the recId field of this Relation Cache entry to {4,1}.
+     use it to set the 1st index entry of the RelCacheTable.*/
+
+
+    /************ Setting up the Attribute cache ************/
+
+    /**** setting up Relation Catalog relation in the Attribute Cache ****/
 
     // let listHead be used to hold the head of the linked list of Attribute Cache entries.
-    AttrCacheEntry listHead;
+    AttrCacheEntry* listHead;
 
     for i from 0 to 5:
     {
-
-             /* read the ith record entry from block 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
-           update the recId field of this Attribute Cache entry to {5,i}.
-           add the Attribute Cache entry to the linked list of listHead .*/
+      /* read the ith record entry from block 5, the block corresponding to
+      Attribute Catalog in the disk, and create an Attribute Cache entry on it
+      using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
+      update the recId field of this Attribute Cache entry to {5,i}.
+      add the Attribute Cache entry to the linked list of listHead .*/
+      // NOTE: use malloc to create the AttrCacheTable entries
     }
 
     // set the 0th entry of the AttrCacheTable to listHead.
 
-    /**** setting up Relation Catalog relation in the Open Relation Table ****/
 
-    //update the 0th entry of the tableMetaInfo with free as false and relName as the 'RELATIONCAT'.
-
-    /************ Setting up Attribute Catalog relation in the cache ************/
-
-    /**** setting up Attribute Catalog relation in the Relation Cache Table ****/
-
-    /* read the record entry at index 1 from block 4, the block corresponding to Relation Catalog in the disk, and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
-       update the recId field of this Relation Cache entry to {4,1}.
-       use it to set the 1st index entry of the RelCacheTable.*/
-
-    /**** setting up Attribute Catalog relation in the Attribute Cache Table ****/
-
-    // use listHead  to hold the head of the linked list of Attribute Cache entries.
+    /**** setting up Attribute Catalog relation in the Attribute Cache ****/
 
     for i from 6 to 11:
     {
-
-             /* read the ith record entry from bock 5, the block corresponding to Attribute Catalog in the disk, and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
-           update the recId field of this Attribute Cache entry to {5,i}.
-           add the Attribute Cache entry to the linked list of listHead .*/
+      /* read the ith record entry from block 5, the block corresponding to
+      Attribute Catalog in the disk, and create an Attribute Cache entry on it
+      using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
+      update the recId field of this Attribute Cache entry to {5,i}.
+      add the Attribute Cache entry to the linked list of listHead .*/
     }
 
     // set the 1st entry of the AttrCacheTable to listHead.
 
+
+    /************ Setting up the Open Relation table ************/
+
+    /**** setting up Relation Catalog relation in the Open Relation Table ****/
+
+    //update the 0th entry of the tableMetaInfo with free as false and relName
+    // as 'RELATIONCAT'.
+
     /**** setting up Attribute Catalog relation in the Open Relation Table ****/
 
-    //update the 1st entry of the tableMetaInfo with free as false and relName as the 'ATTRIBUTECAT'.
+    //update the 1st entry of the tableMetaInfo with free as false and relName
+    // as 'ATTRIBUTECAT'.
 
 }
 ```
@@ -1078,9 +1076,7 @@ OpenRelTable::~OpenRelTable() {
     {
         if ith relation is still open:
         {
-
             // close the relation using openRelTable::closeRel().
-
         }
     }
 
@@ -1088,21 +1084,23 @@ OpenRelTable::~OpenRelTable() {
 
     /****** releasing the entry corresponding to Attribute Catalog relation from Relation Cache Table ******/
 
-    // if the Relation Catalog entry of the ATTRCAT_RELIDth Relation Cache entry has been modified:
-    {
+    if (/* the RelCatEntry of the ATTRCAT_RELIDth Relation Cache entry has been modified */) {
+
         /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
+        Write back that entry by instantiating RecBuffer class. Use recId member
+        field and recBuffer.setRecord() */
     }
+    // free the memory dynamically allocated to this RelCacheEntry
 
     /****** releasing the entry corresponding to Attribute Catalog relation from Attribute Cache Table ******/
 
-    // iterate over all the entries in the linked list of the ATTRCAT_RELIDth Attribute Cache entry.
+    // for all the entries in the linked list of the ATTRCAT_RELIDth Attribute Cache entry.
     {
-        if the entry has been modified:
+        if (/* the entry has been modified */)
         {
             /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
-             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
-
+            Write back that entry by instantiating RecBuffer class. Use recId member
+            field and recBuffer.setRecord() */
         }
 
         // free the memory dynamically alloted to this entry in Attribute Cache linked list.
@@ -1110,28 +1108,29 @@ OpenRelTable::~OpenRelTable() {
 
     /****** updating metadata corresponding to Attribute Catalog relation in the Open Relation Table ******/
 
-    //free the ATTRCAT_RELIDth entry of the tableMetaInfo.
+    //set free=true for the ATTRCAT_RELIDth entry of the tableMetaInfo.
 
     /************ Closing Relation Catalog relation in the cache ************/
 
     /****** releasing the entry corresponding to Relation Catalog relation from Relation Cache Table ******/
 
-    // if the Relation Catalog entry of the RELCAT_RELIDth Relation Cache entry has been modified:
-    {
+    if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
+
         /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
+        Write back that entry by instantiating RecBuffer class. Use recId member
+        field and recBuffer.setRecord() */
     }
+    // free the memory dynamically allocated for this RelCacheEntry
 
     /****** releasing the entry corresponding to Relation Catalog relation from Attribute Cache Table ******/
 
-    // iterate over all the entries in the linked list of the RELCAT_RELIDth Attribute Cache entry.
+    // for all the entries in the linked list of the RELCAT_RELIDth Attribute Cache entry.
     {
-        if the entry has been modified:
-        {
+        if (/* the entry has been modified */) {
+
             /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
-            Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
-
-
+            Write back that entry by instantiating RecBuffer class. Use recId
+            member field and recBuffer.setRecord() */
         }
 
         // free the memory dynamically alloted to this entry in Attribute Cache linked list.
@@ -1158,8 +1157,8 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                                        |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Value                        | Description                                                                                                                                                        | cache entries |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
 | `relId`                      | The relation id of the relation in the Open Relation Table                                                                                                         |
 | [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
 
@@ -1168,11 +1167,11 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 ```cpp
 int OpenRelTable::getRelId(unsigned char relName[ATTR_SIZE]) {
 
-    /* traverse through the tableMetaInfo array,
-        find the entry in the Open Relation Table corresponding to relName.*/
+  /* traverse through the tableMetaInfo array,
+    find the entry in the Open Relation Table corresponding to relName.*/
 
-    // if found return the relation id, else indicate that the relation do not have an entry in the Open Relation Table.
-
+  // if found return the relation id, else indicate that the relation do not
+  // have an entry in the Open Relation Table.
 }
 ```
 
@@ -1190,80 +1189,82 @@ Creates an entry for the input relation in the _Open Relation_ Table and returns
 
 #### Return Values
 
-| Value                         | Description                                            |
-| ----------------------------- | ------------------------------------------------------ |
-| `relId`                       | Relation id of the relation in the Open Relation Table |
-| [`E_RELNOTEXIST`](/constants) | No relation with name, relName, exists in the disk     |
-| [`E_CACHEFULL`](/constants)   | No free entries left in the Open Relation Table        |
+| Value                         | Description                                                                                                  |
+| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| `relId`                       | Relation id of the relation in the Open Relation Table. This is a value between 0 and [MAX_OPEN](/constants) |
+| [`E_RELNOTEXIST`](/constants) | No relation with name, relName, exists in the disk                                                           |
+| [`E_CACHEFULL`](/constants)   | No free entries left in the Open Relation Table                                                              |
 
 #### Algorithm
 
 ```cpp
 int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
 
-    if the relation, relName, already has an entry in the Open Relation Table:
-    { // checked using OpenRelTable::getRelId().
+  if(/* the relation, relName, already has an entry in the Open Relation Table */){
+    // (checked using OpenRelTable::getRelId())
 
-        // return that relation id;
-    }
+    // return that relation id;
+  }
 
-    // find a free slot in the Open Relation Table using OpenRelTable::getFreeOpenRelTableEntry().
-    if free slot not available:
-    {
-        return E_CACHEFULL;
-    }
+  // find a free slot in the Open Relation Table using OpenRelTable::getFreeOpenRelTableEntry().
+  if (/* free slot not available */){
+    return E_CACHEFULL;
+  }
 
-    // let relId be used to store the free slot.
-    int relId;
+  // let relId be used to store the free slot.
+  int relId;
 
-    /****** Setting up Relation Cache entry for the relation ******/
+  /****** Setting up Relation Cache entry for the relation ******/
 
-    /* search for the entry with relation name, relName, in the Relation Catalog using linear_search() of the Block Access Layer.
-       care should be taken to reset the searchIndex of the relation, RELCAT_RELID, corresponding to
-       Relation Catalog before calling linear_search().*/
+  /* search for the entry with relation name, relName, in the Relation Catalog using
+      BlockAccess::linearSearch().
+      Care should be taken to reset the searchIndex of the relation RELCAT_RELID
+      before calling linearSearch().*/
 
-    // let relcatRecId store the record id of the relation, relName, in the Relation Catalog.
-    RecId relcatRecId;
+  // let relcatRecId store the record id of the relation, relName, in the Relation Catalog.
+  RecId relcatRecId;
 
-    if relcatRecId == {-1, -1}:
-    {
-        // the relation is not found in the Relation Catalog.
-        return E_RELNOTEXIST;
-    }
+  if (/* relcatRecId == {-1, -1} */) {
+    // (the relation is not found in the Relation Catalog.)
+    return E_RELNOTEXIST;
+  }
 
-    /* read the record entry corresponding to relcatRecId and create a Relation Cache entry on it
-       using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
-       update the recId field of this Relation Cache entry to relcatRecId.
-       use the Relation Cache entry to set the relIdth entry of the RelCacheTable.*/
+  /* read the record entry corresponding to relcatRecId and create a relCacheEntry
+      on it using RecBuffer::getRecord() and RelCacheTable::recordToRelCatEntry().
+      update the recId field of this Relation Cache entry to relcatRecId.
+      use the Relation Cache entry to set the relId-th entry of the RelCacheTable.
+    NOTE: make sure to allocate memory for the RelCacheEntry using malloc()
+  */
 
-    /****** Setting up Attribute Cache entry for the relation ******/
+  /****** Setting up Attribute Cache entry for the relation ******/
 
-    // let listHead be used to hold the head of the linked list of Attribute Cache entries.
-    AttrCacheEntry listHead;
+  // let listHead be used to hold the head of the linked list of attrCache entries.
+  AttrCacheEntry* listHead;
 
-    /* iterate over all the entries in the Attribute Catalog corresponding to each attribute of
-       the relation, relName by multiple calls of linear_search() of the Block Access Layer.
-       care should be taken to reset the searchIndex of the relation, ATTRCAT_RELID, corresponding to
-       Attribute Catalog before the first call to linear_search().*/
-    {
-                /* let attrcatRecId store a valid record id an entry of the relation, relName,
-           in the Attribute Catalog.*/
-        RecId attrcatRecId;
+  /*iterate over all the entries in the Attribute Catalog corresponding to each
+  attribute of the relation relName by multiple calls of BlockAccess::linearSearch()
+  care should be taken to reset the searchIndex of the relation, ATTRCAT_RELID,
+  corresponding to Attribute Catalog before the first call to linearSearch().*/
+  {
+      /* let attrcatRecId store a valid record id an entry of the relation, relName,
+      in the Attribute Catalog.*/
+      RecId attrcatRecId;
 
-             /* read the record entry corresponding to attrcatRecId and create an Attribute Cache entry on it
-           using RecBuffer::getRecord() and AttrCacheTable::recordToAttrCatEntry().
-           update the recId field of this Attribute Cache entry to attrcatRecId.
-           add the Attribute Cache entry to the linked list of listHead .*/
-    }
+      /* read the record entry corresponding to attrcatRecId and create an
+      Attribute Cache entry on it using RecBuffer::getRecord() and
+      AttrCacheTable::recordToAttrCatEntry().
+      update the recId field of this Attribute Cache entry to attrcatRecId.
+      add the Attribute Cache entry to the linked list of listHead .*/
+      // NOTE: make sure to allocate memory for the AttrCacheEntry using malloc()
+  }
 
-    // set the relIdth entry of the AttrCacheTable to listHead.
+  // set the relIdth entry of the AttrCacheTable to listHead.
 
-    /****** Setting up metadata in the Open Relation Table for the relation******/
+  /****** Setting up metadata in the Open Relation Table for the relation******/
 
-    //update the relIdth entry of the tableMetaInfo with free as false and relName as the input.
+  //update the relIdth entry of the tableMetaInfo with free as false and relName as the input.
 
-    return relId;
-
+  return relId;
 }
 ```
 
@@ -1314,10 +1315,12 @@ int OpenRelTable::closeRel(int relId) {
 
     /****** Releasing the Relation Cache entry of the relation ******/
 
-    // if the Relation Catalog entry of the relIdth Relation Cache entry has been modified:
+    if (/* RelCatEntry of the relIdth Relation Cache entry has been modified */)
     {
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
+        /* Get the Relation Catalog entry from Cache using
+        RelCacheTable::relCatEntryToRecord().
+        Write back that entry by instantiating RecBuffer class. Use recId member
+        field and recBuffer.setRecord() */
     }
 
     // free the memory dynamically alloted to this Relation Cache entry
@@ -1325,12 +1328,14 @@ int OpenRelTable::closeRel(int relId) {
 
     /****** Releasing the Attribute Cache entry of the relation ******/
 
-    // iterate over all the entries in the linked list of the relIdth Attribute Cache entry.
+    // for all the entries in the linked list of the relIdth Attribute Cache entry.
     {
         if the entry has been modified:
         {
-            /* Get the Attribute Catalog entry from Cache using AttrCacheTable::attrCatEntryToRecord().
-             Write back that entry by instantiating RecBuffer class. Use recId member field and recBuffer.setRecord() */
+            /* Get the Attribute Catalog entry from Cache using
+             AttrCacheTable::attrCatEntryToRecord().
+             Write back that entry by instantiating RecBuffer class. Use recId
+             member field and recBuffer.setRecord() */
 
         }
 
@@ -1343,7 +1348,6 @@ int OpenRelTable::closeRel(int relId) {
     //free the relIdth entry of the tableMetaInfo.
 
     return SUCCESS;
-
 }
 ```
 
@@ -1369,10 +1373,9 @@ Nil
 ```cpp
 int OpenRelTable::getFreeOpenRelTableEntry() {
 
-    /* traverse through the tableMetaInfo array,
-        find a free entry in the Open Relation Table.*/
+  /* traverse through the tableMetaInfo array,
+    find a free entry in the Open Relation Table.*/
 
-    // if found return the relation id, else return E_CACHEFULL.
-
+  // if found return the relation id, else return E_CACHEFULL.
 }
 ```
