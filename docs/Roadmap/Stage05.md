@@ -55,7 +55,7 @@ sequenceDiagram
     participant Buffer Layer
     User->>Frontend User Interface: OPEN TABLE
     activate Frontend User Interface
-    Frontend User Interface->>Frontend Programming Interface:open_table()🟢
+    Frontend User Interface->>Frontend Programming Interface :open_table()🟢
     activate Frontend Programming Interface
     Frontend Programming Interface->>Schema Layer:openRel()🟢
     activate Schema Layer
@@ -71,8 +71,9 @@ sequenceDiagram
       Buffer Layer-->>Cache Layer: record block info
       deactivate Buffer Layer
     end
-    Cache Layer-->>User:operation status
-    deactivate Cache Layer
+    Cache Layer-->>Schema Layer:relId
+      deactivate Cache Layer
+    Schema Layer-->>User:operation status
     deactivate Schema Layer
     deactivate Frontend Programming Interface
     deactivate Frontend User Interface
@@ -267,12 +268,14 @@ int OpenRelTable::closeRel(int relId) {
   // allocated in the OpenRelTable::openRel() function
 
   // update `tableMetaInfo` to set `relId` as a free slot
-  OpenRelTable::tableMetaInfo[relId].free = true;
+  // update `relCache` and `attrCache` to set the entry at `relId` to nullptr
 
   return SUCCESS;
 }
 
 ```
+
+You should now be able to open any relation present in your database and perform the _select_ operation on it.
 
 </details>
 
@@ -284,4 +287,20 @@ int OpenRelTable::closeRel(int relId) {
 OPEN TABLE Students;
 SELECT * FROM Students INTO null WHERE Batch=J;
 CLOSE TABLE Students;
+```
+
+**Q2.** Open the relations _Events(`id`: `NUM`, `title`: `STR`, `location`: `STR`), Locations(`name`: `STR`, `capacity`: `NUM`)_ and _Participants(`regNo`: `NUM`, `event`: `STR`)_ that you created earlier and do a _select_ query for all three relations. Ensure that you get the following output.
+
+```plain
+# SELECT * FROM Events INTO null WHERE id>0;
+| id | title | location |
+Selected successfully into null
+
+# SELECT * FROM Locations INTO null WHERE name!=none;
+| name | capacity |
+Selected successfully into null
+
+# SELECT * FROM Participants INTO null WHERE regNo>0;
+| name | capacity |
+Selected successfully into null
 ```

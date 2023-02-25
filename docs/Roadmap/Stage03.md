@@ -475,6 +475,7 @@ OpenRelTable::OpenRelTable() {
   //    attrCacheEntry.recId.block = ATTRCAT_BLOCK;
   //    attrCacheEntry.recId.slot = i   (0 to 5)
   //    and attrCacheEntry.next appropriately
+  // NOTE: allocate each entry dynamically using malloc
 
   // set the next field in the last entry to nullptr
 
