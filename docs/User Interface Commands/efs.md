@@ -133,6 +133,28 @@ export Students Marks.csv
 
 :::
 
+### Print Relation
+
+#### Description
+
+This command is used to print the records of a relation from XFS / NITCbase disk. All the records corresponding to the relation `tablename` are written to the console.
+
+#### Syntax
+
+```bash
+print table tablename
+```
+
+:::note Example
+
+To print a relation `Students` present in the NITCbase disk, execute the following command:
+
+```bash
+print table Students
+```
+
+:::
+
 ### List Relation Names
 
 #### Description
