@@ -13,7 +13,6 @@ title: "Stage 5 : Opening Relations"
 
 :::tip PREREQUISITE READING
 
-- [Data Definition Language (DDL) Commands](../User%20Interface%20Commands/ddl.md)
 - [Data Manipulation Language (DML) Commands](../User%20Interface%20Commands/dml.md)
 
 :::
@@ -24,7 +23,7 @@ Your current NITCbase implementation must be able to read the rows and columns o
 
 ### Open and Closed Relations
 
-A relation that has it's relation and attribute catalog entries stored in the respective caches is called an **open relation**. NITCbase supports opening 12 relations at once. Since the relation catalog and attribute catalog are always open, we can only open 10 other relations. If we want to open any more relations, we will have to **close** some relation. Note that the NITCbase specification does not allow closing of the relation and attribute catalog unless at the time of database exit. **NITCbase requires that a relation be opened before any [DDL](../User%20Interface%20Commands/ddl.md) or [DML](../User%20Interface%20Commands/dml.md) commands can be performed on it**.
+A relation that has it's relation and attribute catalog entries stored in the respective caches is called an **open relation**. NITCbase supports opening 12 relations at once. Since the relation catalog and attribute catalog are always open, we can only open 10 other relations. If we want to open any more relations, we will have to **close** some relation. Note that the NITCbase specification does not allow closing of the relation and attribute catalog unless at the time of database exit. **NITCbase requires that a relation be opened before any [DML](../User%20Interface%20Commands/dml.md) commands can be performed on it**.
 
 We discussed the [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) classes in the preceding stage. Here, we introduce the class [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable). This class manages the opening and closing of relations and handles the caching operations. It has a member `tableMetaInfo` which is a [MAX_OPEN](/constants) sized array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer.md#openreltablemetainfo). `tableMetaInfo` is used to store which entries of the caches are free and the relation to which an occupied entry belongs.
 

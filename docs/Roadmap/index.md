@@ -9,7 +9,8 @@ _It is very important that you proceed with the roadmap on a regular schedule an
 
 - [**Stage 0 : Installation and Preparation**](../Roadmap/Stage00.md)
 - [**Stage 1 : Understanding the Disk Interface (2 hours)**](../Roadmap/Stage01.md)
-- [**Stage 2: Record Blocks and Catalogs (6 hours)**](../Roadmap/Stage02.md)
+- [**Stage 2 : Record Blocks and Catalogs (6 hours)**](../Roadmap/Stage02.md)
 - [**Stage 3 : The Disk Buffer and Catalog Caches(10 hours)**](../Roadmap/Stage03.md)
 - [**Stage 4 : Linear Search on Relations (10 hours)**](../Roadmap/Stage04.md)
 - [**Stage 5 : Opening Relations (10 hours)**](../Roadmap/Stage05.md)
+- [**Stage 6 : Writing Back to the Disk (10 hours)**](../Roadmap/Stage06.md)

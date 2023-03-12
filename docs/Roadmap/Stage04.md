@@ -132,10 +132,10 @@ classDiagram
     +getSlotMap(unsigned char *slotMap) int🟢
   }
   class BlockBuffer{
-    -int blockNum
+    #int blockNum
     +BlockBuffer(int blockNum) 🔵
     +getHeader(struct HeadInfo *head) int🔵
-    -loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟤
+    #loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟤
   }
 ```
 

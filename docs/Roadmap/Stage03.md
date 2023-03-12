@@ -51,10 +51,10 @@ classDiagram
     +getRecord(union Attribute *rec, int slotNum) int🟢
   }
   class BlockBuffer{
-    -int blockNum
+    #blockNum: int
     +BlockBuffer(int blockNum) 🔵
     +getHeader(struct HeadInfo *head) int🟢
-    -loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟠
+    #loadBlockAndGetBufferPtr(unsigned char **buffPtr) int🟠
   }
   class StaticBuffer{
     -blocks[BUFFER_CAPACITY][BLOCK_SIZE]: unsigned char
