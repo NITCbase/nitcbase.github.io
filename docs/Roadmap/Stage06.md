@@ -30,9 +30,6 @@ NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org
 
 Each entry in the buffer also has a corresponding [`dirty` field](../Design/Buffer%20Layer.md#buffer-structure) which is a boolean value storing if the values in that buffer entry have been updated since they were loaded from the disk block. If the dirty bit is set for an entry, we will write it back to the disk when the entry is replaced in the buffer or at system exit.
 
-- complete static buffer write-back
-- the relation needs to be closed
-
 ## Implementation
 
 NITCbase requires that a relation be closed before its schema can be edited. To update a relation name or attribute name, we will need to update the corresponding entries in the relation and/or attribute catalog blocks. These changes will subsequently be written back to the disk from the disk buffer.
