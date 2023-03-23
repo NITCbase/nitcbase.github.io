@@ -1080,7 +1080,7 @@ OpenRelTable::~OpenRelTable() {
         }
     }
 
-    /************ Closing Attribute Catalog relation in the cache ************/
+    /************ Closing the catalog relations in the relation cache ************/
 
     /****** releasing the entry corresponding to Attribute Catalog relation from Relation Cache Table ******/
 
@@ -1091,6 +1091,20 @@ OpenRelTable::~OpenRelTable() {
         field and recBuffer.setRecord() */
     }
     // free the memory dynamically allocated to this RelCacheEntry
+
+
+    /****** releasing the entry corresponding to Relation Catalog relation from Relation Cache Table ******/
+
+    if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
+
+        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
+        Write back that entry by instantiating RecBuffer class. Use recId member
+        field and recBuffer.setRecord() */
+    }
+    // free the memory dynamically allocated for this RelCacheEntry
+
+
+    /************ Closing the catalog relations in the attribute cache ************/
 
     /****** releasing the entry corresponding to Attribute Catalog relation from Attribute Cache Table ******/
 
@@ -1106,22 +1120,6 @@ OpenRelTable::~OpenRelTable() {
         // free the memory dynamically alloted to this entry in Attribute Cache linked list.
     }
 
-    /****** updating metadata corresponding to Attribute Catalog relation in the Open Relation Table ******/
-
-    //set free=true for the ATTRCAT_RELIDth entry of the tableMetaInfo.
-
-    /************ Closing Relation Catalog relation in the cache ************/
-
-    /****** releasing the entry corresponding to Relation Catalog relation from Relation Cache Table ******/
-
-    if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
-
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member
-        field and recBuffer.setRecord() */
-    }
-    // free the memory dynamically allocated for this RelCacheEntry
-
     /****** releasing the entry corresponding to Relation Catalog relation from Attribute Cache Table ******/
 
     // for all the entries in the linked list of the RELCAT_RELIDth Attribute Cache entry.
@@ -1136,10 +1134,15 @@ OpenRelTable::~OpenRelTable() {
         // free the memory dynamically alloted to this entry in Attribute Cache linked list.
     }
 
+    /************ Closing the catalog relations in the OpenRelTable ************/
+
+    /****** updating metadata corresponding to Attribute Catalog relation in the Open Relation Table ******/
+
+    //set free=true for the ATTRCAT_RELIDth entry of the tableMetaInfo.
+
     /****** updating metadata corresponding to Relation Catalog relation in the Open Relation Table ******/
 
     //free the RELCAT_RELIDth entry of the tableMetaInfo.
-
 }
 ```
 
