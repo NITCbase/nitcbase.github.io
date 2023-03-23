@@ -7,8 +7,8 @@ title: "Stage 6 : Writing Back to the Disk"
 :::note Learning Objectives
 
 - Implement the commands to rename relations and attributes
-- Implement disk write-back operations
-- Implement an LRU buffer for disk blocks
+- Implement the transfer of record blocks between the disk and the buffer
+- Implement the LRU algorithm to free up space in the buffer when it becomes fully occupied
 
 :::
 
@@ -20,13 +20,13 @@ title: "Stage 6 : Writing Back to the Disk"
 
 ## Introduction
 
-This far, we've covered a lot of the functionality of NITCbase involving reading from the disk. You've implemented a read-only buffer and a cache for the catalog entries. In this stage, we will finally discuss operations involving writing back to the disk. You will implement the [ALTER TABLE RENAME](../User%20Interface%20Commands/ddl.md#alter-table-rename) and [ALTER TABLE RENAME COLUMN](../User%20Interface%20Commands/ddl.md#alter-table-rename-column) commands which are used to rename a table and it's columns respectively.
+This far, we've covered a lot of the functionality of NITCbase involving reading from the disk. You've implemented a read-only buffer and a cache for the catalog entries. In this stage, we will discuss operations involving writing back to the disk. You will implement the [ALTER TABLE RENAME](../User%20Interface%20Commands/ddl.md#alter-table-rename) and [ALTER TABLE RENAME COLUMN](../User%20Interface%20Commands/ddl.md#alter-table-rename-column) commands which are used to rename a relation and it's attributes respectively.
 
 ### Block Replacement
 
-In our current implementation, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that in the [Buffer Layer](../Design/Buffer%20Layer.md), [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block. We will obviously have to reuse an existing slot to load in our new block.
+In our implementation so far, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that in the [Buffer Layer](../Design/Buffer%20Layer.md), [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block? We will obviously have to reuse an existing slot to load in our new block.
 
-NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)>) to decide the block that will be replaced. Each entry in the buffer has a corresponding [`timestamp` field](../Design/Buffer%20Layer.md#buffer-structure) which keeps track of how long it has been since the disk block buffered in that particular location has been used. When a position needs to be freed up, the disk block with the highest timestamp is chosen and changes, if any, are written back to the disk.
+NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)>) to decide on the block that will be replaced. Each entry in the buffer has a corresponding [`timestamp` field](../Design/Buffer%20Layer.md#buffer-structure) which keeps track of how long it has been since the disk block buffered in that particular location has been used. When a position needs to be freed up, the disk block with the highest timestamp is chosen and changes, if any, are written back to the disk.
 
 Each entry in the buffer also has a corresponding [`dirty` field](../Design/Buffer%20Layer.md#buffer-structure) which is a boolean value storing if the values in that buffer entry have been updated since they were loaded from the disk block. If the dirty bit is set for an entry, we will write it back to the disk when the entry is replaced in the buffer or at system exit.
 
@@ -168,7 +168,7 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-The [Block Access Layer](../Design/Block%20Access%20Layer.md) functions will then call `linearSearch()` to iterate through the relation and attribute catalog blocks and find the entries corresponding to the required relation. It then uses `RecBuffer::getRecord()` and `RecBuffer::setRecord()` to fetch the existing record value, update the name and then write the updated record back into the disk block. (We will implement the `RecBuffer::setRecord()` function later.)
+The [Block Access Layer](../Design/Block%20Access%20Layer.md) functions will then call `linearSearch()` to iterate through the relation and attribute catalog blocks and find the entries corresponding to the required relation. It then uses `RecBuffer::getRecord()` and `RecBuffer::setRecord()` to fetch the existing record value, update the name and then write the updated record back into the disk block. (The implementation of the `RecBuffer::setRecord()` function will be described later in this stage.)
 
 <details>
 <summary>BlockAccess/BlockAccess.cpp</summary>

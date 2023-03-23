@@ -424,19 +424,16 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 int StaticBuffer::setDirtyBit(int blockNum){
     //find the buffer index corresponding to the block using the getBufferNum().
 
-    // if Buffer is valid, bufferNum != E_BLOCKNOTINBUFFER
-
-        // set the dirty bit of that buffer in the metaInfo to true.
-
-    // else Buffer is invalid
-
-        // return the returned error code from getBufferNum call
-
-            // E_OUTOFBOUND - blockNum is invalid
-            // E_BLOCKNOTINBUFFER - block with blockNum is not present in Buffer
-
+    // if block is not present in the buffer (bufferNum = E_BLOCKNOTINBUFFER)
+    //     return E_BLOCKNOTINBUFFER
+    // else if blockNum is out of bound (bufferNum = E_OUTOFBOUND)
+    //     return E_OUTOFBOUND
+    //
+    // else
+    //     (the bufferNum is valid)
+    //     set the dirty bit of that buffer in the metaInfo to true.
+    //
     // return SUCCESS
-
 }
 ```
 
@@ -487,7 +484,9 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 
 - This function never fails - a buffer is always assigned to the block.
 - The `timeStamp` is reset to `0` each time the buffer block is accessed and incremented when other buffer blocks are accessed. Thus the buffer block with the largest `timeStamp` is the one that is least recently used.
-- The function allots a free buffer block, fills its `metaInfo` with relevant information, and updates the `timeStamp`. The caller is responsible for actually loading the block into the buffer.
+- The function allots a free buffer block, fills its `metaInfo` with relevant information, and updates the `timeStamp`.
+- This function will only allocate a buffer and will not load the disk block into the buffer. That task is expected to be handled by the caller.
+- This function does not check whether the argument blockNum is already present in the buffer. The caller is expected to validate that before this function is called.
 
 :::
 
@@ -508,17 +507,20 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 
 ```cpp
 int StaticBuffer::getFreeBuffer(int blockNum){
-    // Check if blockNum is valid (non zero and less than number of disk blocks)
+    // Check if blockNum is valid (non zero and less than DISK_BLOCKS)
     // and return E_OUTOFBOUND if not valid.
 
     // increase the timeStamp in metaInfo of all occupied buffers.
 
     // let bufferNum be used to store the buffer number of the free/freed buffer.
+    int bufferNum;
 
     // if a free buffer is available, bufferNum is the index of that free buffer.
 
-    // if a free buffer is not available, write back the buffer with the largest
-    // timeStamp (if it's dirty) using Disk::writeBlock() and set it as bufferNum.
+    // if a free buffer is not available,
+    //     find the buffer with the largest timestamp
+    //     IF IT IS DIRTY, write back to the disk using Disk::writeBlock()
+    //     set bufferNum = index of this buffer
 
     // update the metaInfo entry corresponding to bufferNum with
     // free:false, dirty:false, blockNum:the input block number and timeStamp:0.
@@ -777,7 +779,7 @@ If `releaseBlock()` method is called again after having successfully released fo
 ```cpp
 void BlockBuffer::releaseBlock(){
 
-    / if blockNum is INVALID_BLOCK (-1), or it is invalidated already, do nothing
+    // if blockNum is INVALID_BLOCK (-1), or it is invalidated already, do nothing
 
     // else
         // get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
@@ -789,7 +791,6 @@ void BlockBuffer::releaseBlock(){
         // to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
 
         // set the object's blockNum to INVALID_BLOCK (-1)
-    }
 
 }
 ```
@@ -812,10 +813,9 @@ Nil
 
 :::info Note
 
-- All get and set methods accessing the block's data should call the `getBufferPtr()` method to get the starting address of the buffer block holding the block's data.
-- **This also ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
-- This function will NOT check if the block already exists in disk or not, rather will copy whatever content is there in that disk block to the buffer.
-- Only call this if the Block exists in disk already, otherwise call constructor 1 to allocate space for a new block.
+- The block number that is to be loaded is already available as a member field in the `BlockBuffer` instance.
+- All get and set methods accessing the block's data should call the `loadBlockAndGetBufferPtr()` method to get the starting address of the buffer block holding the block's data. **This ensures that the block is reloaded back to buffer memory if it had been replaced by the buffer replacement algorithm since the last data access.**
+- This function will NOT check if the block has been initialised as a record or an index block. It will copy whatever content is there in that disk block to the buffer.
 
 :::
 

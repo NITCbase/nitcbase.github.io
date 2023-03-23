@@ -243,7 +243,7 @@ OpenRelTable::~OpenRelTable() {
 >
 > <sub>
 >
-> **WARNING**: The `OpenRelTable::openRel()` function involves dynamic memory allocation using `malloc` for entries in the relation cache and attribute cache.
+> **WARNING**: The `OpenRelTable::openRel()` function involves dynamic memory allocation using `malloc` for creating entries in the relation cache and attribute cache (as a linked list). Please take care to avoid segmentation faults due to mishandling of the associated pointers and such.
 > </sub>
 >
 > - [`OpenRelTable::openRel()`](../Design/Cache%20Layer.md#openreltable--openrel)

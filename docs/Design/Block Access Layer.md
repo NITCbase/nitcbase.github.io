@@ -382,7 +382,7 @@ This method changes the relation name of specified relation to the new name spec
 
 | Name    | Type              | Description                                          |
 | ------- | ----------------- | ---------------------------------------------------- |
-| oldName | `char[ATTR_SIZE]` | Old Name of Relation to which name has to be changed |
+| oldName | `char[ATTR_SIZE]` | Old Name of Relation of which name has to be changed |
 | newName | `char[ATTR_SIZE]` | New name for the Relation                            |
 
 #### Return Values
@@ -399,9 +399,9 @@ This method changes the relation name of specified relation to the new name spec
 int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]){
     // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
-    Attribute newRelationName;
+    Attribute newRelationName;    // set newRelationName with newName
 
-    // search if the attribute "RelName" of relation catalog equals(EQ) newRelationName using linearSearch
+    // search the relation catalog for an entry with "RelName" = newRelationName
 
     // If relation with name newName already exists (result of linearSearch is not {-1, -1})
     //    return E_RELEXIST;
@@ -409,9 +409,9 @@ int BlockAccess::renameRelation(char oldName[ATTR_SIZE], char newName[ATTR_SIZE]
 
     // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
-    Attribute oldRelationName;
+    Attribute oldRelationName;    // set oldRelationName with oldName
 
-    // search if the attribute "RelName" of relation catalog equals(EQ) oldRelationName
+    // search the relation catalog for an entry with "RelName" = oldRelationName
 
     // If relation with name oldName does not exist (result of linearSearch is {-1, -1})
     //    return E_RELNOTEXIST;
@@ -470,21 +470,20 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
 
     // reset the searchIndex of the relation catalog using RelCacheTable::resetSearchIndex()
 
-    Attribute relNameAttr;
+    Attribute relNameAttr;    // set relNameAttr to relName
 
-    // Search for the relation with name relName in relation catalog using Linear Search
-    // If relation with name relName does not exits (relcatRecId == {-1,-1})
+    // Search for the relation with name relName in relation catalog using linearSearch()
+    // If relation with name relName does not exist (search returns {-1,-1})
     //    return E_RELNOTEXIST;
 
-    /***
-        Iterating over all Attribute Catalog Entry record corresponding to relation to find the required attribute
-    ***/
     // reset the searchIndex of the attribute catalog using RelCacheTable::resetSearchIndex()
 
-    // declare attrToRenameRecId used to store the attr-cat recId of the attribute to rename
+    // declare variable attrToRenameRecId used to store the attr-cat recId of the attribute to rename
     RecId attrToRenameRecId{-1, -1};
     Attribute attrCatEntryRecord[ATTRCAT_NO_ATTRS];
 
+    /* iterate over all Attribute Catalog Entry record corresponding to the
+       relation to find the required attribute */
     while (true) {
         // linear search on the attribute catalog for RelName = relNameAttr
 
@@ -503,12 +502,11 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
     // if attrToRenameRecId == {-1, -1}
     //     return E_ATTRNOTEXIST;
 
-    /*
-     Update the entry corresponding to the attribute in the Attribute Catalog Relation.
-    */
-    // declare a RecBuffer for attrToRenameRecId.block and get the record at attrToRenameRecId.slot
-    // update the AttrName of the record with newName
-    // set back the record with RecBuffer.setRecord
+
+    // Update the entry corresponding to the attribute in the Attribute Catalog Relation.
+    //   declare a RecBuffer for attrToRenameRecId.block and get the record at attrToRenameRecId.slot
+    //   update the AttrName of the record with newName
+    //   set back the record with RecBuffer.setRecord
 
     return SUCCESS;
 }

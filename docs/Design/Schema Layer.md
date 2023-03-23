@@ -308,30 +308,31 @@ This method changes the relation name of specified relation to new name as speci
 
 | Name       | Type              | Description                                           |
 | ---------- | ----------------- | ----------------------------------------------------- |
-| oldRelName | `char[ATTR_SIZE]` | Old Name of Relation to which name has to be changed. |
+| oldRelName | `char[ATTR_SIZE]` | Old Name of Relation of which name has to be changed. |
 | newRelName | `char[ATTR_SIZE`] | New name for the Relation.                            |
 
 #### Return value
 
-| Value                          | Description                                                                                                                 |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                      |
-| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                    |
-| [`E_RELNOTEXIST`](/constants)  | If the relation with name oldRelName does not exist                                                                         |
-| [`E_RELEXIST`](/constants)     | If the relation with name newRelName already exists                                                                         |
-| [`E_NOTPERMITTED`](/constants) | If the oldrelName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
+| Value                          | Description                                                                                                                            |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                                 |
+| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                               |
+| [`E_RELNOTEXIST`](/constants)  | If the relation with name oldRelName does not exist                                                                                    |
+| [`E_RELEXIST`](/constants)     | If the relation with name newRelName already exists                                                                                    |
+| [`E_NOTPERMITTED`](/constants) | If the oldRelName/newRelName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
 
 #### Algorithm
 
 ```cpp
 int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]) {
-    // if the oldRelName or newRelName is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
-        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
-        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
-    // get the relation's open relation id using OpenRelTable::getRelId() method
+    // if the oldRelName or newRelName is either Relation Catalog or Attribute Catalog,
+        // return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
 
-    // if relation is open in open relation table, return E_RELOPEN
-    // (check if the value returned from getRelId function call != E_RELNOTOPEN)
+    // if the relation is open
+    //    (check if OpenRelTable::getRelId() returns E_RELNOTOPEN)
+    //    return E_RELOPEN
 
     // retVal = BlockAccess::renameRelation(oldRelName, newRelName);
     // return retVal
@@ -369,13 +370,14 @@ This method changes the name of an attribute/column present in a specified relat
 
 ```cpp
 int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
-    // if the relName is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
-        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
-        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
+    // if the relName is either Relation Catalog or Attribute Catalog,
+        // return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
 
-    // get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
-
-    // if relation is opened in open relation table, return E_RELOPEN
+    // if the relation is open
+        //    (check if OpenRelTable::getRelId() returns E_RELNOTOPEN)
+        //    return E_RELOPEN
 
     // Call renameAttribute method of Block Access Layer by passing appropriate arguments.
 
