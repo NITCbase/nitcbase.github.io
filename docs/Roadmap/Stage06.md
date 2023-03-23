@@ -24,7 +24,7 @@ This far, we've covered a lot of the functionality of NITCbase involving reading
 
 ### Block Replacement
 
-In our current implementation, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block. We will obviously have to reuse an existing slot to load in our new block.
+In our current implementation, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that in the [Buffer Layer](../Design/Buffer%20Layer.md), [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block. We will obviously have to reuse an existing slot to load in our new block.
 
 NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)>) to decide the block that will be replaced. Each entry in the buffer has a corresponding [`timestamp` field](../Design/Buffer%20Layer.md#buffer-structure) which keeps track of how long it has been since the disk block buffered in that particular location has been used. When a position needs to be freed up, the disk block with the highest timestamp is chosen and changes, if any, are written back to the disk.
 
@@ -32,7 +32,7 @@ Each entry in the buffer also has a corresponding [`dirty` field](../Design/Buff
 
 ## Implementation
 
-NITCbase requires that a relation be closed before its schema can be edited. To update a relation name or attribute name, we will need to update the corresponding entries in the relation and/or attribute catalog blocks. These changes will subsequently be written back to the disk from the disk buffer.
+The [ALTER TABLE RENAME](../User%20Interface%20Commands/ddl.md#alter-table-rename) and [ALTER TABLE RENAME COLUMN](../User%20Interface%20Commands/ddl.md#alter-table-rename-column) commands modify the schema of a relation and are hence handled by the [Schema Layer](../Design/Schema%20Layer.md). NITCbase requires that a relation be closed before its schema can be edited. To update a relation name or attribute name, we will need to update the corresponding entries in the relation and/or attribute catalog blocks. These changes will subsequently be written back to the disk from the disk buffer.
 
 A sequence diagram showing the call sequence involved in the implementation of this functionality is shown below.
 
@@ -107,7 +107,7 @@ classDiagram
 
 ```mermaid
 classDiagram
-  direction TD
+  direction LR
   BlockBuffer <|-- RecBuffer
   StaticBuffer<|..RecBuffer : uses
   StaticBuffer<|..BlockBuffer : uses

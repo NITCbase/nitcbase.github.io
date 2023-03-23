@@ -517,9 +517,11 @@ int StaticBuffer::getFreeBuffer(int blockNum){
 
     // if a free buffer is available, bufferNum is the index of that free buffer.
 
-    // if a free buffer is not available, write back the buffer with the largest timeStamp (if it's dirty) using Disk::writeBlock() and set it as bufferNum.
+    // if a free buffer is not available, write back the buffer with the largest
+    // timeStamp (if it's dirty) using Disk::writeBlock() and set it as bufferNum.
 
-    // update the metaInfo entry corresponding to bufferNum with free:false, dirty:false, blockNum:the input block number and timeStamp:0.
+    // update the metaInfo entry corresponding to bufferNum with
+    // free:false, dirty:false, blockNum:the input block number and timeStamp:0.
 
     // return the bufferNum.
 }
@@ -592,12 +594,15 @@ If the block could not be allocatted in the disk, then the `blockNum` field of t
 
 ```cpp
 BlockBuffer::BlockBuffer(char blockType){
-    // allocate a block on the disk and a buffer in memory to hold the new block of given type using getFreeBlock function and get the return error codes if any.
+    // allocate a block on the disk and a buffer in memory to hold the new block of
+    // given type using getFreeBlock function and get the return error codes if any.
 
-    // set the blockNum field of the object to that of the allocated block number if the method returned a valid block number,
+    // set the blockNum field of the object to that of the allocated block
+    // number if the method returned a valid block number,
     // otherwise set the error code returned as the block number.
-        // The caller must check if the constructor allocatted block successfully by checking the value of block number field.
 
+    // (The caller must check if the constructor allocatted block successfully
+    // by checking the value of block number field.)
 }
 ```
 
@@ -730,17 +735,19 @@ Nil
 int BlockBuffer::setHeader(struct HeadInfo *head){
 
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    // get the starting address of the buffer containing the block using
+    // loadBlockAndGetBufferPtr(&bufferPtr).
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer to get the headInfo
+    // Use type casting here to cast the returned pointer type to the appropriate
+    // struct pointer to get the headInfo
 
-    //copy the contents of the memory location pointed to by head to the header of block using appropriate.
-        // not copying reserved
+    // copy the fields of the HeadInfo pointed to by head to the header of block.
+    // not copying reserved
 
-    //update dirty bit by calling appropriate method of StaticBuffer class.
+    // update dirty bit by calling appropriate method of StaticBuffer class.
     // if setDirtyBit() failed, return the error code
 
     // return SUCCESS;
@@ -775,9 +782,11 @@ void BlockBuffer::releaseBlock(){
     // else
         // get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
 
-        // if the buffer number is valid (!=E_BLOCKNOTINBUFFER), free the buffer by setting the free flag of its metaInfo entry to true.
+        // if the buffer number is valid (!=E_BLOCKNOTINBUFFER), free the buffer
+        // by setting the free flag of its metaInfo entry to true.
 
-        // free the block in disk by setting the data type of the entry corresponding to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
+        // free the block in disk by setting the data type of the entry corresponding
+        // to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
 
         // set the object's blockNum to INVALID_BLOCK (-1)
     }
@@ -815,17 +824,20 @@ Nil
 ```cpp
 /* NOTE: This function will NOT check if the block already exists in disk or not,
    rather will copy whatever content is there in that disk block to the buffer.
-   Only call this if the Block exists in disk already, otherwise call constructor 1 to allocate space for a new block.
+   Only call this if the Block exists in disk already, otherwise call constructor 1
+   to allocate space for a new block.
    Also ensure that all getter and setter methods accessing the block's data should call the loadBlockAndGetBufferPtr().
  */
 int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
     // check whether the block is already present in the buffer using StaticBuffer.getBufferNum()
     int bufferNum = StaticBuffer::getBufferNum(this->blockNum);
 
-       // if present (!=E_BLOCKNOTINBUFFER), set the timestamp of the corresponding buffer to 0 and increment the timpestamps of all other occupied buffers in the BufferMetaInfo.
+    // if present (!=E_BLOCKNOTINBUFFER),
+        // set the timestamp of the corresponding buffer to 0 and increment the
+        // timestamps of all other occupied buffers in the BufferMetaInfo.
 
     // else
-        // if not present, get a free buffer using StaticBuffer.getFreeBuffer()
+        // get a free buffer using StaticBuffer.getFreeBuffer()
 
         // if the call returns E_OUTOFBOUND, return E_OUTOFBOUND here as the blockNum is invalid
 
@@ -863,7 +875,8 @@ Returns the block number of a free block of the input type in the disk and allot
 ```cpp
 int BlockBuffer::getFreeBlock(int blockType){
 
-    //iterate through the StaticBuffer::blockAllocMap and find the block number of a free block in the disk.
+    //iterate through the StaticBuffer::blockAllocMap and find the block number
+    // of a free block in the disk.
 
     //if no block is free, return E_DISKFULL.
 
@@ -871,7 +884,9 @@ int BlockBuffer::getFreeBlock(int blockType){
 
     //find a free buffer using StaticBuffer::getFreeBuffer() .
 
-    //initialize the header of the block with pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0 using setHeader().
+    //initialize the header of the block with
+    //pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0
+    //using setHeader().
 
     //update the block type of the block to the input block type using setBlockType().
 

@@ -3,6 +3,13 @@ sidebar_position: 3
 title: "Algebra Layer"
 ---
 
+:::info note
+The Schema Layer code is to be written in `Algebra.cpp` and it's header file `Algebra.h`
+
+**[The stub code for these files can be found here.](/stub/algebra_stub)**
+
+:::
+
 ## Layout
 
 The Front End parses SQL-Like queries and converts them into a sequence of algebra layer and schema layer method calls.
