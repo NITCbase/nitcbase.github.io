@@ -799,7 +799,7 @@ void BlockBuffer::releaseBlock(){
 
 #### Description
 
-Returns a pointer to the first byte of the buffer storing the block.
+Returns a pointer to the first byte of the buffer storing the block. This function will load the block to the buffer if it is not already present.
 
 #### Arguments
 
@@ -822,28 +822,31 @@ Nil
 #### Algorithm
 
 ```cpp
-/* NOTE: This function will NOT check if the block already exists in disk or not,
-   rather will copy whatever content is there in that disk block to the buffer.
-   Only call this if the Block exists in disk already, otherwise call constructor 1
-   to allocate space for a new block.
-   Also ensure that all getter and setter methods accessing the block's data should call the loadBlockAndGetBufferPtr().
+/* NOTE: This function will NOT check if the block has been initialised as a
+   record or an index block. It will copy whatever content is there in that
+   disk block to the buffer.
+   Also ensure that all the methods accessing and updating the block's data
+   should call the loadBlockAndGetBufferPtr() function before the access or
+   update is done. This is because the block might not be present in the
+   buffer due to LRU buffer replacement. So, it will need to be bought back
+   to the buffer before any operations can be done.
  */
 int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
-    // check whether the block is already present in the buffer using StaticBuffer.getBufferNum()
+    /* check whether the block is already present in the buffer
+       using StaticBuffer.getBufferNum() */
     int bufferNum = StaticBuffer::getBufferNum(this->blockNum);
 
     // if present (!=E_BLOCKNOTINBUFFER),
         // set the timestamp of the corresponding buffer to 0 and increment the
-        // timestamps of all other occupied buffers in the BufferMetaInfo.
+        // timestamps of all other occupied buffers in BufferMetaInfo.
 
     // else
         // get a free buffer using StaticBuffer.getFreeBuffer()
 
-        // if the call returns E_OUTOFBOUND, return E_OUTOFBOUND here as the blockNum is invalid
+        // if the call returns E_OUTOFBOUND, return E_OUTOFBOUND here as
+        // the blockNum is invalid
 
         // Read the block into the free buffer using readBlock()
-
-        // If the read failed, the block number is invalid return E_OUTOFBOUND;
 
     // store the pointer to this buffer (blocks[bufferNum]) in *buffPtr
 
@@ -1155,7 +1158,7 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
 
 #### Description
 
-Sets the slotNumth record entry of the block with the input record contents.
+Sets the `slotNum`th record entry of the block with the input record contents.
 
 #### Arguments
 
@@ -1173,8 +1176,8 @@ Sets the slotNumth record entry of the block with the input record contents.
 
 :::caution note
 
-- The array of `union Attribute` elements should have a size equal to the number of attributes in the relation.
-- The higher layers must allocate memory for the the array of `union Attribute` elements before calling the function.
+- The array `rec` (an array of type `union Attribute`) should have a size equal to the number of attributes in the relation.
+- The higher layers must allocate memory for `rec` before calling the function.
 
 :::
 
@@ -1183,12 +1186,13 @@ Sets the slotNumth record entry of the block with the input record contents.
 ```cpp
 int RecBuffer::setRecord(union Attribute *rec, int slotNum) {
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer to access headInfo
+    /* get the header of the block using the getHeader() function */
 
     // get number of attributes in the block.
 
@@ -1196,10 +1200,14 @@ int RecBuffer::setRecord(union Attribute *rec, int slotNum) {
 
     // if input slotNum is not in the permitted range return E_OUTOFBOUND.
 
-    // using offset range copy contents of the memory pointed by rec to slotNumth record.
+    /* using offset range copy contents of the memory pointed
+       by rec to slotNumth record. */
 
-    // update dirty bit.
-    // if setDirtyBit failed, return the value returned by the call
+    // update dirty bit using setDirtyBit()
+
+    /* (the above function call should not fail since the block is already
+       in buffer and the blockNum is valid. If the call does fail, there
+       exists some other issue in the code) */
 
     // return SUCCESS
 }

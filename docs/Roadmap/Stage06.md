@@ -1,14 +1,13 @@
 ---
-title: "Stage 6 : Writing Back to the Disk"
+title: "Stage 6 : Buffer Management and Disk Write-back"
 ---
 
-# Stage 6 : Writing Back to the Disk (10 hours)
+# Stage 6 : Buffer Management and Disk Write-back (10 hours)
 
 :::note Learning Objectives
 
 - Implement the commands to rename relations and attributes
-- Implement the transfer of record blocks between the disk and the buffer
-- Implement the LRU algorithm to free up space in the buffer when it becomes fully occupied
+- Implement the LRU algorithm to free up space in the buffer by writing back to the disk when the buffer becomes fully occupied
 
 :::
 
@@ -242,7 +241,7 @@ exit
 Ensure that you get the following output.
 
 ```plain
-| name | author | price | bookOwner |
+| name | author | price | lender |
 Selected successfully into null
 ```
 

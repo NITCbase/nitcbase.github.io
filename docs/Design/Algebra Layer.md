@@ -86,7 +86,8 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
     // get the relation catalog entry from relation cache
     // (use RelCacheTable::getRelCatEntry() of Cache Layer)
 
-    // if relCatEntry.numAttrs != numberOfAttributes in relation, return E_NATTRMISMATCH
+    /* if relCatEntry.numAttrs != numberOfAttributes in relation,
+       return E_NATTRMISMATCH */
 
     // let recordValues[numberOfAttributes] be an array of type union Attribute
 
@@ -95,8 +96,8 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
      */
     // iterate through 0 to nAttrs-1: (let i be the iterator)
     {
-        // get the attribute catalog entry for the i'th attribute from the attribute cache
-        // (use AttrCacheTable::getAttrCatEntry() function with arguments relId and i)
+        // get the attr-cat entry for the i'th attribute from the attr-cache
+        // (use AttrCacheTable::getAttrCatEntry())
 
         // let type = attrCatEntry.attrType;
 
@@ -105,7 +106,8 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
             // if the char array record[i] can be converted to a number
             // (check this using isNumber() function)
             {
-                // convert the char array to numeral and store it at recordValues[i].nVal using atof()
+                /* convert the char array to numeral and store it
+                   at recordValues[i].nVal using atof() */
             }
             // else
             {
@@ -114,20 +116,11 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
         }
         else if (type == STRING)
         {
-            // iterate through 0 to ATTR_SIZE-1: (let charIndex be the iterator)
-            {
-                // let ch be the character at index (i, charIndex) of record array
-
-                // if ch == null character(i.e. '\0') exit the loop
-
-                // if ch is an invalid character return E_NOTPERMITTED;
-                // (check this using isInvalidCharacter() function)
-            }
             // copy record[i] to recordValues[i].sVal
         }
     }
 
-    // insert the record by calling BlockAccess::insert() function of Block Access Layer
+    // insert the record by calling BlockAccess::insert() function
     // let retVal denote the return value of insert call
 
     return retVal;
@@ -169,52 +162,65 @@ This function creates a new target relation with attributes as that of source re
 
 ```cpp
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
-    // get the srcRel's open relation id(let it be srcRelid), using getRelId() method of cache layer
+    // get the srcRel's rel-id(let it be srcRelid), using OpenRelTable::getRelId()
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
-    // get the attribute catalog entry for attr, using getAttrcatEntry() method of AttrCacheTable in cache layer.
+    // get the attr-cat entry for attr, using AttrCacheTable::getAttrCatEntry()
     // if getAttrcatEntry() call fails return E_ATTRNOTEXIST
 
 
-    /*** Convert strVal (c-string) to an attribute of data type NUMBER or STRING as given in the following code. ***/
-    int type = attrCatEntry.attrType;
+    /*** Convert strVal to an attribute of data type NUMBER or STRING ***/
+
     Attribute attrVal;
-    if (type == NUMBER) {
-        try {
-            attrVal.nVal = std::stof(strVal);
-        } catch (std::invalid_argument &e) {
-            // if convert fails, return E_ATTRTYPEMISMATCH
+    int type = attrCatEntry.attrType;
+
+    if (type == NUMBER)
+    {
+        // if the char array record[i] can be converted to a number
+        // (check this using isNumber() function)
+        {
+            /* convert the char array to numeral and store it
+                at attrVal.nVal using atof() */
+        }
+        // else
+        {
             return E_ATTRTYPEMISMATCH;
         }
-    } else if (type == STRING) {
-        strcpy(attrVal.sVal, strVal);
+    }
+    else if (type == STRING)
+    {
+        // copy record[i] to attrVal.sVal
     }
 
     /*** Creating and opening the target relation ***/
     // Prepare arguments for createRel() in the following way:
-    // get RelcatEntry of srcRel from cache using getRelCatEntry() method of RelCacheTable in cache layer.
-    // get the no. of attributes present in src relation, from RelcatEntry. (let it be nAttrs)
+    // get RelcatEntry of srcRel using RelCacheTable::getRelCatEntry()
+    int src_nAttrs = /* the no. of attributes present in src relation */ ;
 
 
-    // let attr_names[src_nAttrs][ATTR_SIZE] be a 2D array of type char(attribute names of rel).
+    /* let attr_names[src_nAttrs][ATTR_SIZE] be a 2D array of type char
+        (will store the attribute names of rel). */
     // let attr_types[src_nAttrs] be an array of type int
 
     /*iterate through 0 to src_nAttrs-1 :
-        get the i'th attribute's AttrCatEntry (using getAttrcatEntry() method of AttrCacheTable in cache layer)
-        fill attr_names, attr_types of corresponding attributes using Attribute catalog found.
+        get the i'th attribute's AttrCatEntry (using getAttrcatEntry()
+        method of AttrCacheTable in cache layer)
+        fill attr_names, attr_types of corresponding attributes using the entry
     */
 
 
-    // Create the relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    /* Create the relation for target relation by calling createRel() method
+       of Schema layer by providing appropriate arguments */
     // if the createRel returns an error code, then return that value.
-    // Hint: ret = Schema::createRel(targetrel,src_nAttrs,attr_name,attr_type)
 
-
-    // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
-    // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
+    /* Open the newly created target relation by calling openRel() method of
+       OpenRelTable and store the target relid */
+    /* If opening fails, delete the target relation by calling deleteRel() of
+       Schema Layer and return the error value. */
 
     /*** Selecting and inserting records into the target relation ***/
-    // Before calling the search function, reset the search to start from the first using RelCacheTable::resetSearchIndex
+    /* Before calling the search function, reset the search to start from the
+       first using RelCacheTable::resetSearchIndex */
 
     Attribute record[src_nAttrs];
     Attribute val;
@@ -224,14 +230,14 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
     /*
     while (true) {
-        // For doing projection call search of Block Access layer with the following arguments:
+        // For doing projection call search of Block Access layer
         // int ret = BlockAccess::search(srcRelId, record, attr, attrVal, op)
 
         if (search call returns SUCCESS):
             ret = BlockAccess::insert(targetRelId, record);
             if (insert fails) {
-                close the targetrel(by calling closeRel(targetrel) method of schema layer)
-                delete targetrel (by calling deleteRel(targetrel) of schema layer)
+                close the targetrel(by calling Schema::closeRel(targetrel))
+                delete targetrel (by calling Schema::deleteRel(targetrel))
                 return ret;
             }
         else:
@@ -603,36 +609,5 @@ bool isNumber(char *str) {
     */
     int ret = sscanf(str, "%f %n", &ignore, &len);
     return ret == 1 && len == strlen(str);
-}
-```
-
-### isInvalidCharacter()
-
-#### Description
-
-This function takes a character and checks if it is allowed as part of a record value.
-
-#### Arguments
-
-| Name      | Type   | Description                 |
-| --------- | ------ | --------------------------- |
-| character | `char` | The character to be checked |
-
-#### Return Values
-
-| Value | Description                                 |
-| ----- | ------------------------------------------- |
-| true  | character is allowed in a record value.     |
-| false | character is not allowed in a record value. |
-
-```cpp
-bool isInvalidCharacter(char character) {
-    // check if the character satisfies any of the below conditions
-    // '0' <= character <= '9'
-    // 'A' <= character <= 'Z'
-    // 'a' <= character <= 'z'
-    // character = '-'
-    // character = '_'
-    // and return true. else return false
 }
 ```
