@@ -12,11 +12,11 @@ title: "Stage 7 : Inserting Records Into Relations"
 
 ## Introduction
 
-Inserting records is quite possibly one of the most essential features of a DBMS. In this stage, we will implement all the methods required to finally start populating the relations that we have in NITCbase. Inserting a record into a relation primarily involves three main steps
+Inserting records is one of the most essential features of a DBMS. In this stage, we will implement all the methods required to start inserting tuples into an existing relation in NITCbase. Inserting a record into a relation primarily involves three main steps
 
-- iterate through the last block of the relation and find a free slot or allocate a new block if the previous block is full.
-- set the value of the record in the block and update the slotmap
-- update the relation catalog/cache to reflect the change
+- iterate through the last block of the relation and find a free slot or allocate a new block if the current last block is full.
+- store the contents of the record in the appropriate slot in the block and update the slotmap
+- update the relation catalog/cache to reflect the change in number of records (thus entailing an update to the corresponding block in the buffer)
 
 A new record can be inserted using the [INSERT INTO TABLE VALUES](../User%20Interface%20Commands/dml.md#insert-into-table-values) command which is handled by the [Algebra Layer](../Design/Algebra%20Layer.md). The allocation of a new block is handled by the [Buffer Layer](../Design/Buffer%20Layer.md).
 
@@ -24,7 +24,9 @@ A new record can be inserted using the [INSERT INTO TABLE VALUES](../User%20Inte
 
 ### Allocating New Blocks
 
-We have already implemented a constructor for the [RecBuffer class](../Design/Buffer%20Layer.md#class-recbuffer) which takes a block number as an argument and creates an instance of `RecBuffer` that handles operations on that block using the buffer (referred to as [**constructor 2**](../Design/Buffer%20Layer.md#recbuffer--recbuffer-constructor-2) in the docs). The [RecBuffer class](../Design/Buffer%20Layer.md#class-recbuffer) also supports a default constructor (referred to as [**constructor 1**](../Design/Buffer%20Layer.md#recbuffer--recbuffer-constructor-1) in the docs) which can be used to allocate a new block on the disk and create an instance of `RecBuffer` to handle operations on that block using the buffer.
+We have already implemented a constructor (referred to as [**constructor 2**](../Design/Buffer%20Layer.md#recbuffer--recbuffer-constructor-2) in the docs) for the [RecBuffer class](../Design/Buffer%20Layer.md#class-recbuffer) which takes a block number as an argument and constructs an instance of the class. The instance of `RecBuffer` thus created can be used to handle operations on that block using the buffer.
+
+The [RecBuffer class](../Design/Buffer%20Layer.md#class-recbuffer) also defines a default constructor (referred to as [**constructor 1**](../Design/Buffer%20Layer.md#recbuffer--recbuffer-constructor-1) in the docs). This constructor will find a free block on the disk and create an instance of `RecBuffer` to handle operations on that block using the buffer.
 
 To find a free block, we iterate through the [block allocation map](../Design/Physical%20Layer.md#disk-model) to find an unoccupied block. Similar to other disk data structures, the block allocation map too is loaded into memory during the runtime of the database.
 
@@ -75,9 +77,9 @@ classDiagram
 
 <br/>
 
-An instance declared using [constructor 1](../Design/Buffer%20Layer.md#blockbuffer--blockbuffer-constructor1) will call the `BlockBuffer::getFreeBlock()` method to get a free block. This method makes use of the `setHeader()` method to and `setBlockType()` set up the header in the newly acquired disk block and the `setBlockType()` method to update the type of the block in the block allocation map.
+An instance declared using [constructor 1](../Design/Buffer%20Layer.md#blockbuffer--blockbuffer-constructor1) will call the `BlockBuffer::getFreeBlock()` method to get a free block. This method makes use of the `setHeader()` method to set up the header in the newly acquired disk block and the `setBlockType()` method to update the type of the block in the block allocation map.
 
-In the `StaticBuffer` file, we declare the `blockAllocMap` member field and update our constructor and destructor to handle this array as well.
+In the `StaticBuffer` file, we declare the `blockAllocMap` member field and update our constructor and destructor to initialise and write-back the block alloc map between the disk and memory.
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>
@@ -249,7 +251,9 @@ int OpenRelTable::closeRel(int relId) {
 
 ### Inserting a Record
 
-A sequence diagram documenting the call sequence for a record insertion is shown below.
+Now that we have our block allocation and cache write-back in place, we can implement the [Algebra Layer](../Design/Algebra%20Layer.md) and [Block Access Layer](../Design/Block%20Access%20Layer.md) functionalities required to insert a record in a block. We also need to implement the [Buffer Layer](../Design/Buffer%20Layer.md) methods to update the slotmap.
+
+A sequence diagram documenting the call sequence for a record insertion is shown below along with a class diagram with the relevant classes.
 
 ```mermaid
  %%{init: { 'sequence': {'mirrorActors':false} } }%%
@@ -286,7 +290,7 @@ sequenceDiagram
 
 ```
 
-<br/>
+---
 
 ```mermaid
 classDiagram
@@ -306,7 +310,7 @@ classDiagram
   }
 ```
 
----
+<br/>
 
 **Buffer Layer**
 
@@ -347,6 +351,26 @@ classDiagram
 ```
 
 <br/>
+
+As shown in the sequence diagram above, the Frontend User Interface will parse the `INSERT INTO TABLE VALUES` command and call the `Frontend::insert_into_table_values()` function in the Frontend Programming Interface. This call is then transferred along to the [Algebra Layer](../Design/Algebra%20Layer.md). Hence, the implementation of the `Frontend::insert_into_table_values()` function only involves a call to the `Algebra::insert()` function.
+
+<details>
+<summary>Frontend/Frontend.cpp</summary>
+
+```cpp
+int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count, char attr_values[][ATTR_SIZE]) {
+  return Algebra::insert(relname, attr_count, attr_values);
+}
+```
+
+</details>
+
+<details>
+<summary>Algebra/Algebra.cpp</summary>
+
+Implement the following functions looking at their respective design docs
+
+</details>
 
 - todo verify if the caches and catalogs have right values.
   - didn't check during implementatoin
