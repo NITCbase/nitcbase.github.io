@@ -276,10 +276,12 @@ sequenceDiagram
   Algebra Layer->>Block Access Layer:insert()🟠
   activate Block Access Layer
   Note over Block Access Layer, Block Access Layer: find an empty slot
+  Note over Block Access Layer, Buffer Layer: update the relation's record block
   Block Access Layer ->> Buffer Layer: setRecord()🔵, setHeader()🔵, setSlotMap()🟢
   activate Buffer Layer
   Buffer Layer-->>Block Access Layer:operation status
   deactivate Buffer Layer
+  Note over Block Access Layer, Cache Layer: update relcat in relation cache
   Block Access Layer->>Cache Layer:setRelCatEntry()🟢
   activate Cache Layer
   Cache Layer-->>Block Access Layer:operation status
@@ -540,5 +542,7 @@ SELECT * FROM Locations INTO null WHERE capacity>0;
 CLOSE TABLE Locations;
 SELECT * FROM RELATIONCAT INTO null WHERE RelName=Locations;
 ```
+
+<br/>
 
 **Q2.** Using the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command, insert the values present [here](/roadmap_files/s7insert.txt) into the relation `Events(id NUM, title STR, location STR)`. Then, use the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to verify that all 50 events were created.

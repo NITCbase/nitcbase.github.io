@@ -11,6 +11,12 @@ title: "Stage 4 : Linear Search on Relations"
 
 :::
 
+:::tip PREREQUISITE READING
+
+- [External Filesystem (XFS) Commands](../User%20Interface%20Commands/efs.md)
+
+:::
+
 ## Introduction
 
 We discussed the relation and attribute cache in the previous stage. Your implementation must now be able to read the rows and columns of the relations `RELCAT` and `ATTRIBUTECAT` from the caches and display the attributes for these relations. In this stage, we'll implement a search functionality so that we can search through all the records of these relations too.

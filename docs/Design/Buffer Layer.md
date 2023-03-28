@@ -782,7 +782,8 @@ void BlockBuffer::releaseBlock(){
     // if blockNum is INVALID_BLOCK (-1), or it is invalidated already, do nothing
 
     // else
-        // get the buffer number of the buffer assigned to the block using StaticBuffer::getBufferNum().
+        /* get the buffer number of the buffer assigned to the block
+           using StaticBuffer::getBufferNum(). */
 
         // if the buffer number is valid (!=E_BLOCKNOTINBUFFER), free the buffer
         // by setting the free flag of its metaInfo entry to true.
@@ -791,7 +792,6 @@ void BlockBuffer::releaseBlock(){
         // to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
 
         // set the object's blockNum to INVALID_BLOCK (-1)
-
 }
 ```
 
