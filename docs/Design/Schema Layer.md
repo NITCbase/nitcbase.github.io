@@ -49,15 +49,15 @@ public:
 
 #### Description
 
-This method creates a new Relation with the name, attribute/column list as specified in arguments.
+This method creates a new relation with the name, attribute/column list as specified in arguments.
 
 #### Arguments
 
 | Name     | Type                 | Description                                                 |
 | -------- | -------------------- | ----------------------------------------------------------- |
-| relName  | `char[ATTR_SIZE]`    | Name of the Relation.                                       |
+| relName  | `char[ATTR_SIZE]`    | Name of the relation.                                       |
 | nAttrs   | `int`                | No. of attributes in the relation.                          |
-| attrs    | `char [][ATTR_SIZE]` | pointer to array of Attribute/column names of the Relation. |
+| attrs    | `char [][ATTR_SIZE]` | pointer to array of attribute/column names of the relation. |
 | attrtype | `int []`             | pointer to an array of attribute types.                     |
 
 #### Return value
@@ -81,18 +81,22 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
     /*
         Reset the searchIndex using RelCacheTable::resetSearhIndex()
-        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0) for attribute value attribute "RelName" = relNameAsAttribute using search() of Block Access Layer with OP = EQ
+        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0)
+        for attribute value attribute "RelName" = relNameAsAttribute using
+        search() of Block Access Layer with OP = EQ
         Let the return value of search be retVal
-        Hint: retVal = BlockAccess::search(RELCAT_RELID, relCatSearchResultRecord, "RelName", relNameAsAttribute, EQ);
     */
 
-    // if retVal == SUCCESS (i.e relation with relation name as relName already exists)
+    // if retVal == SUCCESS (i.e relation with name as relName already exists)
     // return E_RELEXIST;
 
     // compare every pair of attributes of attrNames[] array
-    // if any attribute names have same string value, return E_DUPLICATEATTR (i.e 2 attributes have same value)
+    // if any attribute names have same string value,
+    //     return E_DUPLICATEATTR (i.e 2 attributes have same value)
 
-    // let Attribute relCatRecord[6] be the new record to be inserted into relation catalog corresponding to new relation)
+    /* relCatRecord is the new record corresponding to the new relation which
+       will be inserted into relation catalog */
+    Attribute relCatRecord[RELCAT_NO_ATTRS];
     // fill relCatRecord fields as given below
     // offset RELCAT_REL_NAME_INDEX: relName
     // offset RELCAT_NO_ATTRIBUTES_INDEX: numOfAttributes
@@ -106,9 +110,10 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
     // iterate through 0 to numOfAttributes - 1 :
     {
-        // let Attribute attrCatRecord[6] be the record in attribute catalog corresponding to i'th Attribute)
+        /* let Attribute attrCatRecord[6] be the record in attribute
+           catalog corresponding to i'th Attribute) */
         // (where i is the iterator of the loop)
-        // fill attrCatRecord fields(corresponding to i'th attribute of the relation) as given below
+        // fill attrCatRecord fields as given below
         // offset ATTRCAT_REL_NAME_INDEX: relName
         // offset ATTRCAT_ATTR_NAME_INDEX: attrNames[i]
         // offset ATTRCAT_ATTR_TYPE_INDEX: attrTypes[i]
@@ -133,13 +138,13 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
 #### Description
 
-This method deletes the Relation with name as specified in arguments.
+This method deletes the relation with name as specified in arguments.
 
 #### Arguments
 
 | Name    | Type              | Description           |
 | ------- | ----------------- | --------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the Relation. |
+| relName | `char[ATTR_SIZE]` | Name of the relation. |
 
 #### Return value
 
@@ -154,23 +159,26 @@ This method deletes the Relation with name as specified in arguments.
 
 ```cpp
 int Schema::deleteRel(char *relName) {
-    // if the relation to delete is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
-        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
-        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
+    // if the relation to delete is either Relation Catalog or Attribute Catalog,
+    //     return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
 
-
-    // get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
+    // get the rel-id using appropriate method of OpenRelTable class by
+    // passing relation name as argument
 
     // if relation is opened in open relation table, return E_RELOPEN
 
-    // Call deleteRelation method of the Block Access Layer by passing appropriate argument.
+    // Call BlockAccess::deleteRelation() with appropriate argument.
 
     // return the value returned by the above deleteRelation() call
-    // Errors from deleteRelation -> E_RELNOTEXIST
-        //  AS OF NOW, It can return E_OUT_OF_BOUND from loadBlockAndGetBufferPtr call,
-        //  but if done properly we will not reach this point
-        //  this comes up only when BlockBuffer(or RecBuffer) was initialized with an Invalid Block Number
 
+    /* the only that should be returned from deleteRelation() is E_RELNOTEXIST.
+       The deleteRelation call may return E_OUTOFBOUND from the call to
+       loadBlockAndGetBufferPtr, but if your implementation so far has been
+       correct, it should not reach that point. That error could only occur
+       if the BlockBuffer was initialized with an invalid block number.
+    */
 }
 ```
 
@@ -186,8 +194,8 @@ This method creates a bplus indexing on an attribute attrName in a relation relN
 
 | Name     | Type               | Description            |
 | -------- | ------------------ | ---------------------- |
-| relName  | `char[ATTR_SIZE]`  | Name of the Relation.  |
-| attrName | `char [ATTR_SIZE]` | Name of the Attribute. |
+| relName  | `char[ATTR_SIZE]`  | Name of the relation.  |
+| attrName | `char [ATTR_SIZE]` | Name of the attribute. |
 
 #### Return value
 
@@ -203,10 +211,12 @@ This method creates a bplus indexing on an attribute attrName in a relation relN
 
 ```cpp
 int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
-    // if the relation name is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
-        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
-        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
-    // get the relation's open relation id using OpenRelTable::getRelId() method
+    // if the relName is either Relation Catalog or Attribute Catalog,
+        // return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+
+    // get the relation's rel-id using OpenRelTable::getRelId() method
 
     // if relation is not open in open relation table, return E_RELNOTOPEN
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
@@ -228,8 +238,8 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 
 | Name     | Type               | Description            |
 | -------- | ------------------ | ---------------------- |
-| relName  | `char[ATTR_SIZE]`  | Name of the Relation.  |
-| attrName | `char [ATTR_SIZE]` | Name of the Attribute. |
+| relName  | `char[ATTR_SIZE]`  | Name of the relation.  |
+| attrName | `char [ATTR_SIZE]` | Name of the attribute. |
 
 #### Return value
 
@@ -244,10 +254,12 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 
 ```cpp
 int Schema::dropIndex(char *relName, char *attrName) {
-    // if the relation name is either Relation Catalog or Attribute Catalog, return E_NOTPERMITTED
-        // compare the input relName with "RELATIONCAT" and "ATTRIBUTECAT"
-        // OR use the following constants: RELCAT_NAME and ATTRCAT_NAME
-    // get the open relation id using appropriate method of OpenRelTable class by passing relation name as argument
+    // if the relName is either Relation Catalog or Attribute Catalog,
+        // return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+
+    // get the rel-id using OpenRelTable::getRelId()
 
     // if relation is not open in open relation table, return E_RELNOTOPEN
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
@@ -258,15 +270,15 @@ int Schema::dropIndex(char *relName, char *attrName) {
     // we will store the rootBlock of the attribute in the relation
     int rootBlock;
 
-    // reset the search index of the attribute catalog using RelCacheTable::resetSearchIndex()
-    RelCacheTable::resetSearchIndex(ATTRCAT_RELID);
+    // reset the search index of the attribute catalog using
+    // RelCacheTable::resetSearchIndex()
 
     RecId attrCatRecId;
     Attribute attrCatEntryRecord[ATTRCAT_NO_ATTRS];
 
     while (true) {
-        /* search for all the attributes corresponding to the relation with relName in attribute catalog
-         using BlockAccess::linearSearch() */
+        /* search for all the attributes corresponding to the relation with
+          relName in attribute catalog using BlockAccess::linearSearch() */
         // store it in attrCatRecId;
 
         if (/*attrCatRecId == {-1, -1}*/) {
@@ -274,7 +286,7 @@ int Schema::dropIndex(char *relName, char *attrName) {
             return E_ATTRNOTEXIST;
         }
 
-        // get the record at attrCatRecId using RecBuffer::RecBuffer() and RecBuffer::getRecord()
+        // get the record at attrCatRecId using RecBuffer::getRecord()
 
         if (/* attrCatEntryRecord.attrName == attrName */) {
             rootBlock = // root block value from attrCatEntryRecord
@@ -290,7 +302,8 @@ int Schema::dropIndex(char *relName, char *attrName) {
     // destroy the bplus tree rooted at rootBlock using BPlusTree::bPlusDestroy()
     BPlusTree::bPlusDestroy(rootBlock);
 
-    // update the root block of attrCatEntryRecord to -1 and save the record using RecBuffer::setRecord()
+    /* update the root block of attrCatEntryRecord to -1 and save the record
+       using RecBuffer::setRecord() */
 
     return SUCCESS;
 }
@@ -308,8 +321,8 @@ This method changes the relation name of specified relation to new name as speci
 
 | Name       | Type              | Description                                           |
 | ---------- | ----------------- | ----------------------------------------------------- |
-| oldRelName | `char[ATTR_SIZE]` | Old Name of Relation of which name has to be changed. |
-| newRelName | `char[ATTR_SIZE`] | New name for the Relation.                            |
+| oldRelName | `char[ATTR_SIZE]` | Old Name of relation of which name has to be changed. |
+| newRelName | `char[ATTR_SIZE`] | New name for the relation.                            |
 
 #### Return value
 
@@ -351,7 +364,7 @@ This method changes the name of an attribute/column present in a specified relat
 
 | Name        | Type              | Description             |
 | ----------- | ----------------- | ----------------------- |
-| relName     | `char[ATTR_SIZE]` | Name of the Relation.   |
+| relName     | `char[ATTR_SIZE]` | Name of the relation.   |
 | oldAttrName | `char[ATTR_SIZE]` | Old Name of attribute.  |
 | newAttrName | `char[ATTR_SIZE]` | New name for attribute. |
 
@@ -379,7 +392,7 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
         //    (check if OpenRelTable::getRelId() returns E_RELNOTOPEN)
         //    return E_RELOPEN
 
-    // Call renameAttribute method of Block Access Layer by passing appropriate arguments.
+    // Call BlockAccess::renameAttribute with appropriate arguments.
 
     // return the value returned by the above renameAttribute() call
 }
@@ -397,7 +410,7 @@ This method opens the relation specified as name in cache/OpenRelTable.
 
 | Name    | Type              | Description           |
 | ------- | ----------------- | --------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the Relation. |
+| relName | `char[ATTR_SIZE]` | Name of the relation. |
 
 #### Return value
 
@@ -431,7 +444,7 @@ This method closes the relation specified as name in cache/OpenRelTable.
 
 | Name    | Type              | Description           |
 | ------- | ----------------- | --------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the Relation. |
+| relName | `char[ATTR_SIZE]` | Name of the relation. |
 
 #### Return value
 
@@ -445,14 +458,17 @@ This method closes the relation specified as name in cache/OpenRelTable.
 
 ```cpp
 int closeRel(char relName[ATTR_SIZE]) {
-    // check if relName is either "RELATIONCAT" or "ATTRIBUTECAT". If so then return E_NOTPERMITTED.
+    // if the relName is either Relation Catalog or Attribute Catalog,
+        // return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
 
-    // get the relation's open relation id using OpenRelTable::getRelationId() method
+    // get the relation's rel-id using OpenRelTable::getRelationId() method
 
     // if relation is not open in open relation table, return E_RELNOTOPEN
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
-    // close the relId'th relation using OpenRelTable::closeRelation(relId) of Cache Layer
+    // close the relId'th relation using OpenRelTable::closeRelation()
     // let the return value be retVal
     // return retVal;
 }
