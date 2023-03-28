@@ -56,18 +56,23 @@ If in between the insertion, the disk runs out of space, then the B+ Tree will n
 
 #### Return values
 
-| **Value**                      | **Description**                                               |
-| ------------------------------ | ------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of a B+ tree for the attribute         |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids |
-| [`E_RELNOTOPEN`](/constants)   | If the relation is not open                                   |
-| [`E_ATTRNOTEXIST`](/constants) | If attribute with name attrName does not exist                |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the index        |
+| **Value**                      | **Description**                                                                                                                        |
+| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful creation of a B+ tree for the attribute                                                                                  |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                          |
+| [`E_RELNOTOPEN`](/constants)   | If the relation is not open                                                                                                            |
+| [`E_ATTRNOTEXIST`](/constants) | If attribute with name attrName does not exist                                                                                         |
+| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the index                                                                                 |
+| [`E_NOTPERMITTED`](/constants) | If an index is being created for the catalog relations. The catalog relations are only linear searched and hence should not be indexed |
 
 #### Algorithm
 
 ```cpp
 int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
+
+    // if relId is either RELCAT_RELID or ATTRCAT_RELID:
+    //     return E_NOTPERMITTED;
+
     // let attrCatEntry be used to store the attribute cache entry for attrName.
     AttrCatEntry attrCatEntry;
 
