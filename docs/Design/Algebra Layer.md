@@ -78,7 +78,7 @@ int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
     // if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
     // return E_NOTPERMITTED;
 
-    // get the relation's open relation id using OpenRelTable::getRelId() method
+    // get the relation's rel-id using OpenRelTable::getRelId() method
     int relId = OpenRelTable::getRelId(relName);
 
     // if relation is not open in open relation table, return E_RELNOTOPEN

@@ -2,11 +2,13 @@
 title: "Stage 7 : Inserting Records Into Relations"
 ---
 
-# Stage 7 : Inserting Records Into Relations (10 hours)
+# Stage 7 : Inserting Records Into Relations (20 hours)
 
 :::note Learning Objectives
 
-- Implement
+- Implement the record insertion functionality in NITCbase
+- Implement the functions responsible for allocating and making use of previously unoccupied disk blocks
+- Implement functions to handle runtime updates to the relation and attribute cache
 
 :::
 
@@ -365,13 +367,178 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count, 
 
 </details>
 
+The `Algebra::insert()` function does some validation on the input and converts the user inputs which are in the form of a string to the [union Attribute](../Design/Buffer%20Layer.md#attribute) type. It then calls the `BlockAccess::insert()` function to handle the insertion of the record.
+
 <details>
 <summary>Algebra/Algebra.cpp</summary>
 
-Implement the following functions looking at their respective design docs
+Implement the `Algebra::insert()` function by looking at the [design docs](../Design/Algebra%20Layer.md#insert).
 
 </details>
 
-- todo verify if the caches and catalogs have right values.
-  - didn't check during implementatoin
-- todo exercises should test new block allocatoin
+Before we implement the record insertion, we implement the [Buffer Layer](../Design/Buffer%20Layer.md) method to update the slotmap and a getter function for the [BlockBuffer class](../Design/Buffer%20Layer.md#class-blockbuffer).
+
+<details>
+<summary>Buffer/BlockBuffer.cpp</summary>
+
+Implement the following functions looking at their respective design docs
+
+- [`RecBuffer::setSlotMap()`](../Design/Buffer%20Layer.md#recbuffer--setslotmap)
+- [`BlockBuffer::getBlockNum()`](../Design/Buffer%20Layer.md#blockbuffer--getblocknum)
+
+</details>
+
+Now, we implement the insert functionality in the [Block Access Layer](../Design/Block%20Access%20Layer.md). Inserting a record involves finding a free slot (or allocating a new block if none), and then setting the record in that slot followed by updating the slotmap and the catalog caches.
+
+<details>
+<summary>BlockAccess/BlockAccess.cpp</summary>
+
+```cpp
+int BlockAccess::insert(int relId, Attribute *record) {
+    // get the relation catalog entry from relation cache
+    // ( use RelCacheTable::getRelCatEntry() of Cache Layer)
+
+    int blockNum = /* first record block of the relation (from the rel-cat entry)*/;
+
+    // let rec_id denote the rec-id of the slot where the new record will be inserted
+    RecId rec_id = {-1, -1};
+
+    int numOfSlots = /* number of slots per record block */;
+    int numOfAttributes = /* number of attributes of the relation */;
+
+    int prevBlockNum = /* block number of the last element in the linked list = -1 */;
+
+    /*
+        Traversing the linked list of existing record blocks of the relation
+        until a free slot is found OR
+        until the end of the list is reached
+    */
+    while (blockNum != -1) {
+        // create a RecBuffer object for blockNum(use constructor for existing block)
+
+        // get header of block(blockNum) using RecBuffer::getHeader() function
+
+        // get slot map of block(blockNum) using RecBuffer::getSlotMap() function
+
+        // search for free slot in the block 'blockNum' and store it's rec-id in rec_id
+        // (Free slot can be found by iterating over the slot map of the block)
+        /* slot map stores SLOT_UNOCCUPIED if slot is free and
+           SLOT_OCCUPIED if slot is occupied) */
+
+        /* if a free slot is found, discontinue the traversal of the linked
+           list of record blocks */
+
+        /* otherwise, continue to check the next block by updating the
+           block numbers as follows:
+              update prevBlockNum = blockNum
+              update blockNum = header.rblock (next element in the linked
+                                               list of record blocks)
+        */
+    }
+
+    //  if no free slot is found in existing record blocks
+    {
+        // if relation is RELCAT, do not allocate any more blocks
+        //     return E_MAXRELATIONS;
+
+        // Otherwise,
+        // get a new record block by calling RecBuffer Constructor for new block
+        // get the block number of the newly allocated block
+        // (use BlockBuffer::getBlockNum() function)
+        // let ret be the return value of getBlockNum() function call
+        if (ret == E_DISKFULL) {
+            return E_DISKFULL;
+        }
+
+        // Assign rec_id.block = new block number(i.e. ret) and rec_id.slot = 0
+
+        /*
+            set the header of the new record block such that it links with
+            existing record blocks of the relation
+            set the block's header as follows:
+            blockType: REC, pblock: -1
+            lblock
+                    = -1 (if linked list of existing record blocks was empty)
+                    = prevBlockNum (otherwise),
+            rblock: -1, numEntries: 0,
+            numSlots: numOfSlots, numAttrs: numOfAttributes
+            (use BlockBuffer::setHeader() function)
+        */
+
+        /*
+            set block's slot map with all slots marked as free
+            (i.e. store SLOT_UNOCCUPIED for all the entries)
+            (use RecBuffer::setSlotMap() function)
+        */
+
+        // if prevBlockNum != -1
+        {
+            // create a RecBuffer object for prevBlockNum(use constructor for existing block)
+            // get the header of the block prevBlockNum
+            // update the rblock field of the header to the new block number(i.e. rec_id.block)
+            // (use BlockBuffer::setHeader() function)
+        }
+        // else
+        {
+            // update first block field in the relation catalog entry to the new block
+            // (use RelCacheTable::setRelCatEntry() function of Cache Layer)
+        }
+
+        // update last block field in the relation catalog entry to the new block
+        // (use RelCacheTable::setRelCatEntry() function of Cache Layer)
+    }
+
+    // create a RecBuffer object for rec_id.block(use constructor for existing block)
+    // insert the record into rec_id'th slot by calling RecBuffer::setRecord() function)
+
+    /* update the slot map of the block by marking entry of the slot to
+       which record was inserted as occupied) */
+    // (ie store SLOT_OCCUPIED in free_slot'th entry of slot map)
+    // (use RecBuffer::getSlotMap() and RecBuffer::setSlotMap() functions)
+
+    // increment the num_entries field in the header of the block (to which record was inserted)
+    // (use BlockBuffer::getHeader() and BlockBuffer::setHeader() functions)
+
+    // Increment the number of records field in the relation cache entry for the relation.
+    // (use RelCacheTable::setRelCatEntry function)
+
+    return SUCCESS;
+}
+```
+
+</details>
+
+Your NITCbase should now support insertion of records into an existing relation using the [INSERT INTO TABLE VALUES](../User%20Interface%20Commands/dml.md#insert-into-table-values) command. In addition, you can also make use of the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command. This command is used to populate a relation using values from a CSV file. The Frontend Programming Interface handles the file input and repeatedly calls the `Frontend::insert_into_table_values()` function that you implemented.
+
+:::caution
+
+While inserting the records, the number of records is updated in the relation cache. However, if we were to immediately run the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to read the values stored in the relation catalog, we will find that the `#Records` field is not up to date.
+
+This is because while the relation is open, all the updates made to the catalog relations are only present in the respective caches. It is only when the relation is closed that the changes are written to the buffer (and subsequently the disk). If we were to close the relation and then read the records of the relation catalog, we would see that the updated `#Records` value is indeed reflected in the record.
+
+Though this is an inconsistency in the values, all runtime operations only make use of the values in the caches and do not read from the disk. So, any unexpected behaviour is avoided.
+
+:::
+
+## Exercises
+
+**Q1.** In an exercise of a previous stage, you created a relation `Locations(name STR, capacity NUM)`. Insert the following values into the relation using the [INSERT](../User%20Interface%20Commands/dml.md#insert-into-table-values) command **in your NITCbase**.
+
+```plain
+elhc, 300
+nlhc, 300
+eclc, 500
+pits, 150
+oat,  950
+audi, 1000
+```
+
+Then, verify the insertion using the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command that you implemented earlier. Additionally, run the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to read the records of the relation catalog and verify that the `#Records` field matches the number of records you inserted as shown below.
+
+```sql
+SELECT * FROM Locations INTO null WHERE capacity>0;
+CLOSE TABLE Locations;
+SELECT * FROM RELATIONCAT INTO null WHERE RelName=Locations;
+```
+
+**Q2.** Using the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command, insert the values present [here](/roadmap_files/s7insert.txt) into the relation `Events(id NUM, title STR, location STR)`. Then, use the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to verify that all 50 events were created.

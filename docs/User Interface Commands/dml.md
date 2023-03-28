@@ -75,7 +75,7 @@ INSERT INTO tablename VALUES FROM filename
 :::note Example
 Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:
 
-```c title="/Files/students.csv"
+```c title="/Files/Input_Files/students.csv"
 3,Sunny,8
 5,Sania,6
 7,Ralph,7.5

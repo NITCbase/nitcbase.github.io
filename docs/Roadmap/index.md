@@ -14,4 +14,4 @@ _It is very important that you proceed with the roadmap on a regular schedule an
 - [**Stage 4 : Linear Search on Relations (10 hours)**](../Roadmap/Stage04.md)
 - [**Stage 5 : Opening Relations (10 hours)**](../Roadmap/Stage05.md)
 - [**Stage 6 : Buffer Management and Disk Write-back (10 hours)**](../Roadmap/Stage06.md)
-- [**Stage 7 : Inserting Records Into Relations (10 hours)**](../Roadmap/Stage07.md)
+- [**Stage 7 : Inserting Records Into Relations (20 hours)**](../Roadmap/Stage07.md)
