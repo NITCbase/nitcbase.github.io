@@ -1,0 +1,10 @@
+1,sofa,999.99,10,blue
+2,teapot,20,150,yellow
+3,lamp,50,49,gray
+4,bed,599.5,5,brown
+5,chair,200,67,brown
+6,mattress,450,10,red
+7,plate,25,156,yellow
+8,cupboard,649,54,black
+9,bookshelf,549,37,brown
+10,hanger,10.25,99,blue
