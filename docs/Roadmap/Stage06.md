@@ -51,7 +51,7 @@ sequenceDiagram
   participant Buffer Layer
   User->>Frontend User Interface: ALTER TABLE RENAME
   activate Frontend User Interface
-  Frontend User Interface->>Frontend Programming Interface :alter_table_rename🟢
+  Frontend User Interface->>Frontend Programming Interface :alter_table_rename()🟢
   activate Frontend Programming Interface
   Frontend Programming Interface->>Schema Layer:renameRel()🟢
   activate Schema Layer

@@ -40,7 +40,7 @@ CREATE TABLE sample(Rollno NUM, Name STR, CGPA NUM)
 
 #### Description
 
-This command is used to delete the relation of the given name. It deletes all the record and index blocks corresponding to the relations, and also deletes the entries corresponding to the relation in the `Relation catalog` and `Attribute catalog`. The entries corresponding to the deleted blocks in the `Block allocation map` are also reset.
+This command is used to delete the relation of the given name. It deletes all the record and index blocks corresponding to the relations, and also deletes the entries corresponding to the relation in the relation catalog and attribute catalog. The entries corresponding to the deleted blocks in the block allocation map are also reset.
 
 #### Syntax
 

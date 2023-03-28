@@ -269,7 +269,7 @@ sequenceDiagram
   participant Buffer Layer
   User->>Frontend User Interface: INSERT INTO TABLE VALUES
   activate Frontend User Interface
-  Frontend User Interface->>Frontend Programming Interface :insert_into_table_values🟢
+  Frontend User Interface->>Frontend Programming Interface :insert_into_table_values()🟢
   activate Frontend Programming Interface
   Frontend Programming Interface->>Algebra Layer:insert()🟢
   activate Algebra Layer
