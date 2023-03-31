@@ -168,15 +168,20 @@ OpenRelTable::~OpenRelTable() {
         }
     }
 
-    /************ Closing the catalog relations in the relation cache ************/
+    /**** Closing the catalog relations in the relation cache ****/
 
-    /****** releasing the entry corresponding to Attribute Catalog relation from Relation Cache Table ******/
+    //releasing the relation cache entry of the attribute catalog
 
-    if (/* the RelCatEntry of the ATTRCAT_RELIDth Relation Cache entry has been modified */) {
+    if (/* the RelCatEntry of the ATTRCAT_RELIDth Relation
+           Cache entry has been modified */) {
 
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member
-        field and recBuffer.setRecord() */
+        /* Get the Relation Catalog entry from RelCacheTable::relCache
+        Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+
+        // declaring an object of RecBuffer class to write back to the buffer
+        RecBuffer relCatBlock(recId.block);
+
+        // Write back to the buffer using relCatBlock.setRecord() with recId.slot
     }
     // free the memory dynamically allocated to this RelCacheEntry
 
@@ -185,13 +190,25 @@ OpenRelTable::~OpenRelTable() {
 
     if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
 
-        /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member
-        field and recBuffer.setRecord() */
+        /* Get the Relation Catalog entry from RelCacheTable::relCache
+        Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+
+        // declaring an object of RecBuffer class to write back to the buffer
+        RecBuffer relCatBlock(recId.block);
+
+        // Write back to the buffer using relCatBlock.setRecord() with recId.slot
     }
     // free the memory dynamically allocated for this RelCacheEntry
 
+}
+```
 
+<details>
+<summary>
+Currently, the attribute cache entries of the relation catalog and attribute catalog cannot have runtime modifications. This is because the attribute cache is only updated when an index is created for a relation and `rootBlock` is set. This operation is not permitted for the catalogs. If in a future design update, the attribute cache entries of the catalogs are modified, the following code can be included in the destructor to handle write-back for the same.
+</summary>
+
+```cpp
     /************ Closing the catalog relations in the attribute cache ************/
 
     /****** releasing the entry corresponding to Attribute Catalog relation from Attribute Cache Table ******/
@@ -221,18 +238,9 @@ OpenRelTable::~OpenRelTable() {
 
         // free the memory dynamically alloted to this entry in Attribute Cache linked list.
     }
-
-    /************ Closing the catalog relations in the OpenRelTable ************/
-
-    /****** updating metadata corresponding to Attribute Catalog relation in the Open Relation Table ******/
-
-    //set free=true for the ATTRCAT_RELIDth entry of the tableMetaInfo.
-
-    /****** updating metadata corresponding to Relation Catalog relation in the Open Relation Table ******/
-
-    //free the RELCAT_RELIDth entry of the tableMetaInfo.
-}
 ```
+
+</details>
 
 ### OpenRelTable :: getRelId
 
@@ -411,10 +419,13 @@ int OpenRelTable::closeRel(int relId) {
 
     if (/* RelCatEntry of the relIdth Relation Cache entry has been modified */)
     {
-        /* Get the Relation Catalog entry from Cache using
-        RelCacheTable::relCatEntryToRecord().
-        Write back that entry by instantiating RecBuffer class. Use recId member
-        field and recBuffer.setRecord() */
+        /* Get the Relation Catalog entry from RelCacheTable::relCache
+        Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+
+        // declaring an object of RecBuffer class to write back to the buffer
+        RecBuffer relCatBlock(recId.block);
+
+        // Write back to the buffer using relCatBlock.setRecord() with recId.slot
     }
 
     // free the memory dynamically alloted to this Relation Cache entry
@@ -426,11 +437,10 @@ int OpenRelTable::closeRel(int relId) {
     {
         if the entry has been modified:
         {
-            /* Get the Attribute Catalog entry from Cache using
-             AttrCacheTable::attrCatEntryToRecord().
+            /* Get the Attribute Catalog entry from attrCache
+             Then convert it to a record using AttrCacheTable::attrCatEntryToRecord().
              Write back that entry by instantiating RecBuffer class. Use recId
              member field and recBuffer.setRecord() */
-
         }
 
         // free the memory dynamically alloted to this entry in Attribute

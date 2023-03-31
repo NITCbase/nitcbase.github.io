@@ -262,7 +262,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
     int blockNum = /* first record block of the relation (from the rel-cat entry)*/;
 
-    // let rec_id denote the rec-id of the slot where the new record will be inserted
+    // let rec_id denote the rec-id of the slot
+    // this will be used to store where the new record will be inserted
     RecId rec_id = {-1, -1};
 
     int numOfSlots = /* number of slots per record block */;
@@ -276,7 +277,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
         until the end of the list is reached
     */
     while (blockNum != -1) {
-        // create a RecBuffer object for blockNum(use constructor for existing block)
+        // create a RecBuffer object for blockNum (using appropriate constructor!)
 
         // get header of block(blockNum) using RecBuffer::getHeader() function
 
@@ -287,8 +288,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
         /* slot map stores SLOT_UNOCCUPIED if slot is free and
            SLOT_OCCUPIED if slot is occupied) */
 
-        /* if a free slot is found, discontinue the traversal of the linked
-           list of record blocks */
+        /* if a free slot is found, set rec_id and discontinue the traversal
+           of the linked list of record blocks */
 
         /* otherwise, continue to check the next block by updating the
            block numbers as follows:
@@ -298,13 +299,13 @@ int BlockAccess::insert(int relId, Attribute *record) {
         */
     }
 
-    //  if no free slot is found in existing record blocks
+    //  if no free slot is found in existing record blocks (rec_id = {-1, -1})
     {
         // if relation is RELCAT, do not allocate any more blocks
         //     return E_MAXRELATIONS;
 
         // Otherwise,
-        // get a new record block by calling RecBuffer Constructor for new block
+        // get a new record block (using the appropriate RecBuffer constructor!)
         // get the block number of the newly allocated block
         // (use BlockBuffer::getBlockNum() function)
         // let ret be the return value of getBlockNum() function call

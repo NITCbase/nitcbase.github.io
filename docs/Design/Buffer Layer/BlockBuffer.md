@@ -328,7 +328,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
 
 #### Description
 
-Returns the block number of a free block of the input type in the disk and allots a buffer to that block. If free block is not available FAILURE is returned.
+Returns the block number of a free block. It sets up the header of the block with the input block type and updates the block allocation map with the same. A buffer is also allocated to the block. If a free block is not available, [E_DISKFULL](/constants) is returned.
 
 #### Arguments
 
@@ -357,9 +357,9 @@ int BlockBuffer::getFreeBlock(int blockType){
 
     //find a free buffer using StaticBuffer::getFreeBuffer() .
 
-    //initialize the header of the block with
+    //initialize the header of the block passing a struct HeadInfo with values
     //pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0
-    //using setHeader().
+    //to the setHeader() function.
 
     //update the block type of the block to the input block type using setBlockType().
 

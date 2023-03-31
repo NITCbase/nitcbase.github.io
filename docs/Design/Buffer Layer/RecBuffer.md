@@ -45,8 +45,7 @@ If the record block already has already been initialised as a record block on th
 
 ```cpp
 RecBuffer::RecBuffer() : BlockBuffer('R'){}
-//this is the way to call parent non-default constructor.
-// 'R' is used to denote RecBuffer.
+// call parent non-default constructor with 'R' denoting record block.
 ```
 
 ### RecBuffer :: RecBuffer() (Constructor 2)
@@ -145,16 +144,18 @@ Nil
 ```cpp
 int RecBuffer::setSlotMap(unsigned char *slotMap) {
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block using
+       loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer to access headInfo
+    // get the header of the block using the getHeader() function
 
     // get the number of slots in the block.
 
-    // using offset range copy the slotmap from the memory pointed by the argument to that of the block.
+    // using offset range copy the slotmap from the memory pointed
+    // by the argument to that of the block.
 
     // update dirty bit.
     // if setDirtyBit failed, return the value returned by the call
