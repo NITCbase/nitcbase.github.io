@@ -6,7 +6,7 @@ title: "Stage 5 : Opening Relations"
 
 :::note Learning Objectives
 
-- Familiarise with the design of the [Cache Layer](../Design/Cache%20Layer.md) and understand the maintenance of the catalog caches
+- Familiarise with the design of the [Cache Layer](../Design/Cache%20Layer/intro.md) and understand the maintenance of the catalog caches
 - Implement the functions for opening a relation and setting up it's cache entries to facilitate searching of records.
 
 :::
@@ -25,9 +25,9 @@ Your current NITCbase implementation must be able to read the rows and columns o
 
 A relation that has it's relation and attribute catalog entries stored in the respective caches is called an **open relation**. NITCbase supports opening 12 relations at once. Since the relation catalog and attribute catalog are always open, we can only open 10 other relations. If we want to open any more relations, we will have to **close** some relation. Note that the NITCbase specification does not allow closing of the relation and attribute catalog unless at the time of database exit. **NITCbase requires that a relation be opened before any [DML](../User%20Interface%20Commands/dml.md) commands can be performed on it**.
 
-We discussed the [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) classes in the preceding stage. Here, we introduce the class [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable). This class manages the opening and closing of relations and handles the caching operations. It has a member `tableMetaInfo` which is a [MAX_OPEN](/constants) sized array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer.md#openreltablemetainfo). `tableMetaInfo` is used to store which entries of the caches are free and the relation to which an occupied entry belongs.
+We discussed the [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) and [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) classes in the preceding stage. Here, we introduce the class [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md). This class manages the opening and closing of relations and handles the caching operations. It has a member `tableMetaInfo` which is a [MAX_OPEN](/constants) sized array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer/intro.md#openreltablemetainfo). `tableMetaInfo` is used to store which entries of the caches are free and the relation to which an occupied entry belongs.
 
-For any index `k` that is occupied in the caches, the entries at index `k` in `relCache`, `attrCache` and `tableMetaInfo` will correspond to the same relation. Recall that this index `k` is called the relation's rel-id. These three tables comprise the core functionality of the [Cache Layer](../Design/Cache%20Layer.md) of NITCbase. A table can be opened and closed by the user with the [OPEN TABLE](../User%20Interface%20Commands/ddl.md#open-table) and [CLOSE TABLE](../User%20Interface%20Commands/ddl.md#close-table) commands respectively, both handled by the [Schema Layer](../Design/Schema%20Layer.md).
+For any index `k` that is occupied in the caches, the entries at index `k` in `relCache`, `attrCache` and `tableMetaInfo` will correspond to the same relation. Recall that this index `k` is called the relation's rel-id. These three tables comprise the core functionality of the [Cache Layer](../Design/Cache%20Layer/intro.md) of NITCbase. A table can be opened and closed by the user with the [OPEN TABLE](../User%20Interface%20Commands/ddl.md#open-table) and [CLOSE TABLE](../User%20Interface%20Commands/ddl.md#close-table) commands respectively, both handled by the [Schema Layer](../Design/Schema%20Layer.md).
 
 ## Implementation
 
@@ -81,7 +81,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md) and [Schema Layer](../Design/Schema%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer/intro.md) and [Schema Layer](../Design/Schema%20Layer.md) is shown below.
 
 > Note that we will be using functions from the [Buffer Layer](../Design/Buffer%20Layer/intro.md) and the `linearSearch` function from the [Block Access Layer](../Design/Block%20Access%20Layer.md) that was already implemented by you in the earlier stages. However, these functions do not require any modification at this stage. Hence, their class diagrams are not included below.
 
@@ -151,7 +151,7 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 
 Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md)
 
-The `Schema::openRel()` function invokes the [Cache Layer](../Design/Cache%20Layer.md) function `OpenRelTable::openRel()`. `Schema::closeRel()` closes a relation if it is open by calling `OpenRelTable::closeRel()` which frees that slot in the caches. Note that this function should not allow the closing of the relation catalog and the attribute catalog.
+The `Schema::openRel()` function invokes the [Cache Layer](../Design/Cache%20Layer/intro.md) function `OpenRelTable::openRel()`. `Schema::closeRel()` closes a relation if it is open by calling `OpenRelTable::closeRel()` which frees that slot in the caches. Note that this function should not allow the closing of the relation catalog and the attribute catalog.
 
 Closing a relation involves writing back to the disk any changes that have been made to the relation while the relation was open. At this stage, we have not implemented any such update operations and hence, your current implementation of `Schema::closeRel()` does not need to handle the same. We will add this functionality in later stages.
 
@@ -193,11 +193,11 @@ int Schema::closeRel(char relName[ATTR_SIZE]) {
 
 </details>
 
-Next, we implement the functions of the [Cache Layer](../Design/Cache%20Layer.md)
+Next, we implement the functions of the [Cache Layer](../Design/Cache%20Layer/intro.md)
 
 The `OpenRelTable` class will need to be modified to initialise and update the values in the `tableMetaInfo` array. We will also implement the functions for opening and closing relations.
 
-_Note that `tableMetaInfo` is an array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer.md#openreltablemetainfo). It is static member of the class and will hence need to be explicitly declared before it can be used._
+_Note that `tableMetaInfo` is an array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer/intro.md#openreltablemetainfo). It is static member of the class and will hence need to be explicitly declared before it can be used._
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>
@@ -238,15 +238,15 @@ OpenRelTable::~OpenRelTable() {
 
 > **TASK**: Implement the following functions looking at their respective design docs
 >
-> - [`OpenRelTable::getFreeOpenRelTableEntry()`](../Design/Cache%20Layer.md#openreltable--getfreeopenreltableentry)
-> - [`OpenRelTable::getRelId()`](../Design/Cache%20Layer.md#openreltable--getrelid)
+> - [`OpenRelTable::getFreeOpenRelTableEntry()`](../Design/Cache%20Layer/OpenRelTable.md#openreltable--getfreeopenreltableentry)
+> - [`OpenRelTable::getRelId()`](../Design/Cache%20Layer/OpenRelTable.md#openreltable--getrelid)
 >
 > <sub>
 >
 > **WARNING**: The `OpenRelTable::openRel()` function involves dynamic memory allocation using `malloc` for creating entries in the relation cache and attribute cache (as a linked list). Please take care to avoid segmentation faults due to mishandling of the associated pointers and such.
 > </sub>
 >
-> - [`OpenRelTable::openRel()`](../Design/Cache%20Layer.md#openreltable--openrel)
+> - [`OpenRelTable::openRel()`](../Design/Cache%20Layer/OpenRelTable.md#openreltable--openrel)
 
 ```cpp
 

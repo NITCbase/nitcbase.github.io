@@ -8,7 +8,7 @@ Contents include:
 
 1. [**Algebra Layer**](../Design/Algebra%20Layer.md)
 2. [**Schema Layer**](../Design/Schema%20Layer.md)
-3. [**Cache Layer**](../Design/Cache%20Layer.md)
+3. [**Cache Layer**](../Design/Cache%20Layer/intro.md)
 4. [**B+ Tree Layer**](../Design/B+%20Tree%20Layer.md)
 5. [**Block Access Layer**](../Design/Block%20Access%20Layer.md)
 6. [**Buffer Layer**](../Design/Buffer%20Layer/intro.md)

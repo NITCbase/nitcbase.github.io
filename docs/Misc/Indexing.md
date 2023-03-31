@@ -300,7 +300,7 @@ A concise algorithmic procedure for search on a B+ Tree implemented in NITCbase 
 
 #### Algorithm:
 
-1. Get `searchIndex` from the [attribute cache](../Design/Cache%20Layer#class-attrcachetable) and store it in the variable `sIndex`. `searchIndex` stores the block number of the corresponding leaf index block and index number, which is the offset of the index in that block. It represents the previous hit in the leaf blocks, i.e the previous record that satisfied the search condition. This is used to take advantage the linked list structure of leaf blocks after the first hit.
+1. Get `searchIndex` from the [attribute cache](../Design/Cache%20Layer/AttrCacheTable.md) and store it in the variable `sIndex`. `searchIndex` stores the block number of the corresponding leaf index block and index number, which is the offset of the index in that block. It represents the previous hit in the leaf blocks, i.e the previous record that satisfied the search condition. This is used to take advantage the linked list structure of leaf blocks after the first hit.
 2. Reset the value of `searchIndex` in the attribute cache to (-1, -1). This will be set to the correct index-id if an entry satisfying `op` for given `attrval` is found in the course of the search.
 3. If `sIndex` is (-1, -1), i.e the search is done for the first time :
 

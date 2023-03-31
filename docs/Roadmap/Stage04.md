@@ -27,7 +27,7 @@ A search operation involves fetching all records that satisfy some condition. Th
 
 You might've realized that the above function would require some global state to work as intended. We'll need to keep track of the previously found record so that we can fetch the next record that satisfies the condition. And that is exactly what the `searchIndex` field in the relation cache does. `searchIndex` in a relation cache entry stores the `rec-id = {block, slot}` of the last hit during linear search on that relation. A value of `rec-id = {-1, -1}` indicates that the search should start over from the beginning again.
 
-The search functionality is implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md) of NITCbase and made available to the user through the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command. This command will be parsed and handled by the [Frontend Interface](../Design/Frontend.md#frontend-programming-interface) which will call the [Algebra Layer](../Design/Algebra%20Layer.md). The `searchIndex` field and it's operations will be implemented in the [Cache Layer](../Design/Cache%20Layer.md).
+The search functionality is implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md) of NITCbase and made available to the user through the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command. This command will be parsed and handled by the [Frontend Interface](../Design/Frontend.md#frontend-programming-interface) which will call the [Algebra Layer](../Design/Algebra%20Layer.md). The `searchIndex` field and it's operations will be implemented in the [Cache Layer](../Design/Cache%20Layer/intro.md).
 
 ## Implementation
 
@@ -80,7 +80,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md), [Buffer Layer](../Design/Buffer%20Layer/intro.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Algebra Layer](../Design/Algebra%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer/intro.md), [Buffer Layer](../Design/Buffer%20Layer/intro.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Algebra Layer](../Design/Algebra%20Layer.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -197,11 +197,11 @@ int Frontend::select_from_table_where(char relname_source[ATTR_SIZE], char relna
 
 </details>
 
-Before we can get into implementing search, we need to understand `searchIndex` and implement the associated functions in the [Cache Layer](../Design/Cache%20Layer.md).
+Before we can get into implementing search, we need to understand `searchIndex` and implement the associated functions in the [Cache Layer](../Design/Cache%20Layer/intro.md).
 
-Each entry in the relation cache has a `searchIndex` field (see [struct RelCatEntry](../Design/Cache%20Layer.md#relcacheentry)). To start a search operation from the first record, we initialise this field with `{-1, -1}` with the `RelCacheTable::resetSearchIndex()` function. Once a linear search operation is executed and a record is found, we update `searchIndex` with the rec-id(`{block, slot}`) of that record using `RelCacheTable::setSearchIndex()`. The next time `linearSearch()` is called, search will resume from this block until a successful block is found.
+Each entry in the relation cache has a `searchIndex` field (see [struct RelCatEntry](../Design/Cache%20Layer/intro.md#relcacheentry)). To start a search operation from the first record, we initialise this field with `{-1, -1}` with the `RelCacheTable::resetSearchIndex()` function. Once a linear search operation is executed and a record is found, we update `searchIndex` with the rec-id(`{block, slot}`) of that record using `RelCacheTable::setSearchIndex()`. The next time `linearSearch()` is called, search will resume from this block until a successful block is found.
 
-The [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) defines methods to provide this functionality.
+The [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) defines methods to provide this functionality.
 
 <details>
 <summary>Cache/RelCacheTable.cpp</summary>
@@ -242,7 +242,7 @@ int RelCacheTable::resetSearchIndex(int relId) {
 
 </details>
 
-The [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command specifies a condition expecting to fetch all the records that satisfy the condition. While checking for this condition, we will need to have the details of the attribute which is part of the condition. In the previous stage, we had implemented the `AttrCacheTable::getAttrCatEntry()` function in the [Cache Layer](../Design/Cache%20Layer.md) which returned to us the attribute at a particular offset. Here, we overload that function to find an attribute of a relation with a particular name.
+The [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command specifies a condition expecting to fetch all the records that satisfy the condition. While checking for this condition, we will need to have the details of the attribute which is part of the condition. In the previous stage, we had implemented the `AttrCacheTable::getAttrCatEntry()` function in the [Cache Layer](../Design/Cache%20Layer/intro.md) which returned to us the attribute at a particular offset. Here, we overload that function to find an attribute of a relation with a particular name.
 
 <details>
 <summary>Cache/AttrCacheTable.cpp</summary>

@@ -128,7 +128,7 @@ NITCbase follows a 7-layer object oriented architecture. In the course of this p
 2. [**Schema Layer**](../Design/Schema%20Layer.md): Handles the schema operations such as creation, deletion
 3. [**Block Access Layer**](../Design/Block%20Access%20Layer.md): Handles high-level operations on the disk such as search and insert
 4. [**B+ Tree Layer**](../Design/B%2B%20Tree%20Layer.md): Handles all index related operations.
-5. [**Cache Layer**](../Design/Cache%20Layer.md): Handles caching of the relation and attribute catalog
+5. [**Cache Layer**](../Design/Cache%20Layer/intro.md): Handles caching of the relation and attribute catalog
 6. [**Buffer Layer**](../Design/Buffer%20Layer/intro.md): Handles buffered operations on all disk blocks
 7. [**Physical Layer**](../Design/Physical%20Layer.md): Provides the low-level operations on the disk blocks.
 

@@ -141,7 +141,7 @@ Recall that the relation catalog and consequently the relation cache contain a f
 
 Similar to the buffer, each entry in the caches contain a `dirty` field which stores whether that entry has been modified. If a cache entry is dirty, it will need to be written back either when the relation is closed (with the [CLOSE TABLE](../User%20Interface%20Commands/ddl.md#close-table) command) or at system exit when all open relations are closed. The cache entry can be written back to the disk using an instance of the `RecBuffer` class.
 
-A class diagram indicating the relevant methods in the [Cache Layer](../Design/Cache%20Layer.md) is shown below.
+A class diagram indicating the relevant methods in the [Cache Layer](../Design/Cache%20Layer/intro.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -185,8 +185,8 @@ In earlier stages, we had implemented the `RelCacheTable::getRelCatEntry()` func
 
 Implement the following functions looking at their respective design docs
 
-- [`RelCacheTable::setRelCatEntry()`](../Design/Cache%20Layer.md#relcachetable--setrelcatentry)
-- [`RelCacheTable::relCatEntryToRecord()`](../Design/Cache%20Layer.md#relcachetable--relcatentrytorecord)
+- [`RelCacheTable::setRelCatEntry()`](../Design/Cache%20Layer/RelCacheTable.md#relcachetable--setrelcatentry)
+- [`RelCacheTable::relCatEntryToRecord()`](../Design/Cache%20Layer/RelCacheTable.md#relcachetable--relcatentrytorecord)
 
 </details>
 

@@ -218,19 +218,19 @@ Compile the program and execute it. You should get output identical to what you 
 
 ## Caches
 
-Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The [Cache Layer](../Design/Cache%20Layer.md) handles the implementation of these structures.
+Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The [Cache Layer](../Design/Cache%20Layer/intro.md) handles the implementation of these structures.
 
 The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
 
 An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about the `open` operation in later stages.
 
-**Take a quick look at the documentation for [relation cache table structures](../Design/Cache%20Layer.md#relation-cache-table-structures) and [attribute cache table structures](../Design/Cache%20Layer.md#attribute-cache-table-structures) before proceeding further.** You don't need to understand any of the fields not mentioned here explicitly.
+**Take a quick look at the documentation for [relation cache table structures](../Design/Cache%20Layer/intro.md#relation-cache-table-structures) and [attribute cache table structures](../Design/Cache%20Layer/intro.md#attribute-cache-table-structures) before proceeding further.** You don't need to understand any of the fields not mentioned here explicitly.
 
 The index corresponding to a relation in the relation/attribute cache is called it's **relation id** or rel-id. NITCbase fixes that the catalog entries for the relation catalog will always be stored at **rel-id 0** (recall that the first relation in both the catalogs is the relation catalog). The catalog entries for the attribute catalog will always be stored at **rel-id 1**. At this stage, we will only be implementing the cache operations for these two relations.
 
 ### Setting up the cache
 
-The next feature that we will add to NITCbase is a rudimentary version of the relation and attribute cache. This functionality is implemented in the [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable), [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) and [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) classes. The details of [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) are not relevant at this stage and will be covered in later stages. In this stage, we will only be using the constructor of this class to initialise our caches. The class diagram below shows the functions we will be implementing.
+The next feature that we will add to NITCbase is a rudimentary version of the relation and attribute cache. This functionality is implemented in the [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md), [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) and [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) classes. The details of [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) are not relevant at this stage and will be covered in later stages. In this stage, we will only be using the constructor of this class to initialise our caches. The class diagram below shows the functions we will be implementing.
 
 ```mermaid
 classDiagram
@@ -286,11 +286,11 @@ sequenceDiagram
 <br/>
 
 :::note A NOTE ABOUT STATIC CLASSES
-A class is called static if all its member fields and functions are declared static. In the case of such classes, memory is allocated [statically](https://en.wikipedia.org/wiki/Static_variable). Generally, static classes arise when only one instance of the class is required during run time. [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable), [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of static classes.
+A class is called static if all its member fields and functions are declared static. In the case of such classes, memory is allocated [statically](https://en.wikipedia.org/wiki/Static_variable). Generally, static classes arise when only one instance of the class is required during run time. [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md), [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md), [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of static classes.
 
 Generally, there is no need to create an instance of a static class (by defining a variable of the class) as the declaration of the class itself fixes the storage and access to the members and methods of the class.
 
-However, there is one exception to this rule. The exception arises when we wish to run a constructor and destructor for the class for initialization. In such cases, an instance of the class needs to be declared. [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of classes that require such instantiation. On the other hand, [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) require no initializer code to run and hence, no instance variables are declared.
+However, there is one exception to this rule. The exception arises when we wish to run a constructor and destructor for the class for initialization. In such cases, an instance of the class needs to be declared. [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of classes that require such instantiation. On the other hand, [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) and [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) require no initializer code to run and hence, no instance variables are declared.
 
 Many of the classes encapsulating the implementation of higher layers of NITCbase are static classes that require no initializer code to run, and hence do not require instances to be created.
 
@@ -298,7 +298,7 @@ Many of the classes encapsulating the implementation of higher layers of NITCbas
 
 <br/>
 
-We'll start by implementing [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable). Here, we have two functions; `getRelCatEntry()` which is used to the get the [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) from the relation cache and `recordToRelCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to a [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) struct. We also need to declare the static member field `relCache`.
+We'll start by implementing [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md). Here, we have two functions; `getRelCatEntry()` which is used to the get the [RelCatEntry](../Design/Cache%20Layer/intro.md#relcatentry) from the relation cache and `recordToRelCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to a [RelCatEntry](../Design/Cache%20Layer/intro.md#relcatentry) struct. We also need to declare the static member field `relCache`.
 
 <details>
 <summary>Cache/RelCacheTable.cpp</summary>
@@ -347,7 +347,7 @@ void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
 
 </details>
 
-Similarly, in [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), we have a static member field `attrCache` and two functions; `getAttrCatEntry()` which is used to the get the [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) from the attribute cache and `recordToAttrCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to an [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) struct. _Note that an attribute cache entry is a linked list_. The attribute cache is an array of linked lists.
+Similarly, in [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md), we have a static member field `attrCache` and two functions; `getAttrCatEntry()` which is used to the get the [AttrCatEntry](../Design/Cache%20Layer/intro.md#attrcatentry) from the attribute cache and `recordToAttrCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to an [AttrCatEntry](../Design/Cache%20Layer/intro.md#attrcatentry) struct. _Note that an attribute cache entry is a linked list_. The attribute cache is an array of linked lists.
 
 <details>
 <summary>Cache/AttrCacheTable.cpp</summary>

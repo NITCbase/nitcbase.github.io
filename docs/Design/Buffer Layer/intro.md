@@ -149,7 +149,7 @@ The Buffer Layer defines the following block data structures.
 - [InternalEntry](#internalentry)
 - [Index](#index)
 
-Each structure is designed to store **a subset of the data stored in a disk block**. A disk block contains **_2048 bytes_** of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](../Cache%20Layer.md), the [Block Access Layer](../Block%20Access%20Layer.md), and the [B+ Tree Layer](../B+%20Tree%20Layer.md).
+Each structure is designed to store **a subset of the data stored in a disk block**. A disk block contains **_2048 bytes_** of data. Higher layer functions, however, instead of processing the whole block data together, typically request access to a particular set of related data in a disk block at a time. Whenever such a selective access request is made, the method in the Buffer Layer implementing the access functionality will pack the requested data into the corresponding block structure designed to store that particular type of data. Variables of these structures will be declared and used in the [Cache Layer](../Cache%20Layer/intro.md), the [Block Access Layer](../Block%20Access%20Layer.md), and the [B+ Tree Layer](../B+%20Tree%20Layer.md).
 
 ### HeadInfo
 
@@ -255,7 +255,7 @@ struct BufferMetaInfo {
 
 ## Miscellaneous
 
-Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](../Cache%20Layer.md), [Block access layer](../Block%20Access%20Layer.md) and [B+ tree](../B+%20Tree%20Layer.md) layer, to name a few.
+Given below are the definitions of RecId and IndexId structures. Variables of these structures will be of use in several layers of NITCbase, such as [Cache layer](../Cache%20Layer/intro.md), [Block access layer](../Block%20Access%20Layer.md) and [B+ tree](../B+%20Tree%20Layer.md) layer, to name a few.
 
 :::note
 The code for RecId struct and IndexId struct can be found in the `id.h` file defined inside `define/` directory.
