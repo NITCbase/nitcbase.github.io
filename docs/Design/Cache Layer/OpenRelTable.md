@@ -92,7 +92,7 @@ OpenRelTable::OpenRelTable() {
 
     /**** setting up Relation Catalog relation in the Attribute Cache ****/
 
-    // let listHead be used to hold the head of the linked list of Attribute Cache entries.
+    // listHead will hold the head of the linked list of Attribute Cache entries.
     AttrCacheEntry* listHead;
 
     for i from 0 to 5:
@@ -291,13 +291,15 @@ Creates an entry for the input relation in the _Open Relation_ Table and returns
 ```cpp
 int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
 
-  if(/* the relation, relName, already has an entry in the Open Relation Table */){
+  if(/* the relation `relName` already has an entry in the Open Relation Table */){
     // (checked using OpenRelTable::getRelId())
 
     // return that relation id;
   }
 
-  // find a free slot in the Open Relation Table using OpenRelTable::getFreeOpenRelTableEntry().
+  /* find a free slot in the Open Relation Table
+     using OpenRelTable::getFreeOpenRelTableEntry(). */
+
   if (/* free slot not available */){
     return E_CACHEFULL;
   }
@@ -312,7 +314,7 @@ int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
       Care should be taken to reset the searchIndex of the relation RELCAT_RELID
       before calling linearSearch().*/
 
-  // let relcatRecId store the record id of the relation, relName, in the Relation Catalog.
+  // relcatRecId stores the rec-id of the relation `relName` in the Relation Catalog.
   RecId relcatRecId;
 
   if (/* relcatRecId == {-1, -1} */) {
@@ -353,7 +355,8 @@ int OpenRelTable::openRel(unsigned char relName[ATTR_SIZE]) {
 
   /****** Setting up metadata in the Open Relation Table for the relation******/
 
-  //update the relIdth entry of the tableMetaInfo with free as false and relName as the input.
+  // update the relIdth entry of the tableMetaInfo with free as false and
+  // relName as the input.
 
   return relId;
 }
@@ -430,8 +433,8 @@ int OpenRelTable::closeRel(int relId) {
 
         }
 
-        // free the memory dynamically alloted to this entry in Attribute Cache linked list
-        // and assign nullptr to that entry
+        // free the memory dynamically alloted to this entry in Attribute
+        // Cache linked list and assign nullptr to that entry
     }
 
     /****** Updating metadata in the Open Relation Table of the relation  ******/

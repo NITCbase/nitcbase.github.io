@@ -85,7 +85,8 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
     return E_RELNOTOPEN;
   }
 
-  //copy the corresponding Relation Catalog entry in the Relation Cache Table to relCatBuf.
+  // copy the corresponding Relation Catalog entry in the Relation Cache Table
+  // to relCatBuf.
 
   return SUCCESS;
 
@@ -130,9 +131,11 @@ int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
     return E_RELNOTOPEN;
   }
 
-  //copy the relCatBuf to the corresponding Relation Catalog entry in the Relation Cache Table.
+  // copy the relCatBuf to the corresponding Relation Catalog entry in
+  // the Relation Cache Table.
 
-  //set the dirty flag of the corresponding Relation Cache entry in the Relation Cache Table.
+  // set the dirty flag of the corresponding Relation Cache entry in
+  // the Relation Cache Table.
 
   return SUCCESS;
 

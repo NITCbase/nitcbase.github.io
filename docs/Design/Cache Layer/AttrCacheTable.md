@@ -93,11 +93,13 @@ int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
     return E_RELNOTOPEN;
   }
 
-  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  for(/*all attributes corresponding to relation with relId */)
   {
-    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
+    if (/* attrName/offset field of the AttrCatEntry
+        is equal to the input attrName/attrOffset */)
     {
-      // copy that Attribute Catalog entry in the Attribute Cache Table to attrCatBuf.
+      // copy that Attribute Catalog entry in the Attribute Cache Table to
+      // attrCatBuf.
 
       return SUCCESS;
     }
@@ -151,12 +153,13 @@ int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
     return E_RELNOTOPEN;
   }
 
-  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  for(/*all attributes corresponding to relation with relId */)
   {
-    if(/* the attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
+    if(/* the attrName/offset field of the AttrCatEntry
+       is equal to the input attrName/attrOffset */)
     {
       // copy the attrCatBuf to the corresponding Attribute Catalog entry in
-      //the Attribute Cache Table.
+      // the Attribute Cache Table.
 
       // set the dirty flag of the corresponding Attribute Cache entry in the
       // Attribute Cache Table.
@@ -213,12 +216,13 @@ int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
     return E_RELNOTOPEN;
   }
 
-  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  for(/*all attributes corresponding to relation with relId */)
   {
-    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
+    if (/* attrName/offset field of the AttrCatEntry
+        is equal to the input attrName/attrOffset */)
     {
-      //copy the searchIndex field of the corresponding Attribute Cache entry in
-      //the Attribute Cache Table to input searchIndex variable.
+      //copy the searchIndex field of the corresponding Attribute Cache entry
+      //in the Attribute Cache Table to input searchIndex variable.
 
       return SUCCESS;
     }
@@ -272,9 +276,10 @@ int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
     return E_RELNOTOPEN;
   }
 
-  // for all the attributes in the Attribute Cache Table corresponding to the relation with relId.
+  for(/*all attributes corresponding to relation with relId */)
   {
-    if (/* attrName/offset field of the AttrCatEntry is equal to the input attrName/attrOffset */)
+    if (/* attrName/offset field of the AttrCatEntry
+        is equal to the input attrName/attrOffset */)
     {
       // copy the input searchIndex variable to the searchIndex field of the
       //corresponding Attribute Cache entry in the Attribute Cache Table.
