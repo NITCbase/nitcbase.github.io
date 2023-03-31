@@ -186,7 +186,7 @@ OpenRelTable::~OpenRelTable() {
     // free the memory dynamically allocated to this RelCacheEntry
 
 
-    /****** releasing the entry corresponding to Relation Catalog relation from Relation Cache Table ******/
+    //releasing the relation cache entry of the relation catalog
 
     if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
 
