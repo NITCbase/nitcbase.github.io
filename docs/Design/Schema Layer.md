@@ -26,6 +26,8 @@ The functions of Schema layer include:
 
 The method `openRel` is used to the open a relations for access, `closeRel` to close a relation and `getSchema` to get the schema of the relation. NITCbase follows an Object-Oriented design for Schema Layer. The class definition is as shown below:
 
+---
+
 ## class Schema
 
 ```cpp
@@ -43,9 +45,7 @@ public:
 };
 ```
 
----
-
-## Schema :: createRel()
+### Schema :: createRel()
 
 #### Description
 
@@ -134,7 +134,7 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
 ---
 
-## Schema :: deleteRel()
+### Schema :: deleteRel()
 
 #### Description
 
@@ -184,7 +184,7 @@ int Schema::deleteRel(char *relName) {
 
 ---
 
-## Schema :: createIndex()
+### Schema :: createIndex()
 
 #### Description
 
@@ -228,7 +228,7 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
 
 ---
 
-## Schema :: dropIndex()
+### Schema :: dropIndex()
 
 #### Description
 
@@ -311,7 +311,7 @@ int Schema::dropIndex(char *relName, char *attrName) {
 
 ---
 
-## Schema :: renameRel()
+### Schema :: renameRel()
 
 #### Description
 
@@ -354,7 +354,7 @@ int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]) {
 
 ---
 
-## Schema :: renameAttr()
+### Schema :: renameAttr()
 
 #### Description
 
@@ -400,7 +400,7 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
 
 ---
 
-## Schema :: openRel()
+### Schema :: openRel()
 
 #### Description
 
@@ -434,7 +434,7 @@ int Schema::openRel(char *relName) {
 
 ---
 
-## Schema :: closeRel()
+### Schema :: closeRel()
 
 #### Description
 

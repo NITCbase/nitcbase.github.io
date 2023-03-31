@@ -74,7 +74,7 @@ This method **inserts the given record** into the specified Relation. Insertion 
 #### Algorithm
 
 ```cpp
-int insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
+int Algebra::insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE]){
     // if relName is equal to "RELATIONCAT" or "ATTRIBUTECAT"
     // return E_NOTPERMITTED;
 

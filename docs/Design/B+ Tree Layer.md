@@ -25,6 +25,8 @@ The leaf entries are ordered in ascending order of attribute values. The Leaf In
 
 NITCbase follows Object Oriented design for implementing B+ Tree. The class diagram is as shown below.
 
+---
+
 ## class BPlusTree
 
 ```cpp
@@ -38,9 +40,7 @@ public:
 
 ```
 
----
-
-## bPlusCreate
+### BPlusTree::bPlusCreate
 
 #### Description
 
@@ -153,7 +153,7 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
 
 ---
 
-## bPlusInsert
+### BPlusTree::bPlusInsert
 
 #### Description
 
@@ -462,7 +462,7 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
 ---
 
-## bPlusSearch
+### BPlusTree::bPlusSearch
 
 #### Description
 
@@ -669,7 +669,7 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
 
 ---
 
-## bPlusDestroy
+### BPlusTree::bPlusDestroy
 
 #### Description
 
