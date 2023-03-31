@@ -149,6 +149,15 @@ classDiagram
 
 We will be working with the [Frontend Interface](../Design/Architecture.md) from this stage onwards. For all subsequent stages, your `main.cpp` only needs to have declarations of `Disk`, `StaticBuffer` and `OpenRelTable` classes and a call to the `handleFrontend()` function as shown below.
 
+:::info NOTE
+
+The `handleFrontend()` function runs in an infinite loop receiving commands from the user. Similar to the XFS Interface, **graceful exit from the Frontend Interface is done using the `exit` command**.
+
+In earlier stages, you had implemented the constructors for the `StaticBuffer` and `OpenRelTable` classes. In later stages, we will be implementing the destructors for these classes as well. The `Disk` class too has a destructor defined. It is essential that these destructors be run to ensure that all the changes we make during runtime are written back to the disk.
+
+The destructors will only be run if the program exits gracefully. If the program was to be killed with the `Ctrl`+`C` combination, the destructors will not be run and any changes made will be lost. Recall that all runtime changes in NITCbase are written to a temporary disk copy, and the changes are copied to the actual disk only at the time of program exit.
+:::
+
 <details>
 <summary>main.cpp</summary>
 

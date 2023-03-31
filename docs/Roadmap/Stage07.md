@@ -32,15 +32,14 @@ When a disk block is allocated to a relation for the first time, _Constructor1_ 
 
 The number of the allocated block will be stored in the private data field `blockNum` of the object allocated. (IMPORTANT&nbsp;NOTE: If block allocation failed, appropriate error code will be written on to the `blockNum` field. Care should be taken to check whether the allocation was successful before going ahead with accessing the block!)
 
-`RecBuffer::Constructor1` is invoked only when:-
+Recall that we have already completed the implementation of `RecBuffer::Constructor2` and `BlockBuffer::Constructor2` in the previous stages. If a record block was already allocated to a relation using `RecBuffer::Constructor1` in the past, then `RecBuffer::Constructor2` is used for the subseqent access of the block. This constructor, as already seen, involves loading the block from the disk to the buffer (if not already present) and updating the data structures in the [class StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md). Since the block number is already known in this case, it must be passed as an argument to the constructor. `RecBuffer::Constructor2` in turn invokes the parent class constructor `BlockBuffer::Constructor2`, passing the block number as an argument, for performing the required functionality.
+
+NITCBase requires that the `RecBuffer::Constructor1` be invoked only when **both the conditions** below hold true:
 
 1. a record is added into a relation (or when a new relation is created, resulting in an insertion into the catalogs) <br/>
-   **AND** <br/>
-2. none of its already allocated blocks (if any) have a free slot to store the inserted record.
+2. none of its already allocated blocks (if any) have a free slot to store the inserted record, implying that insertion cannot be performed without allocating a new block.
 
 In all the previous stages, such insertion was performed only through the XFS Interface, and we never had to do a fresh block allocation for any relation. In this stage, we will be implementing `RecBuffer::Constructor1` and `BlockBuffer::Constructor1` to support record insertions into existing relations.
-
-Recall that we have already completed the implementation of `RecBuffer::Constructor2` and `BlockBuffer::Constructor2` in the previous stages. If a record block was already allocated to a relation using `RecBuffer::Constructor1`, then, subsequent access to the block by creating a memory copy in the buffer must be performed using `RecBuffer::Constructor2`. Since the block number is already known in this case, it is passed as an argument to the constructor. `RecBuffer::Constructor2` in turn invokes `BlockBuffer::Constructor2`.
 
 The methods relevant to adding this functionality are shown in the class diagram below.
 
@@ -114,7 +113,7 @@ StaticBuffer::~StaticBuffer() {
   // copy blockAllocMap blocks from buffer to disk(using writeblock() of disk)
 
   /*iterate through all the buffer blocks,
-    write back blocks with meta info as free:false,dirty:true (using writeblock() of disk)
+    write back blocks with metainfo as free:false,dirty:true
     (you did this already)
   */
 }
@@ -127,19 +126,19 @@ StaticBuffer::~StaticBuffer() {
 
 Implement the following functions looking at their respective design docs
 
-- [`BlockBuffer::BlockBuffer(char blockType)`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--blockbuffer-constructor1)
-- [`RecBuffer::RecBuffer()`](../Design/Buffer%20Layer/RecBuffer.md#recbuffer--recbuffer-constructor-1)
 - [`BlockBuffer::setHeader()`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--setheader)
 - [`BlockBuffer::setBlockType()`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--setblocktype)
 - [`BlockBuffer::getFreeBlock()`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--getfreeblock)
+- [`BlockBuffer::BlockBuffer(char blockType)`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--blockbuffer-constructor1)
+- [`RecBuffer::RecBuffer()`](../Design/Buffer%20Layer/RecBuffer.md#recbuffer--recbuffer-constructor-1)
 
 </details>
 
 ### Handling Cache Updates
 
-Recall that the relation catalog and consequently the relation cache contain a field `numRecords` which stores the number of records that are part of the relation. After we insert a record, this value will have to be incremented. Thus far, we have only been reading from the caches. In this stage, we will implement write-back for the relation cache.
+Recall that every relation catalog entry (and consequently every relation cache entry) contains a field `numRecords` which stores the number of records that are part of the relation. After we insert a record, this value will have to be incremented. This far, we have only been reading from the caches. In this stage, we will implement write-back for the relation cache.
 
-Similar to the buffer, each entry in the caches contain a `dirty` field which stores whether that entry has been modified. If a cache entry is dirty, it will need to be written back either when the relation is closed (with the [CLOSE TABLE](../User%20Interface%20Commands/ddl.md#close-table) command) or at system exit when all open relations are closed. The cache entry can be written back to the disk using an instance of the `RecBuffer` class.
+Similar to the buffer, each entry in the caches contain a `dirty` field which stores whether that entry has been modified. If a cache entry is dirty, it will need to be written back (to the copy of the disk block in the buffer) either when the relation is closed (with the [CLOSE TABLE](../User%20Interface%20Commands/ddl.md#close-table) command) or at system exit when all open relations are closed. The cache entry can be written back to the disk buffer using an instance of the `RecBuffer` class. Our earlier implementation did not need to do this since we did not have any operations which modified the caches.
 
 A class diagram indicating the relevant methods in the [Cache Layer](../Design/Cache%20Layer/intro.md) is shown below.
 
@@ -167,7 +166,7 @@ direction RL
   class OpenRelTable{
     -tableMetaInfo[MAX_OPEN] : OpenRelTableMetaInfo
     +OpenRelTable(): 🔵
-    +~OpenRelTable(): 🟠
+    +~OpenRelTable(): 🟤
     -getFreeOpenRelTableEntry()$ int🔵
     +getRelId(char relName[ATTR_SIZE])$ int🔵
     +openRel(char relName[ATTR_SIZE])$ int🔵
@@ -178,7 +177,7 @@ direction RL
 
 <br/>
 
-In earlier stages, we had implemented the `RelCacheTable::getRelCatEntry()` function to get an entry from the relation cache. In this stage, we will implement it's counterpart `RelCacheTable::setRelCatEntry()` which is how we update the values stored in the relation cache during runtime. We will also implement the `RelCacheTable::relCatEntryToRecord()` which we'll be using while closing the relation.
+In earlier stages, we had implemented the `RelCacheTable::getRelCatEntry()` function to get an entry from the relation cache. In this stage, we will implement it's counterpart `RelCacheTable::setRelCatEntry()` which is how we update the values stored in the relation cache during runtime. We will also implement the `RelCacheTable::relCatEntryToRecord()` function which converts from the [struct RelCatEntry](../Design/Cache%20Layer/intro.md#relcacheentry) to a relation catalog entry record. This is useful when the relation is closed and the cache entries are written back to the buffer.
 
 <details>
 <summary>Cache/RelCacheTable.cpp</summary>
@@ -190,59 +189,31 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-Now, we modify our `OpenRelTable::closeRel()` function and the `OpenRelTable` destructor to handle write-back for the relation cache.
+Now, we modify our `OpenRelTable::closeRel()` function to handle write-back for the relation cache.
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>
 
 ```cpp
-OpenRelTable::~OpenRelTable() {
-  // close all open relations i.e rel-id 2 to MAX_OPEN using OpenRelTable::closeRel()
-  //    (you did this already)
-
-  /************ Closing the entries in the relation cache ************/
-
-  /****** releasing the entry corresponding to Attribute Catalog relation from Relation Cache Table ******/
-  if (/* the RelCatEntry of the ATTRCAT_RELIDth Relation Cache entry has been modified */) {
-
-    /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-    Write back that entry by instantiating RecBuffer class. Use recId member
-    field and recBuffer.setRecord() */
-  }
-  // free the memory dynamically allocated to this RelCacheEntry
-
-
-  /****** releasing the entry corresponding to Relation Catalog relation from Relation Cache Table ******/
-  if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
-
-    /* Get the Relation Catalog entry from Cache using RelCacheTable::relCatEntryToRecord().
-    Write back that entry by instantiating RecBuffer class. Use recId member
-    field and recBuffer.setRecord() */
-  }
-  // free the memory dynamically allocated for this RelCacheEntry
-
-
-  /************ Closing the entries in the attribute cache ************/
-
-  // free the memory allocated for the attribute cache entries of rel-id 0 and 1
-}
-
-
 int OpenRelTable::closeRel(int relId) {
   // confirm that rel-id fits the following conditions
-  //     - does not correspond to relation or attribute catalog
-  //     - 0 <=relId < MAX_OPEN
-  //     - corresponds to a free slot
-  //  (you did this already)
+  //     - 2 <=relId < MAX_OPEN
+  //     - does not correspond to a free slot
+  //  (you have done this already)
 
   /****** Releasing the Relation Cache entry of the relation ******/
 
-  if (/* RelCatEntry of the relIdth Relation Cache entry has been modified */)
+  if (/* RelCatEntry of the relId-th Relation Cache entry has been modified */)
   {
-    /* Get the Relation Catalog entry from Cache using
-    RelCacheTable::relCatEntryToRecord().
-    Write back that entry by instantiating RecBuffer class. Use recId member
-    field and recBuffer.setRecord() */
+
+    /* Get the Relation Catalog entry from RelCacheTable::relCache
+    Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
+
+
+    // declaring an object of RecBuffer class to write back to the buffer
+    RecBuffer relCatBlock(recId.block);
+
+    // Write back to the buffer using relCatBlock.setRecord() with recId.slot
   }
 
   /****** Releasing the Attribute Cache entry of the relation ******/
@@ -250,8 +221,12 @@ int OpenRelTable::closeRel(int relId) {
   // free the memory allocated in the attribute caches which was
   // allocated in the OpenRelTable::openRel() function
 
+  // (because we are not modifying the attribute cache at this stage,
+  // write-back is not required. We will do it in subsequent
+  // stages when it becomes needed)
 
-  /****** Updating metadata in the Open Relation Table of the relation  ******/
+
+  /****** Set the Open Relation Table entry of the relation as free ******/
 
   // update `tableMetaInfo` to set `relId` as a free slot
 
@@ -366,7 +341,7 @@ classDiagram
 
 <br/>
 
-As shown in the sequence diagram above, the Frontend User Interface will parse the `INSERT INTO TABLE VALUES` command and call the `Frontend::insert_into_table_values()` function in the Frontend Programming Interface. This call is then transferred along to the [Algebra Layer](../Design/Algebra%20Layer.md). Hence, the implementation of the `Frontend::insert_into_table_values()` function only involves a call to the `Algebra::insert()` function.
+As shown in the sequence diagram above, the [Frontend User Interface](../Design/Frontend.md#frontend-user-interface) will parse the `INSERT INTO TABLE VALUES` command and call the `Frontend::insert_into_table_values()` function in the [Frontend Programming Interface](../Design/Frontend.md#frontend-programming-interface). This call is then transferred along to the [Algebra Layer](../Design/Algebra%20Layer.md). Hence, the implementation of the `Frontend::insert_into_table_values()` function only involves a call to the `Algebra::insert()` function.
 
 <details>
 <summary>Frontend/Frontend.cpp</summary>
@@ -379,7 +354,7 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count, 
 
 </details>
 
-The `Algebra::insert()` function does some validation on the input and converts the user inputs which are in the form of a string to the [union Attribute](../Design/Buffer%20Layer/intro.md#attribute) type. It then calls the `BlockAccess::insert()` function to handle the insertion of the record.
+The `Algebra::insert()` function does some validation on the input and converts the user inputs, which are in the form of a string, and assigns it to an [union Attribute](../Design/Buffer%20Layer/intro.md#attribute) type. It then calls the `BlockAccess::insert()` function to handle the insertion of the record.
 
 <details>
 <summary>Algebra/Algebra.cpp</summary>
@@ -388,7 +363,7 @@ Implement the `Algebra::insert()` function by looking at the [design docs](../De
 
 </details>
 
-Before we implement the record insertion, we implement the [Buffer Layer](../Design/Buffer%20Layer/intro.md) method to update the slotmap and a getter function for the [BlockBuffer class](../Design/Buffer%20Layer/BlockBuffer.md).
+Before we implement the record insertion, we implement the [Buffer Layer](../Design/Buffer%20Layer/intro.md) method to update the slotmap and a getter function for the [BlockBuffer class](../Design/Buffer%20Layer/BlockBuffer.md) to access the private `blockNum` member of the class.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
@@ -412,7 +387,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
     int blockNum = /* first record block of the relation (from the rel-cat entry)*/;
 
-    // let rec_id denote the rec-id of the slot where the new record will be inserted
+    // let rec_id denote the rec-id of the slot
+    // this will be used to store where the new record will be inserted
     RecId rec_id = {-1, -1};
 
     int numOfSlots = /* number of slots per record block */;
@@ -426,7 +402,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
         until the end of the list is reached
     */
     while (blockNum != -1) {
-        // create a RecBuffer object for blockNum(use constructor for existing block)
+        // create a RecBuffer object for blockNum (using appropriate constructor!)
 
         // get header of block(blockNum) using RecBuffer::getHeader() function
 
@@ -437,8 +413,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
         /* slot map stores SLOT_UNOCCUPIED if slot is free and
            SLOT_OCCUPIED if slot is occupied) */
 
-        /* if a free slot is found, discontinue the traversal of the linked
-           list of record blocks */
+        /* if a free slot is found, set rec_id and discontinue the traversal
+           of the linked list of record blocks */
 
         /* otherwise, continue to check the next block by updating the
            block numbers as follows:
@@ -448,13 +424,13 @@ int BlockAccess::insert(int relId, Attribute *record) {
         */
     }
 
-    //  if no free slot is found in existing record blocks
+    //  if no free slot is found in existing record blocks (rec_id = {-1, -1})
     {
         // if relation is RELCAT, do not allocate any more blocks
         //     return E_MAXRELATIONS;
 
         // Otherwise,
-        // get a new record block by calling RecBuffer Constructor for new block
+        // get a new record block (using the appropriate RecBuffer constructor!)
         // get the block number of the newly allocated block
         // (use BlockBuffer::getBlockNum() function)
         // let ret be the return value of getBlockNum() function call
@@ -470,8 +446,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
             set the block's header as follows:
             blockType: REC, pblock: -1
             lblock
-                    = -1 (if linked list of existing record blocks was empty)
-                    = prevBlockNum (otherwise),
+                  = -1 (if linked list of existing record blocks was empty)
+                  = prevBlockNum (otherwise),
             rblock: -1, numEntries: 0,
             numSlots: numOfSlots, numAttrs: numOfAttributes
             (use BlockBuffer::setHeader() function)

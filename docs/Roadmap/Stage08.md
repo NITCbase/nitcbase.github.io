@@ -134,6 +134,41 @@ classDiagram
 
 <br/>
 
+**Cache Layer**
+
+```mermaid
+classDiagram
+direction RL
+  RelCacheTable <|.. OpenRelTable : friend
+  AttrCacheTable <|.. OpenRelTable : friend
+  class RelCacheTable{
+    -relCache[MAX_OPEN] : RelCacheEntry*
+    -recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS], RelCatEntry *relCatEntry)$ void🔵
+    -relCatEntryToRecord(RelCatEntry *relCatEntry, union Attribute record[RELCAT_NO_ATTRS])$ void🔵
+    +getRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int🔵
+    +setRelCatEntry(int relId, RelCatEntry *relCatBuf)$ int🔵
+    +getSearchIndex(int relId, RecId *searchIndex)$ int🔵
+    +setSearchIndex(int relId, RecId *searchIndex)$ int🔵
+    +resetSearchIndex(int relId)$ int🔵
+  }
+  class AttrCacheTable{
+    -attrCache[MAX_OPEN] : AttrCacheEntry*
+    -recordToAttrCatEntry(union Attribute record[ATTRCAT_NO_ATTRS], AttrCatEntry *attrCatEntry)$ void🔵
+    +getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf)$ int🔵
+    +getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf)$ int🔵
+  }
+  class OpenRelTable{
+    -tableMetaInfo[MAX_OPEN] : OpenRelTableMetaInfo
+    +OpenRelTable(): 🔵
+    +~OpenRelTable(): 🟢
+    -getFreeOpenRelTableEntry()$ int🔵
+    +getRelId(char relName[ATTR_SIZE])$ int🔵
+    +openRel(char relName[ATTR_SIZE])$ int🔵
+    +closeRel(int relId)$ int🟤
+  }
+
+```
+
 **Buffer Layer**
 
 ```mermaid
@@ -206,12 +241,21 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
+The creation/deletion of a relation modifies the `numRecords` entry in the relation cache for the relation and attribute catalog. In the previous stage, we had implemented write-back for a cache entry on closing of the relation. In this stage, we update the destructor of the [class OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) to handle the write-back for the relation.
+
+<details>
+<summary>Cache/OpenRelTable.cpp</summary>
+
+Implement the `OpenRelTable::~OpenRelTable()` function by looking at the [design docs](../Design/Cache%20Layer/OpenRelTable.md#openreltable--openreltable-destructor).
+
+</details>
+
 In the [Buffer Layer](../Design/Buffer%20Layer/intro.md), we implement the `BlockBuffer::releaseBlock()` function which takes a block number as an argument and frees that block in the buffer and the block allocation map, thus making the block available for use again.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
-Implement the `BlockBuffer::releaseBlock()` function function by looking at the [design docs](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--releaseblock).
+Implement the `BlockBuffer::releaseBlock()` function by looking at the [design docs](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--releaseblock).
 
 </details>
 
@@ -273,7 +317,7 @@ Now, run the following commands **in the XFS Interface** to verify the creation 
 ```
 dump relcat
 dump attrcat
-export Products products.csv
+print table Products
 ```
 
 Open `Files/Output_Files/relation_catalog` and verify that the new relations are present in the relation catalog. Also, ensure that the `LastBlock` of the attribute catalog is now pointing to a new block.
