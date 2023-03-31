@@ -6,7 +6,8 @@ title: "Stage 8 : Creating and Deleting Relations"
 
 :::note Learning Objectives
 
-- Implement
+- Implement the creation of relations by inserting records into the catalogs
+- Implement the deletion of relations and the subsequent freeing of blocks
 
 :::
 
@@ -105,7 +106,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Schema Layer](../Design/Schema%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Buffer Layer](../Design/Buffer%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Schema Layer](../Design/Schema%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Buffer Layer](../Design/Buffer%20Layer/intro.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -205,12 +206,12 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-In the [Buffer Layer](../Design/Buffer%20Layer.md), we implement the `BlockBuffer::releaseBlock()` function which takes a block number as an argument and frees that block in the buffer and the block allocation map, thus making the block available for use again.
+In the [Buffer Layer](../Design/Buffer%20Layer/intro.md), we implement the `BlockBuffer::releaseBlock()` function which takes a block number as an argument and frees that block in the buffer and the block allocation map, thus making the block available for use again.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
-Implement the `BlockBuffer::releaseBlock()` function function by looking at the [design docs](../Design/Buffer%20Layer.md#blockbuffer--releaseblock).
+Implement the `BlockBuffer::releaseBlock()` function function by looking at the [design docs](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--releaseblock).
 
 </details>
 
