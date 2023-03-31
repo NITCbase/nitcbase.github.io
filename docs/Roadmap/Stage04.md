@@ -80,7 +80,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md), [Buffer Layer](../Design/Buffer%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Algebra Layer](../Design/Algebra%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md), [Buffer Layer](../Design/Buffer%20Layer/intro.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Algebra Layer](../Design/Algebra%20Layer.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -267,7 +267,7 @@ int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCat
 
 </details>
 
-One last thing we will need before implementing search is the ability to read the slotmap so that we can iterate through all the valid records of the relation. Let's add that function to our [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) implementation in the [Buffer Layer](../Design/Buffer%20Layer.md).
+One last thing we will need before implementing search is the ability to read the slotmap so that we can iterate through all the valid records of the relation. Let's add that function to our [RecBuffer](../Design/Buffer%20Layer/RecBuffer.md) implementation in the [Buffer Layer](../Design/Buffer%20Layer/intro.md).
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
@@ -304,9 +304,9 @@ int RecBuffer::getSlotMap(unsigned char *slotMap) {
 
 Now, we finally implement linear search on our database. As mentioned earlier, NITCbase supports 6 operators in our search operation (`=`, `!=`, `>`, `>=`, `<` `>=`).
 
-An attribute in NITCbase can be either a string or a number. In case the attribute is a number, the operators work as you'd expect. If it is a string, the operation is performed with respect to lexicographic order (i.e `>` would be checked on the first differing letter between two strings). It would be convenient in our operation to abstract this implementation detail to a separate function. That is exactly what the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` does.
+An attribute in NITCbase can be either a string or a number. In case the attribute is a number, the operators work as you'd expect. If it is a string, the operation is performed with respect to lexicographic order (i.e `>` would be checked on the first differing letter between two strings). It would be convenient in our operation to abstract this implementation detail to a separate function. That is exactly what the [compareAttrs function](../Design/Buffer%20Layer/intro.md#compareattrs) in `Buffer/BlockBuffer.cpp` does.
 
-> **TASK**: Implement the [compareAttrs function](../Design/Buffer%20Layer.md#compareattrs) in `Buffer/BlockBuffer.cpp` before proceeding further.
+> **TASK**: Implement the [compareAttrs function](../Design/Buffer%20Layer/intro.md#compareattrs) in `Buffer/BlockBuffer.cpp` before proceeding further.
 
 Now, we implement the `BlockAccess::linearSearch()` function in the [Block Access Layer](../Design/Block%20Access%20Layer.md).
 

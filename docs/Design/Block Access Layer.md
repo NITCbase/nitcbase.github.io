@@ -13,7 +13,7 @@ The Block Access Layer code is to be written in `BlockAccess.cpp` and it's heade
 
 In any database management system, in order to retrieve data from the database or to alter the schema of the relations in the database, the system has to work with the disk blocks. _Block Access layer provides an abstraction that hides the disk structures to the above layers ([Algebra layer](Algebra%20Layer.md) and [Schema layer](Schema%20Layer.md))_.
 
-The _block access layer also provides an interface to the above layers in terms of records instead of disk blocks._ Hence, the Block Access layer processes the requests for update/retrieval from the algebra and schema layers and works with disk blocks that are buffered by the [_Buffer layer_](Buffer%20Layer.md).
+The _block access layer also provides an interface to the above layers in terms of records instead of disk blocks._ Hence, the Block Access layer processes the requests for update/retrieval from the algebra and schema layers and works with disk blocks that are buffered by the [_Buffer layer_](./Buffer%20Layer/intro.md).
 
 NITCbase follows an Object-Oriented design for Block Access Layer. The class definition is as shown below.
 

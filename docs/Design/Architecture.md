@@ -11,7 +11,7 @@ Contents include:
 3. [**Cache Layer**](../Design/Cache%20Layer.md)
 4. [**B+ Tree Layer**](../Design/B+%20Tree%20Layer.md)
 5. [**Block Access Layer**](../Design/Block%20Access%20Layer.md)
-6. [**Buffer Layer**](../Design/Buffer%20Layer.md)
+6. [**Buffer Layer**](../Design/Buffer%20Layer/intro.md)
 7. [**Physical Layer**](../Design/Physical%20Layer.md)
 
 In addition to the above layers, NITCbase provides a command line interface called [Frontend Interface](../Design/Frontend.md) to the users in which they can execute any database query.

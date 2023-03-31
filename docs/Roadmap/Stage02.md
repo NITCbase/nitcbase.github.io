@@ -129,7 +129,7 @@ NITCbase follows a 7-layer object oriented architecture. In the course of this p
 3. [**Block Access Layer**](../Design/Block%20Access%20Layer.md): Handles high-level operations on the disk such as search and insert
 4. [**B+ Tree Layer**](../Design/B%2B%20Tree%20Layer.md): Handles all index related operations.
 5. [**Cache Layer**](../Design/Cache%20Layer.md): Handles caching of the relation and attribute catalog
-6. [**Buffer Layer**](../Design/Buffer%20Layer.md): Handles buffered operations on all disk blocks
+6. [**Buffer Layer**](../Design/Buffer%20Layer/intro.md): Handles buffered operations on all disk blocks
 7. [**Physical Layer**](../Design/Physical%20Layer.md): Provides the low-level operations on the disk blocks.
 
 We also have a [**frontend interface**](../Design/Frontend.md) which is responsible for interacting with the user, receiving the commands, and translating them to the appropriate function in the Schema/Algebra layer. Most of this layer has already been implemented and provided to you. You will only need to make minor additions to this layer.
@@ -140,9 +140,9 @@ We also have a [**frontend interface**](../Design/Frontend.md) which is responsi
 
 Let's come back to the task of displaying the relations on the database.
 
-Since we want to handle the display of any number of relations, we need to be able to fetch the total number of relations on the disk. Where do we find this information? Recall that the header of each record block stores the number of entries in that block. Checking the header of the relation catalog block should give us this number. Once we have this value (let it be `N`), we can get the names of the relations by reading the records at the first `N` slots of the relation catalog block. We will be implementing a rudimentary version of the `getHeader()` and `getRecord()` function of the [Buffer Layer](../Design/Buffer%20Layer.md) to do these operations.
+Since we want to handle the display of any number of relations, we need to be able to fetch the total number of relations on the disk. Where do we find this information? Recall that the header of each record block stores the number of entries in that block. Checking the header of the relation catalog block should give us this number. Once we have this value (let it be `N`), we can get the names of the relations by reading the records at the first `N` slots of the relation catalog block. We will be implementing a rudimentary version of the `getHeader()` and `getRecord()` function of the [Buffer Layer](../Design/Buffer%20Layer/intro.md) to do these operations.
 
-A simplified class diagram with the functions we need to implement is shown below. The classes will eventually implement a lot of functionality of the [Buffer Layer](../Design/Buffer%20Layer.md). In this section, we will only implement a subset of the methods of [BlockBuffer](../Design/Buffer%20Layer.md#class-blockbuffer) and [RecBuffer](../Design/Buffer%20Layer.md#class-recbuffer) classes.
+A simplified class diagram with the functions we need to implement is shown below. The classes will eventually implement a lot of functionality of the [Buffer Layer](../Design/Buffer%20Layer/intro.md). In this section, we will only implement a subset of the methods of [BlockBuffer](../Design/Buffer%20Layer/BlockBuffer.md) and [RecBuffer](../Design/Buffer%20Layer/RecBuffer.md) classes.
 
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
@@ -168,7 +168,7 @@ classDiagram
 
 We have two classes, `BlockBuffer` and `RecBuffer`. An object of either of those classes allows us to work with a particular disk block (stored in the `blockNum` member field). The `BlockBuffer` class implements the common operations available to all disk blocks. The `RecBuffer` class extends `BlockBuffer` to add functionality specific to a record block. We will implement the `BlockBuffer::getHeader()` and `RecBuffer::getRecord()` functions using the disk read and write operations that we covered in the previous stage. **Note that these functions will assume that memory for its arguments has been already allocated by the calling function.**
 
-We will also be making use of two data structures for representing the data. **Read the documentation for [struct HeadInfo](../Design/Buffer%20Layer.md#headinfo) and [union Attribute](../Design/Buffer%20Layer.md#attribute) before proceeding further.**
+We will also be making use of two data structures for representing the data. **Read the documentation for [struct HeadInfo](../Design/Buffer%20Layer/intro.md#headinfo) and [union Attribute](../Design/Buffer%20Layer/intro.md#attribute) before proceeding further.**
 
 :::info NOTE
 All commonly used values have already been defined as [constants](/constants) and can be used throughout your implementation.

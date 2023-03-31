@@ -83,7 +83,7 @@ sequenceDiagram
 
 A class diagram showing the methods relevant to this functionality in the [Cache Layer](../Design/Cache%20Layer.md) and [Schema Layer](../Design/Schema%20Layer.md) is shown below.
 
-> Note that we will be using functions from the [Buffer Layer](../Design/Buffer%20Layer.md) and the `linearSearch` function from the [Block Access Layer](../Design/Block%20Access%20Layer.md) that was already implemented by you in the earlier stages. However, these functions do not require any modification at this stage. Hence, their class diagrams are not included below.
+> Note that we will be using functions from the [Buffer Layer](../Design/Buffer%20Layer/intro.md) and the `linearSearch` function from the [Block Access Layer](../Design/Block%20Access%20Layer.md) that was already implemented by you in the earlier stages. However, these functions do not require any modification at this stage. Hence, their class diagrams are not included below.
 
 **Schema Layer**
 

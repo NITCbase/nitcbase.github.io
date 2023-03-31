@@ -23,11 +23,11 @@ This far, we've covered a lot of the functionality of NITCbase involving reading
 
 ### Block Replacement
 
-In our implementation so far, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that in the [Buffer Layer](../Design/Buffer%20Layer.md), [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block? We will obviously have to reuse an existing slot to load in our new block.
+In our implementation so far, every time we want to access a block, we load it into a buffer and then do all our read operations from that. Recall that in the [Buffer Layer](../Design/Buffer%20Layer/intro.md), [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) allows us to buffer `BUFFER_CAPACITY`(=32) blocks at any given time. What if we want to read from a new block? We will obviously have to reuse an existing slot to load in our new block.
 
-NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)>) to decide on the block that will be replaced. Each entry in the buffer has a corresponding [`timestamp` field](../Design/Buffer%20Layer.md#buffer-structure) which keeps track of how long it has been since the disk block buffered in that particular location has been used. When a position needs to be freed up, the disk block with the highest timestamp is chosen and changes, if any, are written back to the disk.
+NITCbase uses the [LRU(least recently used) algorithm](<https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)>) to decide on the block that will be replaced. Each entry in the buffer has a corresponding [`timestamp` field](../Design/Buffer%20Layer/intro.md#buffer-structure) which keeps track of how long it has been since the disk block buffered in that particular location has been used. When a position needs to be freed up, the disk block with the highest timestamp is chosen and changes, if any, are written back to the disk.
 
-Each entry in the buffer also has a corresponding [`dirty` field](../Design/Buffer%20Layer.md#buffer-structure) which is a boolean value storing if the values in that buffer entry have been updated since they were loaded from the disk block. If the dirty bit is set for an entry, we will write it back to the disk when the entry is replaced in the buffer or at system exit.
+Each entry in the buffer also has a corresponding [`dirty` field](../Design/Buffer%20Layer/intro.md#buffer-structure) which is a boolean value storing if the values in that buffer entry have been updated since they were loaded from the disk block. If the dirty bit is set for an entry, we will write it back to the disk when the entry is replaced in the buffer or at system exit.
 
 ## Implementation
 
@@ -79,7 +79,7 @@ sequenceDiagram
 
 <br/>
 
-A class diagram showing the methods relevant to this functionality in the [Schema Layer](../Design/Schema%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Buffer Layer](../Design/Buffer%20Layer.md) is shown below.
+A class diagram showing the methods relevant to this functionality in the [Schema Layer](../Design/Schema%20Layer.md), [Block Access Layer](../Design/Block%20Access%20Layer.md) and [Buffer Layer](../Design/Buffer%20Layer/intro.md) is shown below.
 
 ```mermaid
 classDiagram
@@ -179,7 +179,7 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-Now, the only functionality we have left to implement is in the [Buffer Layer](../Design/Buffer%20Layer.md). In the [StaticBuffer class](../Design/Buffer%20Layer.md#class-staticbuffer), we update the `StaticBuffer::getFreeBuffer()` function to implement our block replacement algorithm if there are no free slots in the buffer. We also modify the constructor and destructor to work with the changes we discussed and implement `StaticBuffer::setDirtyBit()`.
+Now, the only functionality we have left to implement is in the [Buffer Layer](../Design/Buffer%20Layer/intro.md). In the [StaticBuffer class](../Design/Buffer%20Layer/StaticBuffer.md), we update the `StaticBuffer::getFreeBuffer()` function to implement our block replacement algorithm if there are no free slots in the buffer. We also modify the constructor and destructor to work with the changes we discussed and implement `StaticBuffer::setDirtyBit()`.
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>
@@ -207,20 +207,20 @@ StaticBuffer::~StaticBuffer() {
 
 > **TASK**: Implement the following functions looking at their respective design docs
 >
-> - [`StaticBuffer::getFreeBuffer()`](../Design/Buffer%20Layer.md#staticbuffer--getfreebuffer)
-> - [`StaticBuffer::setDirtyBit()`](../Design/Buffer%20Layer.md#staticbuffer--setdirtybit)
+> - [`StaticBuffer::getFreeBuffer()`](../Design/Buffer%20Layer/StaticBuffer.md#staticbuffer--getfreebuffer)
+> - [`StaticBuffer::setDirtyBit()`](../Design/Buffer%20Layer/StaticBuffer.md#staticbuffer--setdirtybit)
 
 </details>
 
-In the [RecBuffer class](../Design/Buffer%20Layer.md#class-recbuffer), we modify the `BlockBuffer::loadBlockAndGetBufferPtr()` function to increment the `timestamp` field for the buffer blocks and call the `StaticBuffer::getFreeBuffer()` function to allocate a free buffer if required. We also implement the `RecBuffer::setRecord()` function which is used to update the value of a record at a particular slot in the disk block.
+In the [RecBuffer class](../Design/Buffer%20Layer/RecBuffer.md), we modify the `BlockBuffer::loadBlockAndGetBufferPtr()` function to increment the `timestamp` field for the buffer blocks and call the `StaticBuffer::getFreeBuffer()` function to allocate a free buffer if required. We also implement the `RecBuffer::setRecord()` function which is used to update the value of a record at a particular slot in the disk block.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
 Implement the following functions looking at their respective design docs
 
-- [`BlockBuffer::loadBlockAndGetBufferPtr()`](../Design/Buffer%20Layer.md#blockbuffer--loadblockandgetbufferptr)
-- [`RecBuffer::setRecord()`](../Design/Buffer%20Layer.md#recbuffer--setrecord)
+- [`BlockBuffer::loadBlockAndGetBufferPtr()`](../Design/Buffer%20Layer/BlockBuffer.md#blockbuffer--loadblockandgetbufferptr)
+- [`RecBuffer::setRecord()`](../Design/Buffer%20Layer/RecBuffer.md#recbuffer--setrecord)
 
 </details>
 

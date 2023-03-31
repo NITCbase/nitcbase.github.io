@@ -25,13 +25,13 @@ We have seen record blocks, the way they are represented on the NITCbase disk, a
 
 ## Disk Buffer
 
-Following the [principle of locality](https://en.wikipedia.org/wiki/Locality_of_reference), NITCbase buffers all the disk i/o operations. We will be pre-allocating memory for holding 32 disk blocks in memory at a given time. Whenever a disk block is accessed for the first time, it will be loaded into the buffer. All subsequent operations on that block will be done on that buffer until that disk block is swapped out by a more recently required disk block. All the changes done to the buffer will be commited back to the disk at that point. This functionality is implemented as part of the [Buffer Layer](../Design/Buffer%20Layer.md) of NITCbase.
+Following the [principle of locality](https://en.wikipedia.org/wiki/Locality_of_reference), NITCbase buffers all the disk i/o operations. We will be pre-allocating memory for holding 32 disk blocks in memory at a given time. Whenever a disk block is accessed for the first time, it will be loaded into the buffer. All subsequent operations on that block will be done on that buffer until that disk block is swapped out by a more recently required disk block. All the changes done to the buffer will be commited back to the disk at that point. This functionality is implemented as part of the [Buffer Layer](../Design/Buffer%20Layer/intro.md) of NITCbase.
 
 However, in the present stage, we will not be implementing the write-back functionality. Here, we will modify our disk read operations to work from a buffer instead of the disk directly. This allows all subsequent read operations to be much quicker than repeatedly reading from the disk.
 
 ### Using the disk buffer
 
-The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) class. This class declares a static two dimensional array **`unsigned char blocks[][]`** of size [BUFFER_CAPACITY](/constants) × [BLOCK_SIZE](/constants) (= 32 × 2048). The methods relevant to adding this functionality are shown in the class diagram below.
+The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) class. This class declares a static two dimensional array **`unsigned char blocks[][]`** of size [BUFFER_CAPACITY](/constants) × [BLOCK_SIZE](/constants) (= 32 × 2048). The methods relevant to adding this functionality are shown in the class diagram below.
 
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
@@ -136,7 +136,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr) {
 
 </details>
 
-Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer.md#buffer-structure) which is used to store the metadata of the 32 (=[BUFFER_CAPACITY](/constants)) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a buffer block is free or if it is storing a particular disk block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
+Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer/intro.md#buffer-structure) which is used to store the metadata of the 32 (=[BUFFER_CAPACITY](/constants)) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a buffer block is free or if it is storing a particular disk block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>
@@ -286,11 +286,11 @@ sequenceDiagram
 <br/>
 
 :::note A NOTE ABOUT STATIC CLASSES
-A class is called static if all its member fields and functions are declared static. In the case of such classes, memory is allocated [statically](https://en.wikipedia.org/wiki/Static_variable). Generally, static classes arise when only one instance of the class is required during run time. [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable), [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) are examples of static classes.
+A class is called static if all its member fields and functions are declared static. In the case of such classes, memory is allocated [statically](https://en.wikipedia.org/wiki/Static_variable). Generally, static classes arise when only one instance of the class is required during run time. [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable), [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of static classes.
 
 Generally, there is no need to create an instance of a static class (by defining a variable of the class) as the declaration of the class itself fixes the storage and access to the members and methods of the class.
 
-However, there is one exception to this rule. The exception arises when we wish to run a constructor and destructor for the class for initialization. In such cases, an instance of the class needs to be declared. [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer.md#class-staticbuffer) are examples of classes that require such instantiation. On the other hand, [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) require no initializer code to run and hence, no instance variables are declared.
+However, there is one exception to this rule. The exception arises when we wish to run a constructor and destructor for the class for initialization. In such cases, an instance of the class needs to be declared. [OpenRelTable](../Design/Cache%20Layer.md#class-openreltable) and [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) are examples of classes that require such instantiation. On the other hand, [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable) and [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable) require no initializer code to run and hence, no instance variables are declared.
 
 Many of the classes encapsulating the implementation of higher layers of NITCbase are static classes that require no initializer code to run, and hence do not require instances to be created.
 
@@ -298,7 +298,7 @@ Many of the classes encapsulating the implementation of higher layers of NITCbas
 
 <br/>
 
-We'll start by implementing [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable). Here, we have two functions; `getRelCatEntry()` which is used to the get the [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) from the relation cache and `recordToRelCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer.md#attribute)) to a [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) struct. We also need to declare the static member field `relCache`.
+We'll start by implementing [RelCacheTable](../Design/Cache%20Layer.md#class-relcachetable). Here, we have two functions; `getRelCatEntry()` which is used to the get the [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) from the relation cache and `recordToRelCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to a [RelCatEntry](../Design/Cache%20Layer.md#relcatentry) struct. We also need to declare the static member field `relCache`.
 
 <details>
 <summary>Cache/RelCacheTable.cpp</summary>
@@ -347,7 +347,7 @@ void RelCacheTable::recordToRelCatEntry(union Attribute record[RELCAT_NO_ATTRS],
 
 </details>
 
-Similarly, in [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), we have a static member field `attrCache` and two functions; `getAttrCatEntry()` which is used to the get the [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) from the attribute cache and `recordToAttrCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer.md#attribute)) to an [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) struct. _Note that an attribute cache entry is a linked list_. The attribute cache is an array of linked lists.
+Similarly, in [AttrCacheTable](../Design/Cache%20Layer.md#class-attrcachetable), we have a static member field `attrCache` and two functions; `getAttrCatEntry()` which is used to the get the [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) from the attribute cache and `recordToAttrCatEntry()` which converts a record (array of [union Attribute](../Design/Buffer%20Layer/intro.md#attribute)) to an [AttrCatEntry](../Design/Cache%20Layer.md#attrcatentry) struct. _Note that an attribute cache entry is a linked list_. The attribute cache is an array of linked lists.
 
 <details>
 <summary>Cache/AttrCacheTable.cpp</summary>
