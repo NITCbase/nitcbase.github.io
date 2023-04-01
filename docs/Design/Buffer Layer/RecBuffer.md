@@ -113,10 +113,9 @@ int RecBuffer::getSlotMap(unsigned char *slotMap) {
 
     int numSlots = /* the number of slots in the block */;
 
-    // using offset range copy the slotmap of the block to the memory
-    // pointed by the argument.
-    // (hint: the slotmap starts at bufferPtr + HEADER_SIZE. copy the
-    //  `numSlots` values after that to `slotMap`)
+    // the slotmap starts at bufferPtr + HEADER_SIZE. Copy the contents of the
+    // slotmap in the buffer to the argument `slotMap`.
+    // Note that size of slotmap is `numSlots`
 
     // return SUCCESS
 }
@@ -158,10 +157,9 @@ int RecBuffer::setSlotMap(unsigned char *slotMap) {
 
     int numSlots = /* the number of slots in the block */;
 
-    // using offset range copy the slotmap of the block to the memory
-    // pointed by the argument.
-    // (hint: the slotmap starts at bufferPtr + HEADER_SIZE. copy the
-    //  `numSlots` values after that from `slotMap`)
+    // the slotmap starts at bufferPtr + HEADER_SIZE. Copy the contents of the
+    // argument `slotMap` to the buffer replacing the existing slotmap.
+    // Note that size of slotmap is `numSlots`
 
     // update dirty bit using StaticBuffer::setDirtyBit
     // if setDirtyBit failed, return the value returned by the call
@@ -220,9 +218,10 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
     // if slot corresponding to input slotNum is free return E_FREESLOT
 
     /* offset bufferPtr to point to the beginning of the record at required
-       slot. (hint: the block contains the header, the slotmap, and then all
-       the records.)
-       copy the record to `rec` using memcpy
+       slot. the block contains the header, the slotmap, followed by all
+       the records. so, for example,
+       record at slot x will be at bufferPtr + HEADER_SIZE + (x*recordSize)
+       copy the record from buffer to `rec` using memcpy
        (hint: a record will be of size ATTR_SIZE * numAttrs)
     */
 
@@ -278,9 +277,10 @@ int RecBuffer::setRecord(union Attribute *rec, int slotNum) {
     // if input slotNum is not in the permitted range return E_OUTOFBOUND.
 
     /* offset bufferPtr to point to the beginning of the record at required
-       slot. (hint: the block contains the header, the slotmap, and then all
-       the records.)
-       copy the record from `rec` using memcpy
+       slot. the block contains the header, the slotmap, followed by all
+       the records. so, for example,
+       record at slot x will be at bufferPtr + HEADER_SIZE + (x*recordSize)
+       copy the record from `rec` to buffer using memcpy
        (hint: a record will be of size ATTR_SIZE * numAttrs)
     */
 

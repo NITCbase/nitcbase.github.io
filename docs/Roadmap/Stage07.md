@@ -197,8 +197,8 @@ Now, we modify our `OpenRelTable::closeRel()` function to handle write-back for 
 ```cpp
 int OpenRelTable::closeRel(int relId) {
   // confirm that rel-id fits the following conditions
-  //     - 2 <=relId < MAX_OPEN
-  //     - does not correspond to a free slot
+  //     2 <=relId < MAX_OPEN
+  //     does not correspond to a free slot
   //  (you have done this already)
 
   /****** Releasing the Relation Cache entry of the relation ******/
@@ -228,7 +228,7 @@ int OpenRelTable::closeRel(int relId) {
 
   /****** Set the Open Relation Table entry of the relation as free ******/
 
-  // update `tableMetaInfo` to set `relId` as a free slot
+  // update `metainfo` to set `relId` as a free slot
 
   return SUCCESS;
 }
@@ -387,8 +387,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
     int blockNum = /* first record block of the relation (from the rel-cat entry)*/;
 
-    // let rec_id denote the rec-id of the slot
-    // this will be used to store where the new record will be inserted
+    // rec_id will be used to store where the new record will be inserted
     RecId rec_id = {-1, -1};
 
     int numOfSlots = /* number of slots per record block */;
@@ -414,7 +413,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
            SLOT_OCCUPIED if slot is occupied) */
 
         /* if a free slot is found, set rec_id and discontinue the traversal
-           of the linked list of record blocks */
+           of the linked list of record blocks (break from the loop) */
 
         /* otherwise, continue to check the next block by updating the
            block numbers as follows:
@@ -446,7 +445,8 @@ int BlockAccess::insert(int relId, Attribute *record) {
             set the block's header as follows:
             blockType: REC, pblock: -1
             lblock
-                  = -1 (if linked list of existing record blocks was empty)
+                  = -1 (if linked list of existing record blocks was empty
+                         i.e this is the first insertion into the relation)
                   = prevBlockNum (otherwise),
             rblock: -1, numEntries: 0,
             numSlots: numOfSlots, numAttrs: numOfAttributes
@@ -461,34 +461,36 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
         // if prevBlockNum != -1
         {
-            // create a RecBuffer object for prevBlockNum(use constructor for existing block)
-            // get the header of the block prevBlockNum
-            // update the rblock field of the header to the new block number(i.e. rec_id.block)
+            // create a RecBuffer object for prevBlockNum
+            // get the header of the block prevBlockNum and
+            // update the rblock field of the header to the new block
+            // number i.e. rec_id.block
             // (use BlockBuffer::setHeader() function)
         }
         // else
         {
-            // update first block field in the relation catalog entry to the new block
-            // (use RelCacheTable::setRelCatEntry() function of Cache Layer)
+            // update first block field in the relation catalog entry to the
+            // new block (using RelCacheTable::setRelCatEntry() function)
         }
 
-        // update last block field in the relation catalog entry to the new block
-        // (use RelCacheTable::setRelCatEntry() function of Cache Layer)
+        // update last block field in the relation catalog entry to the
+        // new block (using RelCacheTable::setRelCatEntry() function)
     }
 
-    // create a RecBuffer object for rec_id.block(use constructor for existing block)
-    // insert the record into rec_id'th slot by calling RecBuffer::setRecord() function)
+    // create a RecBuffer object for rec_id.block
+    // insert the record into rec_id'th slot using RecBuffer.setRecord())
 
     /* update the slot map of the block by marking entry of the slot to
        which record was inserted as occupied) */
     // (ie store SLOT_OCCUPIED in free_slot'th entry of slot map)
     // (use RecBuffer::getSlotMap() and RecBuffer::setSlotMap() functions)
 
-    // increment the num_entries field in the header of the block (to which record was inserted)
+    // increment the numEntries field in the header of the block to
+    // which record was inserted
     // (use BlockBuffer::getHeader() and BlockBuffer::setHeader() functions)
 
-    // Increment the number of records field in the relation cache entry for the relation.
-    // (use RelCacheTable::setRelCatEntry function)
+    // Increment the number of records field in the relation cache entry for
+    // the relation. (use RelCacheTable::setRelCatEntry function)
 
     return SUCCESS;
 }
@@ -525,7 +527,7 @@ Then, verify the insertion using the [SELECT](../User%20Interface%20Commands/dml
 
 ```sql
 SELECT * FROM Locations INTO null WHERE capacity>0;
-CLOSE TABLE Locations;
+CLOSE TABLE Locations;      # required to update the relation catalog
 SELECT * FROM RELATIONCAT INTO null WHERE RelName=Locations;
 ```
 

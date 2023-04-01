@@ -112,7 +112,7 @@ BlockBuffer::BlockBuffer(int blockNum){
 
 #### Description
 
-Returns the block number of the block.
+Returns the block number of the block. Defined to access the private member field `blockNum` of the class.
 
 #### Arguments
 
