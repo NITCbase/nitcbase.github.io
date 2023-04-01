@@ -7,7 +7,7 @@ title: "Stage 8 : Creating and Deleting Relations"
 :::note Learning Objectives
 
 - Implement the creation of relations by inserting records into the catalogs
-- Implement the deletion of relations and the subsequent freeing of blocks
+- Implement the deletion of relations and freeing of the disk storage structures associated to the relation
 
 :::
 
@@ -15,9 +15,9 @@ title: "Stage 8 : Creating and Deleting Relations"
 
 In previous stages, we had implemented the insertion of records into existing relations. In this stage, we will implement the functionality to create and delete relations in NITCbase.
 
-Creating a relation, in essence, involves inserting records into the relation and attribute catalog specifying the details of the relation and its attributes. This functionality is implemented in the [Schema Layer](../Design/Schema%20Layer.md) and the [Block Access Layer](../Design/Block%20Access%20Layer.md) and is called using the [CREATE TABLE](../User%20Interface%20Commands/ddl.md#create-table) command.
+Creating a relation, in essence, involves inserting records into the relation catalog and the attribute catalog specifying the details of the relation and its attributes. This functionality is implemented in the [Schema Layer](../Design/Schema%20Layer.md) and the [Block Access Layer](../Design/Block%20Access%20Layer.md), and is called using the [CREATE TABLE](../User%20Interface%20Commands/ddl.md#create-table) command.
 
-Deleting a relation is done using the [DROP TABLE](../User%20Interface%20Commands/ddl.md#drop-table) command. This process involves freeing all the blocks used to store the record of the relation and removing all the records corresponding to the relation from the catalogs. Note that NITCbase does not allow you to delete individual records from a relation, only a relation as a whole.
+Deleting a relation is done using the [DROP TABLE](../User%20Interface%20Commands/ddl.md#drop-table) command. This process involves freeing all the blocks used to store the record of the relation and removing all the records corresponding to the relation from the catalogs. Note that NITCbase only allows you to delete a relation as a whole and does not allow the deletion of individual records from a relation.
 
 ## Implementation
 
@@ -229,7 +229,9 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md)
 
-The `Schema::createRel()` function checks for duplicate relation and attribute names and inserts the records into the catalogs using `BlockAccess:insert()`. The `Schema::deleteRel()` function confirms that the relation is closed and then calls the `BlockAccess::deleteRelation()` function to delete the relation (we will implement this function later in this stage).
+The `Schema::createRel()` function is used to create a relation. Creating a relation involves adding the relevant records to the relation catalog and the attribute catalog (using `BlockAccess::insert()`). Before this can be done, the user input will need to be verified to ensure that there are no existing relations with the same name. Additionally, it will also need to be verified that the new relation does not contain duplicate attribute names.
+
+The `Schema::deleteRel()` is used to delete a relation. NITCbase requires that a relation be closed before it is deleted. This is to avoid inconsistencies between the buffer and the disk. Deleting a relation is done with a call to the `BlockAccess::deleteRelation()` function (we will implement this function later in this stage).
 
 <details>
 <summary>Schema/Schema.cpp</summary>
@@ -241,7 +243,9 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-The creation/deletion of a relation modifies the `numRecords` entry in the relation cache for the relation and attribute catalog. In the previous stage, we had implemented write-back for a cache entry on closing of the relation. In this stage, we update the destructor of the [class OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md) to handle the write-back for the relation.
+Recall that every open relation has an entry in the relation cache. If any update to the cache entries for a relation are made, these must be committed back to the disk. Normally, such write-back is performed when the relation is closed. Hence, in the previous stages, we implemented the write-back operations in the `OpenRelTable::closeRel()` function.
+
+However, in the present stage, when we create a new relation, the relation cache entries for the relation catalog and attribute catalog will be modified (the `numRecords` field will be incremented). Since these catalogs are never opened or closed, the relation cache write-back cannot happen inside `OpenReltable::closeRel()`. Instead, the relation cache write-back for the relation catalog and the attirbute catalog is peformed when the destructor for the `OpenRelTable` class is executed during system shutdown. (Recall that the cache entries for relation catalog and attribute catalog were set up during system initialization, when the constructor for `OpenRelTable` executes).
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>

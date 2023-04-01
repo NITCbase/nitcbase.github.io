@@ -49,7 +49,7 @@ public:
 
 #### Description
 
-This method creates a new relation with the name, attribute/column list as specified in arguments.
+This method creates a new relation with the name, attribute/column list as specified in arguments. Verifying the maximum number of attributes in a relation is to be checked by the caller of this function (Frontend Interface) and is not handled by this function.
 
 #### Arguments
 
@@ -66,7 +66,7 @@ This method creates a new relation with the name, attribute/column list as speci
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/constants)         | On successful creation of the relation                         |
 | [`E_RELEXIST`](/constants)      | If the relation with name relName already exists.              |
-| [`E_DUPLICATEATTR`](/constants) | If two any two of the given attributes have same name.         |
+| [`E_DUPLICATEATTR`](/constants) | If two of any two of the given attributes have same name.      |
 | [`E_DISKFULL`](/constants)      | If disk space is not sufficient for creating the new relation. |
 
 #### Algorithm
@@ -74,16 +74,16 @@ This method creates a new relation with the name, attribute/column list as speci
 ```cpp
 int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[]){
 
-    // let relNameAsAttribute be of type Attribute
+    // declare variable relNameAsAttribute of type Attribute
     // copy the relName into relNameAsAttribute.sVal
 
-    // let targetRelId be of type recId
+    // declare a variable targetRelId of type RecId
 
     /*
         Reset the searchIndex using RelCacheTable::resetSearhIndex()
-        Search the relation RELCAT(relId RELCAT_RELID,which is equal to 0)
+        Search the relation catalog (relId given by the constant RELCAT_RELID)
         for attribute value attribute "RelName" = relNameAsAttribute using
-        search() of Block Access Layer with OP = EQ
+        BlockAccess::search() with OP = EQ
         Let the return value of search be retVal
     */
 
@@ -94,8 +94,9 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
     // if any attribute names have same string value,
     //     return E_DUPLICATEATTR (i.e 2 attributes have same value)
 
-    /* relCatRecord is the new record corresponding to the new relation which
-       will be inserted into relation catalog */
+    /* declare relCatRecord of type Attribute which will be used to store the
+       record corresponding to the new relation which will be inserted
+       into relation catalog */
     Attribute relCatRecord[RELCAT_NO_ATTRS];
     // fill relCatRecord fields as given below
     // offset RELCAT_REL_NAME_INDEX: relName
@@ -104,14 +105,16 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
     // offset RELCAT_FIRST_BLOCK_INDEX: -1
     // offset RELCAT_LAST_BLOCK_INDEX: -1
     // offset RELCAT_NO_SLOTS_PER_BLOCK_INDEX: floor((2016 / (16 * nAttrs + 1)))
+    // (number of slots is calculated as specified in the physical layer docs)
 
     // retVal = BlockAccess::insert(RELCAT_RELID(=0), relCatRecord);
     // if BlockAccess::insert fails return retVal
+    // (this call could fail if there is no more space in the relation catalog)
 
     // iterate through 0 to numOfAttributes - 1 :
     {
-        /* let Attribute attrCatRecord[6] be the record in attribute
-           catalog corresponding to i'th Attribute) */
+        /* declare Attribute attrCatRecord[6] to store the attribute catalog
+           record corresponding to i'th attribute of the argument passed*/
         // (where i is the iterator of the loop)
         // fill attrCatRecord fields as given below
         // offset ATTRCAT_REL_NAME_INDEX: relName
@@ -122,9 +125,11 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
         // offset ATTRCAT_OFFSET_INDEX: i
 
         // retVal = BlockAccess::insert(ATTRCAT_RELID(=1), attrCatRecord);
-        /* if insert fails:
-            delete the relation by calling deleteRel(targetrel) of schema layer
-            return E_DISKFULL
+        /* if attribute catalog insert fails:
+             delete the relation by calling deleteRel(targetrel) of schema layer
+             return E_DISKFULL
+             // (this is necessary because we had already created the
+             //  relation catalog entry which needs to be removed)
         */
     }
 
