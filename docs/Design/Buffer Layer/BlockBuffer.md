@@ -163,15 +163,18 @@ Nil
 int BlockBuffer::getHeader(struct HeadInfo *head){
 
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer to get the headInfo
+    // cast bufferPtr to type HeadInfo*
+    struct HeadInfo *bufferHeader = (struct HeadInfo *)bufferPtr;
 
-    // copy the header of block to the memory location pointed to by the argument head.
-        // not copying reserved
+    // copy all the values except reserved in the header (from bufferHeader)
+    // to the argument `head`
+    // (hint: head->numEntries = bufferHeader->numEntries)
 
     // return SUCCESS
 }
@@ -213,13 +216,14 @@ int BlockBuffer::setHeader(struct HeadInfo *head){
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate
-    // struct pointer to get the headInfo
+    // cast bufferPtr to type HeadInfo*
+    struct HeadInfo *bufferHeader = (struct HeadInfo *)bufferPtr;
 
-    // copy the fields of the HeadInfo pointed to by head to the header of block.
-    // not copying reserved
+    // copy the fields of the HeadInfo pointed to by head (except reserved) to
+    // the header of the block (pointed to by bufferHeader)
+    //(hint: bufferHeader->numSlots = head->numSlots )
 
-    // update dirty bit by calling appropriate method of StaticBuffer class.
+    // update dirty bit by calling StaticBuffer::setDirtyBit()
     // if setDirtyBit() failed, return the error code
 
     // return SUCCESS;
@@ -348,22 +352,22 @@ Returns the block number of a free block. It sets up the header of the block wit
 ```cpp
 int BlockBuffer::getFreeBlock(int blockType){
 
-    //iterate through the StaticBuffer::blockAllocMap and find the block number
+    // iterate through the StaticBuffer::blockAllocMap and find the block number
     // of a free block in the disk.
 
-    //if no block is free, return E_DISKFULL.
+    // if no block is free, return E_DISKFULL.
 
-    //set the object's blockNum to the block number of the free block.
+    // set the object's blockNum to the block number of the free block.
 
-    //find a free buffer using StaticBuffer::getFreeBuffer() .
+    // find a free buffer using StaticBuffer::getFreeBuffer() .
 
-    //initialize the header of the block passing a struct HeadInfo with values
-    //pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0 and numSlots: 0
-    //to the setHeader() function.
+    // initialize the header of the block passing a struct HeadInfo with values
+    // pblock: -1, lblock: -1, rblock: -1, numEntries: 0, numAttrs: 0, numSlots: 0
+    // to the setHeader() function.
 
-    //update the block type of the block to the input block type using setBlockType().
+    // update the block type of the block to the input block type using setBlockType().
 
-    //return block number of the free block.
+    // return block number of the free block.
 
 }
 ```
@@ -390,16 +394,20 @@ Nil
 int BlockBuffer::setBlockType(int blockType){
 
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
     // store the input block type in the first 4 bytes of the buffer.
+    // (hint: cast bufferPtr to int32_t* and then assign it)
+    // *((int32_t *)bufferPtr) = blockType;
 
-    // update the StaticBuffer::blockAllocMap entry corresponding to the object's block number.
+    // update the StaticBuffer::blockAllocMap entry corresponding to the
+    // object's block number to `blockType`.
 
-    // update dirty bit by calling appropriate method of StaticBuffer class.
+    // update dirty bit by calling StaticBuffer::setDirtyBit()
     // if setDirtyBit() failed
         // return the returned value from the call
 

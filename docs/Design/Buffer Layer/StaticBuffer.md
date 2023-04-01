@@ -104,9 +104,8 @@ Nil
 StaticBuffer::~StaticBuffer(){
     // copy blockAllocMap to Block Allocation Map blocks in the disk using Disk::writeBlock().
 
-    /*iterate through all the metaInfo entries,
-        write back buffer blocks with meta-info as free:false,dirty:true using Disk::writeBlock().*/
-
+    /* iterate through all the metaInfo entries,
+      write back buffer blocks with meta-info as free:false,dirty:true using Disk::writeBlock().*/
 }
 ```
 
@@ -172,17 +171,18 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 ```cpp
 int StaticBuffer::setDirtyBit(int blockNum){
-    //find the buffer index corresponding to the block using the getBufferNum().
+    // find the buffer index corresponding to the block using getBufferNum().
 
     // if block is not present in the buffer (bufferNum = E_BLOCKNOTINBUFFER)
     //     return E_BLOCKNOTINBUFFER
-    // else if blockNum is out of bound (bufferNum = E_OUTOFBOUND)
+
+    // if blockNum is out of bound (bufferNum = E_OUTOFBOUND)
     //     return E_OUTOFBOUND
-    //
+
     // else
     //     (the bufferNum is valid)
-    //     set the dirty bit of that buffer in the metaInfo to true.
-    //
+    //     set the dirty bit of that buffer to true in metainfo
+
     // return SUCCESS
 }
 ```
@@ -214,10 +214,10 @@ int StaticBuffer::getBufferNum(int blockNum){
     // Check if blockNum is valid (non zero and less than number of disk blocks)
     // and return E_OUTOFBOUND if not valid.
 
-    //traverse through the metaInfo array &
+    // traverse through the metaInfo array and
     //	find the buffer number of the buffer to which the block is loaded.
 
-    //if found return buffer number
+    // if found return buffer number
 
     // if block not found in buffer return E_BLOCKNOTINBUFFER
 
@@ -265,7 +265,9 @@ int StaticBuffer::getFreeBuffer(int blockNum){
     // let bufferNum be used to store the buffer number of the free/freed buffer.
     int bufferNum;
 
-    // if a free buffer is available, bufferNum is the index of that free buffer.
+    // iterate through metainfo and check if there is any buffer free
+
+    // if a free buffer is available, set bufferNum = index of that free buffer.
 
     // if a free buffer is not available,
     //     find the buffer with the largest timestamp
@@ -273,7 +275,7 @@ int StaticBuffer::getFreeBuffer(int blockNum){
     //     set bufferNum = index of this buffer
 
     // update the metaInfo entry corresponding to bufferNum with
-    // free:false, dirty:false, blockNum:the input block number and timeStamp:0.
+    // free:false, dirty:false, blockNum:the input block number, timeStamp:0.
 
     // return the bufferNum.
 }

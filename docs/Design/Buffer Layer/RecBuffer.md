@@ -72,7 +72,7 @@ If a new record block is to be allocated in the disk use [constructor 1](#recbuf
 
 ```cpp
 RecBuffer::RecBuffer(int blockNum) : BlockBuffer(blockNum){}
-//this is the way to call parent non-default constructor.
+//call parent non-default constructor with blockNum
 ```
 
 ### RecBuffer :: getSlotMap()
@@ -103,16 +103,20 @@ Nil
 ```cpp
 int RecBuffer::getSlotMap(unsigned char *slotMap) {
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block using
+       loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer
+    // get the header of the block using the getHeader() function
 
-    // get the number of slots in the block.
+    int numSlots = /* the number of slots in the block */;
 
-    // using offset range copy the slotmap of the block to the memory pointed by the argument.
+    // using offset range copy the slotmap of the block to the memory
+    // pointed by the argument.
+    // (hint: the slotmap starts at bufferPtr + HEADER_SIZE. copy the
+    //  `numSlots` values after that to `slotMap`)
 
     // return SUCCESS
 }
@@ -152,12 +156,14 @@ int RecBuffer::setSlotMap(unsigned char *slotMap) {
 
     // get the header of the block using the getHeader() function
 
-    // get the number of slots in the block.
+    int numSlots = /* the number of slots in the block */;
 
-    // using offset range copy the slotmap from the memory pointed
-    // by the argument to that of the block.
+    // using offset range copy the slotmap of the block to the memory
+    // pointed by the argument.
+    // (hint: the slotmap starts at bufferPtr + HEADER_SIZE. copy the
+    //  `numSlots` values after that from `slotMap`)
 
-    // update dirty bit.
+    // update dirty bit using StaticBuffer::setDirtyBit
     // if setDirtyBit failed, return the value returned by the call
 
     // return SUCCESS
@@ -197,12 +203,13 @@ Gives the slotNumth record entry of the block.
 ```cpp
 int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // Use type casting here to cast the returned pointer type to the appropriate struct pointer to access headInfo
+    // get the header using the getHeader() function
 
     // get number of attributes in the block.
 
@@ -212,7 +219,12 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
 
     // if slot corresponding to input slotNum is free return E_FREESLOT
 
-    // using offset range copy slotNumth record to the memory pointed by rec.
+    /* offset bufferPtr to point to the beginning of the record at required
+       slot. (hint: the block contains the header, the slotmap, and then all
+       the records.)
+       copy the record to `rec` using memcpy
+       (hint: a record will be of size ATTR_SIZE * numAttrs)
+    */
 
     // return SUCCESS
 
@@ -265,8 +277,12 @@ int RecBuffer::setRecord(union Attribute *rec, int slotNum) {
 
     // if input slotNum is not in the permitted range return E_OUTOFBOUND.
 
-    /* using offset range copy contents of the memory pointed
-       by rec to slotNumth record. */
+    /* offset bufferPtr to point to the beginning of the record at required
+       slot. (hint: the block contains the header, the slotmap, and then all
+       the records.)
+       copy the record from `rec` using memcpy
+       (hint: a record will be of size ATTR_SIZE * numAttrs)
+    */
 
     // update dirty bit using setDirtyBit()
 
