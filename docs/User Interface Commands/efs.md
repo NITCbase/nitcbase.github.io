@@ -3,13 +3,13 @@ sidebar_position: 4
 title: "XFS Commands"
 ---
 
-The XFS commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the NITCbase disk to a UNIX file. These commands are only available for the XFS Interface. The following are the XFS commands supported by NITCBase.
+The XFS commands are used to format the disk, dump disk data structures like Block Allocation Map, Relation Catalog and Attribute Catalog, load / remove relations, list relations and copy the records of a relation on the NITCbase disk to a UNIX file. These commands are only available for the XFS Interface. The following are the XFS commands supported by NITCbase.
 
 ### Format Disk
 
 #### Description
 
-This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCBase. The disk is simulated on a binary file called `disk` which is located at `Disk/` once it is created.
+This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCbase. The disk is simulated on a binary file called `disk` which is located at `Disk/` once it is created.
 
 :::note Important Details
 

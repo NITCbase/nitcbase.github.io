@@ -34,7 +34,7 @@ The number of the allocated block will be stored in the private data field `bloc
 
 Recall that we have already completed the implementation of `RecBuffer::Constructor2` and `BlockBuffer::Constructor2` in the previous stages. If a record block was already allocated to a relation using `RecBuffer::Constructor1` in the past, then `RecBuffer::Constructor2` is used for the subseqent access of the block. This constructor, as already seen, involves loading the block from the disk to the buffer (if not already present) and updating the data structures in the [class StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md). Since the block number is already known in this case, it must be passed as an argument to the constructor. `RecBuffer::Constructor2` in turn invokes the parent class constructor `BlockBuffer::Constructor2`, passing the block number as an argument, for performing the required functionality.
 
-NITCBase requires that the `RecBuffer::Constructor1` be invoked only when **both the conditions** below hold true:
+NITCbase requires that the `RecBuffer::Constructor1` be invoked only when **both the conditions** below hold true:
 
 1. a record is added into a relation (or when a new relation is created, resulting in an insertion into the catalogs) <br/>
 2. none of its already allocated blocks (if any) have a free slot to store the inserted record, implying that insertion cannot be performed without allocating a new block.

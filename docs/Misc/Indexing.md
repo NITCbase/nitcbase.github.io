@@ -23,7 +23,7 @@ As index is a collection of attribute values and their corresponding record poin
 
 :::
 
-Each internal index block in NITCBase stores a maximum of **100** attribute values. Each of these values has an associated pair of left and right child pointers. Since the right child of one value is the same as the left child of the next value each internal index block stores 101 child pointers.<br/>
+Each internal index block in NITCbase stores a maximum of **100** attribute values. Each of these values has an associated pair of left and right child pointers. Since the right child of one value is the same as the left child of the next value each internal index block stores 101 child pointers.<br/>
 Each index stored in the leaf block is a 3-tuple occupying 32 bytes(attribute value-16 bytes, block number-4 bytes, slot number-4 bytes and 8 bytes of unused space). A leaf index block stores **63** entries.
 
 Let us understand indexing in NITCbase with an example.
@@ -54,7 +54,7 @@ $$
 
 To process our search query in the absence of an index, we need to fetch all the records from disk blocks one by one, and check if they satisfy our search condition _(`Attribute_2` > X)_. This implies that the number of disk accesses required to process a query in the absence of an index is **1000**.
 
-Suppose, an index is created on `Attribute_2` of this relation. In NITCBase, the maximum number of entries in an internal index block and leaf index block are 100 and 63 respectively. When an index block is full, it is split into two, i.e a new index block is allocated such that each of them is atleast half full. So, if there is more than one internal index block and leaf index block, the minimum number of entries in an internal index block and leaf index block are 50 and 32 respectively. We know that all the attribute values along with their record pointers appear in any of the leaf blocks. So the maximum number of leaf index blocks is:
+Suppose, an index is created on `Attribute_2` of this relation. In NITCbase, the maximum number of entries in an internal index block and leaf index block are 100 and 63 respectively. When an index block is full, it is split into two, i.e a new index block is allocated such that each of them is atleast half full. So, if there is more than one internal index block and leaf index block, the minimum number of entries in an internal index block and leaf index block are 50 and 32 respectively. We know that all the attribute values along with their record pointers appear in any of the leaf blocks. So the maximum number of leaf index blocks is:
 
 $$
 \#Leaf Index Blocks = \left \lceil \frac {12000} {32} \right \rceil = 375
@@ -80,7 +80,7 @@ Now, let us understand the creation of B+ Tree in NITCbase in detail, and Insert
 
 Going forward, we will be assuming simpler values than the actual sizes of NITCbase in the interest of easier understanding.
 
-We will be taking the size of a [record block](../Design/Physical%20Layer.md#record-block-structure) as 320 bytes analogous to the 2048 bytes in NITCBase. Therefore, keeping all other factors the same, the number of slots per block would be 4.
+We will be taking the size of a [record block](../Design/Physical%20Layer.md#record-block-structure) as 320 bytes analogous to the 2048 bytes in NITCbase. Therefore, keeping all other factors the same, the number of slots per block would be 4.
 
 $$
 \#Slots = L = \left \lfloor \frac {320 - 32} {((16 * \#Attributes(K)) + 1)} \right \rfloor

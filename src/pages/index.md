@@ -39,18 +39,18 @@ Since NITCbase is a relational database, it supports execution of SQL-like queri
 
 ## What are you given
 
-This project assumes that you are working on a Unix/Linux system. The documentation specifies how the NITCBase RDBMS system can be implemented in C++ Language.
+This project assumes that you are working on a Unix/Linux system. The documentation specifies how the NITCbase RDBMS system can be implemented in C++ Language.
 The following are provided to you to get started on the project:
 
 1. **A complete implementation of a command line user interface called XFS-interface** that allows a user to _access the system’s simulated disk from the host_ (Linux/Unix environment) and allows operations such as
 
    - formatting the disk to the NITCbase file system format
    - transferring files to and from the host system to the NITCbase file system
-   - supporting standard NITCBase - [Data Definition language (DDL)](/docs/User%20Interface%20Commands/ddl) and [Data Manipulation language (DML)](/docs/User%20Interface%20Commands/dml) operations on the database file system and so on.
+   - supporting standard NITCbase - [Data Definition language (DDL)](/docs/User%20Interface%20Commands/ddl) and [Data Manipulation language (DML)](/docs/User%20Interface%20Commands/dml) operations on the database file system and so on.
 
    <br/>
 
-2. **A complete implementation of the Disk class**, implemented in `Disk.cpp`, that provides a bare minimum C++ programming interface to the NITCBase disk. The code for the methods `write()` & `read()` in this class, that allows for the transfer of one block of data between a C++ program and the disk, is given to you.
+2. **A complete implementation of the Disk class**, implemented in `Disk.cpp`, that provides a bare minimum C++ programming interface to the NITCbase disk. The code for the methods `write()` & `read()` in this class, that allows for the transfer of one block of data between a C++ program and the disk, is given to you.
 
 3. **Class definitions for various intermediate layers** of the database system are provided. These are
 

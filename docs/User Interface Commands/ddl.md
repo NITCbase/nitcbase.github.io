@@ -3,7 +3,7 @@ sidebar_position: 2
 title: "Data Definition Language Commands"
 ---
 
-The Data Definition Language(DDL) commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. DDL Commands are supported by both XFS Interface and Frontend Interface. The following are the DDL commands supported by NITCBase.
+The Data Definition Language(DDL) commands are used to define the database schema. They are used to create and delete relations, modify the structure of relations in the database and also create and delete indexes on the attributes of relations. DDL Commands are supported by both XFS Interface and Frontend Interface. The following are the DDL commands supported by NITCbase.
 
 ### CREATE TABLE
 
@@ -19,7 +19,7 @@ CREATE TABLE tablename(attr1_name attr1_type, attr2_name attr2_type, ... )
 
 :::info
 
-- In NITCBase, the **maximum size of an attribute is 16 bytes**.
+- In NITCbase, the **maximum size of an attribute is 16 bytes**.
 - Since relation names and attribute names are attributes themselves in the catalog structures, the table name and attribute names in the queries must only have a maximum of 15 characters.
 - If the length is greater than 16, **only the first 15 characters will be taken.**
 - All attribute names of the relation must be unique.
