@@ -26,14 +26,14 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      showgrid="false"
-     inkscape:zoom="4.4199744"
-     inkscape:cx="914.82429"
-     inkscape:cy="237.21857"
-     inkscape:window-width="1904"
-     inkscape:window-height="1032"
-     inkscape:window-x="5"
-     inkscape:window-y="37"
-     inkscape:window-maximized="0"
+     inkscape:zoom="0.78134847"
+     inkscape:cx="-10.23871"
+     inkscape:cy="553.53023"
+     inkscape:window-width="1914"
+     inkscape:window-height="1042"
+     inkscape:window-x="0"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
      inkscape:current-layer="g764" />
   <defs
      id="defs406">
@@ -768,30 +768,31 @@
        stroke="none"
        id="rect610" />
     <a
-       xlink:href="https://nitcbase.github.io/docs/Design/Schema%20Layer"
-       id="a618">
+       xlink:href="https://nitcbase.github.io/docs/Design/Algebra%20Layer"
+       id="a632"
+       transform="translate(-444.59567,2.0528106)">
       <rect
-         x="101"
-         y="502.25"
-         width="160"
+         x="536.01001"
+         y="500"
+         width="180"
          height="55.5"
          rx="8.3199997"
          ry="8.3199997"
          fill="#e7fbbe"
          stroke="#999999"
          stroke-width="2"
-         id="rect612" />
+         id="rect626" />
       <g
          fill="#4d4d4d"
          font-family="Helvetica"
          font-weight="bold"
          text-anchor="middle"
          font-size="16px"
-         id="g616">
+         id="g630">
         <text
-           x="180.5"
-           y="536.5"
-           id="text614">Schema Layer</text>
+           x="625.51001"
+           y="534.25"
+           id="text628">Algebra Layer</text>
       </g>
     </a>
     <rect
@@ -821,33 +822,6 @@
        fill="none"
        stroke="none"
        id="rect624" />
-    <a
-       xlink:href="https://nitcbase.github.io/docs/Design/Algebra%20Layer"
-       id="a632">
-      <rect
-         x="536.01001"
-         y="500"
-         width="180"
-         height="55.5"
-         rx="8.3199997"
-         ry="8.3199997"
-         fill="#e7fbbe"
-         stroke="#999999"
-         stroke-width="2"
-         id="rect626" />
-      <g
-         fill="#4d4d4d"
-         font-family="Helvetica"
-         font-weight="bold"
-         text-anchor="middle"
-         font-size="16px"
-         id="g630">
-        <text
-           x="625.51001"
-           y="534.25"
-           id="text628">Algebra Layer</text>
-      </g>
-    </a>
     <rect
        x="81"
        y="672.25"
@@ -949,6 +923,34 @@
        stroke-miterlimit="10"
        stroke-dasharray="3, 3"
        id="path660" />
+    <a
+       xlink:href="https://nitcbase.github.io/docs/Design/Schema%20Layer"
+       id="a618-3"
+       transform="translate(444.54978,-2.3195058)">
+      <rect
+         x="101"
+         y="502.25"
+         width="160"
+         height="55.5"
+         rx="8.3199997"
+         ry="8.3199997"
+         fill="#e7fbbe"
+         stroke="#999999"
+         stroke-width="2"
+         id="rect612-6" />
+      <g
+         fill="#4d4d4d"
+         font-family="Helvetica"
+         font-weight="bold"
+         text-anchor="middle"
+         font-size="16px"
+         id="g616-7">
+        <text
+           x="180.5"
+           y="536.5"
+           id="text614-5">Schema Layer</text>
+      </g>
+    </a>
     <path
        d="m 625.03,499.45 -14.51,-0.74 6.39,-11.32 z"
        fill="none"
