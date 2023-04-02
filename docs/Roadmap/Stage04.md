@@ -184,11 +184,11 @@ SELECT * FROM RelName INTO TargetName WHERE Attribute `op` value;
 
 There are other versions of the `SELECT` command which map to different handlers as shown below:
 
-| Frontend User Interface Command                                                         | Frontend Programming Interface Handler         |
-| --------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| `SELECT Attribute1,Attribute2 FROM RelName INTO TargetName WHERE Attribute `op` value;` | `Frontend::select_attrlist_from_where()`       |
-| `SELECT * FROM RelName INTO TargetName;`                                                | `Frontend::select_from_table()`                |
-| `SELECT Attribute1,Attribute2 FROM RelName INTO TargetName;`                            | `Frontend::select_attrlist_from_table_where()` |
+| Frontend User Interface Command                                                       | Frontend Programming Interface Handler         |
+| ------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| SELECT Attribute1,Attribute2 FROM RelName INTO TargetName WHERE Attribute `op` value; | `Frontend::select_attrlist_from_where()`       |
+| SELECT \* FROM RelName INTO TargetName;                                               | `Frontend::select_from_table()`                |
+| SELECT Attribute1,Attribute2 FROM RelName INTO TargetName;                            | `Frontend::select_attrlist_from_table_where()` |
 
 Since we have only implemented the `Frontend::select_from_table()` function, the other commands do not currently do anything.
 

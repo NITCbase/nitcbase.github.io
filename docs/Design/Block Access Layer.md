@@ -739,7 +739,7 @@ int BlockAccess::project(int relId, Attribute *record) {
     }
     else
     {
-        // (a project operation is already in progress)
+        // (a project/search operation is already in progress)
 
         // block = previous search index's block
         // slot = previous search index's slot + 1
