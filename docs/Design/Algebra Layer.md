@@ -287,43 +287,53 @@ This function creates a new target relation with list of attributes specified in
 
 ```cpp
 int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]) {
-    // get the srcRel's open relation id(let it be srcrelid), using getRelId() method of cache layer
+
+    int srcRelId = /*srcRel's rel-id (use OpenRelTable::getRelId() function)*/
+
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
-
-    // get RelCatEntry of srcRel using getRelCatEntry() of RelCacheTable in Cache layer
+    // get RelCatEntry of srcRel using RelCacheTable::getRelCatEntry()
 
     // get the no. of attributes present in relation from the fetched RelCatEntry.
 
+    // declare attr_offset[tar_nAttrs] an array of type int.
+    // where i-th entry will store the offset in a record of srcRel for the
+    // i-th attribute in the target relation.
 
-    // let attr_offset[tar_nAttrs] be an array of type int.
-    // where ith entry corresponds to the offset in the srcRel of ith attribute in the target relation.
     // let attr_types[tar_nAttrs] be an array of type int.
-    // where ith entry corresponds to the type ith attribute in the target relation.
+    // where i-th entry will store the type of the i-th attribute in the
+    // target relation.
 
 
-    /*** Checking if attributes of target are present in the source relation and storing its offsets and types ***/
+    /*** Checking if attributes of target are present in the source relation
+         and storing its offsets and types ***/
+
     /*iterate through 0 to tar_nAttrs-1 :
-        - get the AttributeCat entry (using getAttrCatEntry() of AttrCacheTable in cache layer)
-        of the attribute with name tar_attrs[i].
+        - get the attribute catalog entry of the attribute with name tar_attrs[i].
         - if the attribute is not found return E_ATTRNOTEXIST
-        - fill the attr_offset, attr_types arrays of target relation from the corresponding Attribute catalog entries
-            * idea -> each attribute in targetRel corresponds to which attributes of source relation
+        - fill the attr_offset, attr_types arrays of target relation from the
+          corresponding attribute catalog entries of source relation
     */
 
 
     /*** Creating and opening the target relation ***/
 
-    // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    // Create a relation for target relation by calling createRel() method of
+    // Schema layer by providing appropriate arguments
+
     // if the createRel returns an error code, then return that value.
 
+    // Open the newly created target relation by calling openRel() method of
+    // OpenRelTable and store the target relid
 
-    // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
-    // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
+    // If opening fails, delete the target relation by calling deleteRel() of
+    // Schema Layer and return the error value.
 
 
     /*** Inserting projected records into the target relation ***/
-    // Before calling the search function, reset the search to start from the first hit
+
+    // Take care to reset the searchIndex before calling the project function
+    // using RelCacheTable::resetSearchIndex()
 
     Attribute record[src_nAttrs];
 
@@ -331,11 +341,12 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
     while (true) :
 
         if (BlockAccess::project(srcRelId, record) returns SUCCESS):
-            // record will contain the next record
+            // the variable `record` will contain the next record
+
             Attribute proj_record[tar_nAttrs];
 
             iterate through 0 to tar_attrs-1:
-                proj_record[attr_iter] = record[attr_offset[attr_iter]];
+                proj_record[attr_iter] = record[attr_offset[attr_iter]]
 
             ret = BlockAccess::insert(targetRelId, proj_record);
 
@@ -382,37 +393,45 @@ This function creates a copy of the source relation in the target relation. **Ev
 
 ```cpp
 int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]) {
-    // get the srcRel's open relation id(let it be srcrelid), using getRelId() method of cache layer
+
+    int srcRelId = /*srcRel's rel-id (use OpenRelTable::getRelId() function)*/
+
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
-
-    // get RelCatEntry of srcRel using getRelCatEntry() of RelCacheTable in Cache layer
+    // get RelCatEntry of srcRel using RelCacheTable::getRelCatEntry()
 
     // get the no. of attributes present in relation from the fetched RelCatEntry.
-    int numAttrs;
 
-    // attrNames and attrTypes will be used to store the attribute names and types of the source relation
+    // attrNames and attrTypes will be used to store the attribute names
+    // and types of the source relation respectively
     char attrNames[numAttrs][ATTR_SIZE];
     int attrTypes[numAttrs];
 
     /*iterate through every attribute of the source relation :
-        - get the AttributeCat entry (using getAttrCatEntry() of AttrCacheTable in cache layer) of the attribute with offset.
+        - get the AttributeCat entry of the attribute with offset.
+          (using AttrCacheTable::getAttrCatEntry())
         - fill attrNames and attrTypes with the data about each attribute
     */
 
 
     /*** Creating and opening the target relation ***/
 
-    // Create a relation for target relation by calling createRel() method of Schema layer by providing appropriate arguments
+    // Create a relation for target relation by calling createRel() method of
+    // Schema layer by providing appropriate arguments
+
     // if the createRel returns an error code, then return that value.
 
+    // Open the newly created target relation by calling openRel() method of
+    // OpenRelTable and store the target relid
 
-    // Open the newly created target relation by calling openRel() method of OpenRelTable and store the target relid
-    // If opening fails, delete the target relation by calling deleteRel() of Schema Layer and return the error value.
+    // If opening fails, delete the target relation by calling deleteRel() of
+    // Schema Layer and return the error value.
 
 
     /*** Inserting projected records into the target relation ***/
-    // Before calling the search function, reset the search to start from the first hit
+
+    // Take care to reset the searchIndex before calling the project function
+    // using RelCacheTable::resetSearchIndex()
 
     Attribute record[numAttrs];
 
