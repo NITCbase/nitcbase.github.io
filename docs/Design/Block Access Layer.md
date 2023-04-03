@@ -552,7 +552,7 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
 
 #### Description
 
-This method deletes the relation with the name specified in arguments.
+This method deletes the relation with the name specified in arguments. This involves freeing the record blocks and index blocks allocated to this relation, as well as deleting the records corresponding to the relation in the relation catalog and attribute catalog.
 
 #### Arguments
 
@@ -570,7 +570,7 @@ This method deletes the relation with the name specified in arguments.
 #### Algorithm
 
 :::note
-If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of Block access layer are being called, make sure to get the return value and if it is not success, then to return the error code from the method.
+If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of [Buffer Layer](Buffer%20Layer/intro.md) are being called, make sure to get the return value and if it is not [SUCCESS](/constants), then to return the error code from the method.
 :::
 
 ```cpp
@@ -604,6 +604,7 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     //
     //     Hint: to know if we reached the end, check if nextBlock = -1
 
+
     /***
         Deleting attribute catalog entries corresponding the relation and index
         blocks corresponding to the relation with relName on its attributes
@@ -626,9 +627,10 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
         // get the header of the block
         // get the record corresponding to attrCatRecId.slot
 
-        // get root block from the attribute catalog record.
-        // This will be used later to delete any indexes if it exists
-        int rootBlock;
+        // declare rootBlock to store the root block field from the
+        // attribute catalog record.
+        int rootBlock = /* get root block from the record */;
+        // (This will be used later to delete any indexes if it exists
 
         // Update the Slotmap for the block by setting the slot as SLOT_UNOCCUPIED
         // Hint: use RecBuffer.getSlotMap and RecBuffer.setSlotMap
@@ -659,8 +661,10 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
                    relation with the block number of the previous block. */
             }
 
-            // (since the attribute catalog will never be empty, we do not
-            //  need to handle that case)
+            // (since the attribute catalog will never be empty(why?), we do not
+            //  need to handle the case of the linked list becoming empty i.e
+            //  every block gets released. this would have required us to update
+            //  the pointer to the head of the linked list )
 
             // call releaseBlock()
         }

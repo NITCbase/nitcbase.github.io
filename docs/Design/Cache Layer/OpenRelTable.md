@@ -172,8 +172,7 @@ OpenRelTable::~OpenRelTable() {
 
     //releasing the relation cache entry of the attribute catalog
 
-    if (/* the RelCatEntry of the ATTRCAT_RELIDth Relation
-           Cache entry has been modified */) {
+    if (/* RelCatEntry of the ATTRCAT_RELID-th RelCacheEntry has been modified */) {
 
         /* Get the Relation Catalog entry from RelCacheTable::relCache
         Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
@@ -188,7 +187,7 @@ OpenRelTable::~OpenRelTable() {
 
     //releasing the relation cache entry of the relation catalog
 
-    if(/* Relation Catalog entry of the RELCAT_RELIDth RelCacheEntry has been modified */) {
+    if(/* RelCatEntry of the RELCAT_RELID-th RelCacheEntry has been modified */) {
 
         /* Get the Relation Catalog entry from RelCacheTable::relCache
         Then convert it to a record using RelCacheTable::relCatEntryToRecord(). */
@@ -200,12 +199,19 @@ OpenRelTable::~OpenRelTable() {
     }
     // free the memory dynamically allocated for this RelCacheEntry
 
+
+    // free the memory allocated for the attribute cache entries of the
+    // relation catalog and the attribute catalog
 }
 ```
 
 <details>
 <summary>
-Currently, the attribute cache entries of the relation catalog and attribute catalog cannot have runtime modifications. This is because the attribute cache is only updated when an index is created for a relation and `rootBlock` is set. This operation is not permitted for the catalogs. If in a future design update, the attribute cache entries of the catalogs are modified, the following code can be included in the destructor to handle write-back for the same.
+
+**NOTE**: Currently, neither the attribute cache entry of the relation catalog nor the attribute cache entry of the attribute catalog can have runtime modifications. This is because the attribute cache is only updated when an index is created/deleted for a relation (and `rootBlock` is set). This operation is not permitted for the catalogs. If, in a future design update, the attribute cache entries of the catalogs are modified, the following code can be included in the destructor to handle write-back for the same.
+
+(click to view code)
+
 </summary>
 
 ```cpp

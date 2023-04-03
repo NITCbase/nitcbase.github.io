@@ -234,7 +234,7 @@ int BlockBuffer::setHeader(struct HeadInfo *head){
 
 #### Description
 
-Deletes the block from both the buffer memory and the disk. The `blockNum` field of the object is invalidated (set to `INVALID_BLOCK` (-1)).
+The block number to which this instance of `BlockBuffer` is associated (given by the `blockNum` member field) is freed from the buffer and the disk. The `blockNum` field of the object is invalidated (set to `INVALID_BLOCK` (-1)).
 
 #### Arguments
 
@@ -245,7 +245,10 @@ Nil
 Nil
 
 :::caution note
-If `releaseBlock()` method is called again after having successfully released for the first time (or if the `blockNum` field is invalid), then this method will not perform any operation.
+
+- The `BlockBuffer` class is a higher level abstraction to the disk blocks. It makes use of the `StaticBuffer` to access/modify the values in the disk block. When `releaseBlock()` is called, the corresponding disk block is freed from the buffer(if present) and set as an unused block in the disk. However, the `BlockBuffer` object itself remains as is with its `blockNum` set to `INVALID_BLOCK`. This object is only deallocated at the end of it's lifetime.
+- If `releaseBlock()` method is called again after having successfully released for the first time (or if the `blockNum` field is invalid), then this method will not perform any operation.
+
 :::
 
 #### Algorithm
@@ -257,17 +260,24 @@ void BlockBuffer::releaseBlock(){
 
     // else
         /* get the buffer number of the buffer assigned to the block
-           using StaticBuffer::getBufferNum(). */
+           using StaticBuffer::getBufferNum().
+           (this function return E_BLOCKNOTINBUFFER if the block is not
+           currently loaded in the buffer)
+            */
 
-        // if the buffer number is valid (!=E_BLOCKNOTINBUFFER), free the buffer
-        // by setting the free flag of its metaInfo entry to true.
+        // if the block is present in the buffer, free the buffer
+        // by setting the free flag of its StaticBuffer::tableMetaInfo entry
+        // to true.
 
-        // free the block in disk by setting the data type of the entry corresponding
-        // to the block number in StaticBuffer::blockAllocMap to UNUSED_BLK.
+        // free the block in disk by setting the data type of the entry
+        // corresponding to the block number in StaticBuffer::blockAllocMap
+        // to UNUSED_BLK.
 
         // set the object's blockNum to INVALID_BLOCK (-1)
 }
 ```
+
+> When a block is released, only the block allocation map is updated to store `UNUSED_BLK`. However, the header of the block still has its block type set to its previous value. This does not cause any inconsistencies because the allocation of a block is done only using the block allocation map. Once a block is allocated, it's header will be updated with the appropriate value. If the design of NITCbase were to change such that the block type in the header is used, then the above function can be modified to use the `getHeader()` and `setHeader()` functions to update the block type.
 
 ### BlockBuffer :: loadBlockAndGetBufferPtr()
 

@@ -227,7 +227,7 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 </details>
 
-Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md)
+Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md).
 
 The `Schema::createRel()` function is used to create a relation. Creating a relation involves adding the relevant records to the relation catalog and the attribute catalog (using `BlockAccess::insert()`). Before this can be done, the user input will need to be verified to ensure that there are no existing relations with the same name. Additionally, it will also need to be verified that the new relation does not contain duplicate attribute names.
 
@@ -245,7 +245,7 @@ Implement the following functions looking at their respective design docs
 
 Recall that every open relation has an entry in the relation cache. If any update to the cache entries for a relation are made, these must be committed back to the disk. Normally, such write-back is performed when the relation is closed. Hence, in the previous stages, we implemented the write-back operations in the `OpenRelTable::closeRel()` function.
 
-However, in the present stage, when we create a new relation, the relation cache entries for the relation catalog and attribute catalog will be modified (the `numRecords` field will be incremented). Since these catalogs are never opened or closed, the relation cache write-back cannot happen inside `OpenReltable::closeRel()`. Instead, the relation cache write-back for the relation catalog and the attirbute catalog is peformed when the destructor for the `OpenRelTable` class is executed during system shutdown. (Recall that the cache entries for relation catalog and attribute catalog were set up during system initialization, when the constructor for `OpenRelTable` executes).
+However, in the present stage, when we create a new relation, the relation cache entries for the relation catalog and attribute catalog will be modified (the `numRecords` field will be incremented). Since these catalogs are never opened or closed, the relation cache write-back cannot happen inside `OpenReltable::closeRel()`. Instead, the relation cache write-back for the relation catalog and the attirbute catalog is peformed when the destructor for the `OpenRelTable` class is executed during system shutdown. (Recall that the cache entries for relation catalog and attribute catalog were set up during system initialization, when the constructor for `OpenRelTable` executed).
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>
@@ -256,6 +256,19 @@ Implement the `OpenRelTable::~OpenRelTable()` function by looking at the [design
 
 In the [Buffer Layer](../Design/Buffer%20Layer/intro.md), we implement the `BlockBuffer::releaseBlock()` function which takes a block number as an argument and frees that block in the buffer and the block allocation map, thus making the block available for use again.
 
+:::info WARNING
+
+The low level disk operations on all disk blocks are performed by the [StaticBuffer class](../Design/Buffer%20Layer/StaticBuffer.md) and the [BlockBuffer class](../Design/Buffer%20Layer/BlockBuffer.md). However, NITCBase design does not permit higher layer functions to perform any modifications on blocks directly by accessing the buffer. Instead, the following access procedure is stipulated by the design.
+
+Whenever a higher layer class requires a block to be accessed or created, it must first create an object of the `BlockBuffer` class. This operation associates a block (either existing or new) to the new `BlockBuffer` object. All further operations on the block must be performed using calls to appropriate methods of the `BlockBuffer` object. (The only exception to this rule is the [StaticBuffer::getStaticBlockType()](../Design/Buffer%20Layer/StaticBuffer.md#staticbuffer--getstaticblocktype) function, which may be directly invoked by higher layer functions.)
+
+Now, if a higher layer function wishes to release a block allocated to a relation, the `BlockBuffer::releaseBlock()` function may be invoked. This function updates the disk data structures to mark the block as free and disassociates the `BlockBuffer` object from the disk block by setting block number field of the `BlockBuffer` object as [INVALID_BLK](/constants).
+
+It is important to note here that such release operations creates a situation where the BlockBuffer object is no longer associated with any valid disk block, and any further access to the functions of the object will result in the return of an error code. Hence, care must be exercised in higher layer functions to avoid implementation
+errors due to attempts to access BlockBuffer objects that have already been released.
+
+:::
+
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
 
@@ -265,7 +278,9 @@ Implement the `BlockBuffer::releaseBlock()` function by looking at the [design d
 
 In the [Block Access Layer](../Design/Block%20Access%20Layer.md), we implement the `search()` function and the `deleteRelation()` function.
 
-The `search()` function in it's final state will be used to either do a linear search or a b-plus tree search on the records of a relation depending on whether an index exists for the relation. However, since we have not implemented indexes yet, our current implementation will just call the `linearSearch()` function.
+We do not need to modify the [Block Access Layer](../Design/Block%20Access%20Layer.md) for relation creation at this stage because creation of a relation only involves insertion of records into the catalogs and this is something that we had already implemented in previous stages (in the `insert()` function). However, this function will be updated in subsequent stages to handle indexing.
+
+The `search()` function in it's final state will be used to either do a linear search or a B+ tree search on the records of a relation depending on whether an index exists for the relation. However, since we have not implemented indexes yet, our current implementation will just call the `linearSearch()` function.
 
 The `deleteRelation()` function releases all the record blocks of the relation and deletes the relation's entries from the relation and attribute catalog. If the deletion of the entries in the attribute catalog causes one of its blocks to be completely unoccupied, we release that block as well. We then update the changes in the records of the catalogs in the catalog caches.
 
@@ -273,6 +288,11 @@ The `deleteRelation()` function releases all the record blocks of the relation a
 <summary>BlockAccess/BlockAccess.cpp</summary>
 
 ```cpp
+/*
+NOTE: This function will copy the result of the search to the `record` argument.
+      The caller should ensure that space is allocated for `record` array
+      based on the number of attributes in the relation.
+*/
 int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], Attribute attrVal, int op) {
     // Declare a variable called recid to store the searched record
     RecId recId;
@@ -285,7 +305,7 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
     //    return E_NOTFOUND;
 
     /* Copy the record with record id (recId) to the record buffer (record)
-       For this Instantiate a RecBuffer class object by passing the recId and
+       For this Instantiate a RecBuffer class object using recId and
        call the appropriate method to fetch the record
     */
 
@@ -293,7 +313,7 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
 }
 ```
 
-> **TASK**: Implement the `BlockAccess::deleteRelation()` method by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation). The algorithm specified in the docs calls `BPlusTree::bPlusDestroy()` to free any indexes that exist for the relation. Since we have not yet implemented indexing, this call can be omitted. The rest of the design remains the same.
+> **TASK**: Implement the `BlockAccess::deleteRelation()` method by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation). The algorithm specified in the docs calls `BPlusTree::bPlusDestroy()` to free any indexes that exist for the relation. Since we have not yet implemented indexing, this call may be omitted. The rest of the design remains the same.
 
 </details>
 
