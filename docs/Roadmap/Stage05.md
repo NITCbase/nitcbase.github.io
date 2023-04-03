@@ -300,6 +300,6 @@ Selected successfully into null
 Selected successfully into null
 
 # SELECT * FROM Participants INTO null WHERE regNo>0;
-| name | capacity |
+| regNo | event |
 Selected successfully into null
 ```
