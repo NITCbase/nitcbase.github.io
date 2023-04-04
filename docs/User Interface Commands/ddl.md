@@ -103,7 +103,7 @@ CLOSE TABLE sample
 
 #### Description
 
-This command is used to create an index on a given attribute of a relation. [B+ trees](https://nitcbase.github.io/design/Bplustreedetails.html) are used for creating indexes. Before executing this query, the relation must be opened using the `OPEN TABLE` command.
+This command is used to create an index on a given attribute of a relation. [B+ trees](../Misc/B%2B%20Trees.md) are used for creating indexes. Before executing this query, the relation must be opened using the `OPEN TABLE` command.
 
 #### Syntax
 

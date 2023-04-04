@@ -9,7 +9,7 @@ The XFS commands are used to format the disk, dump disk data structures like Blo
 
 #### Description
 
-This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](https://nitcbase.github.io/storage-model.html) of NITCbase. The disk is simulated on a binary file called `disk` which is located at `Disk/` once it is created.
+This command is used to create a simulated disk or to format the disk if already it already exists. On the newly created/formatted disk, initialization of _disk data structures_, namely - `Block allocation map`, `Relation catalog` and `Attribute catalog` are done according to the specification for disk model given in the [Physical layer](../Design/Physical%20Layer.md) of NITCbase. The disk is simulated on a binary file called `disk` which is located at `Disk/` once it is created.
 
 :::note Important Details
 

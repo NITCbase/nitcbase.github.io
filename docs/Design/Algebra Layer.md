@@ -54,22 +54,22 @@ This method **inserts the given record** into the specified Relation. Insertion 
 
 #### Arguments
 
-| **Attribute** | **Type**            | **Description**                                                                                                                            |
-| ------------- | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| relName       | `char[ATTR_SIZE]`   | Name of the relation into which insert operation has to be performed.                                                                      |
-| nAttrs        | `int`               | Number of attributes in the inserting record.(which has to match with no.of attributes field in the relation cache entry for the relation) |
-| record        | `char[][ATTR_SIZE]` | each string containing value of corresponding attribute.                                                                                   |
+| **Attribute** | **Type**            | **Description**                                                                                                                     |
+| ------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| relName       | `char[ATTR_SIZE]`   | Name of the relation into which insert operation has to be performed.                                                               |
+| nAttrs        | `int`               | Number of attributes in the inserting record(which has to match with `numAttrs` field in the relation cache entry for the relation) |
+| record        | `char[][ATTR_SIZE]` | An array of strings with each string containing value of corresponding attribute.                                                   |
 
 #### Return values
 
-| **Value**                          | **Description**                                                                                                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                                                                  |
-| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                                                                                |
-| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                                                                      |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.                                                         |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                                                                            |
-| [`E_NOTPERMITTED`](/constants)     | If relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. Or if the attribute contains invalid characters |
+| **Value**                          | **Description**                                                                                                            |
+| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                 |
+| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                               |
+| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                     |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.        |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                           |
+| [`E_NOTPERMITTED`](/constants)     | If relName is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to insert a record into any of the catalogs |
 
 #### Algorithm
 
@@ -137,13 +137,13 @@ This function creates a new target relation with attributes as that of source re
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                                                                                                                                                   |
-| ------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                          |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                       |
-| attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                        |
-| op            | `int`              | Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE corresponding to equal,lessthan equal, lessthan ,greaterthan equal, greaterthan, Not equal respectively). |
-| strVal        | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                               |
+| **Attribute** | **Type**           | **Description**                                                                                                                                                                                                                   |
+| ------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                                                                                          |
+| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                                                                                       |
+| attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                                                                                        |
+| op            | `int`              | The conditional operator (which can be one among `EQ`, `LE`, `LT`, `GE`, `GT`, `NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_) |
+| strVal        | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                                                                                               |
 
 #### Return values
 
@@ -151,10 +151,10 @@ This function creates a new target relation with attributes as that of source re
 | ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)            | On successful creation of new relation.                                                               |
 | [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                   |
-| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                     |
-| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name attr does not exist.                                                         |
+| [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                   |
+| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name `attr` does not exist.                                                       |
 | [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute. |
-| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                |
+| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table             |
 | [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                        |
 
 #### Algorithm
@@ -272,23 +272,23 @@ This function creates a new target relation with list of attributes specified in
 
 #### Arguments
 
-| **Attribute** | **Type**            | **Description**                                                                                                            |
-| ------------- | ------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`   | Name of Source Relation.                                                                                                   |
-| targetRel     | `char [ATTR_SIZE]`  | Name of the target Relation(target relation is the Project of source Relation)                                             |
-| tar_nAttrs    | `int`               | No. of attributes that have to be projected from source relation to target relation.                                       |
-| tar_attrs     | `char[][ATTR_SIZE]` | Pointer to attribute names array, (array of attributes that have to be projected from source relation to target relation.) |
+| **Attribute** | **Type**            | **Description**                                                                             |
+| ------------- | ------------------- | ------------------------------------------------------------------------------------------- |
+| srcRel        | `char[ATTR_SIZE]`   | Name of source relation.                                                                    |
+| targetRel     | `char [ATTR_SIZE]`  | Name of the target relation(target relation is the Project of source relation)              |
+| tar_nAttrs    | `int`               | Number of attributes that have to be projected from source relation to target relation.     |
+| tar_attrs     | `char[][ATTR_SIZE]` | Array of attribute names that have to be projected from source relation to target relation. |
 
 #### Return values
 
-| **Value**                      | **Description**                                                        |
-| ------------------------------ | ---------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of new relation.                                |
-| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                    |
-| [`E_RELEXIST`](/constants)     | If a relation with name targetrel already exists.                      |
-| [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attr array does not exist.         |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.         |
-| [`E_CACHEFULL`](/constants)    | If the openRel() fails because of no free slots in open relation table |
+| **Value**                      | **Description**                                                                           |
+| ------------------------------ | ----------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful creation of new relation.                                                   |
+| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                       |
+| [`E_RELEXIST`](/constants)     | If a relation with name `targetRel` already exists.                                       |
+| [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attribute name array does not exist.                  |
+| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.                            |
+| [`E_CACHEFULL`](/constants)    | If target relation cannot be operated on due to lack of free slots in open relation table |
 
 #### Algorithm
 
@@ -374,20 +374,20 @@ This function creates a copy of the source relation in the target relation. **Ev
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                                                                |
-| ------------- | ------------------ | ------------------------------------------------------------------------------ |
-| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                       |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation(target relation is the Project of source Relation) |
+| **Attribute** | **Type**           | **Description**                                                                 |
+| ------------- | ------------------ | ------------------------------------------------------------------------------- |
+| srcRel        | `char[ATTR_SIZE]`  | Name of source relation.                                                        |
+| targetRel     | `char [ATTR_SIZE]` | Name of the target relation (target relation is the Project of source relation) |
 
 #### Return values
 
-| **Value**                    | **Description**                                                        |
-| ---------------------------- | ---------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | On successful creation of new relation.                                |
-| [`E_RELNOTOPEN`](/constants) | If the source relation is not open.                                    |
-| [`E_RELEXIST`](/constants)   | If a relation with name targetrel already exists.                      |
-| [`E_DISKFULL`](/constants)   | If disk space is not sufficient for creating the new relation.         |
-| [`E_CACHEFULL`](/constants)  | If the openRel() fails because of no free slots in open relation table |
+| **Value**                    | **Description**                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | On successful creation of new relation.                                                   |
+| [`E_RELNOTOPEN`](/constants) | If the source relation is not open.                                                       |
+| [`E_RELEXIST`](/constants)   | If a relation with name `targetRel` already exists.                                       |
+| [`E_DISKFULL`](/constants)   | If disk space is not sufficient for creating the new relation.                            |
+| [`E_CACHEFULL`](/constants)  | If target relation cannot be operated on due to lack of free slots in open relation table |
 
 #### Algorithm
 
@@ -487,12 +487,12 @@ An example for the join operation can be seen [here](../User%20Interface%20Comma
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                               |
 | [`E_RELNOTOPEN`](/constants)       | If any of the source relations is not open.                                                                           |
-| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                                     |
+| [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                                   |
 | [`E_ATTRNOTEXIST`](/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
 | [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                        |
 | [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
 | [`E_DUPLICATEATTR`](/constants)    | If there are duplicate attribute names between srcrel1 and srcrel2 aside from the join attributes.                    |
-| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                                |
+| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
 
 #### Algorithm
 

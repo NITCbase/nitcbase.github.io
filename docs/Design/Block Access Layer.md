@@ -56,12 +56,12 @@ value-in-record `op` attrVal
 
 #### Arguments
 
-| Name     | Type              | Description                                                                                                                                                                                                            |
-| -------- | ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relId    | `int`             | rel-id of relation to which search has to be made.                                                                                                                                                                     |
-| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                   |
-| attrVal  | `union Attribute` | value of attribute that has to be checked against the value in the record.                                                                                                                                             |
-| op       | `int`             | The conditional operator (which can be one among `EQ, LE, LT, GE, GT, NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_ |
+| Name     | Type              | Description                                                                                                                                                                                                                       |
+| -------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| relId    | `int`             | rel-id of relation to which search has to be made.                                                                                                                                                                                |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                              |
+| attrVal  | `union Attribute` | value of attribute that has to be checked against the value in the record.                                                                                                                                                        |
+| op       | `int`             | The conditional operator (which can be one among `EQ`, `LE`, `LT`, `GE`, `GT`, `NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_) |
 
 #### Return Values
 
