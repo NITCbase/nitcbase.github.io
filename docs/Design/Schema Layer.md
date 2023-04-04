@@ -83,12 +83,12 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
         Reset the searchIndex using RelCacheTable::resetSearhIndex()
         Search the relation catalog (relId given by the constant RELCAT_RELID)
         for attribute value attribute "RelName" = relNameAsAttribute using
-        BlockAccess::search() with OP = EQ
-        Let the return value of search be retVal
+        BlockAccess::linearSearch() with OP = EQ
     */
 
-    // if retVal == SUCCESS (i.e relation with name as relName already exists)
-    // return E_RELEXIST;
+    // if a relation with name `relName` already exists  ( linearSearch() does
+    //                                                     not return {-1,-1} )
+    //     return E_RELEXIST;
 
     // compare every pair of attributes of attrNames[] array
     // if any attribute names have same string value,

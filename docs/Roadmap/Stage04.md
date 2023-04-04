@@ -322,7 +322,7 @@ Now, we implement the `BlockAccess::linearSearch()` function in the [Block Acces
 <details>
 <summary>BlockAccess/BlockAccess.cpp</summary>
 
-Implement this function by looking at the algorithm given in the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--linearsearch).
+Implement the `BlockAccess::linearSearch()` function by looking at the algorithm given in the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--linearsearch).
 
 </details>
 

@@ -6,20 +6,17 @@ title: "Stage 9 : Selection and Projection on Relations"
 
 :::note Learning Objectives
 
-- Complete the implementation of the NITCbase commands that do the following operations
-  - selection
-  - projection
-  - a combination of both selection and projection
+- Complete the implementation of **SELECT** and **PROJECT** operations in NITCbase
 
 :::
 
 ## Introduction
 
-In previous stages, you had implemented linear search on relations and a rudimentary version of the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to select records from a relation. In this stage, we will complete the implementation of the select operation and the projection operation.
+In previous stages, you had implemented linear search on relations and a rudimentary version of the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to select records from a relation. In this stage, we will complete the implementation of the select operation and the project operation.
 
-As discussed earlier, a selection operation in relational algebra involves fetching all records that satisfy some condition. Our previous implementation would select records from a relation and print them to the console. The actual NITCbase specification defines the select operation as selecting records from a relation and creating a new relation with that subset of records. Since we have now implemented relation creation, we can finish our implementation of the [SELECT \* FROM TABLE WHERE](../User%20Interface%20Commands/dml.md#select--from-table-where) command.
+As discussed earlier, a SELECT operation in relational algebra involves fetching all the records that satisfy a given condition. Our previous implementation would select records from a relation and print them to the console. The actual NITCbase specification defines the SELECT operation as selecting records from a relation that satisfy a specific condition and writing those records into a newly created relation of a specified name. Since we have now implemented relation creation, we can finish our implementation of the [SELECT \* FROM TABLE WHERE](../User%20Interface%20Commands/dml.md#select--from-table-where) command.
 
-A projection operation is used to pick a subset of columns from the relation. In NITCbase, doing a project operation on a relation would result in the creation of a new relation with a subset of the attributes of the source relation. The required attributes will be picked from each record and inserted into the new relation.
+A PROJECT operation on a relation is used to pick a subset of columns from the relation. In NITCbase, doing a PROJECT operation on a relation would result in the creation of a new relation with a subset of the attributes of the source relation. The required attributes will be picked from each record and inserted into the new relation.
 
 Once you implement the `select()` and `project()` operations in the [Algebra Layer](../Design/Algebra%20Layer.md), you will be able to add the following commands to your NITCbase using a combination of the two functions.
 
@@ -37,6 +34,7 @@ A sequence diagram documenting the call sequence involved in a call to the [SELE
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
 > 🟢 -> methods that will attain their final state in this stage<br/>
+> 🟠 -> methods that we will modify in this stage, and in subsequent stages <br/>
 > 🟤 -> methods that we built earlier and require more work later, but will leave as is in this stage
 
 <br/>
@@ -89,7 +87,7 @@ A class diagram highlighting the methods relevant to this stage is shown below.
 classDiagram
   class Algebra{
     +insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE])$ int🔵
-    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟢
+    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟠
 		+project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE])$ int🟢
 		+project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE])$ int🟢
   }
@@ -110,26 +108,30 @@ classDiagram
 
 <br/>
 
-In the [Block Access Layer](../Design/Block%20Access%20Layer.md), we implement the `project()` function. This function is used to fetch every record of the relation one by one. Similar to the `linearSearch()` function you implemented earlier, `project()` makes use of the `searchIndex` in the relation cache to keep track of the last read record. As a result of this, `RelCacheTable::resetSearchIndex()` will need to be called before a project operation is done.
+In the [Block Access Layer](../Design/Block%20Access%20Layer.md), we implement the `project()` function. This function is used to fetch **one** record of the relation. Each subsequent call would return the next record until there are no more records to be returned. Similar to the `linearSearch()` function you implemented earlier, `project()` makes use of the `searchIndex` in the relation cache to keep track of the last
+
+> NOTE: Even though this function is named `project()`, it does not do a PROJECT operation. It effectively serves as a way to access the next record from a relation. The actual projection of the record to a subset of its columns is implemented in the [Algebra Layer](../Design/Algebra%20Layer.md). This function is named `project()` only due to the fact that it serves as a helper function for the `Algebra::project()` function.
 
 <details>
 <summary>BlockAccess/BlockAccess.cpp</summary>
 
-Implement this function by looking at the algorithm given in the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--project).
+Implement the `BlockAccess::project()` function by looking at the algorithm given in the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--project).
 
 </details>
 
-In the [Algebra Layer](../Design/Algebra%20Layer.md), you had already implemented part of the `select()` function in previous stages. In this stage, you will modify the function to create a new relation and insert the selected records into the new relation. This will be the final state of this function.
+In the [Algebra Layer](../Design/Algebra%20Layer.md), you had already implemented part of the `select()` function in previous stages. In this stage, you will modify the function to create a new relation and insert the selected records into the new relation.
 
-We also add two new overloaded functions `project(srcRel, targetRel)` and `project(srcRel, targetRel, numAttrs, attrs)` which are responsible for the [SELECT \* FROM TABLE](../User%20Interface%20Commands/dml.md#select--from-table) and [SELECT AttrList FROM TABLE](../User%20Interface%20Commands/dml.md#select-attrlist-from-table) commands respectively. Note that the `project(relId, record)` function is used to create a copy of the source relation.
+We also add two new overloaded functions `project(srcRel, targetRel)` and `project(srcRel, targetRel, numAttrs, attrs)` which are responsible for the [SELECT \* FROM TABLE](../User%20Interface%20Commands/dml.md#select--from-table) and [SELECT AttrList FROM TABLE](../User%20Interface%20Commands/dml.md#select-attrlist-from-table) commands respectively. The [SELECT AttrList FROM TABLE WHERE](../User%20Interface%20Commands/dml.md#select-attrlist-from-table-where) also makes use of the `project(srcRel, targetRel, numAttrs, attrs)` function. Note that the `project(srcRel, targetRel)` function is used to create a copy of the source relation into the target relation.
 
 <details>
 <summary>Algebra/Algebra.cpp</summary>
 
 Implement the following functions looking at their respective design docs
 
-- [`Algebra::project(srcRel, targetRel)`](../Design/Algebra%20Layer.md#all-attributes-copy-relation)
-- [`Algebra::project(srcRel, targetRel, numAttrs, attrs)`](../Design/Algebra%20Layer.md#specified-attributes)
+- [`Algebra::select()`](../Design/Algebra%20Layer.md#select).<br/>
+  **NOTE**: The definition of the above function involves a call to the `AttrCacheTable::resetSearchIndex()` function before the call to the `BlockAccess::search()` function. This call is only relevant when we are doing a B+ tree search. Since we have not yet implemented indexing, this call can be omitted. The rest of the design remains the same.
+- [`Algebra::project(srcRel, targetRel)`](../Design/Algebra%20Layer.md#project-all-attributes-copy-relation)
+- [`Algebra::project(srcRel, targetRel, numAttrs, attrs)`](../Design/Algebra%20Layer.md#project-specified-attributes)
 
 </details>
 

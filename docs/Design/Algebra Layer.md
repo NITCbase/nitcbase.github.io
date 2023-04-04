@@ -137,26 +137,25 @@ This function creates a new target relation with attributes as that of source re
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                                                                                                                                                  |
-| ------------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                         |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                      |
-| attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                       |
-| op            | `int`              | Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE corresponding to equal,lesthan equal, lessthan ,greaterthan equal, greaterthan, Not equal respectively). |
-| strVal        | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                              |
+| **Attribute** | **Type**           | **Description**                                                                                                                                                   |
+| ------------- | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                          |
+| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                       |
+| attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                        |
+| op            | `int`              | Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE corresponding to equal,lessthan equal, lessthan ,greaterthan equal, greaterthan, Not equal respectively). |
+| strVal        | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                               |
 
 #### Return values
 
-| **Value**                          | **Description**                                                                                                                 |
-| ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                                         |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                                             |
-| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                                               |
-| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name attr does not exist.                                                                                   |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute.                           |
-| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                                          |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                                  |
-| [`E_NOTPERMITTED`](/constants)     | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                          | **Description**                                                                                       |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                               |
+| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                   |
+| [`E_RELEXIST`](/constants)         | If a relation with name targetrel already exists.                                                     |
+| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name attr does not exist.                                                         |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute. |
+| [`E_CACHEFULL`](/constants)        | If the openRel() fails because of no free slots in open relation table                                |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                        |
 
 #### Algorithm
 
@@ -203,30 +202,39 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     // let attr_types[src_nAttrs] be an array of type int
 
     /*iterate through 0 to src_nAttrs-1 :
-        get the i'th attribute's AttrCatEntry (using getAttrcatEntry()
-        method of AttrCacheTable in cache layer)
-        fill attr_names, attr_types of corresponding attributes using the entry
+        get the i'th attribute's AttrCatEntry using AttrCacheTable::getAttrCatEntry()
+        fill the attr_names, attr_types arrays that we declared with the entries
+        of corresponding attributes
     */
 
 
-    /* Create the relation for target relation by calling createRel() method
-       of Schema layer by providing appropriate arguments */
+    /* Create the relation for target relation by calling Schema::createRel()
+       by providing appropriate arguments */
     // if the createRel returns an error code, then return that value.
 
-    /* Open the newly created target relation by calling openRel() method of
-       OpenRelTable and store the target relid */
-    /* If opening fails, delete the target relation by calling deleteRel() of
-       Schema Layer and return the error value. */
+    /* Open the newly created target relation by calling OpenRelTable::openRel()
+       method and store the target relid */
+    /* If opening fails, delete the target relation by calling Schema::deleteRel()
+       and return the error value returned from openRel() */
 
     /*** Selecting and inserting records into the target relation ***/
     /* Before calling the search function, reset the search to start from the
-       first using RelCacheTable::resetSearchIndex */
+       first using RelCacheTable::resetSearchIndex() */
 
     Attribute record[src_nAttrs];
-    Attribute val;
-    strcpy(val.sVal, "RST");
 
-    // Hint: do BlockAccess::search(srcRelId, record, attr, val, RST);
+    /*
+        The BlockAccess::search() function can either do a linearSearch or
+        a B+ tree search. Hence, reset the search index of the relation in the
+        relation cache using RelCacheTable::resetSearchIndex().
+        Also, reset the search index in the attribute cache for the select
+        condition attribute with name given by the argument `attr`. Use
+        AttrCacheTable::resetSearchIndex().
+        Both these calls are necessary to ensure that search begins from the
+        first record.
+    */
+    RelCacheTable::resetSearchIndex(/* fill arguments */);
+    AttrCacheTable::resetSearchIndex(/* fill arguments */);
 
     /*
     while (true) {
@@ -256,7 +264,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
 ## Project
 
-### Specified Attributes
+### Project Specified Attributes
 
 #### Description
 
@@ -273,15 +281,14 @@ This function creates a new target relation with list of attributes specified in
 
 #### Return values
 
-| **Value**                      | **Description**                                                                                                                 |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of new relation.                                                                                         |
-| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                                                             |
-| [`E_RELEXIST`](/constants)     | If a relation with name targetrel already exists.                                                                               |
-| [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attr array does not exist.                                                                  |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.                                                                  |
-| [`E_CACHEFULL`](/constants)    | If the openRel() fails because of no free slots in open relation table                                                          |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                      | **Description**                                                        |
+| ------------------------------ | ---------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful creation of new relation.                                |
+| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                    |
+| [`E_RELEXIST`](/constants)     | If a relation with name targetrel already exists.                      |
+| [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attr array does not exist.         |
+| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.         |
+| [`E_CACHEFULL`](/constants)    | If the openRel() fails because of no free slots in open relation table |
 
 #### Algorithm
 
@@ -318,16 +325,15 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     /*** Creating and opening the target relation ***/
 
-    // Create a relation for target relation by calling createRel() method of
-    // Schema layer by providing appropriate arguments
+    // Create a relation for target relation by calling Schema::createRel()
 
     // if the createRel returns an error code, then return that value.
 
-    // Open the newly created target relation by calling openRel() method of
-    // OpenRelTable and store the target relid
+    // Open the newly created target relation by calling OpenRelTable::openRel()
+    // and get the target relid
 
-    // If opening fails, delete the target relation by calling deleteRel() of
-    // Schema Layer and return the error value.
+    // If opening fails, delete the target relation by calling Schema::deleteRel()
+    // and return the error value from openRel()
 
 
     /*** Inserting projected records into the target relation ***/
@@ -337,35 +343,30 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     Attribute record[src_nAttrs];
 
-    /*
-    while (true) :
+    while (/* BlockAccess::project(srcRelId, record) returns SUCCESS */) {
+        // the variable `record` will contain the next record
 
-        if (BlockAccess::project(srcRelId, record) returns SUCCESS):
-            // the variable `record` will contain the next record
+        Attribute proj_record[tar_nAttrs];
 
-            Attribute proj_record[tar_nAttrs];
+        //iterate through 0 to tar_attrs-1:
+        //    proj_record[attr_iter] = record[attr_offset[attr_iter]]
 
-            iterate through 0 to tar_attrs-1:
-                proj_record[attr_iter] = record[attr_offset[attr_iter]]
+        // ret = BlockAccess::insert(targetRelId, proj_record);
 
-            ret = BlockAccess::insert(targetRelId, proj_record);
+        if (/* insert fails */) {
+            // close the targetrel by calling Schema::closeRel()
+            // delete targetrel by calling Schema::deleteRel()
+            // return ret;
+        }
+    }
 
-            if (insert fails) {
-                close the targetrel by calling closeRel() method of schema layer
-                delete targetrel by calling deleteRel() of schema layer
-                return ret;
-            }
-        else:
-            break;
-    */
-
-    // Close the targetRel by calling closeRel() method of schema layer
+    // Close the targetRel by calling Schema::closeRel()
 
     // return SUCCESS.
 }
 ```
 
-### All Attributes (Copy Relation)
+### Project All Attributes (Copy Relation)
 
 #### Description
 
@@ -380,14 +381,13 @@ This function creates a copy of the source relation in the target relation. **Ev
 
 #### Return values
 
-| **Value**                      | **Description**                                                                                                                 |
-| ------------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of new relation.                                                                                         |
-| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                                                             |
-| [`E_RELEXIST`](/constants)     | If a relation with name targetrel already exists.                                                                               |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.                                                                  |
-| [`E_CACHEFULL`](/constants)    | If the openRel() fails because of no free slots in open relation table                                                          |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either "RELATIONCAT" or "ATTRIBUTECAT". i.e, when the user tries to insert a record into any of the catalogs. |
+| **Value**                    | **Description**                                                        |
+| ---------------------------- | ---------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | On successful creation of new relation.                                |
+| [`E_RELNOTOPEN`](/constants) | If the source relation is not open.                                    |
+| [`E_RELEXIST`](/constants)   | If a relation with name targetrel already exists.                      |
+| [`E_DISKFULL`](/constants)   | If disk space is not sufficient for creating the new relation.         |
+| [`E_CACHEFULL`](/constants)  | If the openRel() fails because of no free slots in open relation table |
 
 #### Algorithm
 
@@ -410,22 +410,22 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
     /*iterate through every attribute of the source relation :
         - get the AttributeCat entry of the attribute with offset.
           (using AttrCacheTable::getAttrCatEntry())
-        - fill attrNames and attrTypes with the data about each attribute
+        - fill the arrays `attrNames` and `attrTypes` that we declared earlier
+          with the data about each attribute
     */
 
 
     /*** Creating and opening the target relation ***/
 
-    // Create a relation for target relation by calling createRel() method of
-    // Schema layer by providing appropriate arguments
+    // Create a relation for target relation by calling Schema::createRel()
 
     // if the createRel returns an error code, then return that value.
 
-    // Open the newly created target relation by calling openRel() method of
-    // OpenRelTable and store the target relid
+    // Open the newly created target relation by calling OpenRelTable::openRel()
+    // and get the target relid
 
-    // If opening fails, delete the target relation by calling deleteRel() of
-    // Schema Layer and return the error value.
+    // If opening fails, delete the target relation by calling Schema::deleteRel() of
+    // return the error value returned from openRel().
 
 
     /*** Inserting projected records into the target relation ***/
@@ -435,23 +435,21 @@ int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_
 
     Attribute record[numAttrs];
 
-    /*
-    while (true) :
-        if (BlockAccess::project(srcRelId, record) returns SUCCESS):
-            // record will contain the next record
 
-            ret = BlockAccess::insert(targetRelId, proj_record);
+    while (/* BlockAccess::project(srcRelId, record) returns SUCCESS */)
+    {
+        // record will contain the next record
 
-            if (insert fails) {
-                close the targetrel by calling closeRel() method of schema layer
-                delete targetrel by calling deleteRel() of schema layer
-                return ret;
-            }
-        else:
-            break;
-    */
+        // ret = BlockAccess::insert(targetRelId, proj_record);
 
-    // Close the targetRel by calling closeRel() method of schema layer
+        if (/* insert fails */) {
+            // close the targetrel by calling Schema::closeRel()
+            // delete targetrel by calling Schema::deleteRel()
+            // return ret;
+        }
+    }
+
+    // Close the targetRel by calling Schema::closeRel()
 
     // return SUCCESS.
 }
@@ -562,6 +560,12 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
 
     // this loop is to get every record of the srcRelation1 one by one
     while (BlockAccess::project(srcRelId1, record1) == SUCCESS) {
+
+        // reset the search index of `srcRelation2` in the relation cache
+        // using RelCacheTable::resetSearchIndex()
+
+        // reset the search index of `attribute2` in the attribute cache
+        // using AttrCacheTable::resetSearchIndex()
 
         // this loop is to get every record of the srcRelation2 which satisfies the following condition:
         // record1.attribute1 = record2.attribute2 (i.e. Equi-Join condition)

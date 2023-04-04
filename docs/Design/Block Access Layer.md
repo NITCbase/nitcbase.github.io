@@ -70,6 +70,20 @@ value-in-record `op` attrVal
 | `{block#, slot#}` | returns the _block number and slot number_ of the record corresponding to the next hit. This corresponds to type `RecId`. |
 | `{-1, -1}`        | If no valid next hit is found. This corresponds to type `RecId`.                                                          |
 
+:::info note
+
+- This function reads the "next" record from the given relation that satisfies a given condition. The search index of the relation (stored in the [RelCacheTable](Cache%20Layer/RelCacheTable.md) entry of the relation) is used to identify the location of the previous record that was returned. This function reads the next record and updates the value of the search index to the position of the newly read record, before passing the record to the caller.
+
+- If `searchIndex` is reset to `{-1,-1}`, this function starts reading from the beginning and returns the first record of the relation that satisfies the condition. The `RelCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
+
+- If the `searchIndex` value of a relation corresponds to the last record of the relation that satisfies the condition, this function will return [E_NOTFOUND](/constants), as there is no "next" record to be read.
+
+- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return [E_NOTFOUND](/constants).
+
+- The [`linearSearch()`](#blockaccess--linearsearch) and `project()` functions make use of the same search index. Hence, changes in the value of `searchIndex` will affect the functioning of both these functions.
+
+:::
+
 #### Algorithm
 
 ```cpp
@@ -191,6 +205,18 @@ This method searches the relation specified to find the next record that satisfi
 | -------------------------- | ----------------------------------------------------------- |
 | [`SUCCESS`](/constants)    | On successful copy of record to record                      |
 | [`E_NOTFOUND`](/constants) | If it fails to find a record satisfying the given condition |
+
+:::info note
+
+This function reads the "next" record from the given relation that satisfies a given condition. It can do either a linear search using `BlockAccess::linearSearch()` or a B+ search using `BPlusTree::bPlussearch()` depending on whether an index exists.
+
+If a linear search is being done, it is required that the search index of the relation is reset in the relation cache with a call to the `RelCacheTable::resetSearchIndex()` function.
+
+If a B+ search is being done, it is required that the search index of the attribute is reset in the attribute cache with a call to the `AttrCacheTable::resetSearchIndex()` function.
+
+Hence, the caller needs to ensure that **both** of these functions are called before starting a search operation with the `BlockAccess::search()` function.
+
+:::
 
 #### Algorithm
 
@@ -713,7 +739,7 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
 
 #### Description
 
-This method iterates over the relation specified to fetch the next record (until all records are fetched) and updates the recId of next record in cache.
+This function is used to fetch **one** record of the relation. Each subsequent call would return the next record until there are no more records to be returned. It also updates `searchIndex` in the cache.
 
 #### Arguments
 
@@ -729,16 +755,39 @@ This method iterates over the relation specified to fetch the next record (until
 | [`SUCCESS`](/constants)    | On successful copy of record to _record_                    |
 | [`E_NOTFOUND`](/constants) | If there are no more records to be fetched for the relation |
 
+:::info note
+
+- This function reads the "next" record from the given relation. The search index of the relation (stored in the [RelCacheTable](Cache%20Layer/RelCacheTable.md) entry of the relation) is used to identify the location of the previous record that was returned. This function reads the next record and updates the value of the search index to the position of the newly read record, before passing the record to the caller.
+
+- If `searchIndex` is reset to `{-1,-1}`, this function starts reading from the beginning and returns the first record of the relation. The `RelCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
+
+- If the `searchIndex` value of a relation corresponds to the last record of the relation, this function will return [E_NOTFOUND](/constants), as there is no "next" record to be read.
+
+- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return [E_NOTFOUND](/constants).
+
+- The [`linearSearch()`](#blockaccess--linearsearch) and `project()` functions make use of the same search index. Hence, changes in the value of `searchIndex` will affect the functioning of both these functions.
+
+:::
+
 #### Algorithm
 
 ```cpp
+/*
+NOTE: the caller is expected to allocate space for the argument `record` based
+      on the size of the relation. This function will only copy the result of
+      the projection onto the array pointed to by the argument.
+*/
 int BlockAccess::project(int relId, Attribute *record) {
     // get the previous search index of the relation relId from the relation
     // cache (use RelCacheTable::getSearchIndex() function)
 
-    // let block and slot denote the record id of the record being currently checked
+    // declare block and slot which will be used to store the record id of the
+    // slot we need to check.
+    int block, slot;
 
-    // if the current search index record is invalid(i.e. both block and slot = -1)
+    /* if the current search index record is invalid(i.e. = {-1, -1})
+       (this only happens when the caller reset the search index)
+    */
     if (prevRecId.block == -1 && prevRecId.slot == -1)
     {
         // (new project operation. start from beginning)
@@ -763,7 +812,7 @@ int BlockAccess::project(int relId, Attribute *record) {
        records of the relation */
     while (block != -1)
     {
-        // create a RecBuffer object for block (use constructor for existing block)
+        // create a RecBuffer object for block (using appropriate constructor!)
 
         // get header of the block using RecBuffer::getHeader() function
         // get slot map of the block using RecBuffer::getSlotMap() function
@@ -773,6 +822,8 @@ int BlockAccess::project(int relId, Attribute *record) {
             // (no more slots in this block)
             // update block = right block of block
             // update slot = 0
+            // (NOTE: if this is the last block, rblock would be -1. this would
+            //        set block = -1 and fail the loop condition )
         }
         else if (/* slot is free */)
         { // (i.e slot-th entry in slotMap contains SLOT_UNOCCUPIED)
