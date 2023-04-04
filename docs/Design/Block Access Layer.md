@@ -552,7 +552,7 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
 
 #### Description
 
-This method deletes the relation with the name specified in arguments. This involves freeing the record blocks and index blocks allocated to this relation, as well as deleting the records corresponding to the relation in the relation catalog and attribute catalog.
+This method deletes the relation with the name specified as argument. This involves freeing the record blocks and index blocks allocated to this relation, as well as deleting the records corresponding to the relation in the relation catalog and attribute catalog.
 
 #### Arguments
 
@@ -562,10 +562,11 @@ This method deletes the relation with the name specified in arguments. This invo
 
 #### Return Values
 
-| Value                         | Description                                  |
-| ----------------------------- | -------------------------------------------- |
-| [`SUCCESS`](/constants)       | On successful deletion of the given relation |
-| [`E_RELNOTEXIST`](/constants) | If the relation does not exist               |
+| Value                          | Description                                                                                                 |
+| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful deletion of the given relation                                                                |
+| [`E_RELNOTEXIST`](/constants)  | If the relation does not exist                                                                              |
+| [`E_NOTPERMITTED`](/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 
@@ -575,10 +576,16 @@ If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap()
 
 ```cpp
 int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
+    // if the relation to delete is either Relation Catalog or Attribute Catalog,
+    //     return E_NOTPERMITTED
+        // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
+        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+
     /* reset the searchIndex of the relation catalog using
        RelCacheTable::resetSearchIndex() */
 
-    Attribute relNameAttr;
+    Attribute relNameAttr; // (stores relName as type union Attribute)
+    // assign relNameAttr.sVal = relName
 
     //  linearSearch on the relation catalog for RelName = relNameAttr
 
@@ -627,10 +634,10 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
         // get the header of the block
         // get the record corresponding to attrCatRecId.slot
 
-        // declare rootBlock to store the root block field from the
-        // attribute catalog record.
+        // declare variable rootBlock which will be used to store the root
+        // block field from the attribute catalog record.
         int rootBlock = /* get root block from the record */;
-        // (This will be used later to delete any indexes if it exists
+        // (This will be used later to delete any indexes if it exists)
 
         // Update the Slotmap for the block by setting the slot as SLOT_UNOCCUPIED
         // Hint: use RecBuffer.getSlotMap and RecBuffer.setSlotMap
@@ -661,10 +668,9 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
                    relation with the block number of the previous block. */
             }
 
-            // (since the attribute catalog will never be empty(why?), we do not
-            //  need to handle the case of the linked list becoming empty i.e
-            //  every block gets released. this would have required us to update
-            //  the pointer to the head of the linked list )
+            // (Since the attribute catalog will never be empty(why?), we do not
+            //  need to handle the case of the linked list becoming empty - i.e
+            //  every block of the attribute catalog gets released.)
 
             // call releaseBlock()
         }
@@ -687,15 +693,17 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
     /*** Updating the Relation Cache Table ***/
     /** Update relation catalog record entry (number of records in relation
         catalog is decreased by 1) **/
-    // Hint: Get the entry corresponding to relation catalog from the relation
+    // Get the entry corresponding to relation catalog from the relation
     // cache and update the number of records and set it back
+    // (using RelCacheTable::setRelCatEntry() function)
 
     /** Update attribute catalog entry (number of records in attribute catalog
         is decreased by numberOfAttributesDeleted) **/
     // i.e., #Records = #Records - numberOfAttributesDeleted
 
-    // Hint: Get the entry corresponding to attribute catalog from the relation
+    // Get the entry corresponding to attribute catalog from the relation
     // cache and update the number of records and set it back
+    // (using RelCacheTable::setRelCatEntry() function)
 
     return SUCCESS;
 }

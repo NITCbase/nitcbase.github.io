@@ -7,7 +7,7 @@ title: "Stage 8 : Creating and Deleting Relations"
 :::note Learning Objectives
 
 - Implement the creation of relations by inserting records into the catalogs
-- Implement the deletion of relations and freeing of the disk storage structures associated to the relation
+- Implement the deletion of relations and freeing of the disk storage structures associated with the relation
 
 :::
 
@@ -280,7 +280,7 @@ In the [Block Access Layer](../Design/Block%20Access%20Layer.md), we implement t
 
 We do not need to modify the [Block Access Layer](../Design/Block%20Access%20Layer.md) for relation creation at this stage because creation of a relation only involves insertion of records into the catalogs and this is something that we had already implemented in previous stages (in the `insert()` function). However, this function will be updated in subsequent stages to handle indexing.
 
-The `search()` function in it's final state will be used to either do a linear search or a B+ tree search on the records of a relation depending on whether an index exists for the relation. However, since we have not implemented indexes yet, our current implementation will just call the `linearSearch()` function.
+The `search()` function in it's final state will be used to either do a linear search or a B+ tree search on the records of a relation depending on whether an index exists for the relation. Since we have not implemented indexes yet, our current implementation will just call the `linearSearch()` function.
 
 The `deleteRelation()` function releases all the record blocks of the relation and deletes the relation's entries from the relation and attribute catalog. If the deletion of the entries in the attribute catalog causes one of its blocks to be completely unoccupied, we release that block as well. We then update the changes in the records of the catalogs in the catalog caches.
 
@@ -313,7 +313,7 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
 }
 ```
 
-> **TASK**: Implement the `BlockAccess::deleteRelation()` method by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation). The algorithm specified in the docs calls `BPlusTree::bPlusDestroy()` to free any indexes that exist for the relation. Since we have not yet implemented indexing, this call may be omitted. The rest of the design remains the same.
+> **TASK**: Implement the `BlockAccess::deleteRelation()` method by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation). The algorithm specified in the docs calls `BPlusTree::bPlusDestroy()` to free any indexes that exist for the relation. Since we have not yet implemented indexing, this call may be omitted. Except for the variables, constants, and methods referring to indexing, the rest of the design remains the same.
 
 </details>
 
