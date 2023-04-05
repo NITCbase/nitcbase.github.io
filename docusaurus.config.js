@@ -27,7 +27,7 @@ const config = {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
           remarkPlugins: [math],
-          rehypePlugins: [katex],
+          rehypePlugins: [[katex, { strict: false }]],
           breadcrumbs: false,
         },
         blog: {
