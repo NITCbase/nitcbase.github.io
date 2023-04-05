@@ -136,7 +136,7 @@ const config = {
               },
               {
                 label: "GitHub",
-                href: "https://github.com/Nitcbase",
+                href: "https://github.com/NITCbase",
               },
             ],
           },

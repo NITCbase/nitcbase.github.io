@@ -6,7 +6,7 @@ title: "Physical Layer"
 :::info NOTE
 
 The `disk` binary file that simulates the NITCbase disk (and the run copy of disk called `disk_run_copy`) is located in the `Disk/` directory.
-The C++ Disk class that initiates the run copy of disk and also provides read/write access to the disk is located in the `Disk.cpp` file of `Disk_Class/` directory. [**The Disk Class has been fully implemented and the code can be found here.**](https://github.com/Nitcbase/nitcbase/blob/master/Disk_Class/Disk.cpp)
+The C++ Disk class that initiates the run copy of disk and also provides read/write access to the disk is located in the `Disk.cpp` file of `Disk_Class/` directory. [**The Disk Class has been fully implemented and the code can be found here.**](https://github.com/NITCbase/nitcbase/blob/master/Disk_Class/Disk.cpp)
 
 :::
 
