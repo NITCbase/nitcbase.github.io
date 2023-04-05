@@ -175,7 +175,7 @@ Gives the indexNumth entry of the block.
 - The `void` pointer is a generic pointer that can be pointed at objects of any data type. However, because the `void` pointer does not know what type of object it is pointing to, it must first be explicitly cast to another pointer type before it is dereferenced.
 - The higher layers calling the `getEntry()` function of the `IndInternal class` must ensure that the argument of type `struct InternalEntry *` is passed.
 - The higher layers must allocate memory for the `struct InternalEntry` before calling this function.
-- The alignment of the `InternalEntry` structure in memory might be different from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
+- The alignment of the `InternalEntry` structure in memory [might be different](https://en.wikipedia.org/wiki/Data_structure_alignment#Data_structure_padding) from the way it is organized in our disk. Make sure to copy each element of the structure separately with appropriate offset. Using `memcpy` on the whole object can lead to errors.
 
 :::
 
@@ -184,14 +184,17 @@ Gives the indexNumth entry of the block.
 ```cpp
 int IndInternal::getEntry(void *ptr, int indexNum) {
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
         // return the value returned by the call.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1), return E_OUTOFBOUND.
+    // if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1)
+    //     return E_OUTOFBOUND.
 
-    // copy the indexNum'th Internalentry in block to memory ptr(ptr can be type casted appropriately if needed).
+    // copy the indexNum'th Internalentry in block to memory ptr
+    // (ptr can be type casted appropriately if needed).
 
     // return SUCCESS.
 }

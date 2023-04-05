@@ -327,7 +327,7 @@ Your NITCbase now supports the creation of relations. With that, we have now imp
 SELECT * FROM RELATIONCAT INTO null WHERE RelName=ATTRIBUTECAT
 ```
 
-Make note of the value of the `LastBlock` field of the attribute catalog. Then, create the following relations using the [CREATE TABLE](../User%20Interface%20Commands/ddl.md#create-table) command and insert all the records from [this csv file](/roadmap_files/s8products.txt) into the relation `Products`.
+Make note of the value of the `LastBlock` field of the attribute catalog. Then, create the following relations using the [CREATE TABLE](../User%20Interface%20Commands/ddl.md#create-table) command.
 
 ```
 Products(id NUM, name STR, cost NUM, stock NUM, color STR)

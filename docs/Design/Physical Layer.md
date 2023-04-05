@@ -266,7 +266,7 @@ The Internal index block must be loaded from the disk to the main memory before 
 
 ### Leaf Index Block Structure
 
-**A leaf node in the B+ tree stores the actual indices for the records in a relation**. A disk block that stores a leaf node of a B+ tree is called a leaf index Block. _Each leaf index block in NITCbase stores a maximum of 63 indices_. An index is a 3-tuple: `(attribute value, block number, slot number)`. The size of an index in nitcbase is 32 bytes (the last 8 bytes are unused)
+**A leaf node in the B+ tree stores the actual indices for the records in a relation**. A disk block that stores a leaf node of a B+ tree is called a leaf index Block. _Each leaf index block in NITCbase stores a maximum of 63 indices_. An index is a 3-tuple: `(attribute value, block number, slot number)`. The size of an index in NITCbase is 32 bytes (the last 8 bytes are unused)
 
 !["Leaf Index Block"](../../static/img/LeafIndexBlock.png)
 

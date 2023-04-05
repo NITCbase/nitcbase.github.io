@@ -17,3 +17,4 @@ _It is very important that you proceed with the roadmap on a regular schedule an
 - [**Stage 7 : Inserting Records Into Relations (20 hours)**](../Roadmap/Stage07.md)
 - [**Stage 8 : Creating and Deleting Relations (10 hours)**](../Roadmap/Stage08.md)
 - [**Stage 9 : Selection and Projection on Relations (10 hours)**](../Roadmap/Stage09.md)
+- [**Stage 10: B+ Tree Search on Relations (20 hours)**](../Roadmap/Stage10.md)
