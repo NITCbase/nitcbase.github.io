@@ -34,10 +34,10 @@ Called if a new index block of the input type is to be allocated in the disk.
 
 #### Arguments
 
-| Name | Type   | Description                                                                                      |
-| ---- | ------ | ------------------------------------------------------------------------------------------------ |
-| I    | `char` | New block of [`IND_INTERNAL`](<https://nitcbase.github.io(/constants).html>) type to be alloted. |
-| L    | `char` | New block of [`IND_LEAF `](<https://nitcbase.github.io(/constants).html>) type to be alloted.    |
+| **Name** | **Type** | **Description**                                               |
+| -------- | -------- | ------------------------------------------------------------- |
+| I        | `char`   | New block of [`IND_INTERNAL`](/constants) type to be alloted. |
+| L        | `char`   | New block of [`IND_LEAF `](/constants) type to be alloted.    |
 
 #### Return Values
 
@@ -63,9 +63,9 @@ Called when the block has already been initialised as an index block on the disk
 
 #### Arguments
 
-| Name     | Type  | Description                      |
-| -------- | ----- | -------------------------------- |
-| blockNum | `int` | Block number of the index block. |
+| **Name** | **Type** | **Description**                  |
+| -------- | -------- | -------------------------------- |
+| blockNum | `int`    | Block number of the index block. |
 
 #### Return Values
 
@@ -133,9 +133,9 @@ Called when the block has already been initialised as an internal index block on
 
 #### Arguments
 
-| Name     | Type  | Description                               |
-| -------- | ----- | ----------------------------------------- |
-| blockNum | `int` | Block number of the internal index block. |
+| **Name** | **Type** | **Description**                           |
+| -------- | -------- | ----------------------------------------- |
+| blockNum | `int`    | Block number of the internal index block. |
 
 #### Return Values
 
@@ -158,14 +158,14 @@ Gives the indexNumth entry of the block.
 
 #### Arguments
 
-| Name     | Type     | Description                                                                                             |
+| **Name** | **Type** | **Description**                                                                                         |
 | -------- | -------- | ------------------------------------------------------------------------------------------------------- |
 | ptr      | `void *` | Pointer to the struct InternalEntry to which the specified internal index entry of the block is copied. |
 | indexNum | `int`    | Index number of the entry in the block.                                                                 |
 
 #### Return Values
 
-| Value                        | Description                                                              |
+| **Value**                    | **Description**                                                          |
 | ---------------------------- | ------------------------------------------------------------------------ |
 | [`SUCCESS`](/constants)      | Successful copy of the internal index entry.                             |
 | [`E_OUTOFBOUND`](/constants) | Input indexNum is outside the valid range of index numbers of the block. |
@@ -205,14 +205,14 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 
 #### Arguments
 
-| Name     | Type     | Description                                                                                            |
+| **Name** | **Type** | **Description**                                                                                        |
 | -------- | -------- | ------------------------------------------------------------------------------------------------------ |
 | ptr      | `void *` | Pointer to the struct InternalEntry from which the specified internal index entry of the block is set. |
 | indexNum | `int`    | Index number of the entry in the block.                                                                |
 
 #### Return Values
 
-| Value                        | Description                                                              |
+| **Value**                    | **Description**                                                          |
 | ---------------------------- | ------------------------------------------------------------------------ |
 | [`SUCCESS`](/constants)      | Successful copy of the internal index entry.                             |
 | [`E_OUTOFBOUND`](/constants) | Input indexNum is outside the valid range of index numbers of the block. |
@@ -300,9 +300,9 @@ Called when the block has already been initialised as a leaf index block on the 
 
 #### Arguments
 
-| Name     | Type  | Description                           |
-| -------- | ----- | ------------------------------------- |
-| blockNum | `int` | Block number of the leaf index block. |
+| **Name** | **Type** | **Description**                       |
+| -------- | -------- | ------------------------------------- |
+| blockNum | `int`    | Block number of the leaf index block. |
 
 #### Return Values
 
@@ -327,14 +327,14 @@ Gives the indexNum<sup>th</sup> entry of the block.
 
 #### Arguments
 
-| Name     | Type     | Description                                                                                           |
+| **Name** | **Type** | **Description**                                                                                       |
 | -------- | -------- | ----------------------------------------------------------------------------------------------------- |
 | ptr      | `void *` | Pointer to the [struct Index](#index) to which the specified leaf index entry of the block is copied. |
 | indexNum | `int`    | Index number of the entry in the block.                                                               |
 
 #### Return Values
 
-| Value                        | Description                                                                |
+| **Value**                    | **Description**                                                            |
 | ---------------------------- | -------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successful getting of the leaf index entry.                                |
 | [`E_OUTOFBOUND`](/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
@@ -374,14 +374,14 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 
 #### Arguments
 
-| Name     | Type     | Description                                                                                           |
+| **Name** | **Type** | **Description**                                                                                       |
 | -------- | -------- | ----------------------------------------------------------------------------------------------------- |
 | ptr      | `void *` | Pointer to the [struct Index](#index) to which the specified leaf index entry of the block is copied. |
 | indexNum | `int`    | Index number of the entry in the block.                                                               |
 
 #### Return Values
 
-| Value                        | Description                                                                |
+| **Value**                    | **Description**                                                            |
 | ---------------------------- | -------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successful setting of the leaf index entry.                                |
 | [`E_OUTOFBOUND`](/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |

@@ -51,9 +51,9 @@ If the block has already been initialised as a record or index block, use [const
 
 #### Arguments
 
-| Name      | Type   | Description                                                                                                                                                     |
-| --------- | ------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| blockType | `char` | Type of the new block to be allotted. It can be one of the following: `'R'`,`'I'` or `'L'` where, <br/> `R`-`REC` <br/> `I`-`IND_INTERNAL` <br/> `L`-`IND_LEAF` |
+| **Name**  | **Type** | **Description**                                                                                                                                                 |
+| --------- | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| blockType | `char`   | Type of the new block to be allotted. It can be one of the following: `'R'`,`'I'` or `'L'` where, <br/> `R`-`REC` <br/> `I`-`IND_INTERNAL` <br/> `L`-`IND_LEAF` |
 
 #### Return Values
 
@@ -91,9 +91,9 @@ If a new block is to be allocated in the disk use [constructor 1](#blockbuffer--
 
 #### Arguments
 
-| Name     | Type  | Description                                              |
-| -------- | ----- | -------------------------------------------------------- |
-| blockNum | `int` | Block number of the block whose object is to be created. |
+| **Name** | **Type** | **Description**                                          |
+| -------- | -------- | -------------------------------------------------------- |
+| blockNum | `int`    | Block number of the block whose object is to be created. |
 
 #### Return Values
 
@@ -120,9 +120,9 @@ Nil
 
 #### Return Values
 
-| Value    | Description                |
-| -------- | -------------------------- |
-| blockNum | Block number of the block. |
+| **Value** | **Description**            |
+| --------- | -------------------------- |
+| blockNum  | Block number of the block. |
 
 #### Algorithm
 
@@ -149,9 +149,9 @@ Gives the header of the block.
 
 #### Arguments
 
-| Name | Type              | Description                                                            |
-| ---- | ----------------- | ---------------------------------------------------------------------- |
-| head | struct HeadInfo\* | Pointer to the HeadInfo structure to which the block header is copied. |
+| **Name** | **Type**          | **Description**                                                        |
+| -------- | ----------------- | ---------------------------------------------------------------------- |
+| head     | struct HeadInfo\* | Pointer to the HeadInfo structure to which the block header is copied. |
 
 #### Return Values
 
@@ -196,9 +196,9 @@ Sets the header of the block.
 
 #### Arguments
 
-| Name | Type              | Description                                                            |
-| ---- | ----------------- | ---------------------------------------------------------------------- |
-| head | struct HeadInfo\* | Pointer to the HeadInfo structure to which the block header is copied. |
+| **Name** | **Type**          | **Description**                                                        |
+| -------- | ----------------- | ---------------------------------------------------------------------- |
+| head     | struct HeadInfo\* | Pointer to the HeadInfo structure to which the block header is copied. |
 
 #### Return Values
 
@@ -291,7 +291,7 @@ Nil
 
 #### Return Values
 
-| Value     | Description                                 |
+| **Value** | **Description**                             |
 | --------- | ------------------------------------------- |
 | bufferPtr | Pointer to the buffer containing the block. |
 
@@ -346,13 +346,13 @@ Returns the block number of a free block. It sets up the header of the block wit
 
 #### Arguments
 
-| Name      | Type  | Description                                                 |
-| --------- | ----- | ----------------------------------------------------------- |
-| blockType | `int` | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+| **Name**  | **Type** | **Description**                                             |
+| --------- | -------- | ----------------------------------------------------------- |
+| blockType | `int`    | Type of the required block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
 #### Return Values
 
-| Value                      | Description                             |
+| **Value**                  | **Description**                         |
 | -------------------------- | --------------------------------------- |
 | blockNum                   | Block number of the free block.         |
 | [`E_DISKFULL`](/constants) | No free block is available in the disk. |
@@ -390,9 +390,9 @@ Sets the type of the block with the input block type. This method sets the type 
 
 #### Arguments
 
-| Name      | Type  | Description                                        |
-| --------- | ----- | -------------------------------------------------- |
-| blockType | `int` | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
+| **Name**  | **Type** | **Description**                                    |
+| --------- | -------- | -------------------------------------------------- |
+| blockType | `int`    | Type of the block(`REC`/`IND_INTERNAL`/`IND_LEAF`) |
 
 #### Return Values
 

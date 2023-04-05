@@ -128,7 +128,7 @@ Make sure to return the correct value from the methods, preferably sticking to t
 
 #### Arguments
 
-| Attribute  | Type                | Description                                                            |
+| **Name**   | **Type**            | **Description**                                                        |
 | ---------- | ------------------- | ---------------------------------------------------------------------- |
 | relname    | `char[ATTR_SIZE]`   | Name of the relation/table to be created                               |
 | no_attrs   | `int`               | Number of attributes of the relation to be created                     |
@@ -137,7 +137,7 @@ Make sure to return the correct value from the methods, preferably sticking to t
 
 #### Return Values
 
-| Value                           | Description                                                    |
+| **Value**                       | **Description**                                                |
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/constants)         | On successful creation of the relation                         |
 | [`E_RELEXIST`](/constants)      | If the relation with name relName already exists.              |
@@ -171,13 +171,13 @@ int Frontend::create_table(char relname[ATTR_SIZE],
 
 #### Arguments
 
-| Attribute | Type              | Description                              |
-| --------- | ----------------- | ---------------------------------------- |
-| relname   | `char[ATTR_SIZE]` | Name of the relation/table to be deleted |
+| **Name** | **Type**          | **Description**                          |
+| -------- | ----------------- | ---------------------------------------- |
+| relname  | `char[ATTR_SIZE]` | Name of the relation/table to be deleted |
 
 #### Return Values
 
-| Value                          | Description                                                                                                 |
+| **Value**                      | **Description**                                                                                             |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the relation.                                                                     |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                    |
@@ -205,13 +205,13 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute | Type              | Description                             |
-| --------- | ----------------- | --------------------------------------- |
-| relname   | `char[ATTR_SIZE]` | Name of the relation/table to be opened |
+| **Name** | **Type**          | **Description**                         |
+| -------- | ----------------- | --------------------------------------- |
+| relname  | `char[ATTR_SIZE]` | Name of the relation/table to be opened |
 
 #### Return Values
 
-| Value                         | Description                                                    |
+| **Value**                     | **Description**                                                |
 | ----------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/constants)       | On successful opening of the relation                          |
 | [`E_RELNOTEXIST`](/constants) | If the relation with name `relName` does not exist in the disk |
@@ -238,13 +238,13 @@ int Frontend::open_table(char relname[ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute | Type              | Description                             |
-| --------- | ----------------- | --------------------------------------- |
-| relname   | `char[ATTR_SIZE]` | Name of the relation/table to be opened |
+| **Name** | **Type**          | **Description**                         |
+| -------- | ----------------- | --------------------------------------- |
+| relname  | `char[ATTR_SIZE]` | Name of the relation/table to be opened |
 
 #### Return Values
 
-| Value                          | Description                                                                                                             |
+| **Value**                      | **Description**                                                                                                         |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful closing of the relation                                                                                   |
 | [`E_RELNOTOPEN`](/constants)   | If relation with given name is not open                                                                                 |
@@ -272,14 +272,14 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute | Type              | Description                                                         |
-| --------- | ----------------- | ------------------------------------------------------------------- |
-| relname   | `char[ATTR_SIZE]` | Name of the relation that contains the attribute to create index on |
-| attrname  | `char[ATTR_SIZE]` | Attribute to create index on                                        |
+| **Name** | **Type**          | **Description**                                                     |
+| -------- | ----------------- | ------------------------------------------------------------------- |
+| relname  | `char[ATTR_SIZE]` | Name of the relation that contains the attribute to create index on |
+| attrname | `char[ATTR_SIZE]` | Attribute to create index on                                        |
 
 #### Return Values
 
-| Value                          | Description                                                                                                             |
+| **Value**                      | **Description**                                                                                                         |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful creation of B+ tree.                                                                                      |
 | [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                                                                            |
@@ -308,14 +308,14 @@ int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute | Type              | Description                                                         |
-| --------- | ----------------- | ------------------------------------------------------------------- |
-| relname   | `char[ATTR_SIZE]` | Name of the relation that contains the attribute to remove index of |
-| attrname  | `char[ATTR_SIZE]` | Attribute to remove index of                                        |
+| **Name** | **Type**          | **Description**                                                     |
+| -------- | ----------------- | ------------------------------------------------------------------- |
+| relname  | `char[ATTR_SIZE]` | Name of the relation that contains the attribute to remove index of |
+| attrname | `char[ATTR_SIZE]` | Attribute to remove index of                                        |
 
 #### Return Values
 
-| Value                          | Description                                                   |
+| **Value**                      | **Description**                                               |
 | ------------------------------ | ------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the B+ tree                         |
 | [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                  |
@@ -346,14 +346,14 @@ char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]
 
 #### Arguments
 
-| Attribute    | Type              | Description                        |
+| **Name**     | **Type**          | **Description**                    |
 | ------------ | ----------------- | ---------------------------------- |
 | relname_from | `char[ATTR_SIZE]` | Name of the relation to be renamed |
 | relname_to   | `char[ATTR_SIZE]` | New name of the relation           |
 
 #### Return Values
 
-| Value                          | Description                                                                                                                             |
+| **Value**                      | **Description**                                                                                                                         |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                                  |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                |
@@ -382,7 +382,7 @@ int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[A
 
 #### Arguments
 
-| Attribute     | Type              | Description                                                 |
+| **Name**      | **Type**          | **Description**                                             |
 | ------------- | ----------------- | ----------------------------------------------------------- |
 | relname       | `char[ATTR_SIZE]` | Name of the relation containing the attribute to be renamed |
 | attrname_from | `char[ATTR_SIZE]` | Name of the attribute to be renamed                         |
@@ -390,7 +390,7 @@ int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[A
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                     |
+| **Value**                      | **Description**                                                                                                                                 |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful renaming of the attribute                                                                                                         |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                        |
@@ -421,7 +421,7 @@ int Frontend::alter_table_rename_column(char relname[ATTR_SIZE], char attrname_f
 
 #### Arguments
 
-| Attribute   | Type                       | Description                                                                                                     |
+| **Name**    | **Type**                   | **Description**                                                                                                 |
 | ----------- | -------------------------- | --------------------------------------------------------------------------------------------------------------- |
 | relname     | `char[ATTR_SIZE]`          | Name of the relation into which insert operation has to be performed                                            |
 | attr_count  | `int`                      | Number of values in the record input by the user                                                                |
@@ -463,7 +463,7 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count,
 
 #### Arguments
 
-| Attribute      | Type              | Description                 |
+| **Name**       | **Type**          | **Description**             |
 | -------------- | ----------------- | --------------------------- |
 | relname_source | `char[ATTR_SIZE]` | Name of the source relation |
 | relname_target | `char[ATTR_SIZE]` | Name of the target relation |
@@ -501,7 +501,7 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 
 #### Arguments
 
-| Attribute      | Type                | Description                                                                             |
+| **Name**       | **Type**            | **Description**                                                                         |
 | -------------- | ------------------- | --------------------------------------------------------------------------------------- |
 | relname_source | `char[ATTR_SIZE]`   | Name of Source Relation                                                                 |
 | relname_target | `char[ATTR_SIZE]`   | Name of the Target Relation                                                             |
@@ -546,7 +546,7 @@ char attr_list[][ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute      | Type              | Description                                                                                                                                                                                                                       |
+| **Name**       | **Type**          | **Description**                                                                                                                                                                                                                   |
 | -------------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relname_source | `char[ATTR_SIZE]` | Name of Source Relation                                                                                                                                                                                                           |
 | relname_target | `char[ATTR_SIZE]` | Name of the Target Relation                                                                                                                                                                                                       |
@@ -591,7 +591,7 @@ char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 
 #### Arguments
 
-| Attribute      | Type                | Description                                                                                                                                                      |
+| **Name**       | **Type**            | **Description**                                                                                                                                                  |
 | -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relname_source | `char[ATTR_SIZE]`   | Name of Source Relation                                                                                                                                          |
 | relname_target | `char[ATTR_SIZE]`   | Name of the Target Relation                                                                                                                                      |
@@ -603,7 +603,7 @@ char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 
 #### Return Values
 
-| Value                              | Description                                                                                                           |
+| **Value**                          | **Description**                                                                                                       |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation.                                                |
 | [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                    |
@@ -658,7 +658,7 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 
 #### Arguments
 
-| Attribute          | Type              | Description                                        |
+| **Name**           | **Type**          | **Description**                                    |
 | ------------------ | ----------------- | -------------------------------------------------- |
 | relname_source_one | `char[ATTR_SIZE]` | Name of 1st Source Relation.                       |
 | relname_source_two | `char[ATTR_SIZE]` | Name of 2nd Source Relation.                       |
@@ -706,7 +706,7 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 
 #### Arguments
 
-| Attribute          | Type                | Description                                                                                                   |
+| **Name**           | **Type**            | **Description**                                                                                               |
 | ------------------ | ------------------- | ------------------------------------------------------------------------------------------------------------- |
 | relname_source_one | `char[ATTR_SIZE]`   | Name of 1st Source Relation.                                                                                  |
 | relname_source_two | `char[ATTR_SIZE]`   | Name of 2nd Source Relation.                                                                                  |
@@ -718,7 +718,7 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 
 #### Return Values
 
-| Value                              | Description                                                                                                           |
+| **Value**                          | **Description**                                                                                                       |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation resulting from join.                            |
 | [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                    |

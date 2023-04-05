@@ -256,13 +256,13 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 
 #### Arguments
 
-| Name    | Type                        | Description                                                                   |
-| ------- | --------------------------- | ----------------------------------------------------------------------------- |
-| relName | `unsigned char [ATTR_SIZE]` | Name of the relation whose relation id in the Open Relation Table is required |
+| **Name** | **Type**                    | **Description**                                                               |
+| -------- | --------------------------- | ----------------------------------------------------------------------------- |
+| relName  | `unsigned char [ATTR_SIZE]` | Name of the relation whose relation id in the Open Relation Table is required |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                                        | cache entries |
+| **Value**                    | **Description**                                                                                                                                                    | cache entries |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
 | `relId`                      | The relation id of the relation in the Open Relation Table                                                                                                         |
 | [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
@@ -288,13 +288,13 @@ Creates an entry for the input relation in the _Open Relation_ Table and returns
 
 #### Arguments
 
-| Name    | Type                        | Description                                                                  |
-| ------- | --------------------------- | ---------------------------------------------------------------------------- |
-| relName | `unsigned char [ATTR_SIZE]` | Name of the relation whose entry is to be created in the Open Relation Table |
+| **Name** | **Type**                    | **Description**                                                              |
+| -------- | --------------------------- | ---------------------------------------------------------------------------- |
+| relName  | `unsigned char [ATTR_SIZE]` | Name of the relation whose entry is to be created in the Open Relation Table |
 
 #### Return Values
 
-| Value                         | Description                                                                                                  |
+| **Value**                     | **Description**                                                                                              |
 | ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
 | `relId`                       | Relation id of the relation in the Open Relation Table. This is a value between 0 and [MAX_OPEN](/constants) |
 | [`E_RELNOTEXIST`](/constants) | No relation with name, relName, exists in the disk                                                           |
@@ -388,13 +388,13 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 
 #### Arguments
 
-| Name  | Type  | Description                                           |
-| ----- | ----- | ----------------------------------------------------- |
-| relId | `int` | Relation id of a relation in the Open Relation Table. |
+| **Name** | **Type** | **Description**                                       |
+| -------- | -------- | ----------------------------------------------------- |
+| relId    | `int`    | Relation id of a relation in the Open Relation Table. |
 
 #### Return Values
 
-| Value                          | Description                                                                                                                             |
+| **Value**                      | **Description**                                                                                                                         |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully closed the entry of the relation in the Open Relation Table                                                                |
 | [`E_NOTPERMITTED`](/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session                                                |
@@ -473,7 +473,7 @@ Nil
 
 #### Return Values
 
-| Value                       | Description                                      |
+| **Value**                   | **Description**                                  |
 | --------------------------- | ------------------------------------------------ |
 | relId                       | Index of a free entry in the Open Relation Table |
 | [`E_CACHEFULL`](/constants) | No free entries left in the Open Relation Table  |

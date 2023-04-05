@@ -49,10 +49,10 @@ If in between the insertion, the disk runs out of space, then the B+ Tree will n
 
 #### Arguments
 
-| **Attribute** | **Type**          | **Description**                                                             |
-| ------------- | ----------------- | --------------------------------------------------------------------------- |
-| relId         | `int`             | Relation Id of the relation whose attribute a B+ tree is to be created for. |
-| attrName      | `char[ATTR_SIZE]` | Attribute/column name for which B+ tree (index) is to be created.           |
+| **Name** | **Type**          | **Description**                                                             |
+| -------- | ----------------- | --------------------------------------------------------------------------- |
+| relId    | `int`             | Relation Id of the relation whose attribute a B+ tree is to be created for. |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name for which B+ tree (index) is to be created.           |
 
 #### Return values
 
@@ -167,12 +167,12 @@ During insertion of an entry to a valid B+ Tree, the disk may run out of memory.
 
 #### Arguments
 
-| **Attribute** | **Type**          | **Description**                                                                      |
-| ------------- | ----------------- | ------------------------------------------------------------------------------------ |
-| relId         | `int`             | Relation Id of the relation containing the attribute.                                |
-| attrName      | `char[ATTR_SIZE]` | Attribute/column name to whose B+ tree (index) an entry is to be added               |
-| attrVal       | `union Attribute` | Attribute value corresponding to attrName in the target record.                      |
-| recId         | `struct RecId`    | The record id of the target record whose Index entry is to be inserted into B+ Tree. |
+| **Name** | **Type**          | **Description**                                                                      |
+| -------- | ----------------- | ------------------------------------------------------------------------------------ |
+| relId    | `int`             | Relation Id of the relation containing the attribute.                                |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name to whose B+ tree (index) an entry is to be added               |
+| attrVal  | `union Attribute` | Attribute value corresponding to attrName in the target record.                      |
+| recId    | `struct RecId`    | The record id of the target record whose Index entry is to be inserted into B+ Tree. |
 
 #### Return values
 
@@ -478,12 +478,12 @@ The caller is expected to verify that an index exists on attrName for the relati
 
 #### Arguments
 
-| **Attribute** | **Type**          | **Description**                                                                                                                                                                                               |
-| ------------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relId         | `int`             | Relation Id of the relation containing the attribute with index.                                                                                                                                              |
-| attrName      | `char[ATTR_SIZE]` | Attribute/column name (which has an index) to which condition need to be checked with.                                                                                                                        |
-| attrVal       | `union Attribute` | value of attribute that has to be checked against the operater.                                                                                                                                               |
-| op            | `int`             | Conditional Operator (can be one among `EQ` , `LE` , `LT` , `GE` , `GT` , `NE` corresponding to equal, less or than equal, less than ,greater than or equal, greater than, not equal operators respectively). |
+| **Name** | **Type**          | **Description**                                                                                                                                                                                               |
+| -------- | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| relId    | `int`             | Relation Id of the relation containing the attribute with index.                                                                                                                                              |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name (which has an index) to which condition need to be checked with.                                                                                                                        |
+| attrVal  | `union Attribute` | value of attribute that has to be checked against the operater.                                                                                                                                               |
+| op       | `int`             | Conditional Operator (can be one among `EQ` , `LE` , `LT` , `GE` , `GT` , `NE` corresponding to equal, less or than equal, less than ,greater than or equal, greater than, not equal operators respectively). |
 
 #### Return values
 
@@ -685,9 +685,9 @@ The caller is responsible for updating the rootBlock field in the corresponding 
 
 #### Arguments
 
-| **Attribute** | **Type** | **Description**                                         |
-| ------------- | -------- | ------------------------------------------------------- |
-| rootBlockNum  | `int`    | block number of the root of the B+ tree to be destroyed |
+| **Name**     | **Type** | **Description**                                         |
+| ------------ | -------- | ------------------------------------------------------- |
+| rootBlockNum | `int`    | block number of the root of the B+ tree to be destroyed |
 
 #### Return values
 

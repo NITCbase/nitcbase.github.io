@@ -56,9 +56,9 @@ Called when the record block already has already been initialised as a record on
 
 #### Arguments
 
-| Name     | Type  | Description                      |
-| -------- | ----- | -------------------------------- |
-| blockNum | `int` | Block number of the record block |
+| **Name** | **Type** | **Description**                  |
+| -------- | -------- | -------------------------------- |
+| blockNum | `int`    | Block number of the record block |
 
 #### Return Values
 
@@ -83,9 +83,9 @@ Gives the slotmap of the block.
 
 #### Arguments
 
-| Name    | Type              | Description                                                            |
-| ------- | ----------------- | ---------------------------------------------------------------------- |
-| slotMap | `unsigned char *` | Pointer to the array of unsigned char to which the slot map is copied. |
+| **Name** | **Type**          | **Description**                                                        |
+| -------- | ----------------- | ---------------------------------------------------------------------- |
+| slotMap  | `unsigned char *` | Pointer to the array of unsigned char to which the slot map is copied. |
 
 #### Return Values
 
@@ -129,9 +129,9 @@ Sets the slotmap of the block.
 
 #### Arguments
 
-| Name    | Type              | Description                                                           |
-| ------- | ----------------- | --------------------------------------------------------------------- |
-| slotMap | `unsigned char *` | Pointer to the array of unsigned char from which the slot map is set. |
+| **Name** | **Type**          | **Description**                                                       |
+| -------- | ----------------- | --------------------------------------------------------------------- |
+| slotMap  | `unsigned char *` | Pointer to the array of unsigned char from which the slot map is set. |
 
 #### Return Values
 
@@ -178,14 +178,14 @@ Gives the slotNumth record entry of the block.
 
 #### Arguments
 
-| Name    | Type                | Description                                                                           |
-| ------- | ------------------- | ------------------------------------------------------------------------------------- |
-| rec     | `union Attribute *` | Pointer to the array of union Attribute elements to which the record entry is copied. |
-| slotNum | `int`               | Slot number of the record in the block.                                               |
+| **Name** | **Type**            | **Description**                                                                       |
+| -------- | ------------------- | ------------------------------------------------------------------------------------- |
+| rec      | `union Attribute *` | Pointer to the array of union Attribute elements to which the record entry is copied. |
+| slotNum  | `int`               | Slot number of the record in the block.                                               |
 
 #### Return Values
 
-| Value                        | Description                                                         |
+| **Value**                    | **Description**                                                     |
 | ---------------------------- | ------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Succesful copy of the record.                                       |
 | [`E_OUTOFBOUND`](/constants) | Input slotNum is outside the set of valid slot values of the block. |
@@ -238,14 +238,14 @@ Sets the `slotNum`th record entry of the block with the input record contents.
 
 #### Arguments
 
-| Name    | Type                | Description                                                                          |
-| ------- | ------------------- | ------------------------------------------------------------------------------------ |
-| rec     | `union Attribute *` | Pointer to the array of union Attribute elements from which the record entry is set. |
-| slotNum | `int`               | Slot number of the record in the block.                                              |
+| **Name** | **Type**            | **Description**                                                                      |
+| -------- | ------------------- | ------------------------------------------------------------------------------------ |
+| rec      | `union Attribute *` | Pointer to the array of union Attribute elements from which the record entry is set. |
+| slotNum  | `int`               | Slot number of the record in the block.                                              |
 
 #### Return Values
 
-| Value                        | Description                                                         |
+| **Value**                    | **Description**                                                     |
 | ---------------------------- | ------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Succesful copy of the record.                                       |
 | [`E_OUTOFBOUND`](/constants) | Input slotNum is outside the set of valid slot values of the block. |

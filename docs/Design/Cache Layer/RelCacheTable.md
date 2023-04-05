@@ -59,14 +59,14 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 
 #### Arguments
 
-| Name      | Type           | Description                                                                                                      |
+| **Name**  | **Type**       | **Description**                                                                                                  |
 | --------- | -------------- | ---------------------------------------------------------------------------------------------------------------- |
 | relId     | `int`          | The relation id of the relation in the _Relation Cache_ Table                                                    |
 | relCatBuf | `RelCatEntry*` | Pointer to struct RelCatEntry to which the _Relation Catalog_ entry corresponding to input relId is to be copied |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                 |
+| **Value**                    | **Description**                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
@@ -105,14 +105,14 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 
 #### Arguments
 
-| Name      | Type           | Description                                                                                                          |
+| **Name**  | **Type**       | **Description**                                                                                                      |
 | --------- | -------------- | -------------------------------------------------------------------------------------------------------------------- |
 | relId     | `int`          | The relation id of the relation in the _Relation Cache_ Table                                                        |
 | relCatBuf | `RelCatEntry*` | Pointer to struct RelCatEntry using which the _Relation Catalog_ entry corresponding to input relId is to be updated |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                 |
+| **Value**                    | **Description**                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
@@ -154,14 +154,14 @@ The caller should allocate memory for the struct RecId before calling the functi
 
 #### Arguments
 
-| Name        | Type     | Description                                                                                                                       |
+| **Name**    | **Type** | **Description**                                                                                                                   |
 | ----------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | relId       | `int`    | The relation id of the relation in the _Relation Cache_ Table                                                                     |
 | searchIndex | `RecId*` | Pointer to struct RecId to which the searchIndex field of the _Relation Cache_ entry corresponding to input relId is to be copied |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                 |
+| **Value**                    | **Description**                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
@@ -199,14 +199,14 @@ The caller should allocate memory for the struct RecId before calling the functi
 
 #### Arguments
 
-| Name        | Type     | Description                                                                                                                           |
+| **Name**    | **Type** | **Description**                                                                                                                       |
 | ----------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | relId       | `int`    | The relation id of the relation in the _Relation Cache_ Table                                                                         |
 | searchIndex | `RecId*` | Pointer to struct RecId using which the searchIndex field of the _Relation Cache_ entry corresponding to input relId is to be updated |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                 |
+| **Value**                    | **Description**                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
@@ -241,13 +241,13 @@ Resets the value of `searchIndex` field of the given relation in _Relation Cache
 
 #### Arguments
 
-| Name  | Type  | Description                                                   |
-| ----- | ----- | ------------------------------------------------------------- |
-| relId | `int` | The relation id of the relation in the _Relation Cache_ Table |
+| **Name** | **Type** | **Description**                                               |
+| -------- | -------- | ------------------------------------------------------------- |
+| relId    | `int`    | The relation id of the relation in the _Relation Cache_ Table |
 
 #### Return Values
 
-| Value                        | Description                                                                                                                                 |
+| **Value**                    | **Description**                                                                                                                             |
 | ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
@@ -276,7 +276,7 @@ The caller should allocate memory for the `struct RelCatEntry` and array of `uni
 
 #### Arguments
 
-| Name        | Type                           | Description                                                                               |
+| **Name**    | **Type**                       | **Description**                                                                           |
 | ----------- | ------------------------------ | ----------------------------------------------------------------------------------------- |
 | record      | `union Attribute[RELCAT_SIZE`] | The record which is to be converted to a `RelCatEntry`                                    |
 | RelCatEntry | `RelCatEntry*`                 | Pointer to struct `RelCatEntry` to which the contents of the input record is to be copied |
@@ -297,7 +297,7 @@ The caller should allocate memory for the struct RelCatEntry and array of union 
 
 #### Arguments
 
-| Name        | Type                           | Description                                                                 |
+| **Name**    | **Type**                       | **Description**                                                             |
 | ----------- | ------------------------------ | --------------------------------------------------------------------------- |
 | RelCatEntry | `RelCatEntry*`                 | Pointer to struct `RelCatEntry` which is to be converted to a record.       |
 | record      | `union Attribute[RELCAT_SIZE]` | The record to which the contents of the input `RelCatEntry` is to be copied |

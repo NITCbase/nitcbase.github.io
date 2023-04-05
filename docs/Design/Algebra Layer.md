@@ -54,11 +54,11 @@ This method **inserts the given record** into the specified Relation. Insertion 
 
 #### Arguments
 
-| **Attribute** | **Type**            | **Description**                                                                                                                     |
-| ------------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| relName       | `char[ATTR_SIZE]`   | Name of the relation into which insert operation has to be performed.                                                               |
-| nAttrs        | `int`               | Number of attributes in the inserting record(which has to match with `numAttrs` field in the relation cache entry for the relation) |
-| record        | `char[][ATTR_SIZE]` | An array of strings with each string containing value of corresponding attribute.                                                   |
+| **Name** | **Type**            | **Description**                                                                                                                     |
+| -------- | ------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| relName  | `char[ATTR_SIZE]`   | Name of the relation into which insert operation has to be performed.                                                               |
+| nAttrs   | `int`               | Number of attributes in the inserting record(which has to match with `numAttrs` field in the relation cache entry for the relation) |
+| record   | `char[][ATTR_SIZE]` | An array of strings with each string containing value of corresponding attribute.                                                   |
 
 #### Return values
 
@@ -137,13 +137,13 @@ This function creates a new target relation with attributes as that of source re
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                                                                                                                                                                                                                   |
-| ------------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                                                                                          |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                                                                                       |
-| attr          | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                                                                                        |
-| op            | `int`              | The conditional operator (which can be one among `EQ`, `LE`, `LT`, `GE`, `GT`, `NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_) |
-| strVal        | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                                                                                               |
+| **Name**  | **Type**           | **Description**                                                                                                                                                                                                                   |
+| --------- | ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| srcRel    | `char[ATTR_SIZE]`  | Name of Source Relation.                                                                                                                                                                                                          |
+| targetRel | `char [ATTR_SIZE]` | Name of the target Relation                                                                                                                                                                                                       |
+| attr      | `char [ATTR_SIZE]` | Attribute/column name to which 'select' condition need to be checked with.                                                                                                                                                        |
+| op        | `int`              | The conditional operator (which can be one among `EQ`, `LE`, `LT`, `GE`, `GT`, `NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_) |
+| strVal    | `char [ATTR_SIZE]` | value of attribute.                                                                                                                                                                                                               |
 
 #### Return values
 
@@ -272,12 +272,12 @@ This function creates a new target relation with list of attributes specified in
 
 #### Arguments
 
-| **Attribute** | **Type**            | **Description**                                                                             |
-| ------------- | ------------------- | ------------------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`   | Name of source relation.                                                                    |
-| targetRel     | `char [ATTR_SIZE]`  | Name of the target relation(target relation is the Project of source relation)              |
-| tar_nAttrs    | `int`               | Number of attributes that have to be projected from source relation to target relation.     |
-| tar_attrs     | `char[][ATTR_SIZE]` | Array of attribute names that have to be projected from source relation to target relation. |
+| **Name**   | **Type**            | **Description**                                                                             |
+| ---------- | ------------------- | ------------------------------------------------------------------------------------------- |
+| srcRel     | `char[ATTR_SIZE]`   | Name of source relation.                                                                    |
+| targetRel  | `char [ATTR_SIZE]`  | Name of the target relation(target relation is the Project of source relation)              |
+| tar_nAttrs | `int`               | Number of attributes that have to be projected from source relation to target relation.     |
+| tar_attrs  | `char[][ATTR_SIZE]` | Array of attribute names that have to be projected from source relation to target relation. |
 
 #### Return values
 
@@ -374,10 +374,10 @@ This function creates a copy of the source relation in the target relation. **Ev
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                                                                 |
-| ------------- | ------------------ | ------------------------------------------------------------------------------- |
-| srcRel        | `char[ATTR_SIZE]`  | Name of source relation.                                                        |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target relation (target relation is the Project of source relation) |
+| **Name**  | **Type**           | **Description**                                                                 |
+| --------- | ------------------ | ------------------------------------------------------------------------------- |
+| srcRel    | `char[ATTR_SIZE]`  | Name of source relation.                                                        |
+| targetRel | `char [ATTR_SIZE]` | Name of the target relation (target relation is the Project of source relation) |
 
 #### Return values
 
@@ -473,13 +473,13 @@ An example for the join operation can be seen [here](../User%20Interface%20Comma
 
 #### Arguments
 
-| **Attribute** | **Type**           | **Description**                   |
-| ------------- | ------------------ | --------------------------------- |
-| srcRelOne     | `char[ATTR_SIZE]`  | Name of 1st Source Relation.      |
-| srcRelTwo     | `char[ATTR_SIZE]`  | Name of 2nd Source Relation.      |
-| targetRel     | `char [ATTR_SIZE]` | Name of the target Relation       |
-| attrOne       | `char [ATTR_SIZE]` | Attribute/column name in srcrel1. |
-| attrTwo       | `char [ATTR_SIZE]` | Attribute/column name in srcrel2. |
+| **Name**  | **Type**           | **Description**                   |
+| --------- | ------------------ | --------------------------------- |
+| srcRelOne | `char[ATTR_SIZE]`  | Name of 1st Source Relation.      |
+| srcRelTwo | `char[ATTR_SIZE]`  | Name of 2nd Source Relation.      |
+| targetRel | `char [ATTR_SIZE]` | Name of the target Relation       |
+| attrOne   | `char [ATTR_SIZE]` | Attribute/column name in srcrel1. |
+| attrTwo   | `char [ATTR_SIZE]` | Attribute/column name in srcrel2. |
 
 #### Return values
 
@@ -605,16 +605,16 @@ This function takes a string and checks whether it can be parsed as a floating p
 
 #### Arguments
 
-| Name | Type              | Description              |
-| ---- | ----------------- | ------------------------ |
-| str  | `char[ATTR_SIZE]` | The string to be checked |
+| **Name** | **Type**          | **Description**          |
+| -------- | ----------------- | ------------------------ |
+| str      | `char[ATTR_SIZE]` | The string to be checked |
 
 #### Return Values
 
-| Value | Description                                     |
-| ----- | ----------------------------------------------- |
-| true  | Value in `str` is parse-able as a `NUMBER`.     |
-| false | Value in `str` is not parse-able as a `NUMBER`. |
+| **Value** | **Description**                                 |
+| --------- | ----------------------------------------------- |
+| true      | Value in `str` is parse-able as a `NUMBER`.     |
+| false     | Value in `str` is not parse-able as a `NUMBER`. |
 
 ```cpp
 bool isNumber(char *str) {

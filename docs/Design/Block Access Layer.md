@@ -56,7 +56,7 @@ value-in-record `op` attrVal
 
 #### Arguments
 
-| Name     | Type              | Description                                                                                                                                                                                                                       |
+| **Name** | **Type**          | **Description**                                                                                                                                                                                                                   |
 | -------- | ----------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relId    | `int`             | rel-id of relation to which search has to be made.                                                                                                                                                                                |
 | attrName | `char[ATTR_SIZE]` | Attribute/column name to which condition need to be checked against.                                                                                                                                                              |
@@ -65,7 +65,7 @@ value-in-record `op` attrVal
 
 #### Return Values
 
-| Value             | Description                                                                                                               |
+| **Value**         | **Description**                                                                                                           |
 | ----------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | `{block#, slot#}` | returns the _block number and slot number_ of the record corresponding to the next hit. This corresponds to type `RecId`. |
 | `{-1, -1}`        | If no valid next hit is found. This corresponds to type `RecId`.                                                          |
@@ -191,7 +191,7 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Arguments
 
-| Name     | Type               | Description                                                                                                                                                                                                   |
+| **Name** | **Type**           | **Description**                                                                                                                                                                                               |
 | -------- | ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relId    | `int`              | rel-id of relation to which search has to be made.                                                                                                                                                            |
 | record   | `union Attribute*` | pointer to record where next found record satisfying given condition is to be placed.                                                                                                                         |
@@ -201,7 +201,7 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Return Values
 
-| Value                      | Description                                                 |
+| **Value**                  | **Description**                                             |
 | -------------------------- | ----------------------------------------------------------- |
 | [`SUCCESS`](/constants)    | On successful copy of record to record                      |
 | [`E_NOTFOUND`](/constants) | If it fails to find a record satisfying the given condition |
@@ -266,14 +266,14 @@ This method inserts the record into relation as specified in arguments.
 
 #### Arguments
 
-| Name   | Type               | Description                                                                                         |
-| ------ | ------------------ | --------------------------------------------------------------------------------------------------- |
-| relId  | `int`              | rel-id of relation to which record is to be inserted                                                |
-| record | `union Attribute*` | Pointer to record(containing values for all the attributes), `record` is an array of Attribute type |
+| **Name** | **Type**           | **Description**                                                                                     |
+| -------- | ------------------ | --------------------------------------------------------------------------------------------------- |
+| relId    | `int`              | rel-id of relation to which record is to be inserted                                                |
+| record   | `union Attribute*` | Pointer to record(containing values for all the attributes), `record` is an array of Attribute type |
 
 #### Return Values
 
-| Value                                   | Description                                                                                                                         |
+| **Value**                               | **Description**                                                                                                                     |
 | --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)                 | On successful insert of the given record                                                                                            |
 | [`E_INDEX_BLOCKS_RELEASED`](/constants) | Record was inserted successfully, but the index existing on one or more attributes had to be deleted due to insufficient disk space |
@@ -431,14 +431,14 @@ This method changes the relation name of specified relation to the new name spec
 
 #### Arguments
 
-| Name    | Type              | Description                                          |
-| ------- | ----------------- | ---------------------------------------------------- |
-| oldName | `char[ATTR_SIZE]` | Old Name of relation of which name has to be changed |
-| newName | `char[ATTR_SIZE]` | New name for the relation                            |
+| **Name** | **Type**          | **Description**                                      |
+| -------- | ----------------- | ---------------------------------------------------- |
+| oldName  | `char[ATTR_SIZE]` | Old Name of relation of which name has to be changed |
+| newName  | `char[ATTR_SIZE]` | New name for the relation                            |
 
 #### Return Values
 
-| Value                         | Description                                      |
+| **Value**                     | **Description**                                  |
 | ----------------------------- | ------------------------------------------------ |
 | [`SUCCESS`](/constants)       | On successful renaming of the relation           |
 | [`E_RELNOTEXIST`](/constants) | If the relation with name oldName does not exist |
@@ -504,15 +504,15 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Arguments
 
-| Name    | Type              | Description            |
-| ------- | ----------------- | ---------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the relation   |
-| oldName | `char[ATTR_SIZE]` | Old Name of attribute  |
-| newName | `char[ATTR_SIZE]` | New name for attribute |
+| **Name** | **Type**          | **Description**        |
+| -------- | ----------------- | ---------------------- |
+| relName  | `char[ATTR_SIZE]` | Name of the relation   |
+| oldName  | `char[ATTR_SIZE]` | Old Name of attribute  |
+| newName  | `char[ATTR_SIZE]` | New name for attribute |
 
 #### Return Values
 
-| Value                          | Description                                       |
+| **Value**                      | **Description**                                   |
 | ------------------------------ | ------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful renaming of the attribute           |
 | [`E_RELNOTEXIST`](/constants)  | If the relation with name relName does not exist  |
@@ -582,13 +582,13 @@ This method deletes the relation with the name specified as argument. This invol
 
 #### Arguments
 
-| Name    | Type              | Description                |
-| ------- | ----------------- | -------------------------- |
-| relName | `char[ATTR_SIZE]` | Name of relation to delete |
+| **Name** | **Type**          | **Description**            |
+| -------- | ----------------- | -------------------------- |
+| relName  | `char[ATTR_SIZE]` | Name of relation to delete |
 
 #### Return Values
 
-| Value                          | Description                                                                                                 |
+| **Value**                      | **Description**                                                                                             |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the given relation                                                                |
 | [`E_RELNOTEXIST`](/constants)  | If the relation does not exist                                                                              |
@@ -743,14 +743,14 @@ This function is used to fetch **one** record of the relation. Each subsequent c
 
 #### Arguments
 
-| Name   | Type               | Description                                            |
-| ------ | ------------------ | ------------------------------------------------------ |
-| relId  | `int`              | rel-id of relation to which projection has to be done. |
-| record | `union Attribute*` | pointer to record where next record is to be placed.   |
+| **Name** | **Type**           | **Description**                                        |
+| -------- | ------------------ | ------------------------------------------------------ |
+| relId    | `int`              | rel-id of relation to which projection has to be done. |
+| record   | `union Attribute*` | pointer to record where next record is to be placed.   |
 
 #### Return Values
 
-| Value                      | Description                                                 |
+| **Value**                  | **Description**                                             |
 | -------------------------- | ----------------------------------------------------------- |
 | [`SUCCESS`](/constants)    | On successful copy of record to _record_                    |
 | [`E_NOTFOUND`](/constants) | If there are no more records to be fetched for the relation |

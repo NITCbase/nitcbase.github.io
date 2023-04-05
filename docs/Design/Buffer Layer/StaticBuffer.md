@@ -124,13 +124,13 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 #### Arguments
 
-| Name     | Type  | Description                                       |
-| -------- | ----- | ------------------------------------------------- |
-| blockNum | `int` | Block number of the block whose type is required. |
+| **Name** | **Type** | **Description**                                   |
+| -------- | -------- | ------------------------------------------------- |
+| blockNum | `int`    | Block number of the block whose type is required. |
 
 #### Return Values
 
-| Value                        | Description                                                            |
+| **Value**                    | **Description**                                                        |
 | ---------------------------- | ---------------------------------------------------------------------- |
 | blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`) |
 | [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                    |
@@ -155,13 +155,13 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 #### Arguments
 
-| Name     | Type  | Description                                                      |
-| -------- | ----- | ---------------------------------------------------------------- |
-| blockNum | `int` | Block number of the block whose buffer's dirty bit is to be set. |
+| **Name** | **Type** | **Description**                                                  |
+| -------- | -------- | ---------------------------------------------------------------- |
+| blockNum | `int`    | Block number of the block whose buffer's dirty bit is to be set. |
 
 #### Return Values
 
-| Value                              | Description                                  |
+| **Value**                          | **Description**                              |
 | ---------------------------------- | -------------------------------------------- |
 | [`SUCCESS`](/constants)            | successfully set dirty bit                   |
 | [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range          |
@@ -195,13 +195,13 @@ Returns the buffer number of the buffer to which the block with the given block 
 
 #### Arguments
 
-| Name     | Type  | Description                                                |
-| -------- | ----- | ---------------------------------------------------------- |
-| blockNum | `int` | Block number of the block whose buffer number is required. |
+| **Name** | **Type** | **Description**                                            |
+| -------- | -------- | ---------------------------------------------------------- |
+| blockNum | `int`    | Block number of the block whose buffer number is required. |
 
 #### Return Values
 
-| Value                              | Description                                       |
+| **Value**                          | **Description**                                   |
 | ---------------------------------- | ------------------------------------------------- |
 | bufferNum                          | Buffer number to which the given block is loaded. |
 | [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range               |
@@ -242,9 +242,9 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 
 #### Arguments
 
-| Name     | Type  | Description                                               |
-| -------- | ----- | --------------------------------------------------------- |
-| blockNum | `int` | Block number of the block to be loaded to a buffer block. |
+| **Name** | **Type** | **Description**                                           |
+| -------- | -------- | --------------------------------------------------------- |
+| blockNum | `int`    | Block number of the block to be loaded to a buffer block. |
 
 #### Return Values
 

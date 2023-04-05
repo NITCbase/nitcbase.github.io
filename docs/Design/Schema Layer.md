@@ -53,7 +53,7 @@ This method creates a new relation with the name, attribute/column list as speci
 
 #### Arguments
 
-| Name     | Type                | Description                                                         |
+| **Name** | **Type**            | **Description**                                                     |
 | -------- | ------------------- | ------------------------------------------------------------------- |
 | relName  | `char[ATTR_SIZE]`   | Name of the relation/table to be created                            |
 | nAttrs   | `int`               | Number of attributes of the relation to be created                  |
@@ -62,7 +62,7 @@ This method creates a new relation with the name, attribute/column list as speci
 
 #### Return value
 
-| Value                           | Description                                                    |
+| **Value**                       | **Description**                                                |
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/constants)         | On successful creation of the relation                         |
 | [`E_RELEXIST`](/constants)      | If the relation with name relName already exists.              |
@@ -148,13 +148,13 @@ This method deletes the relation with name as specified in arguments.
 
 #### Arguments
 
-| Name    | Type              | Description                        |
-| ------- | ----------------- | ---------------------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the relation to be deleted |
+| **Name** | **Type**          | **Description**                    |
+| -------- | ----------------- | ---------------------------------- |
+| relName  | `char[ATTR_SIZE]` | Name of the relation to be deleted |
 
 #### Return value
 
-| Value                          | Description                                                                                                 |
+| **Value**                      | **Description**                                                                                             |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the relation.                                                                     |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                    |
@@ -198,14 +198,14 @@ This method creates a bplus indexing on an attribute attrName in a relation relN
 
 #### Arguments
 
-| Name     | Type               | Description                                                         |
+| **Name** | **Type**           | **Description**                                                     |
 | -------- | ------------------ | ------------------------------------------------------------------- |
 | relName  | `char[ATTR_SIZE]`  | Name of the relation that contains the attribute to create index on |
 | attrName | `char [ATTR_SIZE]` | Attribute to create index on                                        |
 
 #### Return value
 
-| Value                          | Description                                                                                                             |
+| **Value**                      | **Description**                                                                                                         |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful creation of B+ tree.                                                                                      |
 | [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                                                                            |
@@ -242,14 +242,14 @@ This method drops the bplus indexing on an attribute attrName in a relation relN
 
 #### Arguments
 
-| Name     | Type               | Description                                                         |
+| **Name** | **Type**           | **Description**                                                     |
 | -------- | ------------------ | ------------------------------------------------------------------- |
 | relName  | `char[ATTR_SIZE]`  | Name of the relation that contains the attribute to remove index of |
 | attrName | `char [ATTR_SIZE]` | Attribute to remove index of                                        |
 
 #### Return value
 
-| Value                          | Description                                                   |
+| **Value**                      | **Description**                                               |
 | ------------------------------ | ------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful deletion of the B+ tree                         |
 | [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                  |
@@ -326,14 +326,14 @@ This method changes the relation name of specified relation to new name as speci
 
 #### Arguments
 
-| Name       | Type              | Description                                           |
+| **Name**   | **Type**          | **Description**                                       |
 | ---------- | ----------------- | ----------------------------------------------------- |
 | oldRelName | `char[ATTR_SIZE]` | Old Name of relation of which name has to be changed. |
 | newRelName | `char[ATTR_SIZE]` | New name for the relation.                            |
 
 #### Return value
 
-| Value                          | Description                                                                                                                 |
+| **Value**                      | **Description**                                                                                                             |
 | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                      |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                    |
@@ -369,7 +369,7 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Arguments
 
-| Name        | Type              | Description             |
+| **Name**    | **Type**          | **Description**         |
 | ----------- | ----------------- | ----------------------- |
 | relName     | `char[ATTR_SIZE]` | Name of the relation.   |
 | oldAttrName | `char[ATTR_SIZE]` | Old Name of attribute.  |
@@ -377,7 +377,7 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Return value
 
-| Value                          | Description                                                                                                                                     |
+| **Value**                      | **Description**                                                                                                                                 |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful renaming of the attribute                                                                                                         |
 | [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                        |
@@ -415,13 +415,13 @@ This method opens the relation specified as name in cache/OpenRelTable.
 
 #### Arguments
 
-| Name    | Type              | Description                       |
-| ------- | ----------------- | --------------------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the relation to be opened |
+| **Name** | **Type**          | **Description**                   |
+| -------- | ----------------- | --------------------------------- |
+| relName  | `char[ATTR_SIZE]` | Name of the relation to be opened |
 
 #### Return value
 
-| Value                         | Description                                                    |
+| **Value**                     | **Description**                                                |
 | ----------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/constants)       | On successful opening of the relation                          |
 | [`E_RELNOTEXIST`](/constants) | If the relation with name `relName` does not exist in the disk |
@@ -449,13 +449,13 @@ This method closes the relation specified as name in cache/OpenRelTable.
 
 #### Arguments
 
-| Name    | Type              | Description                       |
-| ------- | ----------------- | --------------------------------- |
-| relName | `char[ATTR_SIZE]` | Name of the relation to be closed |
+| **Name** | **Type**          | **Description**                   |
+| -------- | ----------------- | --------------------------------- |
+| relName  | `char[ATTR_SIZE]` | Name of the relation to be closed |
 
 #### Return value
 
-| Value                          | Description                                                                                                             |
+| **Value**                      | **Description**                                                                                                         |
 | ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | On successful closing of the relation                                                                                   |
 | [`E_RELNOTOPEN`](/constants)   | If relation with given name is not open                                                                                 |

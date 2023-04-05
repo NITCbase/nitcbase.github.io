@@ -65,7 +65,7 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 #### Arguments
 
-| Name                  | Type                               | Description                                                                                                                          |
+| **Name**              | **Type**                           | **Description**                                                                                                                      |
 | --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
 | relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                       |
 | attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                              |
@@ -73,7 +73,7 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                  |
+| **Value**                      | **Description**                                                                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
@@ -125,7 +125,7 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 #### Arguments
 
-| Name                  | Type                               | Description                                                                                                                              |
+| **Name**              | **Type**                           | **Description**                                                                                                                          |
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
 | relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                           |
 | attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                  |
@@ -133,7 +133,7 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                  |
+| **Value**                      | **Description**                                                                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
@@ -188,7 +188,7 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 #### Arguments
 
-| Name                  | Type                               | Description                                                                                                                                            |
+| **Name**              | **Type**                           | **Description**                                                                                                                                        |
 | --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                                         |
 | attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                                |
@@ -196,7 +196,7 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                  |
+| **Value**                      | **Description**                                                                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
@@ -248,7 +248,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 #### Arguments
 
-| Name                  | Type                               | Description                                                                                                                                                |
+| **Name**              | **Type**                           | **Description**                                                                                                                                            |
 | --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                                             |
 | attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                                    |
@@ -256,7 +256,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                  |
+| **Value**                      | **Description**                                                                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
@@ -307,14 +307,14 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 
 #### Arguments
 
-| Name                  | Type                               | Description                                                    |
+| **Name**              | **Type**                           | **Description**                                                |
 | --------------------- | ---------------------------------- | -------------------------------------------------------------- |
 | relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table |
 | attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                        |
 
 #### Return Values
 
-| Value                          | Description                                                                                                                                  |
+| **Value**                      | **Description**                                                                                                                              |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
@@ -344,7 +344,7 @@ The caller should allocate memory for the `struct AttrCatEntry` and array of `un
 
 #### Arguments
 
-| Name         | Type                            | Description                                                                                 |
+| **Name**     | **Type**                        | **Description**                                                                             |
 | ------------ | ------------------------------- | ------------------------------------------------------------------------------------------- |
 | record       | `union Attribute[ATTRCAT_SIZE]` | The record which is to be converted to an `AttrCatEntry`.                                   |
 | attrCatEntry | `AttrCatEntry*`                 | Pointer to struct `AttrCatEntry` to which the contents of the input record is to be copied. |
@@ -365,7 +365,7 @@ The caller should allocate memory for the `struct AttrCacheEntry` and array of `
 
 #### Arguments
 
-| Name         | Type                            | Description                                                            |
+| **Name**     | **Type**                        | **Description**                                                        |
 | ------------ | ------------------------------- | ---------------------------------------------------------------------- |
 | attrCatEntry | `AttrCatEntry*`                 | Pointer to struct `AttrCatEntry` which is to be converted to a record. |
 | record       | `union Attribute[ATTRCAT_SIZE]` | The record to which the given `AttrCatEntry` entry is to be copied.    |

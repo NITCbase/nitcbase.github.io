@@ -91,14 +91,14 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Arguments
 
-| Name     | Type             | Description                                                                    |
+| **Name** | **Type**         | **Description**                                                                |
 | -------- | ---------------- | ------------------------------------------------------------------------------ |
 | buffer   | `unsigned char*` | Memory pointer of the buffer to which the block contents is to be loaded/read. |
 | blockNum | `int`            | Block number of the disk block to be read.                                     |
 
 #### Return Values
 
-| Value                        | Description                                            |
+| **Value**                    | **Description**                                        |
 | ---------------------------- | ------------------------------------------------------ |
 | [`SUCCESS`](/constants)      | Successful loading/reading of the block to the buffer. |
 | [`E_OUTOFBOUND`](/constants) | Block number is out of range.                          |
@@ -117,14 +117,14 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Arguments
 
-| Name     | Type             | Description                                                                     |
+| **Name** | **Type**         | **Description**                                                                 |
 | -------- | ---------------- | ------------------------------------------------------------------------------- |
 | buffer   | `unsigned char*` | Memory pointer of the buffer from which contents is to be written to the block. |
 | blockNum | `int`            | Block number of the disk block to be written to.                                |
 
 #### Return Values
 
-| Value                        | Description                                  |
+| **Value**                    | **Description**                              |
 | ---------------------------- | -------------------------------------------- |
 | [`SUCCESS`](/constants)      | Successful writing of the block to the disk. |
 | [`E_OUTOFBOUND`](/constants) | Block number is out of range.                |
