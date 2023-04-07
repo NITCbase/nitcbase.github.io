@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 6
 title: "XFS Commands"
 ---
 
@@ -201,18 +201,6 @@ This command is used to copy the contents of `Attribute catalog` to an external 
 
 ```bash
 dump attrcat
-```
-
-### Exit
-
-#### Description
-
-This command is used to exit the XFS Interface.
-
-#### Syntax
-
-```bash
-exit
 ```
 
 ### Print B+ Tree

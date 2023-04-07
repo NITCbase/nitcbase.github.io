@@ -1,9 +1,33 @@
 ---
-sidebar_position: 5
-title: "Script Commands"
+sidebar_position: 4
+title: "Utility Commands"
 ---
 
-Script commands are available for both XFS interface and frontend interface. These commands help the user to execute mutliple commands sequentially from a file and also to print out custom useful messages into terminal for debugging and informational purposes.
+Utility commands are available for both XFS interface and Frontend Interface. These commands are used to provide information, or perform actions that might be useful for the user while using the system.
+
+### Help
+
+#### Description
+
+This command is used to list all the available commands and a short description of each.
+
+#### Syntax
+
+```bash
+help
+```
+
+### Exit
+
+#### Description
+
+This command is used to exit the system.
+
+#### Syntax
+
+```bash
+exit
+```
 
 ### Batch Execution
 
@@ -20,7 +44,7 @@ This command is used to run multiple commands in sequence by reading the command
 #### Syntax
 
 ```bash
-run filename
+run <filename>
 ```
 
 :::tip

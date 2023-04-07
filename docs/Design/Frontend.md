@@ -27,7 +27,8 @@ Frontend User Interface supports the following types of commands:
 
 1. [Data Definition Language(DDL) Commands ](../User%20Interface%20Commands/ddl.md)
 2. [Data Manipulation Language(DML) Commands](../User%20Interface%20Commands/dml.md)
-3. [Script Commands](../User%20Interface%20Commands/script-cmds.md)
+3. [Utility Commands](../User%20Interface%20Commands/utility.md)
+4. [Test Commands](../User%20Interface%20Commands/test.md)
 
 All the above command documents are linked to various sections of the [NITCbase Commands page](../User%20Interface%20Commands).
 
@@ -758,5 +759,32 @@ int Frontend::select_attrlist_from_join_where(
     // delete the TEMP relation using Schema::deleteRel()
 
     // Return Success or Error values appropriately
+}
+```
+
+### Frontend :: custom_function()
+
+#### Description
+
+- The [`FUNCTION` command](../User%20Interface%20Commands/test.md#function) is translated to this method call.
+- This command is used to implement any functionality that is not already made available by the NITCbase commands
+- The implementation is left entirely to you
+
+#### Arguments
+
+| **Name** | **Type**            | **Description**                                             |
+| -------- | ------------------- | ----------------------------------------------------------- |
+| argc     | `int`               | The size of the `argv` array, that is, the number of tokens |
+| argv     | `char[][ATTR_SIZE]` | An array of tokens as passed to the command                 |
+
+#### Algorithm
+
+```cpp
+int Frontend::custom_function(int argc, char argv[][ATTR_SIZE]) {
+  // argc gives the size of the argv array
+  // argv stores every token delimited by space and comma
+
+  // implement whatever you desire
+
 }
 ```
