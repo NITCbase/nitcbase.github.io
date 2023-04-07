@@ -46,7 +46,7 @@ Nil
 #### Algorithm
 
 ```cpp
-// this is the way to call parent non-default constructor.
+// call the corresponding parent constructor
 IndBuffer::IndBuffer(char blockType) : BlockBuffer(blockType){}
 
 ```
@@ -74,7 +74,7 @@ Nil
 #### Algorithm
 
 ```cpp
-// this is a way to call parent non-default constructor.
+// call the corresponding parent constructor
 IndBuffer::IndBuffer(int blockNum) : BlockBuffer(blockNum){}
 ```
 
@@ -121,7 +121,7 @@ If the block has already been initialised as an internal index block on the disk
 
 ```cpp
 IndInternal::IndInternal() : IndBuffer('I'){}
-//this is the way to call parent non-default constructor.
+// call the corresponding parent constructor
 // 'I' used to denote IndInternal.
 ```
 
@@ -147,7 +147,7 @@ If a new internal index block is to be allocated in the disk use [constructor 1]
 
 ```cpp
 IndInternal::IndInternal(int blockNum) : IndBuffer(blockNum){}
-//this is the way to call parent non-default constructor.
+// call the corresponding parent constructor
 ```
 
 ### IndInternal :: getEntry()
@@ -183,18 +183,35 @@ Gives the indexNumth entry of the block.
 
 ```cpp
 int IndInternal::getEntry(void *ptr, int indexNum) {
+    // if the indexNum is not in the valid range of [0, MAX_KEYS_INTERNAL-1]
+    //     return E_OUTOFBOUND.
+
     unsigned char *bufferPtr;
     /* get the starting address of the buffer containing the block
        using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-        // return the value returned by the call.
+    //     return the value returned by the call.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1)
-    //     return E_OUTOFBOUND.
+    // typecast the void pointer to an internal entry pointer
+    struct InternalEntry *internalEntry = (struct InternalEntry *)ptr;
 
-    // copy the indexNum'th Internalentry in block to memory ptr
-    // (ptr can be type casted appropriately if needed).
+    /*
+    - copy the entries from the indexNum`th entry to *internalEntry
+    - make sure that each field is copied individually as in the following code
+    - the lChild and rChild fields of InternalEntry are of type int32_t
+    - int32_t is a type of int that is guaranteed to be 4 bytes across every
+      C++ implementation. sizeof(int32_t) = 4
+    -
+    */
+
+    /* the indexNum'th entry will begin at an offset of
+       HEADER_SIZE + (indexNum * (sizeof(int) + ATTR_SIZE) )         [why?]
+       from bufferPtr */
+
+    memcpy(internalEntry, /* pointer */, sizeof(int32_t));
+    memcpy(&(internalEntry->attrVal), /* pointer */, sizeof(Attribute));
+    memcpy(&(internalEntry->rChild), /* pointer */, sizeof(int32_t));
 
     // return SUCCESS.
 }
@@ -355,17 +372,25 @@ Gives the indexNum<sup>th</sup> entry of the block.
 
 ```cpp
 int IndLeaf::getEntry(void *ptr, int indexNum) {
+
+    // if the indexNum is not in the valid range of [0, MAX_KEYS_LEAF-1]
+    //     return E_OUTOFBOUND.
+
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-        // return the value returned by the call.
+    //     return the value returned by the call.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
+    // copy the indexNum'th Index entry in block to memory ptr using memcpy
 
-    // copy the indexNum'th Index entry in block to memory ptr(ptr can be type casted appropriately if needed).
+    /* the indexNum'th entry will begin at an offset of
+       HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE)  from bufferPtr */
 
-    // return SUCCESS.
+    memcpy((struct Index *)ptr, /* pointer */, LEAF_ENTRY_SIZE);
+
+    // return SUCCESS
 }
 ```
 

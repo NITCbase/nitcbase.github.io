@@ -76,6 +76,7 @@ To add this functionality, we will need to implement the following:
 - The [Cache Layer](../Design/Cache%20Layer/intro.md) methods to read and update the search index in the attribute cache
 - The [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) method to search through a B+ tree present in the disk
 - Modifications to the [Block Access Layer](../Design/Block%20Access%20Layer.md) to call the B+ search if an index is present
+- Modifications to the [Algebra Layer](../Design/Algebra%20Layer.md) to reset the search index in the attribute cache before beginning B+ search
 
 A sequence diagram documenting the call sequence for a call to the `BlockAccess::search()` function is shown below.
 
@@ -125,6 +126,16 @@ sequenceDiagram
 <br/>
 
 A class diagram showing all the relevant methods is given below. Note that the [Buffer Layer](../Design/Buffer%20Layer/intro.md) classes corresponding to record blocks have been omitted for the sake of brevity.
+
+```mermaid
+classDiagram
+  class Algebra{
+    +insert(char relName[ATTR_SIZE], int nAttrs, char record[][ATTR_SIZE])$ int🔵
+		+project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE])$ int🔵
+		+project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE])$ int🔵
+    +select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE])$ int🟢
+  }
+```
 
 ```mermaid
 classDiagram
@@ -250,3 +261,89 @@ Recall that the `search()` function in the [Block Access Layer](../Design/Block%
 Implement the `BlockAccess::search()` function by looking at the [design docs](../Design/Block%20Access%20Layer.md#blockaccess--search).
 
 </details>
+
+In the [Cache Layer](../Design/Cache%20Layer/intro.md), we add the methods to work with the search index in the attribute cache similar to what we had implemented for the search index in the relation cache. We have methods `AttrCacheTable::getSearchIndex()`, `AttrCacheTable::setSearchIndex()` and `AttrCacheTable::resetSearchIndex()`. Note that each of these methods are overloaded to identify an attribute with either the attribute name or attribute offset. Thus, we have a total of 6 functions to implement in the [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) class.
+
+<details>
+<summary>Cache/AttrCacheTable.cpp</summary>
+
+Implement the following functions looking at their respective design docs
+
+- [`AttrCacheTable::getSearchIndex(relId, attrName, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--getsearchindex)
+- [`AttrCacheTable::getSearchIndex(relId, attrOffset, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--getsearchindex)
+- [`AttrCacheTable::setSearchIndex(relId, attrName, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--setsearchindex)
+- [`AttrCacheTable::setSearchIndex(relId, attrOffset, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--setsearchindex)
+- [`AttrCacheTable::resetSearchIndex(relId, attrName, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--resetsearchindex)
+- [`AttrCacheTable::resetSearchIndex(relId, attrOffset, searchIndex*)`](../Design/Cache%20Layer/AttrCacheTable.md#attrcachetable--resetsearchindex)
+
+</details>
+
+We had earlier modified `BlockAccess::search()` such that it can do either a linear search or a B+ search. Recall that in our current implementation, we always reset the search index in the relation cache before the first call to `linearSearch()` or `search()` to start searching from the beginning. It is now needed to modify the design to reset the search index in the attribute cache before the first call to `bPlusSearch()` or `search()`.
+
+Thus far in our implementation, `BlockAccess::search()` has only been used in the `select()` function in the [Algebra Layer](../Design/Algebra%20Layer.md). So, we modify our earlier design to call `AttrCacheTable::resetSearchIndex()` before the first call to `search()`.
+
+<details>
+<summary>Algebra/Algebra.cpp</summary>
+
+Implement the `Algebra::select()` function by looking at the [design docs](../Design/Algebra%20Layer.md#select).
+
+</details>
+
+In the [Buffer Layer](../Design/Buffer%20Layer/intro.md), we implement the methods to read from index blocks using classes `IndInternal` and `IndLeaf` as mentioned earlier. Similar to how we've used `RecBuffer` to read from record blocks thus far, the `IndBuffer` class defines virtual methods `getEntry()` and `setEntry()` to access the entry at a particular index in a B+ tree node. Note that every node of the B+ tree occupies an entire block of the XFS disk.
+
+The `IndInternal` and `IndLeaf` classes also define a _constructor 1_(which is used to read from an already allocated index block) and a _constructor 2_ (which is used to allocate a new index block) similar to what we had implemented for `RecBuffer`. These constructors call their parent class `IndBuffer`'s _constructor 1_ and _constructor 2_ respectively which in turn calls the corresponding `BlockBuffer` constructors that we implemented earlier.
+
+Similar to the [struct Attribute](../Design/Buffer%20Layer/intro.md#attribute) that we used to hold the values in a record, we have helper structs to store index entries as well. An entry from a leaf index block is represented using [struct Index](../Design/Buffer%20Layer/intro.md#index) and an entry from an internal index block is represented using [struct InternalEntry](../Design/Buffer%20Layer/intro.md#internalentry).
+
+Since we do not need to modify indexes at this stage, we will only be implementing the `getEntry()` method. We will also define an empty `setEntry()` method to avoid compilation issues.
+
+<details>
+<summary>Buffer/BlockBuffer.cpp</summary>
+
+Implement the following constructors looking at the respective design docs
+
+- [`IndBuffer::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indbuffer--indbuffer-constructor-1)
+- [`IndInternal::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--indinternal-constructor-1)
+- [`IndLeaf::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--indleaf-constructor-1)
+- [`IndBuffer::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indbuffer--indbuffer-constructor-2)
+- [`IndInternal::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--indinternal-constructor-2)
+- [`IndLeaf::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--indleaf-constructor-2)
+
+Implement the following functions looking at the respective design docs
+
+- [`IndInternal::getEntry()`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--getentry)
+- [`IndLeaf::getEntry()`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--getentry)
+
+Add the following empty definitions to avoid compilation issues. We will implement these function in later stages.
+
+```cpp
+int IndInternal::setEntry(void *ptr, int indexNum) {
+  return 0;
+}
+
+int IndLeaf::setEntry(void *ptr, int indexNum) {
+  return 0;
+}
+```
+
+</details>
+
+An additional function we will need in the [Buffer Layer](../Design/Buffer%20Layer/intro.md) is the `StaticBuffer::getStaticBlockType()` function which takes a block number and returns the type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`). We will use this function when we implement `bPlusSearch()` later in this stage.
+
+<details>
+<summary>Buffer/StaticBuffer.cpp</summary>
+
+Implement the `StaticBuffer::getStaticBlockType()` function by looking at the [design docs](../Design/Buffer%20Layer/StaticBuffer.md#staticbuffer--getstaticblocktype).
+
+</details>
+
+Lastly, we implement the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) function `bPlusSearch()` which comprises all the logic for an indexed search operation. Refer to the [algorithm for search](../Misc/Indexing.md#search-on-b-tree) if you have not done so already.
+
+<details>
+<summary>BPlusTree/BPlusTree.cpp</summary>
+
+Implement the `BPlusTree::bPlusSearch()` by looking at the [design docs](../Design/B%2B%20Tree%20Layer.md#bplustreebplussearch).
+
+</details>
+
+## Exercises

@@ -499,18 +499,19 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
     // let searchIndex be used to store search index for attrName.
     IndexId searchIndex;
 
-    // get the search index from the attribute cache using the AttrCacheTable::getSearchIndex().
+    /* get the search index corresponding to attribute with name attrName
+       using AttrCacheTable::getSearchIndex(). */
 
     /* reset the search index to {-1,-1} using AttrCacheTable::resetSearchIndex().
     (this will be set to the correct index id if an entry satisfying op for given
-    attrVal is found in the course of the search.)*/
+    attrVal is found in the course of the search.) */
 
     // let attrCatEntry be used to store the attribute cache entry for attrName.
     AttrCatEntry attrCatEntry;
 
-    // load the attribute catalog cache entry using AttrCacheTable::getAttrCatEntry().
+    // load the attribute cache entry using AttrCacheTable::getAttrCatEntry().
 
-    // let block and index variables be used to locate the entry to be searched.
+    // declare variables block and index which will be used during search
     int block, index;
 
     if (/* searchIndex == {-1, -1}*/) {
@@ -552,18 +553,23 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
         }
     }
 
-    /******Traverse through all the internal nodes according to value of AttrVal and the operator op******/
+    /******  Traverse through all the internal nodes according to value
+             of attrVal and the operator op                             ******/
 
-    while (/*block is of type IND_INTERNAL */) {  // use StaticBuffer::getStaticBlockType().
+    // (This section is only needed when search restarts from the root block.
+    //  If there was a valid search index, then we are already at a leaf block
+    //  and the test condition in the following loop will fail.)
+
+    while(/* block is of type IND_INTERNAL */) {  //use StaticBuffer::getStaticBlockType()
 
         // load the block into internalBlk using IndInternal::IndInternal().
         IndInternal internalBlk(block);
 
         HeadInfo intHead;
 
-        // load the header of internalBlock into intHead using BlockBuffer::getHeader()
+        // load the header of internalBlk into intHead using BlockBuffer::getHeader()
 
-        // let intEntry be used to store an internal entry of the internalBlk.
+        // declare intEntry which will be used to store an entry of internalBlk.
         InternalEntry intEntry;
 
         if (/* op is one of NE, LT, LE */) {
@@ -571,12 +577,15 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
             - NE: need to search the entire linked list of leaf indices of the B+ Tree,
             starting from the leftmost leaf index. Thus, always move to the left.
 
-            - LT and LE: the attribute values are arranged in ascending order in the leaf
-            indices of the B+ Tree. Values that satisfy these conditions, if any exist,
-            will always be found in the left-most leaf index. Thus, always move to the left.
+            - LT and LE: the attribute values are arranged in ascending order in the
+            leaf indices of the B+ Tree. Values that satisfy these conditions, if
+            any exist, will always be found in the left-most leaf index. Thus,
+            always move to the left.
             */
 
-            // load entry in the first slot of the block into intEntry using IndInternal::getEntry().
+            // load entry in the first slot of the block into intEntry
+            // using IndInternal::getEntry().
+
             block = intEntry.lChild;
 
         } else {
@@ -589,8 +598,8 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
             */
 
             /*
-             traverse through all entries of internalBlk and find an entry that satisfies
-             the condition.
+             traverse through all entries of internalBlk and find an entry that
+             satisfies the condition.
              if op == EQ or GE, then intEntry.attrVal >= attrVal
              if op == GT, then intEntry.attrVal > attrVal
              Hint: the helper function compareAttrs() can be used for comparing
@@ -608,9 +617,12 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
             }
         }
 
-        // NOTE: the block is now a leaf index block.
 
-        /******Traverse through index entries in the leaf index block from the index entry numbered as index******/
+        // NOTE: `block` now has the block number of a leaf index block.
+
+        /******  Traverse through index entries in the leaf index block from
+                 the index entry numbered as index                       ******/
+
         while (block != -1) {
             // load the block into leafBlk using IndLeaf::IndLeaf().
             IndLeaf leafBlk(block);
@@ -618,13 +630,16 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
 
             // load the header to leafHead using BlockBuffer::getHeader().
 
+            // declare leafEntry which will be used to store an entry from leafBlk
             Index leafEntry;
 
-            while (/*index < numEntries in leafBlk*/) {  // numEntries can be obtained from leafHead.
+            while (/*index < numEntries in leafBlk*/) {
 
-                // load entry corresponding to block and index into leafEntry using IndLeaf::getEntry().
+                // load entry corresponding to block and index into leafEntry
+                // using IndLeaf::getEntry().
 
-                int cmpVal = /* comparison between leafEntry's attribute value and input attrVal using compareAttrs()*/;
+                int cmpVal = /* comparison between leafEntry's attribute value
+                                and input attrVal using compareAttrs()*/
 
                 if (
                     (op == EQ && cmpVal == 0) ||
@@ -641,8 +656,8 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
                     // return the recId {leafEntry.block, leafEntry.slot}.
 
                 } else if ((op == EQ || op == LE || op == LT) && cmpVal > 0) {
-                    /*future entries will not satisfy EQ, LE, LT since the values are
-                    arranged in ascending order in the leaves */
+                    /*future entries will not satisfy EQ, LE, LT since the values
+                      are arranged in ascending order in the leaves */
 
                     // return RecId {-1, -1};
                 }
@@ -652,13 +667,13 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
             }
 
             /*only for NE do we have to check the entire linked list;
-            for all the other op it is guaranteed that the block being searched will have an entry,if it exists,
-            satisying that op.*/
+            for all the other op it is guaranteed that the block being searched
+            will have an entry, if it exists, satisying that op. */
             if (op != NE) {
                 break;
             }
 
-            // block = next block in the linked list, i.e., the rblock in the leafHead.
+            // block = next block in the linked list, i.e., the rblock in leafHead.
             // update index to 0.
         }
 

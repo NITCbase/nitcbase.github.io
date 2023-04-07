@@ -236,23 +236,19 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     RelCacheTable::resetSearchIndex(/* fill arguments */);
     AttrCacheTable::resetSearchIndex(/* fill arguments */);
 
-    /*
-    while (true) {
-        // For doing projection call search of Block Access layer
-        // int ret = BlockAccess::search(srcRelId, record, attr, attrVal, op)
+    // read every record that satisfies the condition by repeatedly calling
+    // BlockAccess::search() until there are no more records to be read
 
-        if (search call returns SUCCESS):
-            ret = BlockAccess::insert(targetRelId, record);
-            if (insert fails) {
-                close the targetrel(by calling Schema::closeRel(targetrel))
-                delete targetrel (by calling Schema::deleteRel(targetrel))
-                return ret;
-            }
-        else:
-            break;
+    while (/* BlockAccess::search() returns success */) {
+
+        // ret = BlockAccess::insert(targetRelId, record);
+
+        // if (insert fails) {
+        //     close the targetrel(by calling Schema::closeRel(targetrel))
+        //     delete targetrel (by calling Schema::deleteRel(targetrel))
+        //     return ret;
+        // }
     }
-
-    */
 
     // Close the targetRel by calling closeRel() method of schema layer
 
