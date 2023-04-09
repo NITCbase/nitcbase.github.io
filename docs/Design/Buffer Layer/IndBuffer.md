@@ -202,7 +202,6 @@ int IndInternal::getEntry(void *ptr, int indexNum) {
     - the lChild and rChild fields of InternalEntry are of type int32_t
     - int32_t is a type of int that is guaranteed to be 4 bytes across every
       C++ implementation. sizeof(int32_t) = 4
-    -
     */
 
     /* the indexNum'th entry will begin at an offset of
@@ -250,17 +249,37 @@ Sets the indexNumth entry of the block with the input struct InternalEntry conte
 
 ```cpp
 int IndInternal::setEntry(void *ptr, int indexNum) {
+    // if the indexNum is not in the valid range of [0, MAX_KEYS_INTERNAL-1]
+    //     return E_OUTOFBOUND.
+
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-        // return the value returned by the call.
+    //     return the value returned by the call.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_INTERNAL-1), return E_OUTOFBOUND.
+    // typecast the void pointer to an internal entry pointer
+    struct InternalEntry *internalEntry = (struct InternalEntry *)ptr;
 
-    // copy the struct InternalEntry pointed by ptr to indexNum'th entry in block.
+    /*
+    - copy the entries from *internalEntry to the indexNum`th entry
+    - make sure that each field is copied individually as in the following code
+    - the lChild and rChild fields of InternalEntry are of type int32_t
+    - int32_t is a type of int that is guaranteed to be 4 bytes across every
+      C++ implementation. sizeof(int32_t) = 4
+    */
 
-    // update dirty bit.
+    /* the indexNum'th entry will begin at an offset of
+       HEADER_SIZE + (indexNum * (sizeof(int) + ATTR_SIZE) )         [why?]
+       from bufferPtr */
+
+    memcpy(/* pointer */, &(internalEntry->lChild), sizeof(int32_t));
+    memcpy(/* pointer */, &(internalEntry->attrVal), sizeof(Attribute));
+    memcpy(/* pointer */, &(internalEntry->rChild), sizeof(int32_t));
+
+
+    // update dirty bit using setDirtyBit()
     // if setDirtyBit failed, return the value returned by the call
 
     // return SUCCESS
@@ -383,12 +402,12 @@ int IndLeaf::getEntry(void *ptr, int indexNum) {
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
     //     return the value returned by the call.
 
-    // copy the indexNum'th Index entry in block to memory ptr using memcpy
+    // copy the indexNum'th Index entry in buffer to memory ptr using memcpy
 
     /* the indexNum'th entry will begin at an offset of
        HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE)  from bufferPtr */
 
-    memcpy((struct Index *)ptr, /* pointer */, LEAF_ENTRY_SIZE);
+    memcpy((struct Index*)ptr, /* pointer */, LEAF_ENTRY_SIZE);
 
     // return SUCCESS
 }
@@ -427,17 +446,25 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 
 ```cpp
 int IndLeaf::setEntry(void *ptr, int indexNum) {
+
+    // if the indexNum is not in the valid range of [0, MAX_KEYS_LEAF-1]
+    //     return E_OUTOFBOUND.
+
     unsigned char *bufferPtr;
-    // get the starting address of the buffer containing the block using loadBlockAndGetBufferPtr(&bufferPtr).
+    /* get the starting address of the buffer containing the block
+       using loadBlockAndGetBufferPtr(&bufferPtr). */
 
     // if loadBlockAndGetBufferPtr(&bufferPtr) != SUCCESS
-            // return the value returned by the call.
+    //     return the value returned by the call.
 
-    // if the indexNum is not in the valid range of 0-(MAX_KEYS_LEAF-1), return E_OUTOFBOUND.
+    // copy the Index at ptr to indexNum'th entry in the buffer using memcpy
 
-    // copy the struct Index pointed by ptr to indexNum'th entry in block.
+    /* the indexNum'th entry will begin at an offset of
+       HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE)  from bufferPtr */
 
-    // update dirty bit.
+    memcpy(/* pointer */, (struct Index*)ptr, LEAF_ENTRY_SIZE);
+
+    // update dirty bit using setDirtyBit()
     // if setDirtyBit failed, return the value returned by the call
 
     //return SUCCESS

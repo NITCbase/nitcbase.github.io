@@ -228,7 +228,7 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
     // create a bplus tree using BPlusTree::bPlusCreate() and return the value
-    // return BPlusTree::bPlusCreate();
+    return BPlusTree::bPlusCreate(relId, attrName);
 }
 ```
 
@@ -271,46 +271,20 @@ int Schema::dropIndex(char *relName, char *attrName) {
     // if relation is not open in open relation table, return E_RELNOTOPEN
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
-    // store the relName as an attribute in relNameAttr
-    Attribute relNameAttr;
+    // get the attribute catalog entry corresponding to the attribute
+    // using AttrCacheTable::getAttrCatEntry()
 
-    // we will store the rootBlock of the attribute in the relation
-    int rootBlock;
+    int rootBlock = /* get the root block from attrcat entry */;
 
-    // reset the search index of the attribute catalog using
-    // RelCacheTable::resetSearchIndex()
-
-    RecId attrCatRecId;
-    Attribute attrCatEntryRecord[ATTRCAT_NO_ATTRS];
-
-    while (true) {
-        /* search for all the attributes corresponding to the relation with
-          relName in attribute catalog using BlockAccess::linearSearch() */
-        // store it in attrCatRecId;
-
-        if (/*attrCatRecId == {-1, -1}*/) {
-            // (search has terminated without finding the attribute)
-            return E_ATTRNOTEXIST;
-        }
-
-        // get the record at attrCatRecId using RecBuffer::getRecord()
-
-        if (/* attrCatEntryRecord.attrName == attrName */) {
-            rootBlock = // root block value from attrCatEntryRecord
-            break;
-        }
-    }
-
-    if (rootBlock == -1) {
-        // (attribute does not have an index)
+    if (/* attribute does not have an index (rootBlock = -1) */) {
         return E_NOINDEX;
     }
 
     // destroy the bplus tree rooted at rootBlock using BPlusTree::bPlusDestroy()
     BPlusTree::bPlusDestroy(rootBlock);
 
-    /* update the root block of attrCatEntryRecord to -1 and save the record
-       using RecBuffer::setRecord() */
+    // set rootBlock = -1 in the attribute cache entry of the attribute using
+    // AttrCacheTable::setAttrCatEntry()
 
     return SUCCESS;
 }
