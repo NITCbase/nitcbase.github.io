@@ -324,6 +324,6 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-And with that, your NITCbase now supports the creation and deletion of indexes. Verify your implementation with the exercises below!
+And with that, your NITCbase now supports the creation and deletion of indexes! Verify your implementation with the exercises below.
 
 ## Exercises

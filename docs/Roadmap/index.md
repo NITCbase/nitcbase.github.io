@@ -19,3 +19,4 @@ _It is very important that you proceed with the roadmap on a regular schedule an
 - [**Stage 9 : Selection and Projection on Relations (10 hours)**](../Roadmap/Stage09.md)
 - [**Stage 10 : B+ Tree Search on Relations (20 hours)**](../Roadmap/Stage10.md)
 - [**Stage 11 : Index Creation and Deletion (20 hours)**](../Roadmap/Stage11.md)
+- [**Stage 12 : Join on Relations (10 hours)**](../Roadmap/Stage12.md)
