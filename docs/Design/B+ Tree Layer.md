@@ -58,7 +58,7 @@ If in between the insertion, the disk runs out of space, then the B+ Tree will n
 
 | **Value**                      | **Description**                                                                                                                        |
 | ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of a B+ tree for the attribute                                                                                  |
+| rootBlockNum                   | The root block number of the B+ tree on the attribute (could be an already existing index or a new index created in this call)         |
 | [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                          |
 | [`E_RELNOTOPEN`](/constants)   | If the relation is not open                                                                                                            |
 | [`E_ATTRNOTEXIST`](/constants) | If attribute with name attrName does not exist                                                                                         |
@@ -73,22 +73,16 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
     // if relId is either RELCAT_RELID or ATTRCAT_RELID:
     //     return E_NOTPERMITTED;
 
-    // let attrCatEntry be used to store the attribute cache entry for attrName.
-    AttrCatEntry attrCatEntry;
 
-    // get the attribute catalog entry of target attribute using AttrCacheTable::getAttrCatEntry() method.
-    int retVal = AttrCacheTable::getAttrCatEntry(relId, attrName, &attrCatEntry);
+    // get the attribute catalog entry of attribute `attrName`
+    // using AttrCacheTable::getAttrCatEntry()
 
-    if (retVal != SUCCESS) {
-        return retVal;
-    }
+    // if getAttrCatEntry fails
+    //     return the error code from getAttrCatEntry
 
-    // let rootBlockNum be used to store the root block number of the B+ Tree, obtained from attrCatEntry.
-    int rootBlockNum;
 
-    if (rootBlockNum != -1) {
-        // (index already exists for the attribute.)
-        return SUCCESS;
+    if (/* an index already exists for the attribute (check rootBlock field) */) {
+        // return the rootBlock of the existing index
     }
 
     /******Creating a new B+ Tree ******/
@@ -96,58 +90,57 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
     // get a free leaf block.
     IndLeaf rootBlockBuf;
 
-    // let rootBlock be the blockNumber of the new leaf block, obtained using IndLeaf::getBlockNum()
+    // declare rootBlock to store the blockNumber of the new leaf block
     int rootBlock = rootBlockBuf.getBlockNum();
 
+    // if there is no more disk space for creating an index
     if (rootBlock == E_DISKFULL) {
         return E_DISKFULL;
     }
 
-    // update the rootBlock field of the attribute cache using AttrCacheTable::setAttrCatEntry().
-
     RelCatEntry relCatEntry;
 
-    // load the relation catalog entry into relCatEntry using RelCacheTable::getRelCatEntry().
+    // load the relation catalog entry into relCatEntry
+    // using RelCacheTable::getRelCatEntry().
 
-    // set block as the first record block of the relation. obtained from relCatEntry
-    int block;
+    int block = /* first record block of the relation */;
 
-    /******Traverse all the blocks in the relation and insert them one by one into the B+ Tree******/
+    /***** Traverse all the blocks in the relation and insert them one
+           by one into the B+ Tree *****/
     while (block != -1) {
-        // load the block of the relation into blockBuf using RecBuffer::RecBuffer().
-        RecBuffer blockBuf(block);
+
+        // declare a RecBuffer object for `block` (using appropriate constructor)
 
         unsigned char slotMap[relCatEntry.numSlotsPerBlk];
 
         // load the slot map into slotMap using RecBuffer::getSlotMap().
 
-        for(/*slot = 0 to relCatEntry.numSlotsPerBlk - 1*/) {
-            if (slotMap[slot] == SLOT_OCCUPIED) {
-                union Attribute record[relCatEntry.numAttrs];
-                // load the record corresponding to the slot into record using RecBuffer::getRecord().
+        // for every occupied slot of the block
 
-                // let recordId hold the record id {block, slot}.
-                RecId recId{block, slot};
+            // declare Attribute record[relCatEntry.numAttrs] and
+            // load the record corresponding to the slot into `record`
+            // using RecBuffer::getRecord().
 
-                // insert the attribute value of the record corresponding to attrName using bPlusInsert.
-                // bPlusInsert will destroy the bplus tree if insert fails
-                retVal = bPlusInsert(relId, attrName, record[attrCatEntry.offset], recId);
+            // declare recId and store the rec-id of this record in it
+            // RecId recId{block, slot};
 
-                if (retVal == E_DISKFULL) {
-                    // (unable to get enough blocks to build the B+ Tree.)
-                    return E_DISKFULL;
-                }
-            }
-        }
+            // insert the attribute value corresponding to attrName from the record
+            // into the B+ tree using bPlusInsert.
+            // (note that bPlusInsert will destroy any existing bplus tree if
+            // insert fails i.e when disk is full)
+            // retVal = bPlusInsert(relId, attrName, attribute value, recId);
 
-        HeadInfo blockHead;
+            // if (retVal == E_DISKFULL) {
+            //     // (unable to get enough blocks to build the B+ Tree.)
+            //     return E_DISKFULL;
+            // }
 
-        // load the header of blockBuf into blockHead using BlockBuffer::getHeader().
+        // get the header of the block using BlockBuffer::getHeader()
 
-        // update the block to the next block in the linked list.
+        // set block = rblock of current block (from the header)
     }
 
-    return SUCCESS;
+    return rootBlock;
 }
 ```
 

@@ -521,6 +521,9 @@ int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char target
 
     // if rel2 does not have an index on attr2
     //   create it using BPlusTree:bPlusCreate()
+    //   if call fails, return the appropriate error code
+    //   (if your implementation is correct, the only error code that will
+    //    be returned here is E_DISKFULL)
 
     // let numOfAttributesInTarget = numOfAttributes1 + numOfAttributes2 - 1
     // let targetRelAttrNames[numOfAttributesInTarget][ATTR_SIZE] be an array of type char
