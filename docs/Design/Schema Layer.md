@@ -228,15 +228,7 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
     // (check if the value returned from getRelId function call = E_RELNOTOPEN)
 
     // create a bplus tree using BPlusTree::bPlusCreate() and return the value
-
-    // if bPlusCreate succeeded (returned a valid blockNum)
-    //     set the RootBlock = root block returned from call to bPlusCreate
-    //     in the attribute cache entry corresponding to attribute `attrName`
-    //
-    //     return SUCCESS
-
-
-    // return the error code returned from bPlusCreate
+    return BPlusTree::bPlusCreate(relId, attrName);
 }
 ```
 
