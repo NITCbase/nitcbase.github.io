@@ -54,8 +54,16 @@ sequenceDiagram
     activate Schema Layer
     Schema Layer->>B-Plus Tree Layer: bPlusCreate()🟢
     activate B-Plus Tree Layer
+    note over B-Plus Tree Layer, Buffer Layer: get new root block
     B-Plus Tree Layer->>Buffer Layer: IndLeaf()🔵
+    activate Buffer Layer
     Buffer Layer-->>B-Plus Tree Layer: blockNum (member field)
+    deactivate Buffer Layer
+    note over B-Plus Tree Layer, Cache Layer: set root block in cache
+    B-Plus Tree Layer->>Cache Layer: setAttrCatEntry()🟢
+    activate Cache Layer
+    Cache Layer-->>B-Plus Tree Layer: operation status
+    deactivate Cache Layer
     loop for every record of the relation
       B-Plus Tree Layer->>Buffer Layer: getRecord()🔵
       activate Buffer Layer
@@ -77,7 +85,49 @@ sequenceDiagram
     deactivate Frontend User Interface
 ```
 
-- todo: discuss where cache updates
+```mermaid
+ %%{init: { 'sequence': {'mirrorActors':false} } }%%
+sequenceDiagram
+    actor User
+    participant Frontend User Interface
+    participant Frontend Programming Interface
+    participant Schema Layer
+    participant B-Plus Tree Layer
+    participant Cache Layer
+    participant Buffer Layer
+    User->>Frontend User Interface: DROP INDEX
+    activate Frontend User Interface
+    Frontend User Interface->>Frontend Programming Interface: drop_index()🟢
+    activate Frontend Programming Interface
+    Frontend Programming Interface->>Schema Layer: dropIndex()🟢
+    activate Schema Layer
+    note over Schema Layer, Cache Layer: get root block of index
+    Schema Layer->>Cache Layer: getAttrCatEntry()🔵
+    activate Cache Layer
+    Cache Layer-->>Schema Layer: attribute catalog entry
+    deactivate Cache Layer
+    Schema Layer->>B-Plus Tree Layer: bPlusDestroy()🟢
+    activate B-Plus Tree Layer
+    note over B-Plus Tree Layer: recursively call bPlusDestroy()<br/>on all children
+    B-Plus Tree Layer->>B-Plus Tree Layer: bPlusDestroy()🟢
+    B-Plus Tree Layer->>Buffer Layer: releaseBlock()🔵
+    activate Buffer Layer
+    Buffer Layer-->>B-Plus Tree Layer: operation status
+    deactivate Buffer Layer
+    B-Plus Tree Layer-->>Schema Layer: operation status
+    deactivate B-Plus Tree Layer
+    note over Schema Layer, Cache Layer: remove root block in attribute cache
+    Schema Layer->>Cache Layer: setAttrCatEntry()🟢
+    activate Cache Layer
+    Cache Layer-->>Schema Layer: operation status
+    deactivate Cache Layer
+    Schema Layer-->>User: operation status
+    deactivate Schema Layer
+    deactivate Frontend Programming Interface
+    deactivate Frontend User Interface
+```
+
+- todo: discuss cache updation during deletion
 
 ### Cache Update and Write-back
 
@@ -283,11 +333,9 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-The `Schema::createIndex()` function verifies that the relation is open and passes the rel-id and attribute name along to the `BPlusTree::bPlusCreate()` function to create an index. We will implement this function later in this stage.
+The `Schema::createIndex()` function verifies that the relation is open and passes the rel-id and attribute name along to the `BPlusTree::bPlusCreate()` function to create an index (to be implemented later in this stage).
 
-The `Schema::deleteIndex()` function fetches the root block of the index on a specified attribute from the attribute cache and then calls the `BPlusTree::bPlusDestroy()` function to free the index blocks.
-
-todo: is the cache updated
+The `Schema::deleteIndex()` function fetches the root block of the index on a specified attribute from the attribute cache and then calls the `BPlusTree::bPlusDestroy()` function to free the index blocks. The corresponding attribute cache entry is then updated to indicate that there no longer exists a B+ tree on the attribute.
 
 <details>
 <summary>Schema/Schema.cpp</summary>
@@ -299,19 +347,9 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-In the [Block Access Layer](../Design/Block%20Access%20Layer.md), we update the `insert()` method to insert the new record into any existing indexes of the relation using `BPlusTree::bPlusInsert()`. The `deleteRelation()` method is updated to free up any indexes associated with the relation using `BPlusTree::bPlusDestroy()`.
+We implement the core functionality of this stage in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md).
 
-<details>
-<summary>BlockAccess/BlockAccess.cpp</summary>
-
-Implement the following functions looking at their respective design docs
-
-- [`BlockAccess::insert()`](../Design/Block%20Access%20Layer.md#blockaccess--insert)
-- [`BlockAccess::deleteRelation()`](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation)
-
-</details>
-
-Lastly, we implement the core functionality of this stage in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md).
+The `BPlusTree::bPlusCreate()` function reads every record of the relation and inserts them into.
 
 <details>
 <summary>BPlusTree/BPlusTree.cpp</summary>
@@ -321,6 +359,18 @@ Implement the following functions looking at their respective design docs
 - [`BPlusTree::bPlusCreate()`](../Design/B%2B%20Tree%20Layer.md#bplustreebpluscreate)
 - [`BPlusTree::bPlusInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
 - [`BPlusTree::bPlusDestroy()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusdestroy)
+
+</details>
+
+Lastly, in the [Block Access Layer](../Design/Block%20Access%20Layer.md), we update the `insert()` method to insert the new record into any existing indexes of the relation using `BPlusTree::bPlusInsert()`. The `deleteRelation()` method is updated to free up any indexes associated with the relation by calling `BPlusTree::bPlusDestroy()`.
+
+<details>
+<summary>BlockAccess/BlockAccess.cpp</summary>
+
+Implement the following functions looking at their respective design docs
+
+- [`BlockAccess::insert()`](../Design/Block%20Access%20Layer.md#blockaccess--insert)
+- [`BlockAccess::deleteRelation()`](../Design/Block%20Access%20Layer.md#blockaccess--deleterelation)
 
 </details>
 
