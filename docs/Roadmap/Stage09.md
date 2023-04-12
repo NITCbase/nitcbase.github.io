@@ -139,7 +139,7 @@ Finally, in the [Frontend Programming Interface](../Design/Frontend.md#frontend-
 
 Contrary to what we are used to, the implementation of the `Frontend::select_attrlist_from_table_where()` function involves more than just a call to a lower layer method. Since this operation is a combination of both selection and projection, it requires calls to both the corresponding methods.
 
-The function implementation involves creating an intermediate relation which holds the result of one of the operations. The second operation is done on this intermediate relation, following which the intermediate relation is deleted. NITCbase reserves the name of this intermediate relation as `.temp` (available to you as the constant [TEMP](/constants)).
+The function implementation involves creating an intermediate relation which holds the result of one of the operations. The second operation is done on this intermediate relation, and the result gives us the required target relation. The intermediate relation is then deleted. NITCbase reserves the name of this intermediate relation as `.temp` (available to you as the constant [TEMP](/constants)).
 
 <details>
 <summary>Frontend/Frontend.cpp</summary>
@@ -148,7 +148,7 @@ Implement the following functions looking at their respective design docs
 
 - [`Frontend::select_from_table()`](../Design/Frontend.md#frontend--select_from_table)
 - [`Frontend::select_attrlist_from_table()`](../Design/Frontend.md#frontend--select_attrlist_from_table)
-- [`Frontend::select_from_table_where()`](../Design/Frontend.md#frontend--select_from_table_where)
+- [`Frontend::select_from_table_where()`](../Design/Frontend.md#frontend--select_from_table_where) (this was already implemented)
 - [`Frontend::select_attrlist_from_table_where()`](../Design/Frontend.md#frontend--select_attrlist_from_table_where)
 
 </details>
@@ -165,3 +165,7 @@ SELECT id,name FROM Toys INTO BlueToys WHERE colour=blue;
 ```
 
 Verify the contents of the new relations in the XFS Interface using either the [PRINT TABLE](../User%20Interface%20Commands/efs.md#print-relation) command or [EXPORT](../User%20Interface%20Commands/efs.md#export-relation) command.
+
+TODO
+
+- add a question saying write query to do this

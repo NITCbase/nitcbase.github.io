@@ -460,7 +460,7 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count,
 #### Description
 
 - The `SELECT * FROM TABLE` command is translated to this method call.
-- This command creates a new target relation with the same attributes as that of source relation,and inserts into it all records from the source relation
+- This command creates a new target relation with the same attributes as that of source relation, and inserts into it all records from the source relation. This is essentially a command that creates a copy of an existing relation.
 
 #### Arguments
 
@@ -484,7 +484,7 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count,
 ```cpp
 int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_target[ATTR_SIZE]) {
 
-    // Call project() method of the Algebra Layer
+    // Call appropriate project() method of the Algebra Layer
 
     // Return Success or Error values appropriately
 
@@ -498,7 +498,7 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 #### Description
 
 - The `SELECT Attrlist FROM TABLE` command is translated to this method call.
-- This command creates a new target relation with the attributes specified in Attrlist,and inserts all records(only the values corresponding to the specified attributes) of the source relation, into the newly created target relation.
+- This command creates a new target relation with the attributes specified in Attrlist, and inserts all records (only the values corresponding to the specified attributes) of the source relation, into the newly created target relation.
 
 #### Arguments
 
@@ -516,7 +516,7 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 | [`SUCCESS`](/constants)        | On successful creation of new relation.                                                   |
 | [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                       |
 | [`E_RELEXIST`](/constants)     | If a relation with name `relname_target` already exists.                                  |
-| [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attribute name array does not exist.                  |
+| [`E_ATTRNOTEXIST`](/constants) | An attribute name specified in `attr_list` does not exist in the source relation.         |
 | [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.                            |
 | [`E_CACHEFULL`](/constants)    | If target relation cannot be operated on due to lack of free slots in open relation table |
 
@@ -524,12 +524,11 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 
 ```cpp
 int Frontend::select_attrlist_from_table(char relname_source[ATTR_SIZE],
-char relname_target[ATTR_SIZE],
-int attr_count,
-char attr_list[][ATTR_SIZE]) {
+                                         char relname_target[ATTR_SIZE],
+                                         int attr_count,
+                                         char attr_list[][ATTR_SIZE]) {
 
-
-    // Call project() method of the Algebra Layer
+    // Call appropriate project() method of the Algebra Layer
 
     // Return Success or Error values appropriately
 
@@ -571,8 +570,9 @@ char attr_list[][ATTR_SIZE]) {
 
 ```cpp
 int Frontend::select_from_table_where(char relname_source[ATTR_SIZE],
-char relname_target[ATTR_SIZE],
-char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
+                                      char relname_target[ATTR_SIZE],
+                                      char attribute[ATTR_SIZE]
+                                      int op, char value[ATTR_SIZE]) {
 
     // Call select() method of the Algebra Layer with correct arguments
 
@@ -588,31 +588,31 @@ char attribute[ATTR_SIZE], int op, char value[ATTR_SIZE]) {
 #### Description
 
 - The `SELECT Attrlist FROM TABLE WHERE` command is translated to this method call.
-- This command creates a new target relation with the attributes specified in Attrlist ,and inserts those records(only the values corresponding to the attributes specified in the Attrlist) from the source relation which satisfy the given condition.
+- This command creates a new target relation with the attributes specified in Attrlist, and inserts those records (only the values corresponding to the attributes specified in the Attrlist) from the source relation which satisfy the given condition.
 
 #### Arguments
 
-| **Name**       | **Type**            | **Description**                                                                                                                                                  |
-| -------------- | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relname_source | `char[ATTR_SIZE]`   | Name of Source Relation                                                                                                                                          |
-| relname_target | `char[ATTR_SIZE]`   | Name of the Target Relation                                                                                                                                      |
-| attr_count     | `int`               | Number of attributes that have to be projected from source relation to target relation.                                                                          |
-| attr_list      | `char[][ATTR_SIZE]` | Array of attributes that have to be projected from source relation to target relation.                                                                           |
-| attribute      | `char[ATTR_SIZE]`   | Attribute/column name to which 'select' condition need to be checked with.                                                                                       |
-| op             | `int`               | Conditional Operator(can be one among EQ,LE,LT,GE,GT,NE corresponding to equal,lesthan equal, lessthan ,greaterthan equal, greaterthan, Not equal respectively). |
-| value          | `char[ATTR_SIZE]`   | value of attribute                                                                                                                                               |
+| **Name**       | **Type**            | **Description**                                                                                                                                                                                                                   |
+| -------------- | ------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| relname_source | `char[ATTR_SIZE]`   | Name of Source Relation                                                                                                                                                                                                           |
+| relname_target | `char[ATTR_SIZE]`   | Name of the Target Relation                                                                                                                                                                                                       |
+| attr_count     | `int`               | Number of attributes that have to be projected from source relation to target relation.                                                                                                                                           |
+| attr_list      | `char[][ATTR_SIZE]` | Array of attributes that have to be projected from source relation to target relation.                                                                                                                                            |
+| attribute      | `char[ATTR_SIZE]`   | Attribute/column name to which 'select' condition need to be checked with.                                                                                                                                                        |
+| op             | `int`               | The conditional operator (which can be one among `EQ`, `LE`, `LT`, `GE`, `GT`, `NE` corresponding to the following operators: _equal to, less than or equal to, less than, greater than or equal to, greater than, not equal to_) |
+| value          | `char[ATTR_SIZE]`   | value of attribute                                                                                                                                                                                                                |
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                                       |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation.                                                |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                    |
-| [`E_RELEXIST`](/constants)         | If a relation with name `relname_target` already exists                                                               |
-| [`E_ATTRNOTEXIST`](/constants)     | If any attribute with name given in attribute name array does not exist or attribute in the condition does not exist. |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute                  |
-| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation                                                         |
+| **Value**                          | **Description**                                                                                                             |
+| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation.                                                      |
+| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                          |
+| [`E_RELEXIST`](/constants)         | If a relation with name `relname_target` already exists                                                                     |
+| [`E_ATTRNOTEXIST`](/constants)     | An attribute name specified in `attr_list` does not exist in the source relation.                                           |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of argument `attribute` given for the select condition is different from the type of the argument`value` |
+| [`E_CACHEFULL`](/constants)        | If the target relation cannot be operated on due to lack of free slots in open relation table                               |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation                                                               |
 
 #### Algorithm
 
@@ -626,8 +626,8 @@ int Frontend::select_attrlist_from_table_where(
     // Call select() method of the Algebra Layer with correct arguments to
     // create a temporary target relation with name ".temp" (use constant TEMP)
 
-    // TEMP results from the select operation on the source relation (and hence
-    // it contains all attributes of the source relations)
+    // TEMP will contain all the attributes of the source relation as it is the
+    // result of a select operation
 
     // Return Error values, if not successful
 
@@ -635,14 +635,14 @@ int Frontend::select_attrlist_from_table_where(
     // if open fails, delete TEMP relation using Schema::deleteRel() and
     // return the error code
 
-    // Call project() method of the Algebra Layer with correct arguments to
-    // create the actual target relation from the TEMP relation. The final
+    // On the TEMP relation, call project() method of the Algebra Layer with
+    // correct arguments to create the actual target relation. The final
     // target relation contains only those attributes mentioned in attr_list
 
     // close the TEMP relation using OpenRelTable::closeRel()
     // delete the TEMP relation using Schema::deleteRel()
 
-    // Return Success or Error values appropriately
+    // return any error codes from project() or SUCCESS otherwise
 }
 ```
 

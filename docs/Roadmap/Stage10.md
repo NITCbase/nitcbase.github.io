@@ -24,18 +24,25 @@ A relation in a production database can contain millions or records and might sp
 
 For example, consider the relation `Student` having 5 attributes (`Roll No`, `Name`, `Marks`, `Grade`, `Attendance`). As an administrator, we might have to frequently get the subset of students having `Marks` greater than some amount `M`. Instead of going through each and every record and checking if it satisfies our condition, the index allows us to easily reach the first record with `Marks` > `M`. We know that in a B+ tree, every subsequent leaf node will also satisfy this condition (Why?). You can see how this would save us a lot of time.
 
-In NITCbase, indexes are B+ trees with **internal nodes of size 100**, and **leaf nodes of size 63**. Each of these nodes will be stored in a separate disk block. A fully filled internal node would consist of a 100 attribute values from various records and 101 pointers to their respective children. A pointer here refers to the block number of the corresponding internal or leaf index block. A fully filled leaf node would consist of 63 attribute values from various records along with the block number and slot number where the record containing this attribute can be found.
+In NITCbase, indexes are B+ trees with **internal nodes of size 100**, and **leaf nodes of size 63**. Each of these nodes will be stored in a separate disk block. A fully filled internal node would consist of a 100 attribute values from various records and 101 pointers to their respective children. A pointer here refers to the block number of the corresponding internal or leaf index block. A fully filled leaf node would consist of 63 attribute values from various records. For each of these attribute values, the block number and slot number of the record with this value is also stored.
 
-The [attribute catalog](../Design/Physical%20Layer.md#attribute-catalog) stores whether a particular attribute of a relation has an index. If it does, the `RootBlock` field of the attribute catalog will store the block number of the root block of the index.
+The [attribute catalog](../Design/Physical%20Layer.md#attribute-catalog) stores whether a particular attribute of a relation has an index. If it does, the `RootBlock` field of the attribute catalog will store the block number of the root block of the index. If not, `RootBlock` will contain the value `-1`.
 
-**Read the documentation for [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure) and [leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure) before proceeding further.**
+To proceed further, we will need some prerequisite reading.
 
-A high-end database might automatically create and dispose of indexes as required by the program without user intervention. In NITCbase, the user is expected to decide when the index is to be created and dropped (using the [CREATE INDEX](../User%20Interface%20Commands/ddl.md#create-index) and [DROP INDEX](../User%20Interface%20Commands/ddl.md#drop-index) commands of the [Schema Layer](../Design/Schema%20Layer.md)). Note that we will not be implementing these commands in the present stage and will instead be using them through the XFS Interface.
+:::tip PREREQUISITE READING
+
+- [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure)
+- [leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure)
+
+:::
+
+A production database might automatically create and dispose of indexes as required by the program without user intervention. In NITCbase, the user is expected to decide when the index is to be created and dropped (using the [CREATE INDEX](../User%20Interface%20Commands/ddl.md#create-index) and [DROP INDEX](../User%20Interface%20Commands/ddl.md#drop-index) commands of the [Schema Layer](../Design/Schema%20Layer.md)). Note that we will not be implementing these commands in the present stage and will instead be using them through the XFS Interface.
 
 <details>
 <summary>
 
-Q. Assume that we have an empty database with no relations. We start it and create a table `LibraryBooks(name STR, id NUM, shelf: NUM, borrower: STR)`. We then insert 1000 records into the relation `LibraryBooks` in descending order of their `id`. It is given that the records have `id` from 1000 to 1.
+Q. Assume that we have an empty database with no relations. We start it and create a table `LibraryBooks(name STR, id NUM, shelf NUM, borrower STR)`. We then insert 1000 records into the relation `LibraryBooks` in descending order of their `id`. It is given that the records have `id` from 1000 to 1.
 
 1. If we were to do a search for a book with `id` > 500, which book would we get? What's the corresponding _record-id=(block, slot)_?
 2. We then create an index on `id` for `LibraryBooks`. How many index blocks would be created?
@@ -59,15 +66,23 @@ Q. Assume that we have an empty database with no relations. We start it and crea
 
 In this stage, you will implement the B+ search operations on a relation in the `BPlusTree::bPlusSearch()` function. We will also modify the functions we designed earlier to do an indexed search if an index is available.
 
-Similar to the linear search operation that implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md), the `BPlusTree::bPlusSearch()` function, when called for the first time, will return the first record that satisfies the given condition. Every subsequent call to the function will return a proceeding record that satisfies the condition until there are no more records to be returned.
+Similar to the linear search operation that you implemented in the [Block Access Layer](../Design/Block%20Access%20Layer.md), the `BPlusTree::bPlusSearch()` function, when called for the first time, will return the first record that satisfies the given condition. Every subsequent call to the function will return a proceeding record that satisfies the condition until there are no more records to be returned.
 
-Recall that in `BlockAccess::linearSearch()` the position of the previously returned record was stored in the [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) in the `searchIndex` field of the entry corresponding to the relation. This field was used to keep track of the position while searching through the records. To restart a search from the beginning, we would have to reset the search index using the `RelCacheTable::resetSearchIndex()` function.
+Recall that in `BlockAccess::linearSearch()`, the position of the previously returned record was stored in the [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) in the `searchIndex` field of the entry corresponding to the relation. This field was used to keep track of the position while searching through the records. To restart a search from the beginning, we would have to **reset the search index** using the `RelCacheTable::resetSearchIndex()` function.
 
 The `BPlusTree::bPlusSearch()` function too makes use of a `searchIndex` field to keep track of it's previous search position in the leaf of the B+ tree. For a B+ search on the B+ tree of an attribute, the search index is stored in the linked list entry corresponding to the attribute in the [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) entry of the relation. The search index can be reset using the `AttrCacheTable::resetSearchIndex()` function.
 
-**Read the documentation about [indexing in NITCbase](../Misc/Indexing.md) before proceeding further.**
+Unlike the search index in the relation cache, this search index does not store the rec-id of the record (from the linear search). Here, the search index stores the last entry in the leaf of the B+ tree that matched our search (that is, the block number and the entry within the leaf index block).
 
-To add this functionality, we will need to implement the following:
+To proceed further, you will need to read the documentation explaining how indexing is implemented in NITCbase. While the earlier documentation explained the algorithms of the B+ tree data structure, the following document explains the specific implementation details of this data structure in NITCbase.
+
+:::tip PREREQUISITE READING
+
+- [Indexing in NITCbase](../Misc/Indexing.md)
+
+:::
+
+To add the B+ tree search functionality, we will need to implement the following:
 
 - The [Buffer Layer](../Design/Buffer%20Layer/intro.md) methods to read from index blocks.
   - Here, we introduce three new classes [IndBuffer](../Design/Buffer%20Layer/IndBuffer.md#class-indbuffer), [IndInternal](../Design/Buffer%20Layer/IndBuffer.md#class-indinternal) and [IndLeaf](../Design/Buffer%20Layer/IndBuffer.md#class-indleaf).
