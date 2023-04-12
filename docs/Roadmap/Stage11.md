@@ -127,8 +127,6 @@ sequenceDiagram
     deactivate Frontend User Interface
 ```
 
-- todo: discuss cache updation during deletion
-
 ### Cache Update and Write-back
 
 An index can only be created for an open relation. When an index is created for a relation on an attribute, the `RootBlock` field is set for the corresponding attribute catalog entry in the attribute cache entry of the relation. Similar to how we had implemented the updation of the relation cache in previous stages, this updated value will be written to the buffer when the relation is closed (or at system exit, when all open relations are closed.).
@@ -349,7 +347,11 @@ Implement the following functions looking at their respective design docs
 
 We implement the core functionality of this stage in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md).
 
-The `BPlusTree::bPlusCreate()` function reads every record of the relation and inserts them into.
+The `BPlusTree::bPlusCreate()` is used to create an index on attribute for a relation. It allocates a new index block and sets the `RootBlock` field in the corresponding attribute cache entry. It then reads every record of the relation and inserts the attribute value into the index using `BPlusTree::bPlusInsert()`.
+
+The `BPlusTree::bPlusInsert()` function is used to insert an entry into the B+ tree of an attribute. It gets the root block of the corresponding tree from the attribute cache and then traverses the tree until the appropriate leaf block is found. If the insertion leads to the splitting of the root block (and hence the creation of a new root block), then this function updates the attribute cache with the new root block.
+
+The `BPlusTree::bPlusDestroy()` function recursively traverses all the blocks of the index and frees them using `BlockBuffer::releaseBlock()`.
 
 <details>
 <summary>BPlusTree/BPlusTree.cpp</summary>
