@@ -73,12 +73,12 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                              |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+| **Value**                      | **Description**                                                            |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -93,7 +93,7 @@ int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
     return E_RELNOTOPEN;
   }
 
-  for(/*all attributes corresponding to relation with relId */)
+  for(/* each attribute corresponding to relation with relId */)
   {
     if (/* attrName/offset field of the AttrCatEntry
         is equal to the input attrName/attrOffset */)
@@ -133,12 +133,12 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                              |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+| **Value**                      | **Description**                                                            |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -153,7 +153,7 @@ int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]
     return E_RELNOTOPEN;
   }
 
-  for(/*all attributes corresponding to relation with relId */)
+  for(/* each attribute corresponding to relation with relId */)
   {
     if(/* the attrName/offset field of the AttrCatEntry
        is equal to the input attrName/attrOffset */)
@@ -196,12 +196,12 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                              |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+| **Value**                      | **Description**                                                            |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully copied the search index to the argument searchIndex.          |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -216,7 +216,7 @@ int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
     return E_RELNOTOPEN;
   }
 
-  for(/*all attributes corresponding to relation with relId */)
+  for(/* each attribute corresponding to relation with relId */)
   {
     if (/* attrName/offset field of the AttrCatEntry
         is equal to the input attrName/attrOffset */)
@@ -237,31 +237,31 @@ int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
 
 #### Description
 
-Sets the value of `searchIndex` field of the given attribute in the specified relation from _Attribute Cache_ Table. This is used by the _B+ Tree_ search algorithm to set the **location of the previous hit** so that the search can be resumed from the next _leaf index_ entry.
+Sets the value of `searchIndex` field of the given attribute in the specified relation's _Attribute Cache_ Table entry. This is used by the _B+ Tree_ search algorithm to set the **location of the previous hit** so that the search can be resumed from the next _leaf index_ entry.
 
 :::caution note
 
 - This method is overloaded in type of the second argument
-- The caller should allocate memory for the `struct IndexId` before calling the function.
+- The value of the search index is expected to be verified by the caller. This function does not check the validity of the search index before setting it into the cache entry.
 
 :::
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                                                                                                            |
-| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                                             |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                                    |
-| searchIndex           | `IndexId*`                         | Pointer to struct IndexId using which the searchIndex field of the _Attribute Cache_ entry corresponding to the input relid and attribute is to be updated |
+| **Name**              | **Type**                           | **Description**                                                                                      |
+| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                       |
+| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                              |
+| searchIndex           | `IndexId*`                         | Pointer to struct IndexId which contains the value to which the `searchIndex` field is to be updated |
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                              |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+| **Value**                      | **Description**                                                            |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully set the search index in the attribute cache.                  |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -276,7 +276,7 @@ int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/
     return E_RELNOTOPEN;
   }
 
-  for(/*all attributes corresponding to relation with relId */)
+  for(/* each attribute corresponding to relation with relId */)
   {
     if (/* attrName/offset field of the AttrCatEntry
         is equal to the input attrName/attrOffset */)
@@ -314,12 +314,12 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                              |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                                |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                                                                                  |
+| **Value**                      | **Description**                                                            |
+| ------------------------------ | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully reset the search index in the cache                           |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 

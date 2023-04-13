@@ -32,8 +32,8 @@ To proceed further, we will need some prerequisite reading.
 
 :::tip PREREQUISITE READING
 
-- [internal index blocks](../Design/Physical%20Layer.md#internal-index-block-structure)
-- [leaf index blocks](../Design/Physical%20Layer.md#leaf-index-block-structure)
+- [Internal Index Blocks](../Design/Physical%20Layer.md#internal-index-block-structure)
+- [Leaf Index Blocks](../Design/Physical%20Layer.md#leaf-index-block-structure)
 
 :::
 
@@ -55,10 +55,10 @@ Q. Assume that we have an empty database with no relations. We start it and crea
 
 **Answer**
 
-1. We will get the record with `id`=1000 because that's the first record that will satisfy the condition when a linear search is done. Since this record will be the first relation in the first block of the relation, we get that the rec-id is `{6, 1}`.
+1. We will get the record with `id`=1000 because that's the first record that will satisfy the condition when a linear search is done. Since this record will be the first record in the first block of the relation, we get that the rec-id is `{6, 1}`. The 7th block is the first block that is available to be used by a relation as the first 6 blocks are reserved.
 2. There will be 31 leaf index blocks and 1 internal index block.
 3. The root block will have 30 entries. The rightmost value in the node will be 968/969 depending on the implementation.
-4. We would get the book with `id` 501 because the records will be sorted in ascending order in the leaf node. A B+ search will return the first node in the leaf that satisfies the condition.
+4. We would get the book with `id` 501 because the records will be sorted in ascending order in the leaf node. B+ search will return the first node in the leaf that satisfies the condition.
 
 </details>
 
@@ -88,7 +88,7 @@ To add the B+ tree search functionality, we will need to implement the following
   - Here, we introduce three new classes [IndBuffer](../Design/Buffer%20Layer/IndBuffer.md#class-indbuffer), [IndInternal](../Design/Buffer%20Layer/IndBuffer.md#class-indinternal) and [IndLeaf](../Design/Buffer%20Layer/IndBuffer.md#class-indleaf).
   - `IndBuffer` is an [abstract class](https://en.wikipedia.org/wiki/Abstract_type) which defines [virtual methods](https://en.wikipedia.org/wiki/Virtual_function) to access and update entries in index blocks. Note that `IndBuffer` cannot be instantiated owing to it being abstract.
   - `IndInternal` and `IndLeaf` are children of `IndBuffer` used for buffered access to leaf blocks and internal index blocks respectively of the B+ tree.
-- The [Cache Layer](../Design/Cache%20Layer/intro.md) methods to read and update the search index in the attribute cache
+- The [Cache Layer](../Design/Cache%20Layer/intro.md) methods to read and update the **search index in the [attribute cache](../Design/Cache%20Layer/AttrCacheTable.md)**
 - The [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) method to search through a B+ tree present in the disk
 - Modifications to the [Block Access Layer](../Design/Block%20Access%20Layer.md) to call the B+ search if an index is present
 - Modifications to the [Algebra Layer](../Design/Algebra%20Layer.md) to reset the search index in the attribute cache before beginning B+ search
@@ -103,12 +103,12 @@ A sequence diagram documenting the call sequence for a call to the `BlockAccess:
 ```mermaid
 %%{init: { 'sequence': {'mirrorActors':false} } }%%
 sequenceDiagram
-  participant caller
+  participant Algebra Layer
   participant Block Access Layer
   participant B-Plus Tree Layer
   participant Cache Layer
   participant Buffer Layer
-  caller->>Block Access Layer: search()🟢
+  Algebra Layer->>Block Access Layer: search()🟢
   activate Block Access Layer
   alt if there is an index on the attribute
   Block Access Layer->>B-Plus Tree Layer: bPlusSearch()🟢
@@ -134,7 +134,7 @@ sequenceDiagram
   activate Buffer Layer
   Buffer Layer-->>Block Access Layer: operation status
   deactivate Buffer Layer
-  Block Access Layer-->>caller:operation status
+  Block Access Layer-->>Algebra Layer:operation status
   deactivate Block Access Layer
 ```
 
@@ -266,7 +266,7 @@ classDiagram
 
 <br/>
 
-When an index is created on an attribute of a relation, the attribute catalog entry of the attribute is updated to store the block number of the root block of the B+ tree on the disk. This may be a leaf index block or an internal index block.
+When an index is created on an attribute of a relation, the attribute catalog entry of the attribute is updated to store the block number of the root block of the B+ tree. This may be a leaf index block or an internal index block (it will be a leaf if the total number of records is less than 63. otherwise, there will be multiple leaf blocks and hence an internal index block.).
 
 Recall that the `search()` function in the [Block Access Layer](../Design/Block%20Access%20Layer.md) is used to either do a B+ search or a linear search depending on the presence of an index. Our earlier implementation did not account for indexes and directly called the `BlockAccess:linearSearch()` function. We now modify that function to check the attribute catalog entry and call the [`BPlusTree::bPlusSearch()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplussearch) function if there is an index (we will implement this function later in this stage).
 

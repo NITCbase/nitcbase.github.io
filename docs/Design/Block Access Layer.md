@@ -187,7 +187,7 @@ RecId BlockAccess::linearSearch(int relId, char attrName[ATTR_SIZE], union Attri
 
 #### Description
 
-This method searches the relation specified to find the next record that satisfies the specified condition on attribute attrVal and updates the recId of next record satisfying the condition in cache.(uses the b+ tree if target attribute is indexed, otherwise, it does linear search).
+This method searches the relation specified to find the next record that satisfies the specified condition on attribute attrVal and updates the corresponding search index in the cache entry of the relation. It uses the B+ tree if target attribute is indexed, otherwise, it does linear search.
 
 #### Arguments
 
@@ -201,20 +201,21 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Return Values
 
-| **Value**                  | **Description**                                             |
-| -------------------------- | ----------------------------------------------------------- |
-| [`SUCCESS`](/constants)    | On successful copy of record to record                      |
-| [`E_NOTFOUND`](/constants) | If it fails to find a record satisfying the given condition |
+| **Value**                      | **Description**                                               |
+| ------------------------------ | ------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | On successful copy of record to record                        |
+| [`E_NOTFOUND`](/constants)     | If it fails to find a record satisfying the given condition   |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to `relId` is free in the cache           |
+| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name exists             |
 
 :::info note
 
-This function reads the "next" record from the given relation that satisfies a given condition. It can do either a linear search using `BlockAccess::linearSearch()` or a B+ search using `BPlusTree::bPlussearch()` depending on whether an index exists.
-
-If a linear search is being done, it is required that the search index of the relation is reset in the relation cache with a call to the `RelCacheTable::resetSearchIndex()` function.
-
-If a B+ search is being done, it is required that the search index of the attribute is reset in the attribute cache with a call to the `AttrCacheTable::resetSearchIndex()` function.
-
-Hence, the caller needs to ensure that **both** of these functions are called before starting a search operation with the `BlockAccess::search()` function.
+- This function reads the "next" record from the given relation that satisfies a given condition. It can do either a linear search using `BlockAccess::linearSearch()` or a B+ search using `BPlusTree::bPlussearch()` depending on whether an index exists.
+- If a linear search is being done, it is required that the search index of the relation is reset in the relation cache with a call to the `RelCacheTable::resetSearchIndex()` function.
+- Subsequent search operations will read from the search index and return the corresponding record. The search index is then advanced so that the search continues from the next record
+- Once the last record satisfying the condition is returned, every subsequent call to this function will return [E_NOTFOUND](/constants).
+- This function assumes that the search query has been validated by the caller before the call to this function. Validation includes checking for whether the operator is valid, whether the type of the value passed is compatible with the actual attribute type and so on.
 
 :::
 
@@ -227,6 +228,8 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
 
     /* get the attribute catalog entry from the attribute cache corresponding
     to the relation with Id=relid and with attribute_name=attrName  */
+
+    // if this call returns an error, return the appropriate error code
 
     // get rootBlock from the attribute catalog entry
     /* if Index does not exist for the attribute (check rootBlock == -1) */ {
@@ -249,8 +252,8 @@ int BlockAccess::search(int relId, Attribute *record, char attrName[ATTR_SIZE], 
     // if there's no record satisfying the given condition (recId = {-1, -1})
     //     return E_NOTFOUND;
 
-    /* Copy the record with record id (recId) to the record buffer (record)
-       For this Instantiate a RecBuffer class object by passing the recId and
+    /* Copy the record with record id (recId) to the record buffer (record).
+       For this, instantiate a RecBuffer class object by passing the recId and
        call the appropriate method to fetch the record
     */
 

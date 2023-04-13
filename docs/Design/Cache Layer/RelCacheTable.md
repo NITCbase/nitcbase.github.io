@@ -66,11 +66,11 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids             |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. |
 
 #### Algorithm
 
@@ -112,11 +112,11 @@ The caller should allocate memory for the `struct RelCatEntry` before calling th
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids             |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. |
 
 #### Algorithm
 
@@ -161,11 +161,11 @@ The caller should allocate memory for the struct RecId before calling the functi
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully copied the search index to the argument.                     |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids             |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. |
 
 #### Algorithm
 
@@ -194,7 +194,9 @@ int relCacheTable::getSearchIndex(int relid, recId *recidbuff_ptr) {
 Sets the value of `searchIndex` field of the given relation in _Relation Cache_ Table. This is used by the linear search algorithm to set the location of the previous hit so that the search can be resumed from the next record.
 
 :::caution note
-The caller should allocate memory for the struct RecId before calling the function.
+
+- The value of the search index is expected to be verified by the caller. This function does not check the validity of the search index before setting it into the cache entry.
+
 :::
 
 #### Arguments
@@ -206,11 +208,11 @@ The caller should allocate memory for the struct RecId before calling the functi
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully set the search index in the relation cache                   |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids             |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. |
 
 #### Algorithm
 
@@ -247,11 +249,11 @@ Resets the value of `searchIndex` field of the given relation in _Relation Cache
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                             |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successfully copied the _Relation Catalog_ entry                                                                                            |
-| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids                                                                               |
-| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                           |
+| ---------------------------- | ------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)      | Successfully reset the search index in the relation cache.                |
+| [`E_OUTOFBOUND`](/constants) | Input relId is outside the valid set of possible relation ids             |
+| [`E_RELNOTOPEN`](/constants) | Entry corresponding to input relId is free in the _Relation Cache_ Table. |
 
 #### Algorithm
 
