@@ -79,19 +79,23 @@ SELECT title, location, capacity FROM Lectures JOIN Locations INTO LectureCapaci
 
 **Answer**
 
-1. | RelName           | AttributeName | AttributeType | PrimaryFlag | RootBlock | Offset |
-   | ----------------- | ------------- | ------------- | ----------- | --------- | ------ |
-   | LectureCapacities | title         | STR           | -           | -1        | 0      |
-   | LectureCapacities | location      | STR           | -           | -1        | 1      |
-   | LectureCapacities | capacity      | NUM           | -           | -1        | 2      |
+1.
 
-2. ```sql
-   OPEN TABLE Events;
-   OPEN TABLE Participants;
-   SELECT regNo,location FROM Participants JOIN Events INTO ParticipantLocations WHERE Participants.eventTitle = Events.title;
-   OPEN TABLE ParticipantLocations;
-   SELECT regNo FROM ParticipantLocations INTO AuditoriumParticipants WHERE location=Auditorium;
-   ```
+| RelName           | AttributeName | AttributeType | PrimaryFlag | RootBlock | Offset |
+| ----------------- | ------------- | ------------- | ----------- | --------- | ------ |
+| LectureCapacities | title         | STR           | -           | -1        | 0      |
+| LectureCapacities | location      | STR           | -           | -1        | 1      |
+| LectureCapacities | capacity      | NUM           | -           | -1        | 2      |
+
+2.
+
+```sql
+OPEN TABLE Events;
+OPEN TABLE Participants;
+SELECT regNo,location FROM Participants JOIN Events INTO ParticipantLocations WHERE Participants.eventTitle = Events.title;
+OPEN TABLE ParticipantLocations;
+SELECT regNo FROM ParticipantLocations INTO AuditoriumParticipants WHERE location=Auditorium;
+```
 
 </details>
 
@@ -99,7 +103,7 @@ SELECT title, location, capacity FROM Lectures JOIN Locations INTO LectureCapaci
 
 To do a join operation, we fetch every record from the first relation specified one by one. For every record, we do a search operation on the second relation to fetch the records that have the specified attribute value equal to the value in the record from the first relation. For every record of the first relation, there will be a corresponding search call to the second relation.
 
-If the only option we had was to do a linear search every time, we would end up with a time complexity of O(n<sup>2</sup>) for the join operation. But that is not the only option we have. If we were to do an indexed search instead, the complexity reduces to O(n log n). This is a significant improvement and would reduce the time required to complete the operation by a significant amount, especially as we approach upwards of a million records. Because of this, the NITCbase design mandates the following. If the second relation in a join operation does not have an index on the join attribute, one will be created for it.
+If the only option we had was to do a linear search every time, we would end up with a time complexity of O(n<sup>2</sup>) for the join operation. But that is not the only option we have. If we were to do an indexed search instead, the complexity reduces to O(n&nbsp;log&nbsp;n). This is a significant improvement and would reduce the time required to complete the operation by a significant amount, especially as we approach upwards of a million records. Because of this, the NITCbase design mandates the following. If the second relation in a join operation does not have an index on the join attribute, one will be created for it.
 
 The target relation produced from a join operation would contain all the attributes from both source relation (aside from the join attribute of the second relation). So, NITCbase requires that there be no attribute names that are common between the two relations except for the join attribute.
 
