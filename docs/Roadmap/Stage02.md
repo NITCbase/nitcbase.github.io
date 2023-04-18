@@ -122,7 +122,7 @@ This section links to various pages of the documentation. You do not need to fol
 
 A proper DBMS consists will implement a large number of operations. Here, we are starting with the implementation of one of the most rudimentary features of a relational database; printing the details of the relations. Before we get into that, let us take a quick look at the architecture of our database.
 
-NITCbase follows a 7-layer object oriented architecture. In the course of this project, you will be implementing all these layers. They are described below.
+NITCbase follows a 8-layer object oriented architecture. In the course of this project, you will be implementing all these layers. They are described below.
 
 1. [**Algebra Layer**](../Design/Algebra%20Layer.md): Handles the high level relational algebraic operations of our database
 2. [**Schema Layer**](../Design/Schema%20Layer.md): Handles the schema operations such as creation, deletion
@@ -130,9 +130,8 @@ NITCbase follows a 7-layer object oriented architecture. In the course of this p
 4. [**B+ Tree Layer**](../Design/B%2B%20Tree%20Layer.md): Handles all index related operations.
 5. [**Cache Layer**](../Design/Cache%20Layer/intro.md): Handles caching of the relation and attribute catalog
 6. [**Buffer Layer**](../Design/Buffer%20Layer/intro.md): Handles buffered operations on all disk blocks
-7. [**Physical Layer**](../Design/Physical%20Layer.md): Provides the low-level operations on the disk blocks.
-
-We also have a [**frontend interface**](../Design/Frontend.md) which is responsible for interacting with the user, receiving the commands, and translating them to the appropriate function in the Schema/Algebra layer. Most of this layer has already been implemented and provided to you. You will only need to make minor additions to this layer.
+7. [**Physical Layer**](../Design/Physical%20Layer.md): Provides the low-level operations on the disk blocks. This layer has already been implemented and provided to you.
+8. [**The Frontend Interface**](../Design/Frontend.md): Responsible for interacting with the user, receiving the commands, and translating them to the appropriate function in the Schema/Algebra layer. Most of this layer has already been implemented and provided to you. You will only need to make minor additions to this layer.
 
 **Read the [home page](/) and [architecture page](../Design/Architecture.md) if you have not done so already.**
 
