@@ -262,10 +262,10 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                                                                                    | cache entries |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------- |
-| `relId`                      | The relation id of the relation in the Open Relation Table                                                                                                         |
-| [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory. |
+| **Value**                    | **Description**                                                                                  |
+| ---------------------------- | ------------------------------------------------------------------------------------------------ |
+| `relId`                      | The relation id of the relation in the Open Relation Table                                       |
+| [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. |
 
 #### Algorithm
 
@@ -394,12 +394,12 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                         |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully closed the entry of the relation in the Open Relation Table                                                                |
-| [`E_NOTPERMITTED`](/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session                                                |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                           |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the Open Relation Table. Use OpenRelTable::openRel() to load the relation to cache memory |
+| **Value**                      | **Description**                                                                          |
+| ------------------------------ | ---------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)        | Successfully closed the entry of the relation in the Open Relation Table                 |
+| [`E_NOTPERMITTED`](/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session |
+| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                            |
+| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the Open Relation Table.                   |
 
 #### Algorithm
 

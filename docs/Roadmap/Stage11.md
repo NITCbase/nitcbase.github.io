@@ -129,7 +129,7 @@ sequenceDiagram
 
 ### Cache Update and Write-back
 
-An index can only be created for an open relation. When an index is created for a relation on an attribute, the `RootBlock` field is set for the corresponding attribute catalog entry in the attribute cache entry of the relation. Similar to how we had implemented the updation of the relation cache in previous stages, this updated value will be written to the buffer when the relation is closed (or at system exit, when all open relations are closed.).
+An index can only be created for an open relation. When an index is created for a relation on an attribute, the `RootBlock` field is set for the corresponding **attribute catalog entry in the attribute cache entry** of the relation. Similar to how we had implemented the updation of the relation cache in previous stages, this updated value will be written to the buffer when the relation is closed (or at system exit, when all open relations are closed.).
 
 Thus, we will need to implement methods to write to the attribute cache. Additionally, we will also modify the `OpenRelTable::closeRel()` function to write-back any _dirty_ attribute cache entries on relation closing. Note that we do not need to update the destructor of the OpenRelTable class to handle write-back for the attribute cache entries of the relation catalog and the attribute catalog (why?).
 
@@ -276,7 +276,7 @@ Implement the following functions looking at their respective design docs
 
 ### Creating and Deleting B+ Trees
 
-In the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md), we implement methods to create a B+ tree, insert into a B+ tree and free all the index blocks associated with a B+ tree. Note that we do not need to implement the functionality to delete an individual entry from a B+ tree (why?).
+In the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md), we implement methods to create a B+ tree, insert into a B+ tree and free all the index blocks associated with a B+ tree. Note that we do not need to implement the functionality to delete an individual entry from a B+ tree because NITCbase does not support individual deletion of records.
 
 A class diagram highlighting all the functions that will be modified to implement this functionality is shown below.
 
@@ -333,7 +333,13 @@ Implement the following functions looking at their respective design docs
 
 The `Schema::createIndex()` function verifies that the relation is open and passes the rel-id and attribute name along to the `BPlusTree::bPlusCreate()` function to create an index (to be implemented later in this stage).
 
-The `Schema::deleteIndex()` function fetches the root block of the index on a specified attribute from the attribute cache and then calls the `BPlusTree::bPlusDestroy()` function to free the index blocks. The corresponding attribute cache entry is then updated to indicate that there no longer exists a B+ tree on the attribute.
+The `Schema::dropIndex()` function fetches the root block of the index on a specified attribute from the attribute cache and then calls the `BPlusTree::bPlusDestroy()` function to free the index blocks. The corresponding attribute cache entry is then updated to indicate that there no longer exists a B+ tree on the attribute.
+
+:::caution note
+
+Although the [Schema Layer](../Design/Schema%20Layer.md) function `Schema::dropIndex()` is responsible for removing the `RootBlock` field during index deletion, during index creation, the attribute cache entry is updated with the value of the root block in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) function `BPlusTree::bPlusCreate()` function (and not in the `Schema::createIndex()` function).
+
+:::
 
 <details>
 <summary>Schema/Schema.cpp</summary>

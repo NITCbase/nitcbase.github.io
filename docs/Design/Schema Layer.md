@@ -274,6 +274,8 @@ int Schema::dropIndex(char *relName, char *attrName) {
     // get the attribute catalog entry corresponding to the attribute
     // using AttrCacheTable::getAttrCatEntry()
 
+    // if getAttrCatEntry() fails, return E_ATTRNOTEXIST
+
     int rootBlock = /* get the root block from attrcat entry */;
 
     if (/* attribute does not have an index (rootBlock = -1) */) {

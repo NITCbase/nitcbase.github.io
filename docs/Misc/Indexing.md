@@ -74,6 +74,10 @@ We notice that from 1000 disk accesses to 3 disk accesses, the performance incre
 
 :::
 
+The record block structure is as follows.
+
+![](../../static/img/indexing/recordblk.png)
+
 Now, let us understand the creation of B+ Tree in NITCbase in detail, and Insert and Search operations on it.
 
 :::note PLEASE NOTE
@@ -87,7 +91,7 @@ $$
 \\ = \left \lfloor \frac {288} {((16 * 4 + 1)} \right \rfloor = 4
 $$
 
-Additionally, we will be taking the maximum number of entries in an[internal index block](../Design/Physical%20Layer.md#internal-index-block-structure) to be **4** and [leaf index block](../Design/Physical%20Layer.md#leaf-index-block-structure) to be **3**.
+Additionally, we will be taking the maximum number of entries in an [internal index block](../Design/Physical%20Layer.md#internal-index-block-structure) to be **4** and [leaf index block](../Design/Physical%20Layer.md#leaf-index-block-structure) to be **3**.
 
 :::
 
@@ -115,10 +119,6 @@ $$
 \#RecordBlocks = \left \lceil \frac {14} {4} \right \rceil = 4
 $$
 
-The record block structure is as follows.
-
-![](../../static/img/indexing/recordblk.png)
-
 ### Create Index
 
 As discussed in the [Physical Layer](../Design/Physical%20Layer.md), each [attribute catalog entry](../Design/Physical%20Layer/#attribute-catalog) contains the `RootBlock` field which stores the root block number of the B+ Tree if there is an index created on the attribute or -1 otherwise.
@@ -131,7 +131,12 @@ Then, we iteratively insert all the values from the record into the index. We wi
 
 ### Insertion in B+ Tree
 
-Considering the simplified version of B+ Tree implementation similar to NITCbase, the algorithmic procedure for insertion is given below:
+Considering the simplified version of B+ Tree implementation similar to NITCbase, the algorithmic procedure for insertion is given below.
+
+As noted above, for the purpose of illustration, we are assuming here that:
+
+1.  an internal index block can store at most 4 indices, and
+2.  a leaf index block can store at most 3 indices
 
 #### Algorithm:
 

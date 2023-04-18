@@ -220,7 +220,7 @@ int IndInternal::getEntry(void *ptr, int indexNum) {
 
 #### Description
 
-Sets the indexNumth entry of the block with the input struct InternalEntry contents.
+Sets the indexNum<sup>th</sup> entry of the block with the input struct InternalEntry contents.
 
 #### Arguments
 

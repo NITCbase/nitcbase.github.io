@@ -135,7 +135,8 @@ Firstly, we traverse down the tree as mentioned earlier from the root node to fi
     - Allocate new leaf and move half the elements of current leaf node to the new leaf node.
     - Insert a copy of the current leaf node's largest key(i.e. the middle key before split) into the parent.
     - If the parent is full, split it too. Add the middle key to its parent node.
-    - Repeat until a parent is found that need not be split. If the root node is split, then a new node is created and the middle key is added to it. This new node becomes the new root node.
+    - Repeat until a parent is found that need not be split.
+      - If the root node is split, then a new node is created and the middle key is added to it. This new node becomes the new root node.
 
 #### Example
 

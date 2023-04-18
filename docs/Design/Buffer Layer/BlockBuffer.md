@@ -291,9 +291,10 @@ Nil
 
 #### Return Values
 
-| **Value** | **Description**                             |
-| --------- | ------------------------------------------- |
-| bufferPtr | Pointer to the buffer containing the block. |
+| **Value**      | **Description**                                 |
+| -------------- | ----------------------------------------------- |
+| bufferPtr      | Pointer to the buffer containing the block.     |
+| [E_OUTOFBOUND] | If `blockNum` is not a valid disk block number. |
 
 :::info Note
 

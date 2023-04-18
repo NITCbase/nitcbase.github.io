@@ -86,8 +86,11 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
 
     /******Creating a new B+ Tree ******/
 
-    // get a free leaf block.
+    // get a free leaf block using constructor 1 to allocate a new block
     IndLeaf rootBlockBuf;
+
+    // (if the block could not be allocated, the appropriate error code
+    //  will be stored in the blockNum member field of the object)
 
     // declare rootBlock to store the blockNumber of the new leaf block
     int rootBlock = rootBlockBuf.getBlockNum();
@@ -115,8 +118,8 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
         // load the slot map into slotMap using RecBuffer::getSlotMap().
 
         // for every occupied slot of the block
-
-            // declare Attribute record[relCatEntry.numAttrs] and
+        {
+            Attribute record[relCatEntry.numAttrs];
             // load the record corresponding to the slot into `record`
             // using RecBuffer::getRecord().
 
@@ -133,6 +136,7 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
             //     // (unable to get enough blocks to build the B+ Tree.)
             //     return E_DISKFULL;
             // }
+        }
 
         // get the header of the block using BlockBuffer::getHeader()
 
@@ -486,13 +490,21 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
 #### Description
 
-Used to search the first/ next record entry in the relation whose attribute value corresponding to `attrName` satisfies the relational operation for the input attribute value. <br/>
-The method makes use of the searchIndex field of the attribute in the Attribute Catalog Cache for this purpose. A valid index id holds the index id of the entry in the leaf block of the B+ Tree that corresponded to a hit in the previous search. The search is resumed from the next index entry. An invalid index id means that the search is being done for the first time. <br/>
-This method can be called multiple times to get all the records in the relation that satisfy op for input attrVal.
+This method searches the relation specified using a B+ tree to find the next record that satisfies the specified condition. The condition value is given by the argument `attrVal`. This function returns the recId of the next record satisfying the condition. The condition that is checked for is the following.
 
-:::info NOTE
+```
+value-in-record `op` attrVal
+```
 
-The caller is expected to verify that an index exists on attrName for the relation. {-1, -1} will be returned otherwise.
+:::info note
+
+- This function reads the "next" record from the given relation that satisfies a given condition. The search index of the attribute (stored in the [AttrCacheTable](Cache%20Layer/AttrCacheTable.md) entry of the relation) is used to identify the location of the previous record that was returned. This function reads the next record and updates the value of the search index to the position of the newly read record, before passing the record to the caller.
+
+- If `searchIndex` was reset to `{-1,-1}` before the call, this function starts reading from the beginning and returns the first record of the relation that satisfies the condition. The `AttrCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
+
+- If the `searchIndex` value of a relation corresponds to the last record of the relation that satisfies the condition, this function will return `{-1, -1}`, as there is no "next" record to be read.
+
+- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return `{-1, -1}`.
 
 :::
 
@@ -516,20 +528,15 @@ The caller is expected to verify that an index exists on attrName for the relati
 
 ```cpp
 RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op) {
-    // let searchIndex be used to store search index for attrName.
+    // declare searchIndex which will be used to store search index for attrName.
     IndexId searchIndex;
 
     /* get the search index corresponding to attribute with name attrName
        using AttrCacheTable::getSearchIndex(). */
 
-    /* reset the search index to {-1,-1} using AttrCacheTable::resetSearchIndex().
-    (this will be set to the correct index id if an entry satisfying op for given
-    attrVal is found in the course of the search.) */
-
-    // let attrCatEntry be used to store the attribute cache entry for attrName.
     AttrCatEntry attrCatEntry;
-
-    // load the attribute cache entry using AttrCacheTable::getAttrCatEntry().
+    /* load the attribute cache entry into attrCatEntry using
+     AttrCacheTable::getAttrCatEntry(). */
 
     // declare variables block and index which will be used during search
     int block, index;
@@ -542,7 +549,7 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
         index = 0;
 
         if (/* attrName doesn't have a B+ tree (block == -1)*/) {
-            // return the recId {-1, -1};
+            return RecId{-1, -1};
         }
 
     } else {
@@ -555,7 +562,7 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
         // load block into leaf using IndLeaf::IndLeaf().
         IndLeaf leaf(block);
 
-        // let leafHead be used to hold the header of leaf.
+        // declare leafHead which will be used to hold the header of leaf.
         HeadInfo leafHead;
 
         // load header into leafHead using BlockBuffer::getHeader().
@@ -568,7 +575,7 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
 
             if (block == -1) {
                 // (end of linked list reached - the search is done.)
-                // return the recId {-1, -1};
+                return RecId{-1, -1};
             }
         }
     }
@@ -576,9 +583,12 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
     /******  Traverse through all the internal nodes according to value
              of attrVal and the operator op                             ******/
 
-    // (This section is only needed when search restarts from the root block.
-    //  If there was a valid search index, then we are already at a leaf block
-    //  and the test condition in the following loop will fail.)
+    /* (This section is only needed when
+        - search restarts from the root block (when searchIndex is reset by caller)
+        - root is not a leaf
+        If there was a valid search index, then we are already at a leaf block
+        and the test condition in the following loop will fail)
+    */
 
     while(/* block is of type IND_INTERNAL */) {  //use StaticBuffer::getStaticBlockType()
 
@@ -636,69 +646,70 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
                 block =  // right child of last entry
             }
         }
+    }
 
+    // NOTE: `block` now has the block number of a leaf index block.
 
-        // NOTE: `block` now has the block number of a leaf index block.
+    /******  Identify the first leaf index entry from the current position
+                that satisfies our condition (moving right)             ******/
 
-        /******  Traverse through index entries in the leaf index block from
-                 the index entry numbered as index                       ******/
+    while (block != -1) {
+        // load the block into leafBlk using IndLeaf::IndLeaf().
+        IndLeaf leafBlk(block);
+        HeadInfo leafHead;
 
-        while (block != -1) {
-            // load the block into leafBlk using IndLeaf::IndLeaf().
-            IndLeaf leafBlk(block);
-            HeadInfo leafHead;
+        // load the header to leafHead using BlockBuffer::getHeader().
 
-            // load the header to leafHead using BlockBuffer::getHeader().
+        // declare leafEntry which will be used to store an entry from leafBlk
+        Index leafEntry;
 
-            // declare leafEntry which will be used to store an entry from leafBlk
-            Index leafEntry;
+        //highlight-start
+        while (/*index < numEntries in leafBlk*/) {
 
-            while (/*index < numEntries in leafBlk*/) {
+            // load entry corresponding to block and index into leafEntry
+            // using IndLeaf::getEntry().
 
-                // load entry corresponding to block and index into leafEntry
-                // using IndLeaf::getEntry().
+            int cmpVal = /* comparison between leafEntry's attribute value
+                            and input attrVal using compareAttrs()*/
 
-                int cmpVal = /* comparison between leafEntry's attribute value
-                                and input attrVal using compareAttrs()*/
+            if (
+                (op == EQ && cmpVal == 0) ||
+                (op == LE && cmpVal <= 0) ||
+                (op == LT && cmpVal < 0) ||
+                (op == GT && cmpVal > 0) ||
+                (op == GE && cmpVal >= 0) ||
+                (op == NE && cmpVal != 0)
+            ) {
+                // (entry satisfying the condition found)
 
-                if (
-                    (op == EQ && cmpVal == 0) ||
-                    (op == LE && cmpVal <= 0) ||
-                    (op == LT && cmpVal < 0) ||
-                    (op == GT && cmpVal > 0) ||
-                    (op == GE && cmpVal >= 0) ||
-                    (op == NE && cmpVal != 0)
-                ) {
-                    // (entry satisfying the condition found)
+                // set search index to {block, index}
 
-                    // set search index to {block, index}
+                // return the recId {leafEntry.block, leafEntry.slot}.
 
-                    // return the recId {leafEntry.block, leafEntry.slot}.
+            } else if ((op == EQ || op == LE || op == LT) && cmpVal > 0) {
+                /*future entries will not satisfy EQ, LE, LT since the values
+                    are arranged in ascending order in the leaves */
 
-                } else if ((op == EQ || op == LE || op == LT) && cmpVal > 0) {
-                    /*future entries will not satisfy EQ, LE, LT since the values
-                      are arranged in ascending order in the leaves */
-
-                    // return RecId {-1, -1};
-                }
-
-                // search next index.
-                ++index;
+                // return RecId {-1, -1};
             }
 
-            /*only for NE do we have to check the entire linked list;
-            for all the other op it is guaranteed that the block being searched
-            will have an entry, if it exists, satisying that op. */
-            if (op != NE) {
-                break;
-            }
+            // search next index.
+            ++index;
+        }
+        //highlight-end
 
-            // block = next block in the linked list, i.e., the rblock in leafHead.
-            // update index to 0.
+        /*only for NE operation do we have to check the entire linked list;
+        for all the other op it is guaranteed that the block being searched
+        will have an entry, if it exists, satisying that op. */
+        if (op != NE) {
+            break;
         }
 
-        // no entry satisying the op was found; return the recId {-1,-1}
+        // block = next block in the linked list, i.e., the rblock in leafHead.
+        // update index to 0.
     }
+
+    // no entry satisying the op was found; return the recId {-1,-1}
 }
 ```
 

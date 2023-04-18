@@ -47,8 +47,7 @@ public:
 
 #### Description
 
-This method searches the relation specified linearly to find the next record that satisfies the specified condition on attribute attrVal and returns the recId of the next record satisfying the condition.
-The function checks for
+This method searches the relation specified linearly to find the next record that satisfies the specified condition. The condition value is given by the argument `attrVal`. This function returns the recId of the next record satisfying the condition. The condition that is checked for is the following.
 
 ```
 value-in-record `op` attrVal
@@ -74,11 +73,11 @@ value-in-record `op` attrVal
 
 - This function reads the "next" record from the given relation that satisfies a given condition. The search index of the relation (stored in the [RelCacheTable](Cache%20Layer/RelCacheTable.md) entry of the relation) is used to identify the location of the previous record that was returned. This function reads the next record and updates the value of the search index to the position of the newly read record, before passing the record to the caller.
 
-- If `searchIndex` is reset to `{-1,-1}`, this function starts reading from the beginning and returns the first record of the relation that satisfies the condition. The `RelCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
+- If `searchIndex` was reset to `{-1,-1}` before the call, this function starts reading from the beginning and returns the first record of the relation that satisfies the condition. The `RelCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
 
-- If the `searchIndex` value of a relation corresponds to the last record of the relation that satisfies the condition, this function will return [E_NOTFOUND](/constants), as there is no "next" record to be read.
+- If the `searchIndex` value of a relation corresponds to the last record of the relation that satisfies the condition, this function will return `{-1, -1}`, as there is no "next" record to be read.
 
-- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return [E_NOTFOUND](/constants).
+- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return `{-1, -1}`.
 
 - The [`linearSearch()`](#blockaccess--linearsearch) and `project()` functions make use of the same search index. Hence, changes in the value of `searchIndex` will affect the functioning of both these functions.
 
