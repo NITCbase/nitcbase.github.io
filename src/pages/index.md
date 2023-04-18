@@ -28,7 +28,7 @@ A more detailed overview is given below.
 
 An even more detailed diagram can be found on the [architecture page](/docs/Design/Architecture).
 
-An **even even more** detailed diagram can be found on the [system design page](/docs/Design/DesignDiagram).
+A still more detailed diagram can be found on the [system design page](/docs/Design/DesignDiagram).
 
 There are two command-line interfaces for NITCbase:
 

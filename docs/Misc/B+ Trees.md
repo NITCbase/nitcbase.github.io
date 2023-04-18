@@ -8,7 +8,7 @@ We know that the objective of indexing is to make the retrieval of records quick
 
 We all are aware of how easy it is to locate a page or a topic in a book if you have an index. We can say that accessing each record in a database is also very easy when you have an index structure for the same. Creating an index is basically creating a data structure that holds an attribute value and a pointer to a record block on the disk, i.e. a 'key-pointer' pair.
 
-Once we generate an index for a relation, we can store it on the disk so that, each time one needs to access the records, they can do so by searching these index blocks. The advantage of indexing is that records can be fetched from the disk with fewer disk accesses. We'll see how this is possible now.
+Once we generate an index for a relation, we can store it on the disk so that, each time there is a need to access the records, it can be done by searching these index blocks. The advantage of indexing is that records can be fetched from the disk with fewer disk accesses. We'll see how this is possible now.
 
 ## Indexing Data Structures
 
@@ -63,14 +63,14 @@ A B+ Tree is fundamentally a B-Tree, having some additional properties. The dist
   The leaf nodes of B+ trees are maintained as a linked list maintaining key values in sorted order, so doing a linear scan of all keys will require just one pass through all the leaf nodes. A B tree, on the other hand, would require a traversal of every level in the tree. This property aids us in the process of fetching records. For example, consider a query to fetch records with a particular attribute value greater than `X`. At first, we traverse down the tree, starting from the root, to find the first key value in the leaf node that succeeds in satisfying our search condition and fetch that record using its record pointer. Since the keys are maintained in a sorted linked list manner, we can linearly scan further from our first success point.
 
 :::info Question
-**Q.** How many keys can be stored in an internal block of a B Tree and B+ Tree? (Block size: 1024 bytes, Record and Child pointer: 6 bytes)
+**Q.** How many keys can be stored in an internal block of a B Tree and B+ Tree? (Block size: 1024 bytes, Record and Child pointer: 6 bytes, Key value: 10 bytes)
 
 <details>
 <summary>
 View solution
 </summary>
 
-**B Tree**:- An entry in an internal node can be considered as a set of a key, record pointer, and child pointer. Hence its size is 22 bytes (10+6+6). We also have an additional child pointer(_recall that k entries will have k+1 children_). Hence number of entries `n` can be calculated as.
+**B Tree**:- An entry in an internal node can be considered as a set of a key, record pointer, and child pointer. Hence its size is 22 bytes (10+6+6). We also have an additional child pointer (_recall that k entries will have k+1 children_). Hence number of entries `n` can be calculated as.
 
 $$
 22n + 6 = 1024 \\
@@ -88,7 +88,9 @@ $$
 
 :::
 
-We can see that more keys can be stored in a B+ Tree than in a B Tree. This becomes a huge difference as the block size and record pointer size increases.
+We can see that more keys can be stored in the internal nodes of a B+ Tree than in a B Tree. This becomes a huge difference as the block size and record pointer size increases.
+
+Note that the convention followed throughout NITCbase for B+ trees is that each value in an internal node of the tree corresponds to the rightmost value (that is, the largest value) in it's left child. Therefore the formal condition is that every entry in the left subtree of an entry is **less than** the entry.
 
 The above B Tree, when converted to a B+ Tree will look something like this. As discussed earlier, each of the entries in the B+ Tree corresponds to a particular attribute value in the relation.
 
@@ -109,7 +111,8 @@ Suppose we want to find a node with key `k`.
 
 #### Example
 
-How do we traverse a B+ tree? Let us consider the following B+ tree.
+How do we traverse a B+ tree? Let us consider the following B+ tree. Note that the leaf nodes have been indicated with the colour blue and internal nodes with the colour green in the following diagrams. The record pointers have been omitted from the diagrams in the interest of clarity.
+
 ![](../../static/img/bplustree/14.png)
 
 Suppose we want to find all values greater than 25.
@@ -132,7 +135,7 @@ Firstly, we traverse down the tree as mentioned earlier from the root node to fi
     - Allocate new leaf and move half the elements of current leaf node to the new leaf node.
     - Insert a copy of the current leaf node's largest key(i.e. the middle key before split) into the parent.
     - If the parent is full, split it too. Add the middle key to its parent node.
-    - Repeat until a parent is found that need not be split.
+    - Repeat until a parent is found that need not be split. If the root node is split, then a new node is created and the middle key is added to it. This new node becomes the new root node.
 
 #### Example
 
