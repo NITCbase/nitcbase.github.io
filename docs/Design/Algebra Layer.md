@@ -147,21 +147,21 @@ This function creates a new target relation with attributes as that of source re
 
 #### Return values
 
-| **Value**                          | **Description**                                                                                       |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                               |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                   |
-| [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                   |
-| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name `attr` does not exist.                                                       |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute. |
-| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table             |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                        |
+| **Value**                          | **Description**                                                                                                               |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/constants)            | On successful completion of the select operation.                                                                             |
+| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                                           |
+| [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                                           |
+| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name `attr` does not exist.                                                                               |
+| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute (the argument `strVal`). |
+| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                                     |
+| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                                |
 
 #### Algorithm
 
 ```cpp
 int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr[ATTR_SIZE], int op, char strVal[ATTR_SIZE]) {
-    // get the srcRel's rel-id(let it be srcRelid), using OpenRelTable::getRelId()
+    // get the srcRel's rel-id (let it be srcRelid), using OpenRelTable::getRelId()
     // if srcRel is not open in open relation table, return E_RELNOTOPEN
 
     // get the attr-cat entry for attr, using AttrCacheTable::getAttrCatEntry()
@@ -175,11 +175,10 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
 
     if (type == NUMBER)
     {
-        // if the char array record[i] can be converted to a number
+        // if the input argument strVal can be converted to a number
         // (check this using isNumber() function)
         {
-            /* convert the char array to numeral and store it
-                at attrVal.nVal using atof() */
+            // convert strVal to double and store it at attrVal.nVal using atof()
         }
         // else
         {
@@ -188,7 +187,7 @@ int Algebra::select(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], char attr
     }
     else if (type == STRING)
     {
-        // copy record[i] to attrVal.sVal
+        // copy strVal to attrVal.sVal
     }
 
     /*** Creating and opening the target relation ***/
@@ -279,7 +278,7 @@ This function creates a new target relation with list of attributes specified in
 
 | **Value**                      | **Description**                                                                           |
 | ------------------------------ | ----------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of new relation.                                                   |
+| [`SUCCESS`](/constants)        | On successful completion of the project operation.                                        |
 | [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                       |
 | [`E_RELEXIST`](/constants)     | If a relation with name `targetRel` already exists.                                       |
 | [`E_ATTRNOTEXIST`](/constants) | If any attribute with name given in attribute name array does not exist.                  |
@@ -379,7 +378,7 @@ This function creates a copy of the source relation in the target relation. **Ev
 
 | **Value**                    | **Description**                                                                           |
 | ---------------------------- | ----------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | On successful creation of new relation.                                                   |
+| [`SUCCESS`](/constants)      | On successful completion of the project operation.                                        |
 | [`E_RELNOTOPEN`](/constants) | If the source relation is not open.                                                       |
 | [`E_RELEXIST`](/constants)   | If a relation with name `targetRel` already exists.                                       |
 | [`E_DISKFULL`](/constants)   | If disk space is not sufficient for creating the new relation.                            |
@@ -481,7 +480,7 @@ An example for the join operation can be seen [here](../User%20Interface%20Comma
 
 | **Value**                          | **Description**                                                                                                       |
 | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                               |
+| [`SUCCESS`](/constants)            | On successful completion of the join operation.                                                                       |
 | [`E_RELNOTOPEN`](/constants)       | If any of the source relations is not open.                                                                           |
 | [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                                   |
 | [`E_ATTRNOTEXIST`](/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |

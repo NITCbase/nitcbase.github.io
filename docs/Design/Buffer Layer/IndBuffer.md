@@ -34,14 +34,17 @@ Called if a new index block of the input type is to be allocated in the disk.
 
 #### Arguments
 
-| **Name** | **Type** | **Description**                                               |
-| -------- | -------- | ------------------------------------------------------------- |
-| I        | `char`   | New block of [`IND_INTERNAL`](/constants) type to be alloted. |
-| L        | `char`   | New block of [`IND_LEAF `](/constants) type to be alloted.    |
+| **Name**  | **Type** | **Description**                                                                                                                                  |
+| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| blockType | `char`   | The block type indicating whether it is an internal index block ([`IND_INTERNAL`](/constants)) or a leaf index block ([`IND_LEAF`](/constants)). |
 
 #### Return Values
 
 Nil
+
+:::note
+If the block already has already been initialised as an index block on the disk, use [constructor 2](#indbuffer--indbuffer-constructor-2).
+:::
 
 #### Algorithm
 
@@ -50,10 +53,6 @@ Nil
 IndBuffer::IndBuffer(char blockType) : BlockBuffer(blockType){}
 
 ```
-
-:::note
-If the block has already been initialised as an index block on the disk, use [constructor 2](#indbuffer-constructor-2).
-:::
 
 ### IndBuffer :: IndBuffer() (Constructor 2)
 
@@ -71,16 +70,16 @@ Called when the block has already been initialised as an index block on the disk
 
 Nil
 
+:::note
+If a new index block is to be allocated in the disk use [constructor 1](#indbuffer--indbuffer-constructor-1).
+:::
+
 #### Algorithm
 
 ```cpp
 // call the corresponding parent constructor
 IndBuffer::IndBuffer(int blockNum) : BlockBuffer(blockNum){}
 ```
-
-:::note
-If a new index block is to be allocated in the disk use [constructor 1](#indbuffer-constructor-1).
-:::
 
 ## class IndInternal
 
@@ -154,7 +153,7 @@ IndInternal::IndInternal(int blockNum) : IndBuffer(blockNum){}
 
 #### Description
 
-Gives the indexNumth entry of the block.
+Gives the indexNum<sup>th</sup> entry of the block.
 
 #### Arguments
 
@@ -207,10 +206,11 @@ int IndInternal::getEntry(void *ptr, int indexNum) {
     /* the indexNum'th entry will begin at an offset of
        HEADER_SIZE + (indexNum * (sizeof(int) + ATTR_SIZE) )         [why?]
        from bufferPtr */
+    unsigned char *entryPtr = bufferPtr + HEADER_SIZE + (indexNum * 20);
 
-    memcpy(internalEntry, /* pointer */, sizeof(int32_t));
-    memcpy(&(internalEntry->attrVal), /* pointer */, sizeof(Attribute));
-    memcpy(&(internalEntry->rChild), /* pointer */, sizeof(int32_t));
+    memcpy(&(internalEntry->lChild), entryPtr, sizeof(int32_t));
+    memcpy(&(internalEntry->attrVal), entryPtr + 4, sizeof(Attribute));
+    memcpy(&(internalEntry->rChild), entryPtr + 20, 4);
 
     // return SUCCESS.
 }
@@ -274,9 +274,11 @@ int IndInternal::setEntry(void *ptr, int indexNum) {
        HEADER_SIZE + (indexNum * (sizeof(int) + ATTR_SIZE) )         [why?]
        from bufferPtr */
 
-    memcpy(/* pointer */, &(internalEntry->lChild), sizeof(int32_t));
-    memcpy(/* pointer */, &(internalEntry->attrVal), sizeof(Attribute));
-    memcpy(/* pointer */, &(internalEntry->rChild), sizeof(int32_t));
+    unsigned char *entryPtr = bufferPtr + HEADER_SIZE + (indexNum * 20);
+
+    memcpy(entryPtr, &(internalEntry->lChild), 4);
+    memcpy(entryPtr + 4, &(internalEntry->attrVal), ATTR_SIZE);
+    memcpy(entryPtr + 20, &(internalEntry->rChild), 4);
 
 
     // update dirty bit using setDirtyBit()
@@ -319,6 +321,10 @@ Nil
 
 Nil
 
+:::note
+If the block has already been initialised as a leaf index block on the disk, use [constructor 2](#indleaf-constructor-2).
+:::
+
 #### Algorithm
 
 ```cpp
@@ -326,10 +332,6 @@ IndLeaf::IndLeaf() : IndBuffer('L'){} // this is the way to call parent non-defa
                       // 'L' used to denote IndLeaf.
 
 ```
-
-:::note
-If the block has already been initialised as a leaf index block on the disk, use [constructor 2](#indleaf-constructor-2).
-:::
 
 ### IndLeaf :: IndLeaf() (Constructor 2)
 
@@ -347,16 +349,16 @@ Called when the block has already been initialised as a leaf index block on the 
 
 Nil
 
+:::note
+If a new leaf index block is to be allocated in the disk use [constructor 1](#indleaf-constructor-1).
+:::
+
 #### Algorithm
 
 ```cpp
 //this is the way to call parent non-default constructor.
 IndLeaf::IndLeaf(int blockNum) : IndBuffer(blockNum){}
 ```
-
-:::note
-If a new leaf index block is to be allocated in the disk use [constructor 1](#indleaf-constructor-1).
-:::
 
 ### IndLeaf :: getEntry()
 
@@ -406,8 +408,8 @@ int IndLeaf::getEntry(void *ptr, int indexNum) {
 
     /* the indexNum'th entry will begin at an offset of
        HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE)  from bufferPtr */
-
-    memcpy((struct Index*)ptr, /* pointer */, LEAF_ENTRY_SIZE);
+    unsigned char *entryPtr = bufferPtr + HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE);
+    memcpy((struct Index *)ptr, entryPtr, LEAF_ENTRY_SIZE);
 
     // return SUCCESS
 }
@@ -461,8 +463,8 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 
     /* the indexNum'th entry will begin at an offset of
        HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE)  from bufferPtr */
-
-    memcpy(/* pointer */, (struct Index*)ptr, LEAF_ENTRY_SIZE);
+    unsigned char *entryPtr = bufferPtr + HEADER_SIZE + (indexNum * LEAF_ENTRY_SIZE);
+    memcpy(entryPtr, (struct Index *)ptr, LEAF_ENTRY_SIZE);
 
     // update dirty bit using setDirtyBit()
     // if setDirtyBit failed, return the value returned by the call

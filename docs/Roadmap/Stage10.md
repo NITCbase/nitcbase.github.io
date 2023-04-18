@@ -266,7 +266,7 @@ classDiagram
 
 <br/>
 
-When an index is created on an attribute of a relation, the attribute catalog entry of the attribute is updated to store the block number of the root block of the B+ tree. This may be a leaf index block or an internal index block (it will be a leaf if the total number of records is less than 63. otherwise, there will be multiple leaf blocks and hence an internal index block.).
+When an index is created on an attribute of a relation, the attribute catalog entry of the attribute is updated to store the block number of the root block of the B+ tree. This may be a leaf index block or an internal index block. (It will be a leaf if the total number of records is less than 63. Otherwise, there will be multiple leaf blocks and consequently an internal index block.)
 
 Recall that the `search()` function in the [Block Access Layer](../Design/Block%20Access%20Layer.md) is used to either do a B+ search or a linear search depending on the presence of an index. Our earlier implementation did not account for indexes and directly called the `BlockAccess:linearSearch()` function. We now modify that function to check the attribute catalog entry and call the [`BPlusTree::bPlusSearch()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplussearch) function if there is an index (we will implement this function later in this stage).
 
@@ -306,7 +306,7 @@ Implement the `Algebra::select()` function by looking at the [design docs](../De
 
 In the [Buffer Layer](../Design/Buffer%20Layer/intro.md), we implement the methods to read from index blocks using classes `IndInternal` and `IndLeaf` as mentioned earlier. Similar to how we've used `RecBuffer` to read from record blocks thus far, the `IndBuffer` class defines virtual methods `getEntry()` and `setEntry()` to access the entry at a particular index in a B+ tree node. Note that every node of the B+ tree occupies an entire block of the XFS disk.
 
-The `IndInternal` and `IndLeaf` classes also define a _constructor 1_(which is used to read from an already allocated index block) and a _constructor 2_ (which is used to allocate a new index block) similar to what we had implemented for `RecBuffer`. These constructors call their parent class `IndBuffer`'s _constructor 1_ and _constructor 2_ respectively which in turn calls the corresponding `BlockBuffer` constructors that we implemented earlier.
+The `IndInternal` and `IndLeaf` classes also define a _constructor 1_ (which is used to read from an already allocated index block) and a _constructor 2_ (which is used to allocate a new index block) similar to what we had implemented for `RecBuffer`. These constructors call their parent class `IndBuffer`'s _constructor 1_ and _constructor 2_ respectively which in turn calls the corresponding `BlockBuffer` constructors that we implemented earlier.
 
 Similar to the [struct Attribute](../Design/Buffer%20Layer/intro.md#attribute) that we used to hold the values in a record, we have helper structs to store index entries as well. An entry from a leaf index block is represented using [struct Index](../Design/Buffer%20Layer/intro.md#index) and an entry from an internal index block is represented using [struct InternalEntry](../Design/Buffer%20Layer/intro.md#internalentry).
 
@@ -318,10 +318,10 @@ Since we do not need to modify indexes at this stage, we will only be implementi
 Implement the following constructors looking at the respective design docs
 
 - [`IndBuffer::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indbuffer--indbuffer-constructor-1)
-- [`IndInternal::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--indinternal-constructor-1)
-- [`IndLeaf::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--indleaf-constructor-1)
 - [`IndBuffer::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indbuffer--indbuffer-constructor-2)
+- [`IndInternal::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--indinternal-constructor-1)
 - [`IndInternal::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--indinternal-constructor-2)
+- [`IndLeaf::Constructor1`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--indleaf-constructor-1)
 - [`IndLeaf::Constructor2`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--indleaf-constructor-2)
 
 Implement the following functions looking at the respective design docs
@@ -329,7 +329,7 @@ Implement the following functions looking at the respective design docs
 - [`IndInternal::getEntry()`](../Design/Buffer%20Layer/IndBuffer.md#indinternal--getentry)
 - [`IndLeaf::getEntry()`](../Design/Buffer%20Layer/IndBuffer.md#indleaf--getentry)
 
-Add the following empty definitions to avoid compilation issues. We will implement these function in later stages.
+Add the following empty definitions to avoid compilation issues. We will implement these functions in later stages.
 
 ```cpp
 int IndInternal::setEntry(void *ptr, int indexNum) {
@@ -343,7 +343,7 @@ int IndLeaf::setEntry(void *ptr, int indexNum) {
 
 </details>
 
-An additional function we will need in the [Buffer Layer](../Design/Buffer%20Layer/intro.md) is the `StaticBuffer::getStaticBlockType()` function which takes a block number and returns the type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`). We will use this function when we implement `bPlusSearch()` later in this stage.
+An additional function we will need in the [Buffer Layer](../Design/Buffer%20Layer/intro.md) is the `StaticBuffer::getStaticBlockType()` function which takes a block number and returns the type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`/`BMAP`). We will use this function when we implement `bPlusSearch()` later in this stage.
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>

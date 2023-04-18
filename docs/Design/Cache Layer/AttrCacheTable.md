@@ -28,13 +28,13 @@ friend class OpenRelTable;
 
 public:
   //methods
-  static int getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
+  static int getAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
   static int getAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
-  static int setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
+  static int setAttrCatEntry(int relId, char attrName[ATTR_SIZE], AttrCatEntry *attrCatBuf);
   static int setAttrCatEntry(int relId, int attrOffset, AttrCatEntry *attrCatBuf);
-  static int getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
+  static int getSearchIndex(int relId, char attrName[ATTR_SIZE], IndexId *searchIndex);
   static int getSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
-  static int setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE], IndexId *searchIndex);
+  static int setSearchIndex(int relId, char attrName[ATTR_SIZE], IndexId *searchIndex);
   static int setSearchIndex(int relId, int attrOffset, IndexId *searchIndex);
 
 private:
@@ -65,11 +65,11 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                                                                                      |
-| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                       |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                              |
-| attrCatBuf            | `AttrCatEntry*`                    | Pointer to struct AttrCatEntry to which the _Attribute Catalog_ entry corresponding to the input relid and attribute is to be copied |
+| **Name**              | **Type**                  | **Description**                                                                                                                      |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| relId                 | `int`                     | The relation id of the relation in the _Attribute Cache_ Table                                                                       |
+| attrName / attrOffset | `char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                              |
+| attrCatBuf            | `AttrCatEntry*`           | Pointer to struct AttrCatEntry to which the _Attribute Catalog_ entry corresponding to the input relid and attribute is to be copied |
 
 #### Return Values
 
@@ -83,7 +83,7 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 #### Algorithm
 
 ```cpp
-int AttrCacheTable::getAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
+int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 
   if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
     return E_OUTOFBOUND;
@@ -125,11 +125,11 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                                                                                          |
-| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                           |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                  |
-| attrCatBuf            | `AttrCatEntry*`                    | Pointer to `struct AttrCatEntry` using which the _Attribute Catalog_ entry corresponding to input `relId` and attribute is to be updated |
+| **Name**              | **Type**                  | **Description**                                                                                                                          |
+| --------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| relId                 | `int`                     | The relation id of the relation in the _Attribute Cache_ Table                                                                           |
+| attrName / attrOffset | `char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                  |
+| attrCatBuf            | `AttrCatEntry*`           | Pointer to `struct AttrCatEntry` using which the _Attribute Catalog_ entry corresponding to input `relId` and attribute is to be updated |
 
 #### Return Values
 
@@ -143,7 +143,7 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 #### Algorithm
 
 ```cpp
-int AttrCacheTable::setAttrCatEntry(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
+int AttrCacheTable::setAttrCatEntry(int relId, char attrName[ATTR_SIZE]/int attrOffset, AttrCatEntry *attrCatBuf) {
 
   if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
     return E_OUTOFBOUND;
@@ -188,11 +188,11 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                                                                                                        |
-| --------------------- | ---------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                                                                         |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                                |
-| searchIndex           | `IndexId*`                         | Pointer to struct IndexId to which the searchIndex field of the _Attribute Cache_ entry corresponding to the input relid and attribute is to be copied |
+| **Name**              | **Type**                  | **Description**                                                                                                                                        |
+| --------------------- | ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| relId                 | `int`                     | The relation id of the relation in the _Attribute Cache_ Table                                                                                         |
+| attrName / attrOffset | `char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                                                                                |
+| searchIndex           | `IndexId*`                | Pointer to struct IndexId to which the searchIndex field of the _Attribute Cache_ entry corresponding to the input relid and attribute is to be copied |
 
 #### Return Values
 
@@ -206,7 +206,7 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 #### Algorithm
 
 ```cpp
-int AttrCacheTable::getSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
+int AttrCacheTable::getSearchIndex(int relId, char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 
   if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
     return E_OUTOFBOUND;
@@ -248,11 +248,11 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                                                      |
-| --------------------- | ---------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table                                       |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                              |
-| searchIndex           | `IndexId*`                         | Pointer to struct IndexId which contains the value to which the `searchIndex` field is to be updated |
+| **Name**              | **Type**                  | **Description**                                                                                      |
+| --------------------- | ------------------------- | ---------------------------------------------------------------------------------------------------- |
+| relId                 | `int`                     | The relation id of the relation in the _Attribute Cache_ Table                                       |
+| attrName / attrOffset | `char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                                                              |
+| searchIndex           | `IndexId*`                | Pointer to struct IndexId which contains the value to which the `searchIndex` field is to be updated |
 
 #### Return Values
 
@@ -266,7 +266,7 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 #### Algorithm
 
 ```cpp
-int AttrCacheTable::setSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
+int AttrCacheTable::setSearchIndex(int relId, char attrName[ATTR_SIZE]/int attrOffset, IndexId *searchIndex) {
 
   if(/*relId is outside the range [0, MAX_OPEN-1]*/) {
     return E_OUTOFBOUND;
@@ -307,10 +307,10 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 
 #### Arguments
 
-| **Name**              | **Type**                           | **Description**                                                |
-| --------------------- | ---------------------------------- | -------------------------------------------------------------- |
-| relId                 | `int`                              | The relation id of the relation in the _Attribute Cache_ Table |
-| attrName / attrOffset | `unsigned char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                        |
+| **Name**              | **Type**                  | **Description**                                                |
+| --------------------- | ------------------------- | -------------------------------------------------------------- |
+| relId                 | `int`                     | The relation id of the relation in the _Attribute Cache_ Table |
+| attrName / attrOffset | `char[ATTR_SIZE]` / `int` | The name/offset of the target attribute                        |
 
 #### Return Values
 
@@ -324,7 +324,7 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 #### Algorithm
 
 ```cpp
-int AttrCacheTable::resetSearchIndex(int relId, unsigned char attrName[ATTR_SIZE]/int attrOffset) {
+int AttrCacheTable::resetSearchIndex(int relId, char attrName[ATTR_SIZE]/int attrOffset) {
 
   // declare an IndexId having value {-1, -1}
   // set the search index to {-1, -1} using AttrCacheTable::setSearchIndex

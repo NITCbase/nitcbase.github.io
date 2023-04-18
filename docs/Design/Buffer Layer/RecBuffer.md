@@ -38,7 +38,7 @@ Nil
 Nil
 
 :::note
-If the record block already has already been initialised as a record block on the disk, use [constructor 2](#recbuffer--recbuffer-constructor-2).
+If the block has already been initialised as a record block on the disk, use [constructor 2](#recbuffer--recbuffer-constructor-2).
 :::
 
 #### Algorithm

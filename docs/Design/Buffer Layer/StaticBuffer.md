@@ -130,10 +130,10 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 #### Return Values
 
-| **Value**                    | **Description**                                                        |
-| ---------------------------- | ---------------------------------------------------------------------- |
-| blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`) |
-| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                    |
+| **Value**                    | **Description**                                                               |
+| ---------------------------- | ----------------------------------------------------------------------------- |
+| blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`/`BMAP`) |
+| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                           |
 
 #### Algorithm
 
