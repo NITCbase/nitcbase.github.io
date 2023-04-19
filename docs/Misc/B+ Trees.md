@@ -90,7 +90,7 @@ $$
 
 We can see that more keys can be stored in the internal nodes of a B+ Tree than in a B Tree. This becomes a huge difference as the block size and record pointer size increases.
 
-Note that the convention followed throughout NITCbase for B+ trees is that each value in an internal node of the tree corresponds to the rightmost value (that is, the largest value) in it's left child. Therefore the formal condition is that every entry in the left subtree of an entry is **less than** the entry.
+Note that the convention followed throughout NITCbase for B+ trees is that each value in an internal node of the tree corresponds to the rightmost value (that is, the largest value) in it's left child.
 
 The above B Tree, when converted to a B+ Tree will look something like this. As discussed earlier, each of the entries in the B+ Tree corresponds to a particular attribute value in the relation.
 

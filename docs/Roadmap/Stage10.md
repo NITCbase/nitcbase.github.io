@@ -57,7 +57,7 @@ Q. Assume that we have an empty database with no relations. We start it and crea
 
 1. We will get the record with `id`=1000 because that's the first record that will satisfy the condition when a linear search is done. Since this record will be the first record in the first block of the relation, we get that the rec-id is `{6, 1}`. The 7th block is the first block that is available to be used by a relation as the first 6 blocks are reserved.
 2. There will be 31 leaf index blocks and 1 internal index block.
-3. The root block will have 30 entries. The rightmost value in the node will be 968/969 depending on the implementation.
+3. The root block will have 30 entries. The rightmost value in the node will be 968.
 4. We would get the book with `id` 501 because the records will be sorted in ascending order in the leaf node. B+ search will return the first node in the leaf that satisfies the condition.
 
 </details>

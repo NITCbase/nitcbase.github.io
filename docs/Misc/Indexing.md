@@ -23,8 +23,11 @@ As index is a collection of attribute values and their corresponding record poin
 
 :::
 
-Each internal index block in NITCbase stores a maximum of **100** attribute values. Each of these values has an associated pair of left and right child pointers. Since the right child of one value is the same as the left child of the next value each internal index block stores 101 child pointers.<br/>
+Each internal index block in NITCbase stores a maximum of **100** attribute values. Each of these values has an associated pair of left and right child pointers. Since the right child of one value is the same as the left child of the next value each internal index block stores 101 child pointers.
+
 Each index stored in the leaf block is a 3-tuple occupying 32 bytes(attribute value-16 bytes, block number-4 bytes, slot number-4 bytes and 8 bytes of unused space). A leaf index block stores **63** entries.
+
+Note that the convention followed throughout NITCbase for B+ trees is that each value in an internal node of the tree corresponds to the rightmost value (that is, the largest value) in it's left child.
 
 Let us understand indexing in NITCbase with an example.
 
