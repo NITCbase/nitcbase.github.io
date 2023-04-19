@@ -2,7 +2,7 @@
 title: "Stage 11: Index Creation and Deletion"
 ---
 
-# Stage 11: Index Creation and Deletion (20 hours)
+# Stage 11: Index Creation and Deletion (30 hours)
 
 :::note Learning Objectives
 
@@ -337,7 +337,7 @@ The `Schema::dropIndex()` function fetches the root block of the index on a spec
 
 :::caution note
 
-Although the [Schema Layer](../Design/Schema%20Layer.md) function `Schema::dropIndex()` is responsible for removing the `RootBlock` field during index deletion, during index creation, the attribute cache entry is updated with the value of the root block in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) function `BPlusTree::bPlusCreate()` function (and not in the `Schema::createIndex()` function).
+Although the [Schema Layer](../Design/Schema%20Layer.md) function `Schema::dropIndex()` is responsible for removing the `RootBlock` field during index deletion, during index creation, the attribute cache entry is updated with the value of the root block in the [B+ Tree Layer](../Design/B%2B%20Tree%20Layer.md) function `BPlusTree::bPlusCreate()` (and not in the `Schema::createIndex()` function).
 
 :::
 

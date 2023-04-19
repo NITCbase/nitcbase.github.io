@@ -2,7 +2,7 @@
 title: "Stage 9 : Selection and Projection on Relations"
 ---
 
-# Stage 9 : Selection and Projection on Relations (10 hours)
+# Stage 9 : Selection and Projection on Relations (12 hours)
 
 :::note Learning Objectives
 

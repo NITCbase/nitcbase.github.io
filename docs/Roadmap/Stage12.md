@@ -2,7 +2,7 @@
 title: "Stage 12: Join on Relations"
 ---
 
-# Stage 12: Join on Relations (10 hours)
+# Stage 12: Join on Relations (6 hours)
 
 :::note Learning Objectives
 

@@ -2,7 +2,7 @@
 title: "Stage 4 : Linear Search on Relations"
 ---
 
-# Stage 4 : Linear Search on Relations (10 hours)
+# Stage 4 : Linear Search on Relations (12 hours)
 
 :::note Learning Objectives
 

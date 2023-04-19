@@ -2,7 +2,7 @@
 title: "Stage 6 : Buffer Management and Disk Write-back"
 ---
 
-# Stage 6 : Buffer Management and Disk Write-back (10 hours)
+# Stage 6 : Buffer Management and Disk Write-back (12 hours)
 
 :::note Learning Objectives
 

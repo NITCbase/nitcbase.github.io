@@ -2,7 +2,7 @@
 title: "Stage 8 : Creating and Deleting Relations"
 ---
 
-# Stage 8 : Creating and Deleting Relations (10 hours)
+# Stage 8 : Creating and Deleting Relations (12 hours)
 
 :::note Learning Objectives
 
