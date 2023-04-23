@@ -9,20 +9,21 @@ The RDBMS code must include a frontend code that interacts with the user and acc
 
 The code for the frontend of NITCbase is divided into two sub-modules:
 
-- **Frontend user interface**
-- **Frontend programming interface**
+- **Frontend User Interface**
+- **Frontend Programming Interface**
 
-The part of the frontend that interacts with the user directly is already implemented and is supplied to you along with the documentation for the project. This part is called the frontend user interface sub-module and its implementation can be found in the file `frontend-runner.cpp`.
+The part of the frontend that interacts with the user directly is already implemented and is supplied to you along with the documentation for the project. This part is called the Frontend User Interface and its implementation can be found in the `FrontendInterface` directory.
 
-_The frontend user interface translates each high level DDL and DML commands from the user to invocations of specific functions which are part of the second sub-module called front-end programming interface_. A C++ class file that contains the declarations of various functions of the frontend programming interface can be found in the file `Frontend.cpp`.
+_The Frontend User Interface translates high level DDL and DML commands from the user to invocations of specific functions which are part of the Frontend Programming Interface_. The files related to the Frontend Programming Interface can be found int the `Frontend` directory.
 
-The code implementing the functions of the front end programming interface sub-module is **not** supplied as part of the documentation. Each function of this sub-module must be designed by the student to invoke lower layer functions of schema layer and algebra layer for meeting their functional requirements, and must return appropriate values to the front end user interface sub-module.
+The code implementing the functions of the Frontend Programming Interface is **not** supplied as part of the documentation. Each function of this sub-module must be designed by the student to invoke lower layer functions of the [Schema Layer](Schema%20Layer.md) and [Algebra Layer](Algebra%20Layer.md) for meeting their functional requirements, and must return appropriate values to the Frontend User Interface.
 
 ![FrontendExplanation](../../static/img/FrontendExplanation.svg)
 
 ## Frontend User Interface
 
-The Frontend user interface sub-module supplied to you interacts with the user and translates the SQL-like queries given as input to a set of lower-layer function calls by extracting the arguments and calling the appropriate methods of the Frontend Class / Frontend Programming Interface sub-module.
+The Frontend User Interface supplied to you interacts with the user and translates the SQL-like queries given as input to a set of lower-layer function calls by extracting the arguments and calling the appropriate methods of the Frontend Class / Frontend Programming Interface.
+
 Frontend User Interface supports the following types of commands:
 
 1. [Data Definition Language(DDL) Commands ](../User%20Interface%20Commands/ddl.md)
@@ -30,13 +31,11 @@ Frontend User Interface supports the following types of commands:
 3. [Utility Commands](../User%20Interface%20Commands/utility.md)
 4. [Test Commands](../User%20Interface%20Commands/test.md)
 
-All the above command documents are linked to various sections of the [NITCbase Commands page](../User%20Interface%20Commands).
-
-Among the above commands, the script command `run` helps the user to execute a sequence of commands from a file - hence translating them into a sequence of calls to other commands supported by Frontend interface. The echo command simply echoes back the message typed in by the user back to the console. **The translation and execution of lower layer method calls corresponding to these script commands have already been implemented and provided to you**. Hence further documentation for Frontend Class focusses only on the specifications for DDL and DML commands.
+Among the above commands, the script command `run` helps the user to execute a sequence of commands from a file - hence translating them into a sequence of calls to other commands supported by Frontend interface. The echo command simply echoes back the message typed in by the user back to the console. **The translation and execution of lower layer method calls corresponding to these script commands have already been implemented and provided to you**. Hence further documentation for the class Frontend focuses only on the specifications for DDL and DML commands.
 
 ## Frontend Programming Interface
 
-Frontend programming interface sub-module is implemented as a C++ Class called `Frontend`. The code for the same is available in `Frontend.cpp` file. Methods of this class are invoked corresponding to each command given as input to the Frontend user interface sub-module.
+The Frontend Programming Interface is implemented in the file `Frontend.cpp` in the `Frontend` directory. Methods of this class are invoked corresponding to each command given as input to the Frontend User Interface.
 
 ### Frontend Class
 
