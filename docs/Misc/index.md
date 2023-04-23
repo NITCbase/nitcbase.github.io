@@ -17,3 +17,5 @@ This page contains supplementary guides and documentation which are to be refere
 ### [B+ Trees](./B%2B%20Trees.md)
 
 ### [Indexing in NITCbase](./Indexing.md)
+
+### [Stub Files](stub/frontend.md)
