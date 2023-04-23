@@ -355,9 +355,9 @@ We implement the core functionality of this stage in the [B+ Tree Layer](../Desi
 
 The `BPlusTree::bPlusCreate()` is used to create an index on attribute for a relation. It allocates a new index block and sets the `RootBlock` field in the corresponding attribute cache entry. It then reads every record of the relation and inserts the attribute value into the index using `BPlusTree::bPlusInsert()`.
 
-The `BPlusTree::bPlusInsert()` function is used to insert an entry into the B+ tree of an attribute. It gets the root block of the corresponding tree from the attribute cache and then traverses the tree until the appropriate leaf block is found. If the insertion leads to the splitting of the root block (and hence the creation of a new root block), then this function updates the attribute cache with the new root block.
-
 The `BPlusTree::bPlusDestroy()` function recursively traverses all the blocks of the index and frees them using `BlockBuffer::releaseBlock()`.
+
+The `BPlusTree::bPlusInsert()` function is used to insert an entry into the B+ tree of an attribute. This is quite possibly the most complicated function in the implementation of NITCbase. In pursuit of clarity, the functionality involved in this task has been split among many helper functions in the `BPlusTree` class.
 
 <details>
 <summary>BPlusTree/BPlusTree.cpp</summary>
@@ -365,8 +365,13 @@ The `BPlusTree::bPlusDestroy()` function recursively traverses all the blocks of
 Implement the following functions looking at their respective design docs
 
 - [`BPlusTree::bPlusCreate()`](../Design/B%2B%20Tree%20Layer.md#bplustreebpluscreate)
-- [`BPlusTree::bPlusInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
 - [`BPlusTree::bPlusDestroy()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusdestroy)
+- [`BPlusTree::bPlusInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
+  - [`BPlusTree::insertIntoLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
+  - [`BPlusTree::splitLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreesplitleaf)
+  - [`BPlusTree::insertIntoInternal()`](../Design/B%2B%20Tree%20Layer.md#bplustreeinsertintointernal)
+  - [`BPlusTree::splitInternal()`](../Design/B%2B%20Tree%20Layer.md#bplustreesplitinternal)
+  - [`BPlusTree::createNewRoot()`](../Design/B%2B%20Tree%20Layer.md#bplustreecreatenewroot)
 
 </details>
 

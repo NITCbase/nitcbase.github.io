@@ -105,7 +105,7 @@ To do a join operation, we fetch every record from the first relation one by one
 
 Suppose that we are performing a join operation on a certain attribute between Relation_1 and Relation_2. Let Relation_1 have m tuples and Relation_2 have n tuples. For each i between 1 and m, let the i-th tuple in Relation_1 match with a total of N<sub>i</sub> number of tuples of Relation_2 on the value of the common attribute. We have N<sub>1</sub> + N<sub>2</sub> + … + N<sub>m</sub> = n.
 
-Suppose we do not create an index for the attribute in both Relation_1 and Relation_2, to match the two relations, then for each tuple in Relation_1, we have to perform a linear search across the entire second relation, which takes $O(n)$ time. (the relation cache search index field has a crucial role in limiting linear search complexity to O(n) here). Since there are m tuples in Relation_1, conducting linear search on Relation_2 over all of them will involve a total complexity of $O(mn)$ operations.
+Suppose we do not create an index for the attribute in both Relation_1 and Relation_2, to match the two relations, then for each tuple in Relation_1, we have to perform a linear search across the entire second relation, which takes $O(n)$ time. (the relation cache search index field has a crucial role in limiting linear search complexity to O(n) here). Since there are m tuples in Relation_1, conducting linear search on Relation_2 over all of them will involve a total complexity of $O(mn)$.
 
 Now, suppose we create an index for the shared attribute in Relation_2. Index creation requires $O(n\log{n})$ complexity. This is because index creation in NITCbase involves n insertions into a B+ tree and each B+ tree insert operation has $O(\log{n})$ complexity.
 
