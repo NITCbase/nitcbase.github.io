@@ -6,12 +6,9 @@ title: "Introduction"
 # Buffer Layer
 
 :::info note
-The Buffer Layer code is to be written in 2 pairs of files:
+The files corresponding to this layer can be found in the `Buffer` directory. The code is to be written in the files `StaticBuffer.cpp` and `BlockBuffer.cpp`. The declaration for the functions can be found in the respective header files `StaticBuffer.h` and `BlockBuffer.h`.
 
-- `StaticBuffer.cpp` and it's header file `StaticBuffer.h`
-- `BlockBuffer.cpp` and it's header file `BlockBuffer.h`.
-
-**[The stub code for these files can be found here.](/stub/buffer_stub)**
+**[The stub code for these files can be found here.](../../Misc/stub/buffer.md)**
 :::
 
 ## Layout

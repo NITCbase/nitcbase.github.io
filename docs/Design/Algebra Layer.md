@@ -4,9 +4,9 @@ title: "Algebra Layer"
 ---
 
 :::info note
-The Schema Layer code is to be written in `Algebra.cpp` and it's header file `Algebra.h`
+The files corresponding to this layer can be found in the `Algebra` directory. The code is to be written in the file `Algebra.cpp`. The declaration for the functions can be found in the header file `Algebra.h`.
 
-**[The stub code for these files can be found here.](/stub/algebra_stub)**
+[**The stub code for this layer can be found here.**](../Misc/stub/algebra.md)
 
 :::
 

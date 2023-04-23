@@ -6,13 +6,9 @@ title: "Introduction"
 # Cache Layer
 
 :::info note
-The Cache Layer code is to be written in 3 pairs of files:
+The files corresponding to this layer can be found in the `Cache` directory. The code is to be written in the files `RelCacheTable.cpp`, `AttrCacheTable.cpp` and `OpenRelTable.cpp`. The declaration for the functions can be found in the respective header files `RelCacheTable.h`, `AttrCacheTable.h` and `OpenRelTable.h`.
 
-- `RelCacheTable.cpp` and it's header file `RelCacheTable.h`
-- `AttrCacheTable.cpp` and it's header file `AttrCacheTable.h`
-- `OpenRelTable.cpp` and it's header file `OpenRelTable.h`
-
-**[The stub code for these files can be found here](/stub/cache_stub)**
+**[The stub code for these files can be found here](../../Misc/stub/cache.md)**
 :::
 
 ## Layout

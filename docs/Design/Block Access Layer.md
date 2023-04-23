@@ -4,9 +4,9 @@ title: "Block Access Layer"
 ---
 
 :::info note
-The Block Access Layer code is to be written in `BlockAccess.cpp` and it's header file `BlockAccess.h`
+The files corresponding to this layer can be found in the `BlockAccess` directory. The code is to be written in the file `BlockAccess.cpp`. The declaration for the functions can be found in the header file `BlockAccess.h`.
 
-[**The stub code for these files can be found here.**](/stub/block_access_stub)
+[**The stub code for this layer can be found here.**](../Misc/stub/block_access.md)
 :::
 
 ## Layout

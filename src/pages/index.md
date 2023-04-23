@@ -88,43 +88,43 @@ A brief functional description of the layers
    **Frontend Programming Interface Sub-layer**: This is a layer of wrapper functions. Most of the functions of this layer just redirects the call to an appropriate function of the Algebra/Schema Layer. (Some complex queries such as the [SELECT FROM JOIN WHERE](/docs/User%20Interface%20Commands/dml#select--from-join-where) command require a combination of calls to the lower layers). DDL commands are redirected to corresponding Schema Layer functions and DML commands are redirected to corresponding Algebra Layer functions. The student needs to complete around 100 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Frontend#frontend-programming-interface).
-   2. The student has to complete the code for this layer in the [stub file](/stub/frontend_stub).
+   2. The student has to complete the code for this layer in the [stub file](/docs/Misc/stub/frontend).
    3. The header file [`Frontend.h`](https://github.com/NITCbase/nitcbase/blob/master/Frontend/Frontend.h) must be included.<br/><br/>
 
 2. **Schema Layer**: All DDL commands of NITCbase - such as commands for creating, deleting, opening, closing and renaming relations; commands for renaming attributes of a relation and so on - are implemented in this layer. Thus, the layer contains important functions of the database system. While the main logic behind each DDL command is implemented here, all disk data access is made by invoking functions of the following lower layers: (1) Cache Layer - for accessing meta-data associated with open relations (2) Block Access Layer - for accessing disk data of relations and (3) B+ Tree Layer - for creating indices. Hence the implementation of most of the functions (except that of creating a new relation) is quite straightforward. The student needs to write around 200 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Schema%20Layer).
-   2. The student has to complete the code for this layer in the [stub file](/stub/schema_stub).
+   2. The student has to complete the code for this layer in the [stub file](/docs/Misc/stub/schema).
    3. The header file [`Schema.h`](https://github.com/NITCbase/nitcbase/blob/master/Schema/Schema.h) must be included.<br/><br/>
 
 3. **Algebra Layer**: Data Manipulation Language (DML) commands - Insert, Select, Project and Join - gets directed to this layer. However, this layer essentially performs some preprocessing of steps and eventually calls the Block Access Layer functions implementing select and project, and hence has relatively low implementation complexity aside from the join operation. The student needs to write around 400 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Algebra%20Layer).
-   2. The student has to complete the code for this layer in the [stub file](/stub/algebra_stub).
+   2. The student has to complete the code for this layer in the [stub file](/docs/Misc/stub/algebra).
    3. The header file [`Algebra.h`](https://github.com/NITCbase/nitcbase/blob/master/Algebra/Algebra.h) must be included.<br/><br/>
 
 4. **Cache Layer**: This layer implements the run time memory data structures associated with open relations of the database (the relation cache and the attribute cache), and involves mostly implementation of the cache data structures and access functions. The layer uses functions of the Buffer Layer below for accessing disk data. The student needs to write around 500 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Cache%20Layer/intro).
-   2. The student has to complete the code for this layer in the [stub files](/stub/cache_stub).
+   2. The student has to complete the code for this layer in the [stub files](/docs/Misc/stub/cache).
    3. The header files [`AttrCacheTable.h`](https://github.com/NITCbase/nitcbase/blob/master/Cache/AttrCacheTable.h), [`RelCacheTable.h`](https://github.com/NITCbase/nitcbase/blob/master/Cache/RelCacheTable.h), [`OpenRelTable.h`](https://github.com/NITCbase/nitcbase/blob/master/Cache/OpenRelTable.h) must be included.<br/><br/>
 
 5. **Block Access Layer**: This layer contains the implementation of the fundamental DML operations - select and project - on relations. (It turns out that equi-join implementation can be implemented with select and project, and hence easily handled by the Algebra Layer by calling appropriate Block Access Layer functions). This is one of the most important modules that implements the core functionality of the database system and involves substantial implementation work. The student needs to write around 500 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Block%20Access%20Layer).
-   2. The student has to complete the code for this layer in the [stub file](/stub/block_access_stub).
+   2. The student has to complete the code for this layer in the [stub file](/docs/Misc/stub/block_access).
    3. The header file [`BlockAccess.h`](https://github.com/NITCbase/nitcbase/blob/master/BlockAccess/BlockAccess.h) must be included.<br/><br/>
 
 6. **B+ Tree Layer**: This layer handles indexing operations with B+ trees. The primary purpose of this layer is to simplify the work in the Block Access Layer by separating all B+ tree operations into a separate layer. The two main operations - B+ tree search and insertion are somewhat sophisticated operations and involve substantial implementation work. Hence, we provide several tutorials to aid learning and implementation ([B+ Trees](docs/Misc/B+%20Trees) and [Indexing in NITCbase](/docs/Misc/Indexing#create-index)). The student needs to write around 500 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/B+%20Tree%20Layer).
-   2. The student has to complete the code for this layer in the [stub file](/stub/bplus_stub).
+   2. The student has to complete the code for this layer in the [stub file](/docs/Misc/stub/bplus).
    3. The header file [`BPlusTree.h`](https://github.com/NITCbase/nitcbase/blob/master/BPlusTree/BPlusTree.h) must be included.<br/><br/>
 
 7. **Buffer Layer**: The buffer layer is the lowest layer which is to be implemented by the student and handles the low level access to the disk (using the low disk read/write functions that is already implemented and given). The Block Access Layer, Cache Layer and B+ Tree Layer functions invoke these functions to perform disk access and update operations. The Buffer Layer maintains a disk buffer that can cache up to 32 disk blocks at a time. The layer contains several access functions that help higher layers to access the disk in suitable format. Buffer replacement is carried out using least recently (LRU) scheme. This layer contains quite a bit of code, as it hides the low level disk details and provides a clean interface to the higher layers. The student needs to write around 500 lines of C++ code for completing this layer.
 
    1. The design of the layer is given [here](/docs/Design/Buffer%20Layer/intro).
-   2. The student has to complete the code for this layer in the [stub files](/stub/buffer_stub).
+   2. The student has to complete the code for this layer in the [stub files](/docs/Misc/stub/buffer).
    3. The header files [`BlockBuffer.h`](https://github.com/NITCbase/nitcbase/blob/master/Buffer/BlockBuffer.h) and [`StaticBuffer.h`](https://github.com/NITCbase/nitcbase/blob/master/Buffer/StaticBuffer.h) must be included.<br/><br/>
 
 8. **Physical Layer**: This is the lowest layer of the NITCbase design and mainly contains two low level disk access routines. The disk read function allows a disk block to be written into a memory buffer. The disk write function transfers data in a memory buffer into a specified disk block.

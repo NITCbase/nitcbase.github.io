@@ -11,9 +11,10 @@ title: "B+ Tree Layer"
 :::
 
 :::info note
-The B+ Tree Layer code is to be written in `BPlusTree.cpp` and it's header file `BPlusTree.h`
+The files corresponding to this layer can be found in the `BPlusTree` directory. The code is to be written in the file `BPlusTree.cpp`. The declaration for the functions can be found in the header file `BPlusTree.h`.
 
-[**The stub code for these files can be found here.**](/stub/bplus_stub)
+[**The stub code for this layer can be found here.**](../Misc/stub/bplus.md)
+
 :::
 
 ## Layout

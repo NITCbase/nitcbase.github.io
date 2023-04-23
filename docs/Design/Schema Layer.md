@@ -4,9 +4,9 @@ title: "Schema Layer"
 ---
 
 :::info note
-The Schema Layer code is to be written in `Schema.cpp` and it's header file `Schema.h`
+The files corresponding to this layer can be found in the `Schema` directory. The code is to be written in the file `Schema.cpp`. The declaration for the functions can be found in the header file `Schema.h`.
 
-**[The stub code for these files can be found here.](/stub/schema_stub)**
+[**The stub code for this layer can be found here.**](../Misc/stub/schema.md)
 :::
 
 ## Layout
