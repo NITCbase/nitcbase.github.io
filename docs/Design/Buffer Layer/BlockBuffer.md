@@ -343,7 +343,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char ** buffPtr) {
 
 #### Description
 
-Returns the block number of a free block. It sets up the header of the block with the input block type and updates the block allocation map with the same. A buffer is also allocated to the block. If a free block is not available, [E_DISKFULL](/constants) is returned.
+Returns the block number of a free block. It sets up the header of the block with the input block type and updates the block allocation map with the same. A buffer is also allocated to the block. If a free block is not available, [E_DISKFULL](/docs/constants) is returned.
 
 #### Arguments
 
@@ -353,10 +353,10 @@ Returns the block number of a free block. It sets up the header of the block wit
 
 #### Return Values
 
-| **Value**                  | **Description**                         |
-| -------------------------- | --------------------------------------- |
-| blockNum                   | Block number of the free block.         |
-| [`E_DISKFULL`](/constants) | No free block is available in the disk. |
+| **Value**                       | **Description**                         |
+| ------------------------------- | --------------------------------------- |
+| blockNum                        | Block number of the free block.         |
+| [`E_DISKFULL`](/docs/constants) | No free block is available in the disk. |
 
 #### Algorithm
 

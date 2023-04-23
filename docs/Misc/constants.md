@@ -1,3 +1,7 @@
+---
+slug: /constants
+---
+
 import FetchCodeBlock from "@site/src/components/FetchCodeBlock"
 
 # Global Constants

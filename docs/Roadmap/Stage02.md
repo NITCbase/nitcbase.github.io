@@ -170,7 +170,7 @@ We have two classes, `BlockBuffer` and `RecBuffer`. An object of either of those
 We will also be making use of two data structures for representing the data. **Read the documentation for [struct HeadInfo](../Design/Buffer%20Layer/intro.md#headinfo) and [union Attribute](../Design/Buffer%20Layer/intro.md#attribute) before proceeding further.**
 
 :::info NOTE
-All commonly used values have already been defined as [constants](/constants) and can be used throughout your implementation.
+All commonly used values have already been defined as [constants](/docs/constants) and can be used throughout your implementation.
 
 :::
 

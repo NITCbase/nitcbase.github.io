@@ -135,6 +135,6 @@ You'll find that the first 6 values in the block allocation map are the followin
 4, 4, 4, 4, 0, 0<br/>
 The rest of the values should all be 3.
 
-This corresponds to the [BMAP](/constants),[REC](/constants) and [UNUSED_BLK](/constants) constants for the block allocation map, catalog blocks and the rest of the blocks respectively.
+This corresponds to the [BMAP](/docs/constants),[REC](/docs/constants) and [UNUSED_BLK](/docs/constants) constants for the block allocation map, catalog blocks and the rest of the blocks respectively.
 
 </details>

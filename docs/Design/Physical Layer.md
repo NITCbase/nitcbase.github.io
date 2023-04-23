@@ -14,7 +14,7 @@ The C++ Disk class that initiates the run copy of disk and also provides read/wr
 
 NITCbase assumes that the disk is a sequence of blocks, and a block is a sequence of bytes. The disk consists of **8192 blocks**, and each block is of **2048 bytes**, resulting in a total of 16MB of storage. Disk blocks are **indexed from 0 to 8191.**
 
-**Block Allocation Map** tells us whether a particular block is **free** or **occupied**. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF` / `BMAP`](/constants)) of the block. _It requires one byte per each block_. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
+**Block Allocation Map** tells us whether a particular block is **free** or **occupied**. If occupied, it stores the type ([`REC` / `IND_INTERNAL` / `IND_LEAF` / `BMAP`](/docs/constants)) of the block. _It requires one byte per each block_. **Hence a total of 8192 / 2048 = 4 blocks are required for Block Allocation Map**. The following figure summarizes the disk structure.
 
 <br/>
 
@@ -98,10 +98,10 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Return Values
 
-| **Value**                    | **Description**                                        |
-| ---------------------------- | ------------------------------------------------------ |
-| [`SUCCESS`](/constants)      | Successful loading/reading of the block to the buffer. |
-| [`E_OUTOFBOUND`](/constants) | Block number is out of range.                          |
+| **Value**                         | **Description**                                        |
+| --------------------------------- | ------------------------------------------------------ |
+| [`SUCCESS`](/docs/constants)      | Successful loading/reading of the block to the buffer. |
+| [`E_OUTOFBOUND`](/docs/constants) | Block number is out of range.                          |
 
 ---
 
@@ -124,10 +124,10 @@ Higher layers must allocate memory for the unsigned character array of size 2048
 
 #### Return Values
 
-| **Value**                    | **Description**                              |
-| ---------------------------- | -------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successful writing of the block to the disk. |
-| [`E_OUTOFBOUND`](/constants) | Block number is out of range.                |
+| **Value**                         | **Description**                              |
+| --------------------------------- | -------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | Successful writing of the block to the disk. |
+| [`E_OUTOFBOUND`](/docs/constants) | Block number is out of range.                |
 
 ---
 
@@ -165,7 +165,7 @@ In NITCbase, _we fix the size of all attributes to the same value to simplify th
 
 !["Record Block"](../../static/img/RecordBlock.png)
 
-- First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](/constants) represents a record block.
+- First four bytes (0-3) of header are used to identify the type of block (`REC` / `IND_INTERNAL` / `IND_LEAF`) where [`REC`](/docs/constants) represents a record block.
 - Next four bytes (4-7) are used for storing parent block pointer, which has no significance for a record block and can be set to `-1`.
 - Bytes 8-11 and 12-15 are used for storing left and right block numbers respectively.
 - Next four bytes are used for storing the number of records currently stored in the block.
@@ -180,7 +180,7 @@ L*(16*K + 1 ) \leq 2016 \\
 \#Slots = L = \left \lfloor \frac {2016} {((16 * \#Attributes(K)) + 1)} \right \rfloor
 $$
 
-The **slotmap**, which appears at the end of the header is used for _indicating whether a slot is occupied or free_. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be [`SLOT_UNOCCUPIED`](/constants) or else it will be [`SLOT_OCCUPIED`](/constants). Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
+The **slotmap**, which appears at the end of the header is used for _indicating whether a slot is occupied or free_. Size of the slotmap is equal to the number of slots, `L`, that fits in the block. If a slot is free, its corresponding entry in slotmap will be [`SLOT_UNOCCUPIED`](/docs/constants) or else it will be [`SLOT_OCCUPIED`](/docs/constants). Slotmap starts from byte 32 of the header followed by slots which store the actual records. Some amount of space may be left unused at the end whose size is less than the size of a record.
 
 The record block must be loaded from the disk to the main memory before its data can be accessed/modified. The Buffer Layer provides the necessary data structures for this purpose. The RecBuffer class is used to access a record block. The header of the block is stored in the struct HeadInfo. Each record in a record block is treated as an array of union Attributes.
 
@@ -258,7 +258,7 @@ _Each internal index block in NITCbase stores a maximum of 100 attribute(key) va
 
 !["Internal Index Block"](../../static/img/InternalIndexBlock.png)
 
-An Internal index block is divided into two parts. The first 32 bytes stores header followed by actual attribute(key) values and child pointers arranged alternatively as shown in the figure. The header metadata is similar to that of a record block. The first four bytes of the header stores the value [`INDINT`](/constants). `PBlock` is the block number of parent block in the corresponding B+ tree. `LBlock` and `RBlock` have no significance for an internal index block. `#Entries` field stores the actual number of attribute values (of maximum 100) stored in the block. `#Attrs` and `#Slots` fields also have no significance for an internal index block. The remaining space in the header is left unused.
+An Internal index block is divided into two parts. The first 32 bytes stores header followed by actual attribute(key) values and child pointers arranged alternatively as shown in the figure. The header metadata is similar to that of a record block. The first four bytes of the header stores the value [`INDINT`](/docs/constants). `PBlock` is the block number of parent block in the corresponding B+ tree. `LBlock` and `RBlock` have no significance for an internal index block. `#Entries` field stores the actual number of attribute values (of maximum 100) stored in the block. `#Attrs` and `#Slots` fields also have no significance for an internal index block. The remaining space in the header is left unused.
 
 The Internal index block must be loaded from the disk to the main memory before its data can be accessed/modified. The [Buffer Layer](./Buffer%20Layer/intro.md) provides the necessary data structures for this purpose. The [IndInternal class](./Buffer%20Layer/IndBuffer.md#class-indinternal) is used to access a internal index block. The header of the block is stored in the [struct HeadInfo](./Buffer%20Layer/intro.md#headinfo). Each entry in an internal index block is accessed through a structure [struct InternalEntry](./Buffer%20Layer/intro.md#internalentry).
 
@@ -270,7 +270,7 @@ The Internal index block must be loaded from the disk to the main memory before 
 
 !["Leaf Index Block"](../../static/img/LeafIndexBlock.png)
 
-Any Leaf Index Block is also divided into a header part of 32 bytes followed by a part containing actual indices. The header is similar to that of any other block. The first four bytes of the header stores the value [`INDLEAF`](/constants). `PBlock` is the block number of the parent block in the corresponding B+ tree. This entry must always contain block number of an Internal Index block. Since all leaf nodes are connected in a B+ tree, `LBlock` and `RBlock` point to left and right Leaf Index blocks respectively. `#Entries` stores the actual number of indices (of maximum 63) stored in the block. `#Attrs` and `#Slots` fields have no significance for a Leaf index block. The remaining space in the header is left unused.
+Any Leaf Index Block is also divided into a header part of 32 bytes followed by a part containing actual indices. The header is similar to that of any other block. The first four bytes of the header stores the value [`INDLEAF`](/docs/constants). `PBlock` is the block number of the parent block in the corresponding B+ tree. This entry must always contain block number of an Internal Index block. Since all leaf nodes are connected in a B+ tree, `LBlock` and `RBlock` point to left and right Leaf Index blocks respectively. `#Entries` stores the actual number of indices (of maximum 63) stored in the block. `#Attrs` and `#Slots` fields have no significance for a Leaf index block. The remaining space in the header is left unused.
 
 The Leaf index block must be loaded from the disk to the main memory before its data can be accessed/modified. The [Buffer Layer](./Buffer%20Layer/intro.md) provides the necessary data structures for this purpose. The [IndLeaf class](./Buffer%20Layer/IndBuffer.md#class-indleaf) is used to access a leaf index block. The header of the block is stored in the [struct HeadInfo](./Buffer%20Layer/intro.md#headinfo). Each entry in a leaf index block is accessed through a structure [struct Index](./Buffer%20Layer/intro.md#index).
 
@@ -307,7 +307,7 @@ Relation Catalog is used for storing meta-information of the relations in a data
 6. `#Slots`
 
 :::note
-The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/constants).
+The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/docs/constants).
 For example to do linear search on the relation catalog where relation name matches a particular relaiton name, you must provide the attribute name argument as "RelName" / `RELCAT_ATTR_RELNAME` constant.
 :::
 
@@ -376,7 +376,7 @@ Each entry of the Attribute Catalog has the following six attributes:
 6. `Offset`
 
 :::note
-The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/constants).
+The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/docs/constants).
 For example to do linear search on the attribute catalog where attribute name matches a particular attrbute name, you must provide the attribute name argument as "AttributeName" / `ATTRCAT_ATTR_ATTRIBUTE_NAME` constant.
 :::
 

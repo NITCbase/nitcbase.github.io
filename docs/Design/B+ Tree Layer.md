@@ -64,14 +64,14 @@ If in between the insertion, the disk runs out of space, then the B+ Tree will n
 
 #### Return values
 
-| **Value**                      | **Description**                                                                                                                        |
-| ------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of a B+ tree for the attribute                                                                                  |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                                                                          |
-| [`E_RELNOTOPEN`](/constants)   | If the relation is not open                                                                                                            |
-| [`E_ATTRNOTEXIST`](/constants) | If attribute with name attrName does not exist                                                                                         |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the index                                                                                 |
-| [`E_NOTPERMITTED`](/constants) | If an index is being created for the catalog relations. The catalog relations are only linear searched and hence should not be indexed |
+| **Value**                           | **Description**                                                                                                                        |
+| ----------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful creation of a B+ tree for the attribute                                                                                  |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids                                                                          |
+| [`E_RELNOTOPEN`](/docs/constants)   | If the relation is not open                                                                                                            |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If attribute with name attrName does not exist                                                                                         |
+| [`E_DISKFULL`](/docs/constants)     | If disk space is not sufficient for creating the index                                                                                 |
+| [`E_NOTPERMITTED`](/docs/constants) | If an index is being created for the catalog relations. The catalog relations are only linear searched and hence should not be indexed |
 
 #### Algorithm
 
@@ -408,11 +408,11 @@ The caller is responsible for updating the rootBlock field in the corresponding 
 
 #### Return values
 
-| **Value**                      | **Description**                                               |
-| ------------------------------ | ------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful deletion of the B+ tree rooted at rootBlockNum  |
-| [`E_OUTOFBOUND`](/constants)   | if `rootBlockNum` is outside the valid range of block numbers |
-| [`E_INVALIDBLOCK`](/constants) | if `rootBlockNum` does not correspond to an index block       |
+| **Value**                           | **Description**                                               |
+| ----------------------------------- | ------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful deletion of the B+ tree rooted at rootBlockNum  |
+| [`E_OUTOFBOUND`](/docs/constants)   | if `rootBlockNum` is outside the valid range of block numbers |
+| [`E_INVALIDBLOCK`](/docs/constants) | if `rootBlockNum` does not correspond to an index block       |
 
 #### Algorithm
 
@@ -479,14 +479,14 @@ During insertion of an entry to a valid B+ Tree, the disk may run out of memory.
 
 #### Return values
 
-| **Value**                      | **Description**                                                |
-| ------------------------------ | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful insertion into the B+ tree of the attribute      |
-| [`E_RELNOTOPEN`](/constants)   | If the relation is not open                                    |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids  |
-| [`E_ATTRNOTEXIST`](/constants) | If attribute with name attrName does not exist                 |
-| [`E_NOINDEX`](/constants)      | Attribute `attrName` does not have an index                    |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for insertion into the B+ tree |
+| **Value**                           | **Description**                                                |
+| ----------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful insertion into the B+ tree of the attribute      |
+| [`E_RELNOTOPEN`](/docs/constants)   | If the relation is not open                                    |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids  |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If attribute with name attrName does not exist                 |
+| [`E_NOINDEX`](/docs/constants)      | Attribute `attrName` does not have an index                    |
+| [`E_DISKFULL`](/docs/constants)     | If disk space is not sufficient for insertion into the B+ tree |
 
 #### Algorithm
 
@@ -568,10 +568,10 @@ Used to insert an index entry into a leaf index block of an existing B+ tree. Th
 
 #### Return values
 
-| **Value**                  | **Description**                                                |
-| -------------------------- | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)    | On successful insertion into the B+ tree of the attribute      |
-| [`E_DISKFULL`](/constants) | If disk space is not sufficient for insertion into the B+ tree |
+| **Value**                       | **Description**                                                |
+| ------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)    | On successful insertion into the B+ tree of the attribute      |
+| [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
 
 #### Algorithm
 
@@ -657,10 +657,10 @@ Distributes an array of index entries between an existing leaf index block and a
 
 #### Return values
 
-| **Value**                  | **Description**                                                                           |
-| -------------------------- | ----------------------------------------------------------------------------------------- |
-| `rightBlkNum`              | The block number of the right block in the splitting, that is, the newly allocated block. |
-| [`E_DISKFULL`](/constants) | If disk space is not sufficient for splitting the leaf index block                        |
+| **Value**                       | **Description**                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `rightBlkNum`                   | The block number of the right block in the splitting, that is, the newly allocated block. |
+| [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for splitting the leaf index block                        |
 
 #### Algorithm
 
@@ -716,10 +716,10 @@ Used to insert an index entry into an internal index block of an existing B+ tre
 
 #### Return values
 
-| **Value**                  | **Description**                                                |
-| -------------------------- | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)    | On successful insertion into the internal index block          |
-| [`E_DISKFULL`](/constants) | If disk space is not sufficient for insertion into the B+ tree |
+| **Value**                       | **Description**                                                |
+| ------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)    | On successful insertion into the internal index block          |
+| [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
 
 #### Algorithm
 
@@ -815,10 +815,10 @@ Distributes an array of index entries between an existing internal index block a
 
 #### Return values
 
-| **Value**                  | **Description**                                                                           |
-| -------------------------- | ----------------------------------------------------------------------------------------- |
-| `rightBlkNum`              | The block number of the right block in the splitting, that is, the newly allocated block. |
-| [`E_DISKFULL`](/constants) | If disk space is not sufficient for splitting the internal index block                    |
+| **Value**                       | **Description**                                                                           |
+| ------------------------------- | ----------------------------------------------------------------------------------------- |
+| `rightBlkNum`                   | The block number of the right block in the splitting, that is, the newly allocated block. |
+| [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for splitting the internal index block                    |
 
 #### Algorithm
 
@@ -889,10 +889,10 @@ Used to update the root of an existing B+ tree when the previous root block was 
 
 #### Return values
 
-| **Value**                  | **Description**                                                |
-| -------------------------- | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)    | On successful insertion into the B+ tree of the attribute      |
-| [`E_DISKFULL`](/constants) | If disk space is not sufficient for insertion into the B+ tree |
+| **Value**                       | **Description**                                                |
+| ------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)    | On successful insertion into the B+ tree of the attribute      |
+| [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
 
 #### Algorithm
 

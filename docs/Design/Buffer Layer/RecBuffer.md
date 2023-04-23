@@ -185,11 +185,11 @@ Gives the slotNumth record entry of the block.
 
 #### Return Values
 
-| **Value**                    | **Description**                                                     |
-| ---------------------------- | ------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Succesful copy of the record.                                       |
-| [`E_OUTOFBOUND`](/constants) | Input slotNum is outside the set of valid slot values of the block. |
-| [`E_FREESLOT`](/constants)   | Slot corresponding to the input slotNum is free.                    |
+| **Value**                         | **Description**                                                     |
+| --------------------------------- | ------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | Succesful copy of the record.                                       |
+| [`E_OUTOFBOUND`](/docs/constants) | Input slotNum is outside the set of valid slot values of the block. |
+| [`E_FREESLOT`](/docs/constants)   | Slot corresponding to the input slotNum is free.                    |
 
 :::caution note
 
@@ -245,10 +245,10 @@ Sets the `slotNum`th record entry of the block with the input record contents.
 
 #### Return Values
 
-| **Value**                    | **Description**                                                     |
-| ---------------------------- | ------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Succesful copy of the record.                                       |
-| [`E_OUTOFBOUND`](/constants) | Input slotNum is outside the set of valid slot values of the block. |
+| **Value**                         | **Description**                                                     |
+| --------------------------------- | ------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | Succesful copy of the record.                                       |
+| [`E_OUTOFBOUND`](/docs/constants) | Input slotNum is outside the set of valid slot values of the block. |
 
 :::caution note
 

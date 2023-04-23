@@ -73,12 +73,12 @@ Gives the _Attribute Catalog_ entry corresponding to the given attribute of the 
 
 #### Return Values
 
-| **Value**                      | **Description**                                                            |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
+| **Value**                           | **Description**                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -133,12 +133,12 @@ Sets the _Attribute Catalog_ entry corresponding to the given attribute of the s
 
 #### Return Values
 
-| **Value**                      | **Description**                                                            |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
+| **Value**                           | **Description**                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully copied the _Attribute Catalog_ entry                          |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -196,12 +196,12 @@ Gives the value of `searchIndex` field of the given attribute in the specified r
 
 #### Return Values
 
-| **Value**                      | **Description**                                                            |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully copied the search index to the argument searchIndex.          |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
+| **Value**                           | **Description**                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully copied the search index to the argument searchIndex.          |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -256,12 +256,12 @@ Sets the value of `searchIndex` field of the given attribute in the specified re
 
 #### Return Values
 
-| **Value**                      | **Description**                                                            |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully set the search index in the attribute cache.                  |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
+| **Value**                           | **Description**                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully set the search index in the attribute cache.                  |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 
@@ -314,12 +314,12 @@ Resets the value of `searchIndex` field of the given attribute in the specified 
 
 #### Return Values
 
-| **Value**                      | **Description**                                                            |
-| ------------------------------ | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully reset the search index in the cache                           |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids              |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name or offset exists                |
+| **Value**                           | **Description**                                                            |
+| ----------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully reset the search index in the cache                           |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids              |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the _Attribute Cache_ Table. |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name or offset exists                |
 
 #### Algorithm
 

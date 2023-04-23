@@ -289,11 +289,11 @@ This function compares two [`union Attribute`](#attribute) values on the basis o
 
 #### Arguments
 
-| **Name** | **Type**                        | **Description**                                        |
-| -------- | ------------------------------- | ------------------------------------------------------ |
-| attr1    | [`union Attribute`](#attribute) | First attribute value to be compared.                  |
-| attr2    | [`union Attribute`](#attribute) | Second attribute value to be compared.                 |
-| attrType | `int`                           | Type of the attribute [`NUMBER`/`STRING`](/constants). |
+| **Name** | **Type**                        | **Description**                                             |
+| -------- | ------------------------------- | ----------------------------------------------------------- |
+| attr1    | [`union Attribute`](#attribute) | First attribute value to be compared.                       |
+| attr2    | [`union Attribute`](#attribute) | Second attribute value to be compared.                      |
+| attrType | `int`                           | Type of the attribute [`NUMBER`/`STRING`](/docs/constants). |
 
 #### Return Values
 

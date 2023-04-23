@@ -31,7 +31,7 @@ However, in the present stage, we will not be implementing the write-back functi
 
 ### Using the disk buffer
 
-The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) class. This class declares a static two dimensional array **`unsigned char blocks[][]`** of size [BUFFER_CAPACITY](/constants) × [BLOCK_SIZE](/constants) (= 32 × 2048). The methods relevant to adding this functionality are shown in the class diagram below.
+The disk buffer is implemented in the [StaticBuffer](../Design/Buffer%20Layer/StaticBuffer.md) class. This class declares a static two dimensional array **`unsigned char blocks[][]`** of size [BUFFER_CAPACITY](/docs/constants) × [BLOCK_SIZE](/docs/constants) (= 32 × 2048). The methods relevant to adding this functionality are shown in the class diagram below.
 
 > **NOTE**: The functions are denoted with circles as follows.<br/>
 > 🔵 -> methods that are already in their final state<br/>
@@ -136,7 +136,7 @@ int BlockBuffer::loadBlockAndGetBufferPtr(unsigned char **buffPtr) {
 
 </details>
 
-Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer/intro.md#buffer-structure) which is used to store the metadata of the 32 (=[BUFFER_CAPACITY](/constants)) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a buffer block is free or if it is storing a particular disk block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
+Now, we define all the `StaticBuffer` functions that we made use of. The `StaticBuffer` class has two member fields we are concerned about here. The `blocks` field is the actual buffer as we mentioned earlier. `metainfo` is an array of [struct BufferMetaInfo](../Design/Buffer%20Layer/intro.md#buffer-structure) which is used to store the metadata of the 32 (=[BUFFER_CAPACITY](/docs/constants)) blocks that are in the buffer. At this stage, we'll use this structure to keep track of whether a buffer block is free or if it is storing a particular disk block. _Both these arrays are static members of the class and hence need to be explicitly declared before they can be used._
 
 <details>
 <summary>Buffer/StaticBuffer.cpp</summary>
@@ -220,7 +220,7 @@ Compile the program and execute it. You should get output identical to what you 
 
 Almost all operations on a relation require access to its corresponding relation catalog and attribute catalog entries. Since this is such a common operation, NITCbase uses a more specialised data structure for operations on these structures. The [Cache Layer](../Design/Cache%20Layer/intro.md) handles the implementation of these structures.
 
-The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/constants) will correspond to the same relation.
+The **relation cache** and the **attribute cache** are specialised data structures used for accessing the catalogs. These caches are both arrays of size 12 ([MAX_OPEN](/docs/constants)). Each entry in these arrays can store the catalog entries for a single relation. The entries in both the caches for a given index `i` < [MAX_OPEN](/docs/constants) will correspond to the same relation.
 
 An entry of the relation cache stores the relation catalog entry, the rec-id (block & slot number) of the entry on the disk, and some other runtime data. An entry of the attribute cache is a linked list where each node contains one of the attribute catalog entries for the relation, the corresponding rec-ids and some runtime metadata. A relation which has it's entries stored in the caches is called _open_. We'll learn more about the `open` operation in later stages.
 
@@ -419,7 +419,7 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-You must now have an idea of the general flow of data between various functions. The only thing left to implement now is the constructor (and destructor) of class `OpenRelTable`. We'll use this constructor to read our `RELCAT` and `ATTRIBUTECAT` records from the disk into the cache. Recall that the index of a relation in the caches is called it's rel-id. The relation catalog has rel-id 0 ([RELCAT_RELID](/constants)) and the attribute catalog has rel-id 1([ATTRCAT_RELID](/constants)).
+You must now have an idea of the general flow of data between various functions. The only thing left to implement now is the constructor (and destructor) of class `OpenRelTable`. We'll use this constructor to read our `RELCAT` and `ATTRIBUTECAT` records from the disk into the cache. Recall that the index of a relation in the caches is called it's rel-id. The relation catalog has rel-id 0 ([RELCAT_RELID](/docs/constants)) and the attribute catalog has rel-id 1([ATTRCAT_RELID](/docs/constants)).
 
 <details>
 <summary>Cache/OpenRelTable.cpp</summary>

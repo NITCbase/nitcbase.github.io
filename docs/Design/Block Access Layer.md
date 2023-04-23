@@ -200,20 +200,20 @@ This method searches the relation specified to find the next record that satisfi
 
 #### Return Values
 
-| **Value**                      | **Description**                                               |
-| ------------------------------ | ------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful copy of record to record                        |
-| [`E_NOTFOUND`](/constants)     | If it fails to find a record satisfying the given condition   |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to `relId` is free in the cache           |
-| [`E_ATTRNOTEXIST`](/constants) | No attribute with the input attribute name exists             |
+| **Value**                           | **Description**                                               |
+| ----------------------------------- | ------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful copy of record to record                        |
+| [`E_NOTFOUND`](/docs/constants)     | If it fails to find a record satisfying the given condition   |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to `relId` is free in the cache           |
+| [`E_ATTRNOTEXIST`](/docs/constants) | No attribute with the input attribute name exists             |
 
 :::info note
 
 - This function reads the "next" record from the given relation that satisfies a given condition. It can do either a linear search using `BlockAccess::linearSearch()` or a B+ search using `BPlusTree::bPlussearch()` depending on whether an index exists.
 - If a linear search is being done, it is required that the search index of the relation is reset in the relation cache with a call to the `RelCacheTable::resetSearchIndex()` function.
 - Subsequent search operations will read from the search index and return the corresponding record. The search index is then advanced so that the search continues from the next record
-- Once the last record satisfying the condition is returned, every subsequent call to this function will return [E_NOTFOUND](/constants).
+- Once the last record satisfying the condition is returned, every subsequent call to this function will return [E_NOTFOUND](/docs/constants).
 - This function assumes that the search query has been validated by the caller before the call to this function. Validation includes checking for whether the operator is valid, whether the type of the value passed is compatible with the actual attribute type and so on.
 
 :::
@@ -275,11 +275,11 @@ This method inserts the record into relation as specified in arguments.
 
 #### Return Values
 
-| **Value**                               | **Description**                                                                                                                     |
-| --------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)                 | On successful insert of the given record                                                                                            |
-| [`E_INDEX_BLOCKS_RELEASED`](/constants) | Record was inserted successfully, but the index existing on one or more attributes had to be deleted due to insufficient disk space |
-| [`E_DISKFULL`](/constants)              | If disk space is not sufficient for inserting the record / index                                                                    |
+| **Value**                                    | **Description**                                                                                                                     |
+| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)                 | On successful insert of the given record                                                                                            |
+| [`E_INDEX_BLOCKS_RELEASED`](/docs/constants) | Record was inserted successfully, but the index existing on one or more attributes had to be deleted due to insufficient disk space |
+| [`E_DISKFULL`](/docs/constants)              | If disk space is not sufficient for inserting the record / index                                                                    |
 
 #### Algorithm
 
@@ -440,11 +440,11 @@ This method changes the relation name of specified relation to the new name spec
 
 #### Return Values
 
-| **Value**                     | **Description**                                  |
-| ----------------------------- | ------------------------------------------------ |
-| [`SUCCESS`](/constants)       | On successful renaming of the relation           |
-| [`E_RELNOTEXIST`](/constants) | If the relation with name oldName does not exist |
-| [`E_RELEXIST`](/constants)    | If the relation with name newName already exists |
+| **Value**                          | **Description**                                  |
+| ---------------------------------- | ------------------------------------------------ |
+| [`SUCCESS`](/docs/constants)       | On successful renaming of the relation           |
+| [`E_RELNOTEXIST`](/docs/constants) | If the relation with name oldName does not exist |
+| [`E_RELEXIST`](/docs/constants)    | If the relation with name newName already exists |
 
 #### Algorithm
 
@@ -514,12 +514,12 @@ This method changes the name of an attribute/column present in a specified relat
 
 #### Return Values
 
-| **Value**                      | **Description**                                   |
-| ------------------------------ | ------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful renaming of the attribute           |
-| [`E_RELNOTEXIST`](/constants)  | If the relation with name relName does not exist  |
-| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name oldName does not exist |
-| [`E_ATTREXIST`](/constants)    | If the attribute with name newName already exists |
+| **Value**                           | **Description**                                   |
+| ----------------------------------- | ------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful renaming of the attribute           |
+| [`E_RELNOTEXIST`](/docs/constants)  | If the relation with name relName does not exist  |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If the attribute with name oldName does not exist |
+| [`E_ATTREXIST`](/docs/constants)    | If the attribute with name newName already exists |
 
 #### Algorithm
 
@@ -590,16 +590,16 @@ This method deletes the relation with the name specified as argument. This invol
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                             |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful deletion of the given relation                                                                |
-| [`E_RELNOTEXIST`](/constants)  | If the relation does not exist                                                                              |
-| [`E_NOTPERMITTED`](/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
+| **Value**                           | **Description**                                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful deletion of the given relation                                                                |
+| [`E_RELNOTEXIST`](/docs/constants)  | If the relation does not exist                                                                              |
+| [`E_NOTPERMITTED`](/docs/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 
 :::note
-If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of [Buffer Layer](Buffer%20Layer/intro.md) are being called, make sure to get the return value and if it is not [SUCCESS](/constants), then to return the error code from the method.
+If at any point getHeader(), setHeader(), getRecord(), setRecord(), getSlotMap() or setSlotMap() methods of [Buffer Layer](Buffer%20Layer/intro.md) are being called, make sure to get the return value and if it is not [SUCCESS](/docs/constants), then to return the error code from the method.
 :::
 
 ```cpp
@@ -752,10 +752,10 @@ This function is used to fetch **one** record of the relation. Each subsequent c
 
 #### Return Values
 
-| **Value**                  | **Description**                                             |
-| -------------------------- | ----------------------------------------------------------- |
-| [`SUCCESS`](/constants)    | On successful copy of record to _record_                    |
-| [`E_NOTFOUND`](/constants) | If there are no more records to be fetched for the relation |
+| **Value**                       | **Description**                                             |
+| ------------------------------- | ----------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)    | On successful copy of record to _record_                    |
+| [`E_NOTFOUND`](/docs/constants) | If there are no more records to be fetched for the relation |
 
 :::info note
 
@@ -763,9 +763,9 @@ This function is used to fetch **one** record of the relation. Each subsequent c
 
 - If `searchIndex` is reset to `{-1,-1}`, this function starts reading from the beginning and returns the first record of the relation. The `RelCacheTable::resetSearchIndex()` function may be used to reset the value of the search index.
 
-- If the `searchIndex` value of a relation corresponds to the last record of the relation, this function will return [E_NOTFOUND](/constants), as there is no "next" record to be read.
+- If the `searchIndex` value of a relation corresponds to the last record of the relation, this function will return [E_NOTFOUND](/docs/constants), as there is no "next" record to be read.
 
-- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return [E_NOTFOUND](/constants).
+- If `searchIndex` has reached the last record of the relation, it is the responsibility of the caller to reset the search index if it is required that the function starts reading from the beginning of the relation again. If not done, every subsequent call to this function will return [E_NOTFOUND](/docs/constants).
 
 - The [`linearSearch()`](#blockaccess--linearsearch) and `project()` functions make use of the same search index. Hence, changes in the value of `searchIndex` will affect the functioning of both these functions.
 

@@ -12,7 +12,7 @@ This page contains supplementary guides and documentation which are to be refere
 
 ### [XFS Interface](./XFS%20Interface.md)
 
-### [Constants](/constants)
+### [Constants](/docs/constants)
 
 ### [B+ Trees](./B%2B%20Trees.md)
 

@@ -262,10 +262,10 @@ Returns the _relation id_, that is, the _index_, of the entry corresponding to t
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                                  |
-| ---------------------------- | ------------------------------------------------------------------------------------------------ |
-| `relId`                      | The relation id of the relation in the Open Relation Table                                       |
-| [`E_RELNOTOPEN`](/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. |
+| **Value**                         | **Description**                                                                                  |
+| --------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `relId`                           | The relation id of the relation in the Open Relation Table                                       |
+| [`E_RELNOTOPEN`](/docs/constants) | The relation corresponding to relationName do not have an open entry in the Open Relation Table. |
 
 #### Algorithm
 
@@ -294,11 +294,11 @@ Creates an entry for the input relation in the _Open Relation_ Table and returns
 
 #### Return Values
 
-| **Value**                     | **Description**                                                                                              |
-| ----------------------------- | ------------------------------------------------------------------------------------------------------------ |
-| `relId`                       | Relation id of the relation in the Open Relation Table. This is a value between 0 and [MAX_OPEN](/constants) |
-| [`E_RELNOTEXIST`](/constants) | No relation with name, relName, exists in the disk                                                           |
-| [`E_CACHEFULL`](/constants)   | No free entries left in the Open Relation Table                                                              |
+| **Value**                          | **Description**                                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `relId`                            | Relation id of the relation in the Open Relation Table. This is a value between 0 and [MAX_OPEN](/docs/constants) |
+| [`E_RELNOTEXIST`](/docs/constants) | No relation with name, relName, exists in the disk                                                                |
+| [`E_CACHEFULL`](/docs/constants)   | No free entries left in the Open Relation Table                                                                   |
 
 #### Algorithm
 
@@ -394,12 +394,12 @@ This function cannot close the entries corresponding to `RELCAT_RELID` and `ATTR
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                          |
-| ------------------------------ | ---------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | Successfully closed the entry of the relation in the Open Relation Table                 |
-| [`E_NOTPERMITTED`](/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session |
-| [`E_OUTOFBOUND`](/constants)   | Input relId is outside the valid set of possible relation ids                            |
-| [`E_RELNOTOPEN`](/constants)   | Entry corresponding to input relId is free in the Open Relation Table.                   |
+| **Value**                           | **Description**                                                                          |
+| ----------------------------------- | ---------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | Successfully closed the entry of the relation in the Open Relation Table                 |
+| [`E_NOTPERMITTED`](/docs/constants) | _Relation Catalog_ and _Attribute Catalog_ relations cannot be closed during the session |
+| [`E_OUTOFBOUND`](/docs/constants)   | Input relId is outside the valid set of possible relation ids                            |
+| [`E_RELNOTOPEN`](/docs/constants)   | Entry corresponding to input relId is free in the Open Relation Table.                   |
 
 #### Algorithm
 
@@ -473,10 +473,10 @@ Nil
 
 #### Return Values
 
-| **Value**                   | **Description**                                  |
-| --------------------------- | ------------------------------------------------ |
-| relId                       | Index of a free entry in the Open Relation Table |
-| [`E_CACHEFULL`](/constants) | No free entries left in the Open Relation Table  |
+| **Value**                        | **Description**                                  |
+| -------------------------------- | ------------------------------------------------ |
+| relId                            | Index of a free entry in the Open Relation Table |
+| [`E_CACHEFULL`](/docs/constants) | No free entries left in the Open Relation Table  |
 
 #### Algorithm
 

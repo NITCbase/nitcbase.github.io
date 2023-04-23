@@ -130,10 +130,10 @@ Returns the block type of the block corresponding to the input block number. Thi
 
 #### Return Values
 
-| **Value**                    | **Description**                                                               |
-| ---------------------------- | ----------------------------------------------------------------------------- |
-| blockType                    | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`/`BMAP`) |
-| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range                                           |
+| **Value**                         | **Description**                                                               |
+| --------------------------------- | ----------------------------------------------------------------------------- |
+| blockType                         | Block type of the block (`REC`/`IND_INTERNAL`/`IND_LEAF`/`UNUSED_BLK`/`BMAP`) |
+| [`E_OUTOFBOUND`](/docs/constants) | blockNum is outside the valid range                                           |
 
 #### Algorithm
 
@@ -161,11 +161,11 @@ Sets the `dirty bit` of the buffer corresponding to the block.
 
 #### Return Values
 
-| **Value**                          | **Description**                              |
-| ---------------------------------- | -------------------------------------------- |
-| [`SUCCESS`](/constants)            | successfully set dirty bit                   |
-| [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range          |
-| [`E_BLOCKNOTINBUFFER`](/constants) | block with blockNum is not present in Buffer |
+| **Value**                               | **Description**                              |
+| --------------------------------------- | -------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | successfully set dirty bit                   |
+| [`E_OUTOFBOUND`](/docs/constants)       | blockNum is outside the valid range          |
+| [`E_BLOCKNOTINBUFFER`](/docs/constants) | block with blockNum is not present in Buffer |
 
 #### Algorithm
 
@@ -201,11 +201,11 @@ Returns the buffer number of the buffer to which the block with the given block 
 
 #### Return Values
 
-| **Value**                          | **Description**                                   |
-| ---------------------------------- | ------------------------------------------------- |
-| bufferNum                          | Buffer number to which the given block is loaded. |
-| [`E_OUTOFBOUND`](/constants)       | blockNum is outside the valid range               |
-| [`E_BLOCKNOTINBUFFER`](/constants) | block with blockNum is not present in Buffer      |
+| **Value**                               | **Description**                                   |
+| --------------------------------------- | ------------------------------------------------- |
+| bufferNum                               | Buffer number to which the given block is loaded. |
+| [`E_OUTOFBOUND`](/docs/constants)       | blockNum is outside the valid range               |
+| [`E_BLOCKNOTINBUFFER`](/docs/constants) | block with blockNum is not present in Buffer      |
 
 #### Algorithm
 
@@ -248,10 +248,10 @@ Assigns a buffer to the block and returns the buffer number. If no free buffer b
 
 #### Return Values
 
-| Value                        | Type                                | Description                                                               |
-| ---------------------------- | ----------------------------------- | ------------------------------------------------------------------------- |
-| bufferNum                    | `int`                               | Buffer number of the free/freed buffer block assigned to the input block. |
-| [`E_OUTOFBOUND`](/constants) | blockNum is outside the valid range |
+| Value                             | Type                                | Description                                                               |
+| --------------------------------- | ----------------------------------- | ------------------------------------------------------------------------- |
+| bufferNum                         | `int`                               | Buffer number of the free/freed buffer block assigned to the input block. |
+| [`E_OUTOFBOUND`](/docs/constants) | blockNum is outside the valid range |
 
 #### Algorithm
 

@@ -116,7 +116,7 @@ public:
 The specifications for each method of this class is provided in the following sections.
 
 :::note
-Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](/constants).
+Make sure to return the correct value from the methods, preferably sticking to the [global constants mentioned here](/docs/constants).
 :::
 
 ### Frontend :: create_table()
@@ -137,13 +137,13 @@ Make sure to return the correct value from the methods, preferably sticking to t
 
 #### Return Values
 
-| **Value**                       | **Description**                                                |
-| ------------------------------- | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)         | On successful creation of the relation                         |
-| [`E_RELEXIST`](/constants)      | If the relation with name relName already exists.              |
-| [`E_DUPLICATEATTR`](/constants) | If two of any two of the given attributes have same name.      |
-| [`E_DISKFULL`](/constants)      | If disk space is not sufficient for creating the new relation. |
-| [E_MAXRELATIONS](/constants)    | If maximum number of relations possible already exists         |
+| **Value**                            | **Description**                                                |
+| ------------------------------------ | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)         | On successful creation of the relation                         |
+| [`E_RELEXIST`](/docs/constants)      | If the relation with name relName already exists.              |
+| [`E_DUPLICATEATTR`](/docs/constants) | If two of any two of the given attributes have same name.      |
+| [`E_DISKFULL`](/docs/constants)      | If disk space is not sufficient for creating the new relation. |
+| [E_MAXRELATIONS](/docs/constants)    | If maximum number of relations possible already exists         |
 
 #### Algorithm
 
@@ -177,12 +177,12 @@ int Frontend::create_table(char relname[ATTR_SIZE],
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                             |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful deletion of the relation.                                                                     |
-| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                    |
-| [`E_RELNOTEXIST`](/constants)  | If the relation does not exist                                                                              |
-| [`E_NOTPERMITTED`](/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
+| **Value**                           | **Description**                                                                                             |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful deletion of the relation.                                                                     |
+| [`E_RELOPEN`](/docs/constants)      | If the relation is open.                                                                                    |
+| [`E_RELNOTEXIST`](/docs/constants)  | If the relation does not exist                                                                              |
+| [`E_NOTPERMITTED`](/docs/constants) | If relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e., when the user tries to delete the catalogs. |
 
 #### Algorithm
 
@@ -211,11 +211,11 @@ int Frontend::drop_table(char relname[ATTR_SIZE]) {
 
 #### Return Values
 
-| **Value**                     | **Description**                                                |
-| ----------------------------- | -------------------------------------------------------------- |
-| [`SUCCESS`](/constants)       | On successful opening of the relation                          |
-| [`E_RELNOTEXIST`](/constants) | If the relation with name `relName` does not exist in the disk |
-| [`E_CACHEFULL`](/constants)   | If there are no free slots in the Open Relation table.         |
+| **Value**                          | **Description**                                                |
+| ---------------------------------- | -------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)       | On successful opening of the relation                          |
+| [`E_RELNOTEXIST`](/docs/constants) | If the relation with name `relName` does not exist in the disk |
+| [`E_CACHEFULL`](/docs/constants)   | If there are no free slots in the Open Relation table.         |
 
 #### Algorithm
 
@@ -244,11 +244,11 @@ int Frontend::open_table(char relname[ATTR_SIZE]) {
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                         |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful closing of the relation                                                                                   |
-| [`E_RELNOTOPEN`](/constants)   | If relation with given name is not open                                                                                 |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to close either of the catalogs. |
+| **Value**                           | **Description**                                                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful closing of the relation                                                                                   |
+| [`E_RELNOTOPEN`](/docs/constants)   | If relation with given name is not open                                                                                 |
+| [`E_NOTPERMITTED`](/docs/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to close either of the catalogs. |
 
 #### Algorithm
 
@@ -279,13 +279,13 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                         |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of B+ tree.                                                                                      |
-| [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                                                                            |
-| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name attrName does not exist.                                                                     |
-| [`E_DISKFULL`](/constants)     | If there is no enough space in the disk to create the tree                                                              |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to create an index for catalogs. |
+| **Value**                           | **Description**                                                                                                         |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful creation of B+ tree.                                                                                      |
+| [`E_RELNOTOPEN`](/docs/constants)   | If the relation is not open.                                                                                            |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If the attribute with name attrName does not exist.                                                                     |
+| [`E_DISKFULL`](/docs/constants)     | If there is no enough space in the disk to create the tree                                                              |
+| [`E_NOTPERMITTED`](/docs/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to create an index for catalogs. |
 
 #### Algorithm
 
@@ -315,13 +315,13 @@ int create_index(char relname[ATTR_SIZE], char attrname[ATTR_SIZE]) {
 
 #### Return Values
 
-| **Value**                      | **Description**                                               |
-| ------------------------------ | ------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful deletion of the B+ tree                         |
-| [`E_RELNOTOPEN`](/constants)   | If the relation is not open.                                  |
-| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name attrName does not exist.           |
-| [`E_NOINDEX`](/constants)      | If there is no index on the given attribute of the relation   |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. |
+| **Value**                           | **Description**                                               |
+| ----------------------------------- | ------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful deletion of the B+ tree                         |
+| [`E_RELNOTOPEN`](/docs/constants)   | If the relation is not open.                                  |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If the attribute with name attrName does not exist.           |
+| [`E_NOINDEX`](/docs/constants)      | If there is no index on the given attribute of the relation   |
+| [`E_NOTPERMITTED`](/docs/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. |
 
 #### Algorithm
 
@@ -353,13 +353,13 @@ char relname_from[ATTR_SIZE], char relname_to[ATTR_SIZE]
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                         |
-| ------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful renaming of the relation                                                                                                  |
-| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                |
-| [`E_RELNOTEXIST`](/constants)  | If the relation with name `relname_from` does not exist                                                                                 |
-| [`E_RELEXIST`](/constants)     | If the relation with name `relname_to` already exists                                                                                   |
-| [`E_NOTPERMITTED`](/constants) | If the relation to be renamed is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
+| **Value**                           | **Description**                                                                                                                         |
+| ----------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful renaming of the relation                                                                                                  |
+| [`E_RELOPEN`](/docs/constants)      | If the relation is open.                                                                                                                |
+| [`E_RELNOTEXIST`](/docs/constants)  | If the relation with name `relname_from` does not exist                                                                                 |
+| [`E_RELEXIST`](/docs/constants)     | If the relation with name `relname_to` already exists                                                                                   |
+| [`E_NOTPERMITTED`](/docs/constants) | If the relation to be renamed is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename either of the catalogs. |
 
 #### Algorithm
 
@@ -390,14 +390,14 @@ int Frontend::alter_table_rename(char relname_from[ATTR_SIZE], char relname_to[A
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                                                                                 |
-| ------------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful renaming of the attribute                                                                                                         |
-| [`E_RELOPEN`](/constants)      | If the relation is open.                                                                                                                        |
-| [`E_RELNOTEXIST`](/constants)  | If the relation with name relName does not exist                                                                                                |
-| [`E_ATTRNOTEXIST`](/constants) | If the attribute with name `attrname_from` does not exist                                                                                       |
-| [`E_ATTREXIST`](/constants)    | If the attribute with name `attrname_to` already exists                                                                                         |
-| [`E_NOTPERMITTED`](/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename any attribute value of either of the catalogs. |
+| **Value**                           | **Description**                                                                                                                                 |
+| ----------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful renaming of the attribute                                                                                                         |
+| [`E_RELOPEN`](/docs/constants)      | If the relation is open.                                                                                                                        |
+| [`E_RELNOTEXIST`](/docs/constants)  | If the relation with name relName does not exist                                                                                                |
+| [`E_ATTRNOTEXIST`](/docs/constants) | If the attribute with name `attrname_from` does not exist                                                                                       |
+| [`E_ATTREXIST`](/docs/constants)    | If the attribute with name `attrname_to` already exists                                                                                         |
+| [`E_NOTPERMITTED`](/docs/constants) | If the relName is either _"RELATIONCAT"_ or _"ATTRIBUTECAT"_. i.e, when the user tries to rename any attribute value of either of the catalogs. |
 
 #### Algorithm
 
@@ -429,14 +429,14 @@ int Frontend::alter_table_rename_column(char relname[ATTR_SIZE], char attrname_f
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                                            |
-| ---------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful insert of the given record into the relation                                                                 |
-| [`E_RELNOTOPEN`](/constants)       | If the relation is not open.                                                                                               |
-| [`E_NATTRMISMATCH`](/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                     |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.        |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for inserting the record / index                                                           |
-| [`E_NOTPERMITTED`](/constants)     | If relName is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to insert a record into any of the catalogs |
+| **Value**                               | **Description**                                                                                                            |
+| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | On successful insert of the given record into the relation                                                                 |
+| [`E_RELNOTOPEN`](/docs/constants)       | If the relation is not open.                                                                                               |
+| [`E_NATTRMISMATCH`](/docs/constants)    | If the actual number of attributes in the relation is different from the provided number of attributes                     |
+| [`E_ATTRTYPEMISMATCH`](/docs/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute in the record.        |
+| [`E_DISKFULL`](/docs/constants)         | If disk space is not sufficient for inserting the record / index                                                           |
+| [`E_NOTPERMITTED`](/docs/constants)     | If relName is either `RELATIONCAT` or `ATTRIBUTECAT`. i.e, when the user tries to insert a record into any of the catalogs |
 
 #### Algorithm
 
@@ -470,13 +470,13 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count,
 
 #### Return Values
 
-| **Value**                    | **Description**                                                                           |
-| ---------------------------- | ----------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | On successful creation of new relation.                                                   |
-| [`E_RELNOTOPEN`](/constants) | If the source relation is not open.                                                       |
-| [`E_RELEXIST`](/constants)   | If a relation with name `relname_target` already exists.                                  |
-| [`E_DISKFULL`](/constants)   | If disk space is not sufficient for creating the new relation.                            |
-| [`E_CACHEFULL`](/constants)  | If target relation cannot be operated on due to lack of free slots in open relation table |
+| **Value**                         | **Description**                                                                           |
+| --------------------------------- | ----------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | On successful creation of new relation.                                                   |
+| [`E_RELNOTOPEN`](/docs/constants) | If the source relation is not open.                                                       |
+| [`E_RELEXIST`](/docs/constants)   | If a relation with name `relname_target` already exists.                                  |
+| [`E_DISKFULL`](/docs/constants)   | If disk space is not sufficient for creating the new relation.                            |
+| [`E_CACHEFULL`](/docs/constants)  | If target relation cannot be operated on due to lack of free slots in open relation table |
 
 #### Algorithm
 
@@ -510,14 +510,14 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
 
 #### Return Values
 
-| **Value**                      | **Description**                                                                           |
-| ------------------------------ | ----------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)        | On successful creation of new relation.                                                   |
-| [`E_RELNOTOPEN`](/constants)   | If the source relation is not open.                                                       |
-| [`E_RELEXIST`](/constants)     | If a relation with name `relname_target` already exists.                                  |
-| [`E_ATTRNOTEXIST`](/constants) | An attribute name specified in `attr_list` does not exist in the source relation.         |
-| [`E_DISKFULL`](/constants)     | If disk space is not sufficient for creating the new relation.                            |
-| [`E_CACHEFULL`](/constants)    | If target relation cannot be operated on due to lack of free slots in open relation table |
+| **Value**                           | **Description**                                                                           |
+| ----------------------------------- | ----------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)        | On successful creation of new relation.                                                   |
+| [`E_RELNOTOPEN`](/docs/constants)   | If the source relation is not open.                                                       |
+| [`E_RELEXIST`](/docs/constants)     | If a relation with name `relname_target` already exists.                                  |
+| [`E_ATTRNOTEXIST`](/docs/constants) | An attribute name specified in `attr_list` does not exist in the source relation.         |
+| [`E_DISKFULL`](/docs/constants)     | If disk space is not sufficient for creating the new relation.                            |
+| [`E_CACHEFULL`](/docs/constants)    | If target relation cannot be operated on due to lack of free slots in open relation table |
 
 #### Algorithm
 
@@ -555,15 +555,15 @@ int Frontend::select_attrlist_from_table(char relname_source[ATTR_SIZE],
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                       |
-| ---------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                               |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open.                                                                   |
-| [`E_RELEXIST`](/constants)         | If a relation with name `relname_target` already exists.                                              |
-| [`E_ATTRNOTEXIST`](/constants)     | If a attribute with name `attribute` does not exist.                                                  |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute. |
-| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table             |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                        |
+| **Value**                               | **Description**                                                                                       |
+| --------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | On successful creation of new relation.                                                               |
+| [`E_RELNOTOPEN`](/docs/constants)       | If the source relation is not open.                                                                   |
+| [`E_RELEXIST`](/docs/constants)         | If a relation with name `relname_target` already exists.                                              |
+| [`E_ATTRNOTEXIST`](/docs/constants)     | If a attribute with name `attribute` does not exist.                                                  |
+| [`E_ATTRTYPEMISMATCH`](/docs/constants) | If the actual type of the attribute in the relation is different from the type of provided attribute. |
+| [`E_CACHEFULL`](/docs/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table             |
+| [`E_DISKFULL`](/docs/constants)         | If disk space is not sufficient for creating the new relation.                                        |
 
 #### Algorithm
 
@@ -603,15 +603,15 @@ int Frontend::select_from_table_where(char relname_source[ATTR_SIZE],
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                                             |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation.                                                      |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                          |
-| [`E_RELEXIST`](/constants)         | If a relation with name `relname_target` already exists                                                                     |
-| [`E_ATTRNOTEXIST`](/constants)     | An attribute name specified in `attr_list` does not exist in the source relation.                                           |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of argument `attribute` given for the select condition is different from the type of the argument`value` |
-| [`E_CACHEFULL`](/constants)        | If the target relation cannot be operated on due to lack of free slots in open relation table                               |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation                                                               |
+| **Value**                               | **Description**                                                                                                             |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | Indicating successful selection into the new target relation relation.                                                      |
+| [`E_RELNOTOPEN`](/docs/constants)       | If the source relation is not open                                                                                          |
+| [`E_RELEXIST`](/docs/constants)         | If a relation with name `relname_target` already exists                                                                     |
+| [`E_ATTRNOTEXIST`](/docs/constants)     | An attribute name specified in `attr_list` does not exist in the source relation.                                           |
+| [`E_ATTRTYPEMISMATCH`](/docs/constants) | If the actual type of argument `attribute` given for the select condition is different from the type of the argument`value` |
+| [`E_CACHEFULL`](/docs/constants)        | If the target relation cannot be operated on due to lack of free slots in open relation table                               |
+| [`E_DISKFULL`](/docs/constants)         | If disk space is not sufficient for creating the new relation                                                               |
 
 #### Algorithm
 
@@ -668,16 +668,16 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                                       |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | On successful creation of new relation.                                                                               |
-| [`E_RELNOTOPEN`](/constants)       | If any of the source relations is not open.                                                                           |
-| [`E_RELEXIST`](/constants)         | If a relation with name `targetRel` already exists.                                                                   |
-| [`E_ATTRNOTEXIST`](/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation.                                                        |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
-| [`E_DUPLICATEATTR`](/constants)    | If there are duplicate attribute names between srcrel1 and srcrel2 aside from the join attributes.                    |
-| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
+| **Value**                               | **Description**                                                                                                       |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | On successful creation of new relation.                                                                               |
+| [`E_RELNOTOPEN`](/docs/constants)       | If any of the source relations is not open.                                                                           |
+| [`E_RELEXIST`](/docs/constants)         | If a relation with name `targetRel` already exists.                                                                   |
+| [`E_ATTRNOTEXIST`](/docs/constants)     | If an attribute with name attr1 in srcrel1 or attr2 in srcrel2 does not exist.                                        |
+| [`E_DISKFULL`](/docs/constants)         | If disk space is not sufficient for creating the new relation.                                                        |
+| [`E_ATTRTYPEMISMATCH`](/docs/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| [`E_DUPLICATEATTR`](/docs/constants)    | If there are duplicate attribute names between srcrel1 and srcrel2 aside from the join attributes.                    |
+| [`E_CACHEFULL`](/docs/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
 
 #### Algorithm
 
@@ -718,16 +718,16 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 
 #### Return Values
 
-| **Value**                          | **Description**                                                                                                       |
-| ---------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)            | Indicating successful selection into the new target relation relation resulting from join.                            |
-| [`E_RELNOTOPEN`](/constants)       | If the source relation is not open                                                                                    |
-| [`E_RELEXIST`](/constants)         | If a relation with name target_relation already exists                                                                |
-| [`E_ATTRNOTEXIST`](/constants)     | If attribute1 or attribute2 does not exist                                                                            |
-| [`E_ATTRTYPEMISMATCH`](/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
-| [`E_DUPLICATEATTR`](/constants)    | If one or more pairs of attributes(other than join attributes) in the source relations have the same name             |
-| [`E_CACHEFULL`](/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
-| [`E_DISKFULL`](/constants)         | If disk space is not sufficient for creating the new relation                                                         |
+| **Value**                               | **Description**                                                                                                       |
+| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)            | Indicating successful selection into the new target relation relation resulting from join.                            |
+| [`E_RELNOTOPEN`](/docs/constants)       | If the source relation is not open                                                                                    |
+| [`E_RELEXIST`](/docs/constants)         | If a relation with name target_relation already exists                                                                |
+| [`E_ATTRNOTEXIST`](/docs/constants)     | If attribute1 or attribute2 does not exist                                                                            |
+| [`E_ATTRTYPEMISMATCH`](/docs/constants) | If the actual type of any of the attributes in the source relations is different from the type of provided attribute. |
+| [`E_DUPLICATEATTR`](/docs/constants)    | If one or more pairs of attributes(other than join attributes) in the source relations have the same name             |
+| [`E_CACHEFULL`](/docs/constants)        | If target relation cannot be operated on due to lack of free slots in open relation table                             |
+| [`E_DISKFULL`](/docs/constants)         | If disk space is not sufficient for creating the new relation                                                         |
 
 #### Algorithm
 

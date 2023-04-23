@@ -34,9 +34,9 @@ Called if a new index block of the input type is to be allocated in the disk.
 
 #### Arguments
 
-| **Name**  | **Type** | **Description**                                                                                                                                  |
-| --------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| blockType | `char`   | The block type indicating whether it is an internal index block ([`IND_INTERNAL`](/constants)) or a leaf index block ([`IND_LEAF`](/constants)). |
+| **Name**  | **Type** | **Description**                                                                                                                                            |
+| --------- | -------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| blockType | `char`   | The block type indicating whether it is an internal index block ([`IND_INTERNAL`](/docs/constants)) or a leaf index block ([`IND_LEAF`](/docs/constants)). |
 
 #### Return Values
 
@@ -164,10 +164,10 @@ Gives the indexNum<sup>th</sup> entry of the block.
 
 #### Return Values
 
-| **Value**                    | **Description**                                                          |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| [`SUCCESS`](/constants)      | Successful copy of the internal index entry.                             |
-| [`E_OUTOFBOUND`](/constants) | Input indexNum is outside the valid range of index numbers of the block. |
+| **Value**                         | **Description**                                                          |
+| --------------------------------- | ------------------------------------------------------------------------ |
+| [`SUCCESS`](/docs/constants)      | Successful copy of the internal index entry.                             |
+| [`E_OUTOFBOUND`](/docs/constants) | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 
@@ -231,10 +231,10 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Internal
 
 #### Return Values
 
-| **Value**                    | **Description**                                                          |
-| ---------------------------- | ------------------------------------------------------------------------ |
-| [`SUCCESS`](/constants)      | Successful copy of the internal index entry.                             |
-| [`E_OUTOFBOUND`](/constants) | Input indexNum is outside the valid range of index numbers of the block. |
+| **Value**                         | **Description**                                                          |
+| --------------------------------- | ------------------------------------------------------------------------ |
+| [`SUCCESS`](/docs/constants)      | Successful copy of the internal index entry.                             |
+| [`E_OUTOFBOUND`](/docs/constants) | Input indexNum is outside the valid range of index numbers of the block. |
 
 :::caution note
 
@@ -375,10 +375,10 @@ Gives the indexNum<sup>th</sup> entry of the block.
 
 #### Return Values
 
-| **Value**                    | **Description**                                                            |
-| ---------------------------- | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successful getting of the leaf index entry.                                |
-| [`E_OUTOFBOUND`](/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+| **Value**                         | **Description**                                                            |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | Successful getting of the leaf index entry.                                |
+| [`E_OUTOFBOUND`](/docs/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
 :::caution note
 
@@ -430,10 +430,10 @@ Sets the indexNum<sup>th</sup> entry of the block with the input struct Index co
 
 #### Return Values
 
-| **Value**                    | **Description**                                                            |
-| ---------------------------- | -------------------------------------------------------------------------- |
-| [`SUCCESS`](/constants)      | Successful setting of the leaf index entry.                                |
-| [`E_OUTOFBOUND`](/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
+| **Value**                         | **Description**                                                            |
+| --------------------------------- | -------------------------------------------------------------------------- |
+| [`SUCCESS`](/docs/constants)      | Successful setting of the leaf index entry.                                |
+| [`E_OUTOFBOUND`](/docs/constants) | Input `indexNum` is outside the valid range of index numbers of the block. |
 
 :::caution note
 

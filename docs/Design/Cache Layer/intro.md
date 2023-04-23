@@ -13,7 +13,7 @@ The files corresponding to this layer can be found in the `Cache` directory. The
 
 ## Layout
 
-Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the _Cache Layer_ **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of [MAX_OPEN](/constants) number of relations at any given time.
+Almost all operations on a relation require access to its corresponding **Relation Catalog** and **Attribute Catalog** entries. NITCbase stores these catalogs as relations in the disk. To prevent multiple reads and write backs of the catalog blocks, the _Cache Layer_ **caches** the catalog blocks along with some extra metadata associated with the relation that allows faster and easier processing of operations such as search. The Cache Layer, thus, provides an interface for catalog access to the higher layers by hiding the storage and maintenance details of the catalogs. Cache Layer can cache a maximum of [MAX_OPEN](/docs/constants) number of relations at any given time.
 
 **NITCbase requires that the relation be first loaded to cache memory before any operation is performed on it.**
 
