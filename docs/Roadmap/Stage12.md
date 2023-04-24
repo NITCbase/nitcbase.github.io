@@ -134,11 +134,13 @@ This is a significant improvement over linear search and would reduce the time r
 To illustrate the saving, suppose Relation_1 has $m = 10,000$ records and Relation_2 has $n = 100,000$ records. For simplicity, let us take log to base 10.
 
 $$
-\text{Complexity of Linear Search}  = mn  = 10^9
-$$
+\begin{aligned}
 
-$$
-\text{Complexity of Indexed Search} =  n\log{n} + m\log{n} + m \\ =  50,000 + 500,000  + 100,000 = 650,000\text{ only}
+\text{Complexity of Linear Search} &= mn  = 10^9 \\
+
+\text{Complexity of Indexed Search} &=  n\log{n} + m\log{n} + m \\ &=  50,000 + 500,000  + 100,000 \\ &= 650,000\text{ only}
+
+\end{aligned}
 $$
 
 :::

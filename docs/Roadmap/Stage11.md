@@ -314,6 +314,7 @@ classDiagram
     +bPlusCreate(int relId, char attrName[ATTR_SIZE])$ int🟢
     +bPlusDestroy(int rootBlockNum)$ int🟢
     +bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVal, RecId recId)$ int🟢
+    -findLeafToInsert(int rootBlock, Attribute attrVal, int attrType)$ int🟢
     -insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum, Index entry)$ int🟢
     -splitLeaf(int leafBlockNum, Index indices[])$ int🟢
     -insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBlockNum, InternalEntry entry)$ int🟢
