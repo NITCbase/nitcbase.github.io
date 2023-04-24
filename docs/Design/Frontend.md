@@ -766,7 +766,7 @@ int Frontend::select_attrlist_from_join_where(
 #### Description
 
 - The [`FUNCTION` command](../User%20Interface%20Commands/test.md#function) is translated to this method call.
-- This command is used to implement any functionality that is not already made available by the NITCbase commands
+- You can use this command to add any functionality that is not already made available by the NITCbase commands
 - The implementation is left entirely to you
 
 #### Arguments

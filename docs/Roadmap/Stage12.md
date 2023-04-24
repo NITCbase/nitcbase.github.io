@@ -2,7 +2,7 @@
 title: "Stage 12: Join on Relations"
 ---
 
-# Stage 12: Join on Relations (6 hours)
+# Stage 12: Join on Relations (10 hours)
 
 :::note Learning Objectives
 
@@ -103,9 +103,17 @@ SELECT regNo FROM ParticipantLocations INTO AuditoriumParticipants WHERE locatio
 
 To do a join operation, we fetch every record from the first relation one by one. For every record, we do a search operation on the second relation to fetch the records that have the specified attribute value equal to the value in the record from the first relation. For every record of the first relation, there will be a set of search calls to the second relation to **fetch all records** that match on the common attribute.
 
-Suppose that we are performing a join operation on a certain attribute between Relation_1 and Relation_2. Let Relation_1 have m tuples and Relation_2 have n tuples. For each i between 1 and m, let the i-th tuple in Relation_1 match with a total of N<sub>i</sub> number of tuples of Relation_2 on the value of the common attribute. We have N<sub>1</sub> + N<sub>2</sub> + … + N<sub>m</sub> = n.
+Suppose that we are performing a join operation on a certain attribute between Relation_1 and Relation_2. Let Relation_1 have $m$ tuples and Relation_2 have $n$ tuples. If we were to do a linear search on the second relation to find the matching records, the join operation would have an overall complexity of $O(mn)$. However, if an index was present on the second relation, then we would be able to do a B+ search to find the matching records. This reduces the complexity of the join operation to $O(m\log{n} + n)$.
 
-Suppose we do not create an index for the attribute in both Relation_1 and Relation_2, to match the two relations, then for each tuple in Relation_1, we have to perform a linear search across the entire second relation, which takes $O(n)$ time. (the relation cache search index field has a crucial role in limiting linear search complexity to O(n) here). Since there are m tuples in Relation_1, conducting linear search on Relation_2 over all of them will involve a total complexity of $O(mn)$.
+Because of this, the NITCbase design mandates the following. **If the second relation in a join operation does not have an index on the join attribute, one will be created for it before the join operation proceeds.**
+
+Readers interested in proceding with the implementation may skip the following note about computational complexity and proceed with the [next section](#implementation).
+
+:::info COMPLEXITY OF JOIN OPERATION (OPTIONAL)
+
+Let Relation_1 have $m$ tuples and Relation_2 have $n$ tuples. For each $i$ between 1 and $m$, let the $i$-th tuple in Relation_1 match with a total of N<sub>i</sub> number of tuples of Relation_2 on the value of the common attribute. We have N<sub>1</sub> + N<sub>2</sub> + … + N<sub>m</sub> = n.
+
+Suppose we do not create an index for the attribute in both Relation_1 and Relation_2, to match the two relations, then for each tuple in Relation_1, we have to perform a linear search across the entire second relation, which takes $O(n)$ time. (the relation cache search index field has a crucial role in limiting linear search complexity to $O(n)$ here). Since there are m tuples in Relation_1, conducting linear search on Relation_2 over all of them will involve a total complexity of $O(mn)$.
 
 Now, suppose we create an index for the shared attribute in Relation_2. Index creation requires $O(n\log{n})$ complexity. This is because index creation in NITCbase involves n insertions into a B+ tree and each B+ tree insert operation has $O(\log{n})$ complexity.
 
@@ -115,15 +123,25 @@ $$
 O(m\log{n} + (N_1 + N_2 + \ldots + N_m)) = O(m\log{n} + n)
 $$
 
-Because of this, the NITCbase design mandates the following. **If the second relation in a join operation does not have an index on the join attribute, one will be created for it before the join operation proceeds.**
-
-So, the worst case complexity for the join operation would involve the cost of creating an index as well as the cost to search through it. This would be for the case when an index does not exist on the attribute for Relation_2. Thus, the worst case cost for an equi-join operation in NITCbase adds up to
+The worst case complexity for the join operation would involve the cost of creating an index as well as the cost to search through it. This would be for the case when an index does not exist on the attribute for Relation_2. Thus, the worst case cost for an equi-join operation in NITCbase adds up to
 
 $$
 O((m+n)\log{n} + n)
 $$
 
 This is a significant improvement over linear search and would reduce the time required to complete the operation by a significant amount, especially as we approach upwards of a million records.
+
+To illustrate the saving, suppose Relation_1 has $m = 10,000$ records and Relation_2 has $n = 100,000$ records. For simplicity, let us take log to base 10.
+
+$$
+\text{Complexity of Linear Search}  = mn  = 10^9
+$$
+
+$$
+\text{Complexity of Indexed Search} =  n\log{n} + m\log{n} + m \\ =  50,000 + 500,000  + 100,000 = 650,000\text{ only}
+$$
+
+:::
 
 ## Implementation
 
@@ -198,9 +216,9 @@ classDiagram
 
 <br/>
 
-In the [Algebra Layer](../Design/Algebra%20Layer.md), we add the `join()` function which receives two relations and the attributes on which an equi-join is to be performed. This function results in the creation of a target relation which is the join of both the source relations as we mentioned earlier.
+In the [Algebra Layer](../Design/Algebra%20Layer.md), we add the `join()` function which receives two relations and the attributes on which an equi-join is to be performed. This function results in the creation of a target relation which is the join of both the source relations, as we mentioned earlier.
 
-The target relation produced from a join operation would contain all the attributes from both source relation (aside from the join attribute of the second relation). So, NITCbase requires that there be no attribute names that are common between the two relations except for the join attribute.
+The target relation produced from a join operation would contain all the attributes from both source relation (aside from the join attribute of the second relation). So, **NITCbase requires that there be no attribute names that are common between the two relations except for the join attribute**.
 
 <details>
 <summary>Algebra/Algebra.cpp</summary>
@@ -225,8 +243,6 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-And with that, we end our implementation of NITCbase! We've implemented a fully-fledged database with algebraic operations, schema operations, and worked with buffering disk blocks, caching, indexing and a whole lot more. Quite impressive! Hope you had fun building NITCbase this semester ❤️.
-
 The only thing left to do is for you to evaluate your implementation with some exercises.
 
 But, before that we need to cover the [FUNCTION command](../User%20Interface%20Commands/test.md#function). This is a test command that is provided to you implement any other feature you want to implement. The Frontend User Interface will pass along any command beginning with `FUNCTION` to the [`Frontend::custom_function()`](../Design/Frontend.md#frontend--custom_function) method. The implementation of this method is left entirely to your imagination.
@@ -234,3 +250,5 @@ But, before that we need to cover the [FUNCTION command](../User%20Interface%20C
 Now, moving on to the exercises.
 
 ## Exercises
+
+And with that, you have completed the implementation of NITCbase! You've implemented a small database management system with algebraic operations, schema operations, disk buffer, caching, indexing and a whole lot more. Hope this experience was fruitful in helping you understand the working of a relational DBMS❤️.

@@ -187,6 +187,13 @@ SELECT Name, CGPA FROM Students INTO Target_Students WHERE CGPA > 8
 
 This command creates a new target relation with attributes constituting from both the source relations (excluding specified attribute from second source relation). It inserts the records obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for `equi-join`) into the target relation.
 
+:::caution
+
+- This command results in the creation of an index on the join attribute for the second relation if it does not already exist.
+- This index might be created even if the command fails.
+
+:::
+
 #### Syntax
 
 ```sql
@@ -240,6 +247,13 @@ SELECT * FROM Students1 JOIN Students2 INTO Students WHERE Students1.Rollno = St
 #### Description
 
 This command creates a new target relation with attributes given in `Attrlist`. It inserts the records (only the values of the specified attributes in `Attrlist` obtained by `equi-join` of both the source relations (an attribute from each relation specified in arguments are used for equi-join) into the target relation.
+
+:::caution
+
+- This command results in the creation of an index on the join attribute for the second relation if it does not already exist.
+- This index might be created even if the command fails.
+
+:::
 
 #### Syntax
 
