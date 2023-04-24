@@ -391,7 +391,7 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
 
 #### Description
 
-Used to delete a B+ Tree. The caller passes the root block of the B+ Tree as input to the method. The method recursively deletes the constituent index blocks, both internal and leaf index blocks, until the full B+ Tree is deleted.
+Used to delete a B+ Tree rooted at a particular block passed as input to the method. The method recursively deletes the constituent index blocks, both internal and leaf index blocks, until the full B+ Tree is deleted.
 
 This function is called when
 
@@ -552,15 +552,29 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
 
 #### Description
 
-Used to find the leaf index block to which an attribute would be inserted to in the B+ insertion process.
+Used to find the leaf index block to which an attribute would be inserted to in the B+ insertion process. If this leaf turns out to be full, the caller will need to handle the splitting of this block to insert the entry.
+
+:::note
+According to the NITCbase specification, this function will only be called from [bPlusInsert()](#bplustreebplusinsert).
+
+:::
+
+:::caution
+
+This function does not do any validation. It is the responsibility of the the caller to verify that
+
+- the argument passed is the block number of root block of a B+ tree on the disk
+- the attribute type that is present in the index matches the attribute type that is passed
+
+:::
 
 #### Arguments
 
-| **Name**  | **Type**                           | **Description**                                                |
-| --------- | ---------------------------------- | -------------------------------------------------------------- |
-| rootBlock | `int`                              | The root block of a B+ tree on the disk                        |
-| attrVal   | `char[ATTR_SIZE]`                  | The attrVal for which the appropriate leaf node is to be found |
-| attrType  | [`NUMBER/STRING`](/docs/constants) | The type of the attribute `attrVal`                            |
+| **Name**  | **Type**           | **Description**                                                                    |
+| --------- | ------------------ | ---------------------------------------------------------------------------------- |
+| rootBlock | `int`              | The root block of a B+ tree on the disk                                            |
+| attrVal   | `struct Attribute` | The attrVal for which the appropriate leaf node is to be found                     |
+| attrType  | `int`              | The type of the attribute `attrVal`, that is, [`NUMBER`/`STRING`](/docs/constants) |
 
 #### Return values
 
@@ -582,8 +596,8 @@ int BPlusTree::findLeafToInsert(int rootBlock, Attribute attrVal, int attrType) 
 
         /* iterate through all the entries, to find the first entry whose
              attribute value >= value to be inserted.
-             NOTE: the helper function compareAttrs() can be used to compare
-                         two Attribute values. */
+             NOTE: the helper function compareAttrs() declared in BlockBuffer.h
+                   can be used to compare two Attribute values. */
 
         if (/*no such entry is found*/) {
             // set blockNum = rChild of (nEntries-1)'th entry of the block
@@ -602,16 +616,21 @@ int BPlusTree::findLeafToInsert(int rootBlock, Attribute attrVal, int attrType) 
 
 #### Description
 
-Used to insert an index entry into a leaf index block of an existing B+ tree. This function will call other B+ Tree Layer functions to handle any updation required to the internal index blocks of the B+ tree.
+Used to insert an index entry into a leaf index block of an existing B+ tree. If the leaf is full and requires splitting, this function will call other B+ Tree Layer functions to handle any updation required to the parent internal index blocks of the B+ tree.
+
+:::note
+According to the NITCbase specification, this function will only be called from [bPlusInsert()](#bplustreebplusinsert).
+
+:::
 
 #### Arguments
 
-| **Name**   | **Type**          | **Description**                                                              |
-| ---------- | ----------------- | ---------------------------------------------------------------------------- |
-| relId      | `int`             | Relation Id of the relation containing the attribute.                        |
-| attrName   | `char[ATTR_SIZE]` | Attribute/column name to whose B+ tree (index) an entry is to be added       |
-| blockNum   | `int`             | The block number of the leaf index block to which an entry is to be inserted |
-| indexEntry | `struct Index`    | The entry that is to be inserted into the leaf index block                   |
+| **Name**   | **Type**          | **Description**                                                                                          |
+| ---------- | ----------------- | -------------------------------------------------------------------------------------------------------- |
+| relId      | `int`             | Relation Id of the relation containing the attribute.                                                    |
+| attrName   | `char[ATTR_SIZE]` | Attribute/column name of the relation with given rel-id to whose B+ tree (index) an entry is to be added |
+| blockNum   | `int`             | The block number of the leaf index block to which an entry is to be inserted                             |
+| indexEntry | `struct Index`    | The entry that is to be inserted into the leaf index block                                               |
 
 #### Return values
 
@@ -619,6 +638,15 @@ Used to insert an index entry into a leaf index block of an existing B+ tree. Th
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/docs/constants)    | On successful insertion into the B+ tree of the attribute      |
 | [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
+
+:::caution
+The caller is expected to ensure that
+
+- `blockNum` corresponds to a valid leaf index block in the B+ tree corresponding to `attrName` of the relation with specified rel-id.
+- `indexEntry` contains the correct `recId` and `attrVal` corresponding to the record that is to be inserted
+
+This function will insert `indexEntry` to the B+ tree **without any validation** on the arguments.
+:::
 
 #### Algorithm
 
@@ -633,7 +661,8 @@ int BPlusTree::insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum,
     // store the header of the leaf index block into blockHeader
     // using BlockBuffer::getHeader()
 
-    // declare indices which will store the existing indices + the new index to insert
+    // the following variable will be used to store a list of index entries with
+    // existing indices + the new index to insert
     Index indices[blockHeader.numEntries + 1];
 
     /*
@@ -641,11 +670,12 @@ int BPlusTree::insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum,
     Also insert `indexEntry` at appropriate position in the indices array maintaining
     the ascending order.
     - use IndLeaf::getEntry() to get the entry
-    - use compareAttrs() to compare two structs of type Attribute
+    - use compareAttrs() declared in BlockBuffer.h to compare two Attribute structs
     */
 
     if (blockHeader.numEntries != MAX_KEYS_LEAF) {
         // (leaf block has not reached max limit)
+
         // increment blockHeader.numEntries and update the header of block
         // using BlockBuffer::setHeader().
 
@@ -668,10 +698,14 @@ int BPlusTree::insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum,
 
     if (/* the current leaf block was not the root */) {  // check pblock in header
         // insert the middle value from `indices` into the parent block using the
-        // insertIntoInternal() function.
+        // insertIntoInternal() function. (i.e the last value of the left block)
+
+        // the middle value will be at index 31 (given by constant MIDDLE_INDEX_LEAF)
+
         // create a struct InternalEntry with attrVal = indices[MIDDLE_INDEX_LEAF].attrVal,
         // lChild = currentBlock, rChild = newRightBlk and pass it as argument to
         // the insertIntoInternalFunction as follows
+
 
         // insertIntoInternal(relId, attrName, parent of current block, new internal entry)
 
@@ -695,6 +729,11 @@ int BPlusTree::insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum,
 
 Distributes an array of index entries between an existing leaf index block and a newly allocated leaf index block.
 
+:::note
+According to the NITCbase specification, this function will only be called from [insertIntoLeaf()](#bplustreeinsertintoleaf).
+
+:::
+
 #### Arguments
 
 | **Name**     | **Type**         | **Description**                                                           |
@@ -708,6 +747,15 @@ Distributes an array of index entries between an existing leaf index block and a
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
 | `rightBlkNum`                   | The block number of the right block in the splitting, that is, the newly allocated block. |
 | [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for splitting the leaf index block                        |
+
+:::caution
+The caller is expected to ensure that
+
+- `leafBlockNum` corresponds to a fully filled leaf index block in a B+ tree
+- `indices` is an array of size [MAX_KEYS_LEAF](/docs/constants)+1 with valid index entries that is to be split among the leaves
+
+This function will distribute `indices` between the two blocks **without any validation** on the argument.
+:::
 
 #### Algorithm
 
@@ -730,13 +778,17 @@ int BPlusTree::splitLeaf(int leafBlockNum, Index indices[]) {
     HeadInfo leftBlkHeader, rightBlkHeader;
     // get the headers of left block and right block using BlockBuffer::getHeader()
 
-    // update number of entries in rightBlkHeader as (MAX_KEYS_LEAF+1)/2 = 32,
-    // pblock as the pblock of leftBlk, lblock as leftBlkNum and its
-    // rblock as the rblock of leftBlk
+    // set rightBlkHeader with the following values
+    // - number of entries = (MAX_KEYS_LEAF+1)/2 = 32,
+    // - pblock = pblock of leftBlk
+    // - lblock = leftBlkNum
+    // - rblock = rblock of leftBlk
     // and update the header of rightBlk using BlockBuffer::setHeader()
 
-    /* update number of entries in leftBlkHeader as (MAX_KEYS_LEAF+1)/2 = 32,
-       rblock as rightBlkNum and update the header using BlockBuffer::setHeader() */
+    // set leftBlkHeader with the following values
+    // - number of entries = (MAX_KEYS_LEAF+1)/2 = 32
+    // - rblock = rightBlkNum
+    // and update the header of leftBlk using BlockBuffer::setHeader() */
 
     // set the first 32 entries of leftBlk = the first 32 entries of indices array
     // and set the first 32 entries of newRightBlk = the next 32 entries of
@@ -750,16 +802,21 @@ int BPlusTree::splitLeaf(int leafBlockNum, Index indices[]) {
 
 #### Description
 
-Used to insert an index entry into an internal index block of an existing B+ tree. This function will call itself to handle any updation required to other internal index blocks than the one passed as argument to it.
+Used to insert an index entry into an internal index block of an existing B+ tree. This function will call itself to handle any updation required to it's parent internal index blocks.
+
+:::note
+According to the NITCbase specification, this function can only be called from either the [insertIntoLeaf()](#bplustreeinsertintoleaf) function or from itself (recursively).
+
+:::
 
 #### Arguments
 
-| **Name**    | **Type**               | **Description**                                                               |
-| ----------- | ---------------------- | ----------------------------------------------------------------------------- |
-| relId       | `int`                  | Relation Id of the relation containing the attribute                          |
-| attrName    | `char[ATTR_SIZE]`      | Attribute/column name to whose B+ tree (index) an entry is to be added        |
-| intBlockNum | `int`                  | The block number of the internal index block to which insertion is to be done |
-| intEntry    | `struct InternalEntry` | The index entry that is to be inserted into the internal index block          |
+| **Name**    | **Type**               | **Description**                                                                                          |
+| ----------- | ---------------------- | -------------------------------------------------------------------------------------------------------- |
+| relId       | `int`                  | Relation Id of the relation containing the attribute                                                     |
+| attrName    | `char[ATTR_SIZE]`      | Attribute/column name of the relation with given rel-id to whose B+ tree (index) an entry is to be added |
+| intBlockNum | `int`                  | The block number of the internal index block to which insertion is to be done                            |
+| intEntry    | `struct InternalEntry` | The index entry that is to be inserted into the internal index block                                     |
 
 #### Return values
 
@@ -767,6 +824,15 @@ Used to insert an index entry into an internal index block of an existing B+ tre
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/docs/constants)    | On successful insertion into the internal index block          |
 | [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
+
+:::caution
+The caller is expected to ensure that
+
+- `intBlockNum` corresponds to a valid internal index block in the B+ tree corresponding to `attrName` of the relation with specified rel-id.
+- `intEntry` contains the correct `attrVal`, `lChild` and `rChild` corresponding to the child that it was called from.
+
+This function will insert `intEntry` to the B+ tree **without any validation** on the arguments.
+:::
 
 #### Algorithm
 
@@ -782,7 +848,7 @@ int BPlusTree::insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBl
     // load blockHeader with header of intBlk using BlockBuffer::getHeader().
 
     // declare internalEntries to store all existing entries + the new entry
-    InternalEntry internalEntries[parHeader.numEntries + 1];
+    InternalEntry internalEntries[blockHeader.numEntries + 1];
 
     /*
     Iterate through all the entries in the block and copy them to the array
@@ -791,8 +857,8 @@ int BPlusTree::insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBl
         - use IndInternal::getEntry() to get the entry
         - use compareAttrs() to compare two structs of type Attribute
 
-    Update the lChild of the internalEntry following the newly added entry
-    to the rChild of the newly added entry.
+    Update the lChild of the internalEntry immediately following the newly added
+    entry to the rChild of the newly added entry.
     */
 
     if (blockHeader.numEntries != MAX_KEYS_INTERNAL) {
@@ -817,16 +883,21 @@ int BPlusTree::insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBl
     int newRightBlk = splitInternal(intBlockNum, internalEntries);
 
     if (/* splitInternal() returned E_DISKFULL */) {
-        // destroy the right subtree, given by intEntry.rChild, build up till now that
-        // has not yet been connected to the existing B+ Tree, using bPlusDestroy().
+
+        // Using bPlusDestroy(), destroy the right subtree, rooted at intEntry.rChild.
+        // This corresponds to the tree built up till now that has not yet been
+        // connected to the existing B+ Tree
 
         return E_DISKFULL;
     }
 
     if (/* the current block was not the root */) {  // (check pblock in header)
         // insert the middle value from `internalEntries` into the parent block
-        // using the insertIntoInternal() function.
-        // create a struct InternalEntry with lChild = currentBlock, rChild = newRightBlk
+        // using the insertIntoInternal() function (recursively).
+
+        // the middle value will be at index 50 (given by constant MIDDLE_INDEX_INTERNAL)
+
+        // create a struct InternalEntry with lChild = current block, rChild = newRightBlk
         // and attrVal = internalEntries[MIDDLE_INDEX_INTERNAL].attrVal
         // and pass it as argument to the insertIntoInternalFunction as follows
 
@@ -853,6 +924,11 @@ int BPlusTree::insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBl
 
 Distributes an array of index entries between an existing internal index block and a newly allocated internal index block.
 
+:::note
+According to the NITCbase specification, this function can only be called from [insertIntoInternal()](#bplustreeinsertintointernal).
+
+:::
+
 #### Arguments
 
 | **Name**        | **Type**                 | **Description**                                                               |
@@ -866,6 +942,16 @@ Distributes an array of index entries between an existing internal index block a
 | ------------------------------- | ----------------------------------------------------------------------------------------- |
 | `rightBlkNum`                   | The block number of the right block in the splitting, that is, the newly allocated block. |
 | [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for splitting the internal index block                    |
+
+:::caution
+The caller is expected to ensure that
+
+- `intBlockNum` corresponds to a fully filled internal index block in a B+ tree
+- `internalEntries` is an array of size [MAX_KEYS_INTERNAL](/docs/constants)+1 with valid internal index entries that is to be split among two blocks.
+
+This function will distribute `internalEntries` between the two blocks **without any validation** on the argument.
+
+:::
 
 #### Algorithm
 
@@ -888,12 +974,15 @@ int BPlusTree::splitInternal(int intBlockNum, InternalEntry internalEntries[]) {
     HeadInfo leftBlkHeader, rightBlkHeader;
     // get the headers of left block and right block using BlockBuffer::getHeader()
 
-    // update number of entries in rightBlkHeader as (MAX_KEYS_INTERNAL)/2 = 50,
-    // pblock as the pblock of leftBlk
+    // set rightBlkHeader with the following values
+    // - number of entries = (MAX_KEYS_INTERNAL)/2 = 50
+    // - pblock = pblock of leftBlk
     // and update the header of rightBlk using BlockBuffer::setHeader()
 
-    // update number of entries in leftBlkHeader as (MAX_KEYS_INTERNAL)/2 = 50,
-    // rblock as rightBlkNum and update the header using BlockBuffer::setHeader()
+    // set leftBlkHeader with the following values
+    // - number of entries = (MAX_KEYS_INTERNAL)/2 = 50
+    // - rblock = rightBlkNum
+    // and update the header using BlockBuffer::setHeader()
 
     /*
     - set the first 50 entries of leftBlk = index 0 to 49 of internalEntries
@@ -922,17 +1011,22 @@ int BPlusTree::splitInternal(int intBlockNum, InternalEntry internalEntries[]) {
 
 #### Description
 
-Used to update the root of an existing B+ tree when the previous root block was split. This function will allocate a new root block and update the attribute cache entry to point to the new root block.
+Used to update the root of an existing B+ tree when the previous root block was split. This function will allocate a new root block and update the attribute cache entry of the attribute in the specified relation to point to the new root block.
+
+:::note
+According to the NITCbase specification, this function can only be called from either the [insertIntoLeaf()](#bplustreeinsertintoleaf) function or from the [insertIntoInternal()](#bplustreeinsertintointernal) function.
+
+:::
 
 #### Arguments
 
-| **Name** | **Type**          | **Description**                                                        |
-| -------- | ----------------- | ---------------------------------------------------------------------- |
-| relId    | `int`             | Relation Id of the relation containing the attribute.                  |
-| attrName | `char[ATTR_SIZE]` | Attribute/column name to whose B+ tree (index) an entry is to be added |
-| attrVal  | `union Attribute` | Attribute value that needs to be inserted into the root block          |
-| lChild   | `int`             | The block number of the left child of the new entry in the root block  |
-| rChild   | `int`             | The block number of the right child of the new entry in the root block |
+| **Name** | **Type**          | **Description**                                                                                          |
+| -------- | ----------------- | -------------------------------------------------------------------------------------------------------- |
+| relId    | `int`             | Relation Id of the relation containing the attribute.                                                    |
+| attrName | `char[ATTR_SIZE]` | Attribute/column name of the relation with given rel-id to whose B+ tree (index) an entry is to be added |
+| attrVal  | `union Attribute` | Attribute value that needs to be inserted into the root block                                            |
+| lChild   | `int`             | The block number of the left child of the new entry in the root block                                    |
+| rChild   | `int`             | The block number of the right child of the new entry in the root block                                   |
 
 #### Return values
 
@@ -940,6 +1034,17 @@ Used to update the root of an existing B+ tree when the previous root block was 
 | ------------------------------- | -------------------------------------------------------------- |
 | [`SUCCESS`](/docs/constants)    | On successful insertion into the B+ tree of the attribute      |
 | [`E_DISKFULL`](/docs/constants) | If disk space is not sufficient for insertion into the B+ tree |
+
+:::caution
+The caller is expected to ensure that
+
+- `relId` corresponds to an open relation
+- `attrName` corresponds to the attribute of the specified relation whose index needs to be re-rooted.
+- `attrVal` is of the same type as the attribute of the relation
+- `lChild` and `rChild` correspond to the blocks that resulted from the split of the previous root block.
+
+This function will update the root of the B+ tree **without any validation** on the arguments.
+:::
 
 #### Algorithm
 
@@ -956,8 +1061,9 @@ int BPlusTree::createNewRoot(int relId, char attrName[ATTR_SIZE], Attribute attr
     if (newRootBlkNum == E_DISKFULL) {
         // (failed to obtain an empty internal index block because the disk is full)
 
-        // destroy the right subtree, given by rChild, build up till now that
-        // has not yet been connected to the existing B + Tree, using bPlusDestroy().
+        // Using bPlusDestroy(), destroy the right subtree, rooted at rChild.
+        // This corresponds to the tree built up till now that has not yet been
+        // connected to the existing B+ Tree
 
         return E_DISKFULL;
     }

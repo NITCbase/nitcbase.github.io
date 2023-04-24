@@ -279,7 +279,7 @@ This method inserts the record into relation as specified in arguments.
 | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
 | [`SUCCESS`](/docs/constants)                 | On successful insert of the given record                                                                                            |
 | [`E_INDEX_BLOCKS_RELEASED`](/docs/constants) | Record was inserted successfully, but the index existing on one or more attributes had to be deleted due to insufficient disk space |
-| [`E_DISKFULL`](/docs/constants)              | If disk space is not sufficient for inserting the record / index                                                                    |
+| [`E_DISKFULL`](/docs/constants)              | If disk space is not sufficient for inserting the record                                                                            |
 
 #### Algorithm
 
@@ -395,12 +395,13 @@ int BlockAccess::insert(int relId, Attribute *record) {
     // Increment the number of records field in the relation cache entry for
     // the relation. (use RelCacheTable::setRelCatEntry function)
 
-    /*
-        B+ tree insertions
-     */
+    //highlight-start
+    /* B+ Tree Insertions */
+    // (the following section is only relevant once indexing has been implemented)
+
     int flag = SUCCESS;
     // Iterate over all the attributes of the relation
-    // Let attrOffset be iterator ranging from 0 to numOfAttributes-1
+    // (let attrOffset be iterator ranging from 0 to numOfAttributes-1)
     {
         // get the attribute catalog entry for the attribute from the attribute cache
         // (use AttrCacheTable::getAttrCatEntry() with args relId and attrOffset)
@@ -420,6 +421,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
             }
         }
     }
+    //highlight-end
 
     return flag;
 }
@@ -703,10 +705,13 @@ int BlockAccess::deleteRelation(char relName[ATTR_SIZE]) {
             // call releaseBlock()
         }
 
+        //highlight-start
+        // (the following part is only relevant once indexing has been implemented)
         // if index exists for the attribute (rootBlock != -1), call bplus destroy
         if (rootBlock != -1) {
             // delete the bplus tree rooted at rootBlock using BPlusTree::bPlusDestroy()
         }
+        //highlight-end
     }
 
     /*** Delete the entry corresponding to the relation from relation catalog ***/

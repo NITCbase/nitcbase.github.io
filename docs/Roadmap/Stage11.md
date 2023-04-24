@@ -374,7 +374,7 @@ Implement the following functions looking at their respective design docs
 - [`BPlusTree::bPlusDestroy()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusdestroy)
 - [`BPlusTree::bPlusInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
   - [`BPlusTree::findLeafToInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreefindleaftoinsert)
-  - [`BPlusTree::insertIntoLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
+  - [`BPlusTree::insertIntoLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreeinsertintoleaf)
   - [`BPlusTree::splitLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreesplitleaf)
   - [`BPlusTree::insertIntoInternal()`](../Design/B%2B%20Tree%20Layer.md#bplustreeinsertintointernal)
   - [`BPlusTree::splitInternal()`](../Design/B%2B%20Tree%20Layer.md#bplustreesplitinternal)
@@ -382,7 +382,7 @@ Implement the following functions looking at their respective design docs
 
 </details>
 
-Lastly, in the [Block Access Layer](../Design/Block%20Access%20Layer.md), we update the `insert()` method to insert the new record into any existing indexes of the relation using `BPlusTree::bPlusInsert()`. The `deleteRelation()` method is updated to free up any indexes associated with the relation by calling `BPlusTree::bPlusDestroy()`.
+Lastly, in the [Block Access Layer](../Design/Block%20Access%20Layer.md), we update the `insert()` method to insert the new record into any existing indexes of the relation using `BPlusTree::bPlusInsert()`. The `deleteRelation()` method is updated to free up any indexes associated with the relation by calling `BPlusTree::bPlusDestroy()`. You have already implemented a major part of both of the above functions. The only modification required to the above functions is the part corresponding to B+ trees.
 
 <details>
 <summary>BlockAccess/BlockAccess.cpp</summary>
