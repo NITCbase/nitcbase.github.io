@@ -33,6 +33,7 @@ NITCbase follows Object Oriented design for implementing B+ Tree. The class diag
 ```cpp
 class BPlusTree {
  private:
+  static int findLeafToInsert(int rootBlock, Attribute attrVal, int attrType);
   static int insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum, Index entry);
   static int splitLeaf(int leafBlockNum, Index indices[]);
   static int insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBlockNum, InternalEntry entry);
@@ -392,7 +393,11 @@ RecId BPlusTree::bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attr
 
 Used to delete a B+ Tree. The caller passes the root block of the B+ Tree as input to the method. The method recursively deletes the constituent index blocks, both internal and leaf index blocks, until the full B+ Tree is deleted.
 
-This method is called in a situation where no further disk blocks can be allotted during the creation of/ insertion to a B+ Tree. This function is also called while deleting an entire relation in NITCbase.
+This function is called when
+
+- the user issues the `DROP INDEX` command
+- in a situation where no further disk blocks can be allotted during the creation of/insertion to a B+ Tree
+- while deleting an entire relation in NITCbase.
 
 :::info NOTE
 
@@ -488,6 +493,18 @@ During insertion of an entry to a valid B+ Tree, the disk may run out of memory.
 | [`E_NOINDEX`](/docs/constants)      | Attribute `attrName` does not have an index                    |
 | [`E_DISKFULL`](/docs/constants)     | If disk space is not sufficient for insertion into the B+ tree |
 
+:::caution
+
+The caller is expected to ensure that
+
+- the `RecId` passed belongs to a valid record in the same relation
+- a duplicate index entry for this record does not already exist in the B+ tree.
+- `recId` actually points to the specific record that the argument attribute value belongs to
+
+This function will add the pair `(attrVal, recId)` to the B+ tree **without any validation** on these arguments.
+
+:::
+
 #### Algorithm
 
 ```cpp
@@ -504,8 +521,58 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
         return E_NOINDEX;
     }
 
-    /****** Traverse the B+ Tree to reach the appropriate leaf where
-                    insertion can be done ******/
+    // find the leaf block to which insertion is to be done using the
+    // findLeafToInsert() function
+
+    int leafBlkNum = /* findLeafToInsert(root block num, attrVal, attribute type) */;
+
+    // insert the attrVal and recId to the leaf block at blockNum using the
+    // insertIntoLeaf() function.
+    // declare a struct Index with attrVal = attrVal, block = recId.block and
+    // slot = recId.slot to pass as argument to the function.
+    // insertIntoLeaf(relId, attrName, leafBlkNum, Index entry)
+    // NOTE: the insertIntoLeaf() function will propagate the insertion to the
+    //       required internal nodes by calling the required helper functions
+    //       like insertIntoInternal() or createNewRoot()
+
+    if (/*insertIntoLeaf() returns E_DISKFULL */) {
+        // destroy the existing B+ tree by passing the rootBlock to bPlusDestroy().
+
+        // update the rootBlock of attribute catalog cache entry to -1 using
+        // AttrCacheTable::setAttrCatEntry().
+
+        return E_DISKFULL;
+    }
+
+    return SUCCESS;
+}
+```
+
+### BPlusTree::findLeafToInsert
+
+#### Description
+
+Used to find the leaf index block to which an attribute would be inserted to in the B+ insertion process.
+
+#### Arguments
+
+| **Name**  | **Type**                           | **Description**                                                |
+| --------- | ---------------------------------- | -------------------------------------------------------------- |
+| rootBlock | `int`                              | The root block of a B+ tree on the disk                        |
+| attrVal   | `char[ATTR_SIZE]`                  | The attrVal for which the appropriate leaf node is to be found |
+| attrType  | [`NUMBER/STRING`](/docs/constants) | The type of the attribute `attrVal`                            |
+
+#### Return values
+
+| **Value**  | **Description**                                                   |
+| ---------- | ----------------------------------------------------------------- |
+| leafBlkNum | The block number of the leaf block to which insertion can be done |
+
+#### Algorithm
+
+```cpp
+int BPlusTree::findLeafToInsert(int rootBlock, Attribute attrVal, int attrType) {
+    int blockNum = rootBlock;
 
     while (/*block is not of type IND_LEAF */) {  // use StaticBuffer::getStaticBlockType()
 
@@ -527,29 +594,9 @@ int BPlusTree::bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVa
         }
     }
 
-    // NOTE: blockNum now stores the leaf index block to which insertion
-    //       of val is to be done.
-
-    // insert the attrVal and recId to the leaf block at blockNum using the
-    // insertIntoLeaf() function.
-    // declare a struct Index with attrVal = attrVal, block = recId.block and
-    // slot = recId.slot to pass as argument to the function.
-    // insertIntoLeaf(relId, attrName, blockNum, Index entry)
-
-    if (/*insertIntoLeaf() returns E_DISKFULL */) {
-        // destroy the existing B+ tree by passing the rootBlock to bPlusDestroy().
-
-        // update the rootBlock of attribute catalog cache entry to -1 using
-        // AttrCacheTable::setAttrCatEntry().
-
-        return E_DISKFULL;
-    }
-
-    return SUCCESS;
+    return blockNum;
 }
 ```
-
----
 
 ### BPlusTree::insertIntoLeaf
 
@@ -850,10 +897,10 @@ int BPlusTree::splitInternal(int intBlockNum, InternalEntry internalEntries[]) {
 
     /*
     - set the first 50 entries of leftBlk = index 0 to 49 of internalEntries
-        array
+      array
     - set the first 50 entries of newRightBlk = entries from index 51 to 100
-        of internalEntries array using IndInternal::setEntry().
-        (index 50 will be moving to the parent internal index block)
+      of internalEntries array using IndInternal::setEntry().
+      (index 50 will be moving to the parent internal index block)
     */
 
     int type = /* block type of a child of any entry of the internalEntries array */;

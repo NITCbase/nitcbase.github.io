@@ -2,7 +2,7 @@
 title: "Stage 11: Index Creation and Deletion"
 ---
 
-# Stage 11: Index Creation and Deletion (30 hours)
+# Stage 11: Index Creation and Deletion (26 hours)
 
 :::note Learning Objectives
 
@@ -312,8 +312,13 @@ classDiagram
   class BPlusTree{
     +bPlusSearch(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int op)$ int🔵
     +bPlusCreate(int relId, char attrName[ATTR_SIZE])$ int🟢
-    +bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVal, RecId recId)$ int🟢
     +bPlusDestroy(int rootBlockNum)$ int🟢
+    +bPlusInsert(int relId, char attrName[ATTR_SIZE], Attribute attrVal, RecId recId)$ int🟢
+    -insertIntoLeaf(int relId, char attrName[ATTR_SIZE], int blockNum, Index entry)$ int🟢
+    -splitLeaf(int leafBlockNum, Index indices[])$ int🟢
+    -insertIntoInternal(int relId, char attrName[ATTR_SIZE], int intBlockNum, InternalEntry entry)$ int🟢
+    -splitInternal(int intBlockNum, InternalEntry internalEntries[])$ int🟢
+    -createNewRoot(int relId, char attrName[ATTR_SIZE], Attribute attrVal, int lChild, int rChild)$ int🟢
   }
 ```
 
@@ -357,7 +362,7 @@ The `BPlusTree::bPlusCreate()` is used to create an index on attribute for a rel
 
 The `BPlusTree::bPlusDestroy()` function recursively traverses all the blocks of the index and frees them using `BlockBuffer::releaseBlock()`.
 
-The `BPlusTree::bPlusInsert()` function is used to insert an entry into the B+ tree of an attribute. This is quite possibly the most complicated function in the implementation of NITCbase. In pursuit of clarity, the functionality involved in this task has been split among many helper functions in the `BPlusTree` class.
+The `BPlusTree::bPlusInsert()` function is used to insert an entry into the B+ tree of an attribute. This is quite possibly the most complicated function in the implementation of NITCbase. Hence, the functionality involved in this task has been split among many private helper functions in the `BPlusTree` class.
 
 <details>
 <summary>BPlusTree/BPlusTree.cpp</summary>
@@ -367,6 +372,7 @@ Implement the following functions looking at their respective design docs
 - [`BPlusTree::bPlusCreate()`](../Design/B%2B%20Tree%20Layer.md#bplustreebpluscreate)
 - [`BPlusTree::bPlusDestroy()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusdestroy)
 - [`BPlusTree::bPlusInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
+  - [`BPlusTree::findLeafToInsert()`](../Design/B%2B%20Tree%20Layer.md#bplustreefindleaftoinsert)
   - [`BPlusTree::insertIntoLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreebplusinsert)
   - [`BPlusTree::splitLeaf()`](../Design/B%2B%20Tree%20Layer.md#bplustreesplitleaf)
   - [`BPlusTree::insertIntoInternal()`](../Design/B%2B%20Tree%20Layer.md#bplustreeinsertintointernal)

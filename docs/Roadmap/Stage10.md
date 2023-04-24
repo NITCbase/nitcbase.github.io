@@ -2,7 +2,7 @@
 title: "Stage 10: B+ Tree Search on Relations"
 ---
 
-# Stage 10: B+ Tree Search on Relations (16 hours)
+# Stage 10: B+ Tree Search on Relations (18 hours)
 
 :::note Learning Objectives
 
