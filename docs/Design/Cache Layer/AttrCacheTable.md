@@ -106,7 +106,6 @@ int AttrCacheTable::getAttrCatEntry(int relId, char attrName[ATTR_SIZE]/int attr
   }
 
   return E_ATTRNOTEXIST;
-
 }
 ```
 
@@ -169,7 +168,6 @@ int AttrCacheTable::setAttrCatEntry(int relId, char attrName[ATTR_SIZE]/int attr
   }
 
   return E_ATTRNOTEXIST;
-
 }
 ```
 
@@ -229,7 +227,6 @@ int AttrCacheTable::getSearchIndex(int relId, char attrName[ATTR_SIZE]/int attrO
   }
 
   return E_ATTRNOTEXIST;
-
 }
 ```
 
@@ -289,7 +286,6 @@ int AttrCacheTable::setSearchIndex(int relId, char attrName[ATTR_SIZE]/int attrO
   }
 
   return E_ATTRNOTEXIST;
-
 }
 ```
 

@@ -575,7 +575,6 @@ int BlockAccess::renameAttribute(char relName[ATTR_SIZE], char oldName[ATTR_SIZE
 
     return SUCCESS;
 }
-
 ```
 
 ### BlockAccess :: deleteRelation()

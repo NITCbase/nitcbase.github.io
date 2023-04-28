@@ -74,7 +74,6 @@ StaticBuffer::StaticBuffer(){
     // copy Block Allocation Map blocks from disk to blockAllocMap using Disk::readBlock()
 
     //initialize metaInfo of all the buffer blocks with free:true, dirty:false, blockNum:-1 and timeStamp:-1.
-
 }
 ```
 
@@ -220,7 +219,6 @@ int StaticBuffer::getBufferNum(int blockNum){
     // if found return buffer number
 
     // if block not found in buffer return E_BLOCKNOTINBUFFER
-
 }
 ```
 
@@ -280,5 +278,3 @@ int StaticBuffer::getFreeBuffer(int blockNum){
     // return the bufferNum.
 }
 ```
-
----

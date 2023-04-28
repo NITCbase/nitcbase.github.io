@@ -226,7 +226,6 @@ int RecBuffer::getRecord(union Attribute *rec, int slotNum) {
     */
 
     // return SUCCESS
-
 }
 ```
 

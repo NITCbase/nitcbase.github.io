@@ -89,7 +89,6 @@ int RelCacheTable::getRelCatEntry(int relId, RelCatEntry *relCatBuf) {
   // to relCatBuf.
 
   return SUCCESS;
-
 }
 ```
 
@@ -138,7 +137,6 @@ int RelCacheTable::setRelCatEntry(int relId, RelCatEntry *relCatBuf) {
   // the Relation Cache Table.
 
   return SUCCESS;
-
 }
 ```
 
@@ -231,7 +229,6 @@ int RelCacheTable::setSearchIndex(int relId, recId *searchIndex) {
   // Cache entry corresponding to input relId.
 
   return SUCCESS;
-
 }
 ```
 

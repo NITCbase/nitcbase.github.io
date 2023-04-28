@@ -130,7 +130,6 @@ Nil
 int BlockBuffer::getBlockNum(){
 
     //return corresponding block number.
-
 }
 ```
 
@@ -379,7 +378,6 @@ int BlockBuffer::getFreeBlock(int blockType){
     // update the block type of the block to the input block type using setBlockType().
 
     // return block number of the free block.
-
 }
 ```
 

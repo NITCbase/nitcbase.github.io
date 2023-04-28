@@ -156,7 +156,6 @@ int Frontend::create_table(char relname[ATTR_SIZE],
     // Call createRel() method of the Schema Layer with correct arguments
 
     // Return Success and Error values appropriately
-
 }
 ```
 
@@ -448,7 +447,6 @@ int Frontend::insert_into_table_values(char relname[ATTR_SIZE], int attr_count,
     // Call insert() method of the Algebra Layer with correct arguments
 
     // Return Success or Error values appropriately
-
 }
 ```
 
@@ -486,7 +484,6 @@ int Frontend::select_from_table(char relname_source[ATTR_SIZE], char relname_tar
     // Call appropriate project() method of the Algebra Layer
 
     // Return Success or Error values appropriately
-
 }
 ```
 
@@ -530,7 +527,6 @@ int Frontend::select_attrlist_from_table(char relname_source[ATTR_SIZE],
     // Call appropriate project() method of the Algebra Layer
 
     // Return Success or Error values appropriately
-
 }
 ```
 
@@ -576,7 +572,6 @@ int Frontend::select_from_table_where(char relname_source[ATTR_SIZE],
     // Call select() method of the Algebra Layer with correct arguments
 
     // Return Success or Error values appropriately
-
 }
 ```
 
@@ -682,14 +677,14 @@ Note that attribute1 should belong to source_relation1 and attribute2 should bel
 #### Algorithm
 
 ```cpp
-int Frontend::select_from_join_where(char relname_source_one[ATTR_SIZE],
-char relname_source_two[ATTR_SIZE], char relname_target[ATTR_SIZE],
-char join_attr_one[ATTR_SIZE], char join_attr_two[ATTR_SIZE]) {
+int Frontend::select_from_join_where(
+    char relname_source_one[ATTR_SIZE], char relname_source_two[ATTR_SIZE],
+    char relname_target[ATTR_SIZE],
+    char join_attr_one[ATTR_SIZE], char join_attr_two[ATTR_SIZE]) {
 
     // Call join() method of the Algebra Layer with correct arguments
 
     // Return Success or Error values appropriately
-
 }
 ```
 
