@@ -495,3 +495,14 @@ SELECT * FROM Students INTO null WHERE Batch=J;
 SELECT * FROM Students INTO null WHERE Batch!=J;
 SELECT * FROM Students INTO null WHERE Marks>=90;
 ```
+
+**Q2**. Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```
+# SELECT * FROM RELATIONCAT INTO null WHERE #Records > five;
+Error: Mismatch in attribute type
+# SELECT * FROM RELATIONCAT INTO null WHERE Name = Students;
+Error: Attribute does not exist
+# SELECT * FROM Students INTO null WHERE Batch=J;
+Error: Relation is not open
+```

@@ -149,7 +149,7 @@ int Frontend::close_table(char relname[ATTR_SIZE]) {
 
 </details>
 
-Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md)
+Now, let us implement the functions in the [Schema Layer](../Design/Schema%20Layer.md).
 
 The `Schema::openRel()` function invokes the [Cache Layer](../Design/Cache%20Layer/intro.md) function `OpenRelTable::openRel()`. `Schema::closeRel()` closes a relation if it is open by calling `OpenRelTable::closeRel()` which frees that slot in the caches. Note that this function should not allow the closing of the relation catalog and the attribute catalog.
 
@@ -193,7 +193,7 @@ int Schema::closeRel(char relName[ATTR_SIZE]) {
 
 </details>
 
-Next, we implement the functions of the [Cache Layer](../Design/Cache%20Layer/intro.md)
+Next, we implement the functions of the [Cache Layer](../Design/Cache%20Layer/intro.md).
 
 The `OpenRelTable` class will need to be modified to initialise and update the values in the `tableMetaInfo` array. We will also implement the functions for opening and closing relations.
 
@@ -302,4 +302,40 @@ Selected successfully into null
 # SELECT * FROM Participants INTO null WHERE regNo>0;
 | regNo | event |
 Selected successfully into null
+```
+
+**Q3.** Run the following commands **in your NITCbase** to create some test relations. (You could make use of the [run](../User%20Interface%20Commands/utility.md#batch-execution) command to run multiple commands easily.)
+
+```sql
+create table a(id NUM);
+create table b(id NUM);
+create table c(id NUM);
+create table d(id NUM);
+create table e(id NUM);
+create table f(id NUM);
+create table g(id NUM);
+create table h(id NUM);
+create table i(id NUM);
+create table j(id NUM);
+create table k(id NUM);
+```
+
+Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+open table x;    # Error: Relation does not exist
+open table a;    # Relation a opened successfully
+open table b;    # Relation b opened successfully
+open table c;    # Relation c opened successfully
+open table d;    # Relation d opened successfully
+open table e;    # Relation e opened successfully
+open table f;    # Relation f opened successfully
+open table g;    # Relation g opened successfully
+open table h;    # Relation h opened successfully
+open table i;    # Relation i opened successfully
+open table j;    # Relation j opened successfully
+open table k;    # Error: Cache is full
+close table k;   # Error: Relation is not open
+close table j;   # Relation j closed successfully
+open table k;    # Relation k opened successfully
 ```

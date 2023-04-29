@@ -33,7 +33,7 @@ exit
 
 #### Description
 
-This command is used to run multiple commands in sequence by reading the commands line-by-line from an external file. For example the `run` command given below will execute commands present in `filename`. If there is an error on running a command at a given line, all commands after that **will not be excuted** and the `run` command fails by giving the line number of the command in which error occurred.
+This command is used to run multiple commands in sequence by reading the commands line-by-line from an external file. For example the `run` command given below will execute commands present in `filename`. If there is an error on running a command at a given line, all commands after that **will not be executed** and the `run` command fails by giving the line number of the command in which error occurred.
 
 :::note
 
