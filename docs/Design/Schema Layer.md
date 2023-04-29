@@ -68,7 +68,7 @@ This method creates a new relation with the name, attribute/column list as speci
 | [`E_RELEXIST`](/docs/constants)      | If the relation with name relName already exists.              |
 | [`E_DUPLICATEATTR`](/docs/constants) | If two of any two of the given attributes have same name.      |
 | [`E_DISKFULL`](/docs/constants)      | If disk space is not sufficient for creating the new relation. |
-| [E_MAXRELATIONS](/docs/constants)    | If maximum number of relations possible already exists         |
+| [`E_MAXRELATIONS`](/docs/constants)  | If maximum number of relations possible already exists         |
 
 #### Algorithm
 
@@ -80,12 +80,10 @@ int createRel(char relName[],int nAttrs, char attrs[][ATTR_SIZE],int attrtype[])
 
     // declare a variable targetRelId of type RecId
 
-    /*
-        Reset the searchIndex using RelCacheTable::resetSearhIndex()
-        Search the relation catalog (relId given by the constant RELCAT_RELID)
-        for attribute value attribute "RelName" = relNameAsAttribute using
-        BlockAccess::linearSearch() with OP = EQ
-    */
+    // Reset the searchIndex using RelCacheTable::resetSearhIndex()
+    // Search the relation catalog (relId given by the constant RELCAT_RELID)
+    // for attribute value attribute "RelName" = relNameAsAttribute using
+    // BlockAccess::linearSearch() with OP = EQ
 
     // if a relation with name `relName` already exists  ( linearSearch() does
     //                                                     not return {-1,-1} )

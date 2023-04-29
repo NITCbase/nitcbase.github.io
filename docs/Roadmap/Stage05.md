@@ -339,3 +339,5 @@ close table k;   # Error: Relation is not open
 close table j;   # Relation j closed successfully
 open table k;    # Relation k opened successfully
 ```
+
+These test tables can be deleted using the [DROP TABLE](../User%20Interface%20Commands/ddl.md#drop-table) command.

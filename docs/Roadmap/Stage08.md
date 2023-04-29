@@ -365,3 +365,14 @@ SELECT * FROM ATTRIBUTECAT INTO null WHERE Offset>=0
 ```
 
 Ensure that the `LastBlock` field of the attribute catalog has returned to the value you had noted earlier (the newly allocated block should've been released). Also, verify that the contents of the attribute catalog are as expected.
+
+---
+
+**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+create table RELATIONCAT(name STR);         # Error: Relation already exists
+create table Stages(sname NUM, sname STR);  # Error: Duplicate attributes found
+```
+
+Additionally, you can also create enough relations to verify that more than 18 relations cannot be created in NITCbase (why?).
