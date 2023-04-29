@@ -257,3 +257,13 @@ author           STR  no
 price            NUM  no
 lender           STR  no
 ```
+
+**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+alter table rename LibBooks to Books            # Error: Relation does not exist
+alter table rename LibraryBooks to Students     # Error: Relation already exists
+alter table rename LibraryBooks to RELATIONCAT  # Error: This operation is not permitted
+open table LibraryBooks
+alter table rename LibraryBooks to LibBooks     # Error: Relation is open
+```

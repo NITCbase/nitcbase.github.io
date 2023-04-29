@@ -498,7 +498,7 @@ int BlockAccess::insert(int relId, Attribute *record) {
 
 </details>
 
-Your NITCbase should now support insertion of records into an existing relation using the [INSERT INTO TABLE VALUES](../User%20Interface%20Commands/dml.md#insert-into-table-values) command. In addition, you can also make use of the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command. This command is used to populate a relation using values from a CSV file. The Frontend Programming Interface handles the file input and repeatedly calls the `Frontend::insert_into_table_values()` function that you implemented.
+Your NITCbase should now support insertion of records into an existing relation using the [INSERT INTO TABLE VALUES](../User%20Interface%20Commands/dml.md#insert-into-table-values) command. In addition, you can also make use of the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command. This command is used to populate a relation using values from a CSV file. The Frontend User Interface handles the file input and repeatedly calls the `Frontend::insert_into_table_values()` function that you implemented.
 
 :::caution
 
@@ -534,3 +534,11 @@ SELECT * FROM RELATIONCAT INTO null WHERE RelName=Locations;
 <br/>
 
 **Q2.** Using the [INSERT INTO TABLE FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command, insert the values present [here](/roadmap_files/s7insert.txt) into the relation `Events(id NUM, title STR, location STR)`. Then, use the [SELECT](../User%20Interface%20Commands/dml.md#select--from-table-where) command to verify that all 50 events were created.
+
+**Q3.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+insert into Participants values (43, Ragam, ELHC)  # Error: Mismatch in number of attributes
+insert into Participants values (four, Ragam)      # Error: Mismatch in attribute type
+insert into RELATIONCAT values (test)              # Error: This operation is not permitted
+```

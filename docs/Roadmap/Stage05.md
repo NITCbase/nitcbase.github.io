@@ -288,7 +288,7 @@ SELECT * FROM Students INTO null WHERE Batch=J;
 CLOSE TABLE Students;
 ```
 
-**Q2.** Open the relations _Events(`id`: `NUM`, `title`: `STR`, `location`: `STR`), Locations(`name`: `STR`, `capacity`: `NUM`)_ and _Participants(`regNo`: `NUM`, `event`: `STR`)_ that you created earlier and do a _select_ query for all three relations. Ensure that you get the following output.
+**Q2.** Open the relations `Events(id NUM, title STR, location STR)`, `Locations(name STR, capacity NUM)` and `Participants(regNo NUM, event STR)` that you created earlier and do a _select_ query for all three relations. Ensure that you get the following output.
 
 ```plain
 # SELECT * FROM Events INTO null WHERE id>0;

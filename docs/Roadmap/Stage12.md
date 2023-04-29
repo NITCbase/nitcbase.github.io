@@ -62,7 +62,7 @@ NITCbase also allows you to do a combination of join and project operations toge
 <details>
 <summary>
 
-Q. Consider we have two relations `Events (id: NUM, title: STR, location: STR)` and `Locations(name: STR, capacity: NUM)`. Here, `Events.location` and `Locations.name` are common between the two relations. We run the following commands in NITCbase.
+Q. Consider we have two relations `Events(id NUM, title STR, location STR)` and `Locations(name STR, capacity NUM)`. Here, `Events.location` and `Locations.name` are common between the two relations. We run the following commands in NITCbase.
 
 ```sql
 OPEN TABLE Events;
