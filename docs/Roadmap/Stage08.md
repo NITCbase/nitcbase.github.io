@@ -321,58 +321,35 @@ Your NITCbase now supports the creation of relations. With that, we have now imp
 
 ## Exercises
 
-**Q1**. In your NITCbase, run the following command to fetch the details of the attribute catalog from the relation catalog.
-
-```sql
-SELECT * FROM RELATIONCAT INTO null WHERE RelName=ATTRIBUTECAT
-```
-
-Make note of the value of the `LastBlock` field of the attribute catalog. Then, create the following relations using the [CREATE TABLE](../User%20Interface%20Commands/ddl.md#create-table) command.
+**Q1**. In your NITCbase, run the file [s8test.txt](/roadmap_files/stage8/script.txt) to test your implementation. Place the files [products.csv](/roadmap_files/stage8/products.txt) and [stores.csv](/roadmap_files/stage8/stores.txt) in the `Files/Input_Files` directory. Place [s8test.txt](/roadmap_files/stage8/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#batch-execution) command in your NITCbase as below.
 
 ```
-Products(id NUM, name STR, cost NUM, stock NUM, color STR)
-Stores(id NUM, name STR, owner STR, location STR, startDate STR)
-Sales(id NUM, storeId NUM, productId NUM, purchaser STR, discount NUM, billId NUM)
-Bills(id NUM, totalCost NUM, tax NUM, tip NUM)
+run s8test.txt
 ```
 
-Now, run the following commands **in the XFS Interface** to verify the creation of the relations. (Note that you need to **exit from NITCbase before starting the XFS Interface**. refer: [runtime disk](./Stage01.md#the-disk-class))
+Read through the output and confirm that everything is working as intended.
+
+**Q2**. Use the **XFS Interface** to print the contents of the relation catalog (using [dump relcat](../User%20Interface%20Commands/efs.md#dump-relation-catalog) command), attribute catalog(using [dump attrcat](../User%20Interface%20Commands/efs.md#dump-attribute-catalog) command) and the relation `Stores` (using [print table](../User%20Interface%20Commands/efs.md#print-relation) command) that was created in the previous question.
+
+> NOTE: Don't forget to exit NITCbase before running the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
 
 ```
 dump relcat
 dump attrcat
-print table Products
+print table Stores
 ```
 
-Open `Files/Output_Files/relation_catalog` and verify that the new relations are present in the relation catalog. Also, ensure that the `LastBlock` of the attribute catalog is now pointing to a new block.
-
-Open `Files/Output_Files/attribute_catalog` and verify that the new attributes have been added to the attribute catalog.
-
-Now, **in your NITCbase**, delete the relation `Products` using the [DROP TABLE](../User%20Interface%20Commands/ddl.md#drop-table) command.
-
-Run the following commands to print all the entries in the relation and attribute catalog and ensure that the results you get are consistent.
-
-```
-SELECT * FROM RELATIONCAT INTO null WHERE #Attributes>0
-SELECT * FROM ATTRIBUTECAT INTO null WHERE Offset>=0
-```
-
-Then, delete the relations `Stores`, `Sales` and `Bills` that we created above using the [DROP TABLE](../User%20Interface%20Commands/ddl.md#drop-table) command. Run the following commands to verify that the deletion has completed successfully.
+**Q3.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
 
 ```sql
-SELECT * FROM RELATIONCAT INTO null WHERE RelName=ATTRIBUTECAT
-SELECT * FROM ATTRIBUTECAT INTO null WHERE Offset>=0
-```
-
-Ensure that the `LastBlock` field of the attribute catalog has returned to the value you had noted earlier (the newly allocated block should've been released). Also, verify that the contents of the attribute catalog are as expected.
-
----
-
-**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
-
-```sql
-create table RELATIONCAT(name STR);         # Error: Relation already exists
-create table Stages(sname NUM, sname STR);  # Error: Duplicate attributes found
+create table Stores(name STR);              # Error: Relation already exists
+create table People(name NUM, name STR);    # Error: Duplicate attributes found
+open table Products                         # Error: Relation does not exist
+open table Stores
+drop table Stores                           # Error: Relation is open
+drop table RELATIONCAT                      # Error: This operation is not permitted
+close table Stores
+drop table Stores
 ```
 
 Additionally, you can also create enough relations to verify that more than 18 relations cannot be created in NITCbase (why?).
