@@ -264,6 +264,6 @@ lender           STR  no
 alter table rename LibBooks to Books            # Error: Relation does not exist
 alter table rename LibraryBooks to Students     # Error: Relation already exists
 alter table rename LibraryBooks to RELATIONCAT  # Error: This operation is not permitted
-open table LibraryBooks
+open table LibraryBooks                         # Relation LibraryBooks opened successfully
 alter table rename LibraryBooks to LibBooks     # Error: Relation is open
 ```

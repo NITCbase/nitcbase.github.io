@@ -345,11 +345,11 @@ print table Stores
 create table Stores(name STR);              # Error: Relation already exists
 create table People(name NUM, name STR);    # Error: Duplicate attributes found
 open table Products                         # Error: Relation does not exist
-open table Stores
+open table Stores                           # Relation Stores opened successfully
 drop table Stores                           # Error: Relation is open
 drop table RELATIONCAT                      # Error: This operation is not permitted
-close table Stores
-drop table Stores
+close table Stores                          # Relation Stores closed successfully
+drop table Stores                           # Relation Stores deleted successfully
 ```
 
 Additionally, you can also create enough relations to verify that more than 18 relations cannot be created in NITCbase (why?).
