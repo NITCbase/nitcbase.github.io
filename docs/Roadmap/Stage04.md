@@ -490,7 +490,7 @@ B220287CS, Arun,      93, B
 
 Populate the entries of the relation in the caches (by updating the `OpenRelTable` constructor) and update the `OpenRelTable::getRelId()` function to return the rel-id of the same. Then, run the following search queries **in your NITCbase** and confirm whether it is working.
 
-> NOTE: Don't forget to exit the XFS Interface before running NITCbase (refer [runtime disk](Stage01.md#the-disk-class)).
+> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
 
 ```sql
 SELECT * FROM Students INTO null WHERE Batch=J;

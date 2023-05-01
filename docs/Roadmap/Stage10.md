@@ -362,3 +362,18 @@ Implement the `BPlusTree::bPlusSearch()` by looking at the [design docs](../Desi
 </details>
 
 ## Exercises
+
+**Q1.** Create a relation `Numbers(key NUM)` which will be used to store a list of numbers. Insert all the values from the file [numbers.csv](/roadmap_files/s10nums.csv) into the relation. Run the following command **in your NITCbase** to select all numbers which are greater than 165,000 into a new relation.
+
+```
+SELECT * FROM Numbers INTO BigNumbers WHERE key > 165000;
+```
+
+Create an index for this relation using the [CREATE INDEX](../User%20Interface%20Commands/ddl.md#create-index) command **in the XFS Interface**. Now, with an index on `Numbers.key`, re-run the above command and note the difference in time between the select queries with and without the index.
+
+> **NOTE:**
+>
+> - Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+> - The file [numbers.csv](/roadmap_files/s10nums.csv) contains values for 166,464 records. As such, operations on the relation might take some time to complete.
+
+**Q2.** Modify your implementation to print the number of comparisons to do both of the above select queries.
