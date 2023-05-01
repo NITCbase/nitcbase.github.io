@@ -396,19 +396,17 @@ Implement the following functions looking at their respective design docs
 
 And with that, your NITCbase now supports the creation and deletion of indexes! Verify your implementation with the exercises below.
 
+:::info tip
+You can use the [`print B+ tree`](../User%20Interface%20Commands/efs.md#print-b-tree) and [`export B+ blocks`](../User%20Interface%20Commands/efs.md#export-b-blocks) commands in the XFS Interface to view the status of your B+ tree.
+:::
+
 ## Exercises
 
-**Q1.** In your NITCbase, run the file [s11test.txt](/roadmap_files/stage11/script.txt) to test your implementation. Place the file [s11students.csv](/roadmap_files/stage11/students.csv) in the `Files/Input_Files` directory and [s11test.txt](/roadmap_files/stage11/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#batch-execution) command in your NITCbase as below.
-
-```
-run s11test.txt
-```
-
-The above script should result in the creation of the following relations
+**Q1.** In your NITCbase, run the file [s11test.txt](/roadmap_files/stage11/script.txt) (using the [run](../User%20Interface%20Commands/utility.md#batch-execution) command) to test your implementation. Place the file [s11students.csv](/roadmap_files/stage11/students.csv) in the `Files/Input_Files` directory and [s11test.txt](/roadmap_files/stage11/script.txt) in the `Files/Batch_Execution_Files` directory before running the script. The script should result in the creation of the following relations
 
 - `S11_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students
 - `S11_c_Students(name STR)`: Stores the name of all students that have their name beginning with the letter c
-- `S11_9_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students who have a CGPA >= 9.
+- `S11_9_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students who have a CGPA >= 9
 
 Now, verify the contents of the above relations by running the following commands in the XFS Interface.
 

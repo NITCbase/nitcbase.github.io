@@ -155,7 +155,7 @@ Implement the following functions looking at their respective design docs
 
 ## Exercises
 
-**Q1.** Create a relation `Toys(id NUM, name STR, colour STR, stock NUM)` and insert the values from the file [toys.csv](/roadmap_files/s9toys.txt) into the relation (using the [INSERT FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command). Then, run the following commands in your NITCbase.
+**Q1.** Create a relation `Toys(id NUM, name STR, colour STR, stock NUM)` and insert the values from the file [toys.csv](/roadmap_files/s9toys.csv) into the relation (using the [INSERT FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command). Then, run the following commands in your NITCbase.
 
 ```sql
 SELECT name,colour FROM Toys INTO ToyColours;

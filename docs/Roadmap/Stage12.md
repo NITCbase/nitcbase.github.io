@@ -253,4 +253,24 @@ Now, moving on to the exercises.
 
 ## Exercises
 
+**Q1**. In a previous stage, you created relations `Events(id NUM, title STR, location STR)`, `Locations(name STR, capacity NUM)` and `Participants(regNo NUM, event STR)`. Populate these relations with the data from the files [events.csv](/roadmap_files/stage12/events.csv), [locations.csv](/roadmap_files/stage12/locations.csv) and [participants.csv](/roadmap_files/stage12/participants.csv) respectively. Write commands to obtain the following relations.
+
+- `EventLocations(name STR)`: Stores the name of all the locations that have an event happening in it.
+- `AudiPeople(regNo NUM, eventName STR)`: Stores the registration number and event of all the participants taking part in an event that is happening at the location 'Audi'
+- `MiniEventPeople(regNo STR, eventName NUM)`: Stores the registration number and event of all the participants taking part in an event that is happening at a location with capacity between 100 and 200.
+
+**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+CREATE TABLE EventRating(id NUM, title STR, rating NUM);  # Relation EventRating created successfully
+SELECT * FROM Events JOIN EventRating INTO LocRating WHERE Events.id = EventRating.id;
+                                                          # Error: Duplicate attributes found
+SELECT * FROM Events JOIN EventRating INTO LocRating WHERE Events.id = EventRating.name;
+                                                          # Error: Mismatch in attribute type
+SELECT * FROM Events JOIN EventRating INTO LocRating WHERE Events.id = EventRating.title;
+                                                          # Error: Attribute does not exist
+```
+
+---
+
 And with that, you have completed the implementation of NITCbase! You've implemented a small database management system with algebraic operations, schema operations, disk buffer, caching, indexing and a whole lot more. Hope this experience was fruitful in helping you understand the working of a relational DBMS❤️.
