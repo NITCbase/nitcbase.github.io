@@ -1,0 +1,41 @@
+echo ----Creating and populating new relation----
+CREATE TABLE S11_Students(name STR, cgpa NUM);
+OPEN TABLE S11_Students;
+INSERT INTO S11_Students VAlUES FROM s11students.csv;
+echo --------------------------------------------
+echo
+echo ----Creating an index on the student names----
+CREATE INDEX ON S11_Students.name;
+echo ----------------------------------------------
+echo
+echo ----Inserting records into the relation----
+INSERT INTO S11_Students VALUES(caaarter, 10);
+INSERT INTO S11_Students VALUES(caaara, 5);
+INSERT INTO S11_Students VALUES(caaapi, 8);
+echo -------------------------------------------------
+echo
+echo ----Creating an index on the student CGPA----
+CREATE INDEX ON S11_Students.cgpa;
+echo ----------------------------------------------
+echo
+echo ----Inserting more records into the relation----
+INSERT INTO S11_Students VALUES(naveen, 9);
+INSERT INTO S11_Students VALUES(rohith, 9);
+echo ----------------------------------------------
+echo
+echo ----Selecting all students whose names begin with c----
+SELECT name FROM S11_Students INTO S11_c_temp WHERE name >= c;
+OPEN TABLE S11_c_temp;
+SELECT name FROM S11_c_temp INTO S11_c_Students WHERE name < d;
+CLOSE TABLE S11_c_temp;
+DROP TABLE S11_c_temp;
+echo -------------------------------------------------------
+echo
+echo ----Selecting all students with cgpa greater than 9----
+SELECT * FROM S11_Students INTO S11_9_Students WHERE cgpa >= 9;
+echo -------------------------------------------------------
+echo
+echo ----Dropping index on S11_Students.name----
+DROP INDEX ON S11_Students.name;
+echo -------------------------------------------
+echo Done
