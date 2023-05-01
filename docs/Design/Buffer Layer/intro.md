@@ -304,14 +304,20 @@ This function compares two [`union Attribute`](#attribute) values on the basis o
 | Positive integer | Value in `attr1` is **greater** than the value in `attr2`. |
 
 ```cpp
-int compare(union Attribute attr1, union Attribute attr2, int attrType) {
+int compareAttrs(union Attribute attr1, union Attribute attr2, int attrType) {
 
-    /* 	if attrType == STRING
-            return strcmp(attr1.sval, attr2.sval); */
+    double diff;
+    // if attrType == STRING
+    //     diff = strcmp(attr1.sval, attr2.sval)
 
-    /* else
-          return attr1.nval - attr2.nval */
+    // else
+    //     diff = attr1.nval - attr2.nval
 
+    /*
+    if diff > 0 then return 1
+    if diff < 0 then return -1
+    if diff = 0 then return 0
+    */
 }
 ```
 

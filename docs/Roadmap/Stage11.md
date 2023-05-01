@@ -397,3 +397,64 @@ Implement the following functions looking at their respective design docs
 And with that, your NITCbase now supports the creation and deletion of indexes! Verify your implementation with the exercises below.
 
 ## Exercises
+
+**Q1.** In your NITCbase, run the file [s11test.txt](/roadmap_files/stage11/script.txt) to test your implementation. Place the file [s11students.csv](/roadmap_files/stage11/students.csv) in the `Files/Input_Files` directory and [s11test.txt](/roadmap_files/stage11/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#batch-execution) command in your NITCbase as below.
+
+```
+run s11test.txt
+```
+
+The above script should result in the creation of the following relations
+
+- `S11_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students
+- `S11_c_Students(name STR)`: Stores the name of all students that have their name beginning with the letter c
+- `S11_9_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students who have a CGPA >= 9.
+
+Now, verify the contents of the above relations by running the following commands in the XFS Interface.
+
+> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+
+```
+schema S11_Students
+export S11_c_Students c_students.csv
+export S11_9_Students 9_students.csv
+```
+
+You should see the following.
+
+```plain title="schema S11_Students"
+Relation: S11_Students
+Attribute        Type Index
+---------------- ---- -----
+name             STR  no
+cgpa             NUM  yes
+```
+
+```plain title="Files/Output_Files/c_students.csv"
+name
+caa
+caaapi
+caaara
+caaarter
+.
+.
+```
+
+```plain title="Files/Output_Files/9_students.csv"
+naveen,9.000000
+rohith,9.000000
+ato,9.010000
+.
+.
+```
+
+---
+
+**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+```sql
+create index on RELATIONCAT.RelName;  # Error: This operation is not permitted
+drop index on S11_Students.name;      # Error: Relation is not open
+open table S11_Students;              # Relation S11_Students opened successfully
+drop index on S11_Students.name;      # Error: No index
+```
