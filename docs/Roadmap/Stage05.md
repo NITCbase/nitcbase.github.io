@@ -23,7 +23,7 @@ Your current NITCbase implementation must be able to read the rows and columns o
 
 ### Open and Closed Relations
 
-A relation that has it's relation and attribute catalog entries stored in the respective caches is called an **open relation**. NITCbase supports opening 12 relations at once. Since the relation catalog and attribute catalog are always open, we can only open 10 other relations. If we want to open any more relations, we will have to **close** some relation. Note that the NITCbase specification does not allow closing of the relation and attribute catalog unless at the time of database exit. **NITCbase requires that a relation be opened before any [DML](../User%20Interface%20Commands/dml.md) commands can be performed on it**.
+A relation that has it's relation and attribute catalog entries stored in the respective caches is called an **open relation**. NITCbase supports opening [MAX_OPEN](/docs/constants)(= 12) relations at once. Since the relation catalog and attribute catalog are always open, we can only open 10 other relations. If we want to open any more relations, we will have to **close** some relation. Note that the NITCbase specification does not allow closing of the relation and attribute catalog unless at the time of database exit. **NITCbase requires that a relation be opened before any [DML](../User%20Interface%20Commands/dml.md) commands can be performed on it**.
 
 We discussed the [RelCacheTable](../Design/Cache%20Layer/RelCacheTable.md) and [AttrCacheTable](../Design/Cache%20Layer/AttrCacheTable.md) classes in the preceding stage. Here, we introduce the class [OpenRelTable](../Design/Cache%20Layer/OpenRelTable.md). This class manages the opening and closing of relations and handles the caching operations. It has a member `tableMetaInfo` which is a [MAX_OPEN](/docs/constants) sized array of type [struct OpenRelTableMetaInfo](../Design/Cache%20Layer/intro.md#openreltablemetainfo). `tableMetaInfo` is used to store which entries of the caches are free and the relation to which an occupied entry belongs.
 
@@ -280,7 +280,19 @@ You should now be able to open any relation present in your database and perform
 
 ## Exercises
 
-**Q1.** Open the relation `Students` and do a select query on the relation with the following commands.
+**Q1.** Recall that in the previous stages, we had created a relation `Students(RollNumber STR, Name STR, Marks NUM, Batch STR)` and inserted the following records into the relation.
+
+```plain
+B220502CS, Keerthana, 99, J
+B220983CS, Gokul,     84, B
+B221002CS, Jessiya,   84, B
+B220763CS, Cliford,   90, J
+B220110CS, James,     74, B
+B220439CS, Anna,      89, J
+B220287CS, Arun,      93, B
+```
+
+Open the relation `Students` and do a select query on the relation with the following commands.
 
 ```sql
 OPEN TABLE Students;
@@ -304,7 +316,7 @@ Selected successfully into null
 Selected successfully into null
 ```
 
-**Q3.** Run the following commands **in your NITCbase** to create some test relations. (You could make use of the [run](../User%20Interface%20Commands/utility.md#batch-execution) command to run multiple commands easily.)
+**Q3.** In this exercise, we will test the error conditions of the _open_ functionality. Run the following **in your NITCbase** to create some test relations. (You could make use of the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command to run multiple commands easily.)
 
 ```sql
 create table a(id NUM);
@@ -321,6 +333,8 @@ create table k(id NUM);
 ```
 
 Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+
+> Since we have the constant [MAX_OPEN](/docs/constants) = 12 in our design, we will not be able to open more than 10 relations (+ the catalog relations). So, the 11-th relation opened should return a cache full error.
 
 ```sql
 open table x;    # Error: Relation does not exist

@@ -476,6 +476,15 @@ Selected successfully into null
 
 ## Exercises
 
+:::info tip
+
+To do a select query on a relation, NITCbase expects that the relation be open. Since the relation catalog and attribute catalog are always open, we can always do select queries on it. To select a record from another relation, we will have to open it as well (that is, load the catalog entries into the caches).
+
+A way to do it is to modify the constructor of the `OpenRelTable` class to load the corresponding cache entries. This works because the constructor is run during system start. Recall that the `OpenRelTable` constructor is also responsible for opening the relation catalog and attribute catalog.
+
+Along with that, we also have to modify the `OpenRelTable::getRelId()` function to return the rel-id of the slot where we loaded the cache entries of the required relation to.
+:::
+
 **Q1**. In the exercises of the previous stages, you created a relation `Students(RollNumber STR, Name STR, Marks NUM, Batch STR)`. Insert the following values into the relation using the [INSERT](../User%20Interface%20Commands/dml.md#insert-into-table-values) command in the **XFS Interface**.
 
 ```plain
@@ -488,9 +497,15 @@ B220439CS, Anna,      89, J
 B220287CS, Arun,      93, B
 ```
 
-Populate the entries of the relation in the caches (by updating the `OpenRelTable` constructor) and update the `OpenRelTable::getRelId()` function to return the rel-id of the same. Then, run the following search queries **in your NITCbase** and confirm whether it is working.
+Populate the entries of the `Students` relation in the caches (by updating the `OpenRelTable` constructor) and update the `OpenRelTable::getRelId()` function to return the rel-id of the same. Then, run the following search queries **in your NITCbase** and confirm whether it is working.
 
-> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+:::caution note
+
+When the NITCbase program is running, all disk operations are done on a temporary **run copy** of the disk and not on the **actual disk**. Updates to the run copy are commited back to the actual disk **only on successful termination** of the NITCbase program. Hence, if you use the XFS Interface to modify the actual disk while NITCbase is running, there will be inconsistencies between the run copy and the actual disk. Therefore, whenever your NITCbase program is making changes to the (run copy of the) disk, you must never use the XFS Interface and make changes to the actual disk before NITCbase exit.
+
+Similarly, before you make any changes to the actual disk using the XFS Interface, you must exit NITCbase and synchronize the run copy with the actual disk, and only then run XFS Interface commands. After making updates to the actual disk using the XFS Inteface, if you run NITCbase again, the run copy will be synchronized with the contents of the actual disk.
+
+:::
 
 ```sql
 SELECT * FROM Students INTO null WHERE Batch=J;
@@ -498,9 +513,9 @@ SELECT * FROM Students INTO null WHERE Batch!=J;
 SELECT * FROM Students INTO null WHERE Marks>=90;
 ```
 
-**Q2**. Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+**Q2**. The following commands will test the error conditions of the select functionality. Run the following **in your NITCbase** and ensure that you get the corresponding output as shown below.
 
-```sql
+```plain
 SELECT * FROM RELATIONCAT INTO null WHERE #Records > five;  # Error: Mismatch in attribute type
 SELECT * FROM RELATIONCAT INTO null WHERE Name = Students;  # Error: Attribute does not exist
 SELECT * FROM Students INTO null WHERE Batch=J;             # Error: Relation is not open

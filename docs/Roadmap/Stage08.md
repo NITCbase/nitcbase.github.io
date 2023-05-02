@@ -321,7 +321,7 @@ Your NITCbase now supports the creation of relations. With that, we have now imp
 
 ## Exercises
 
-**Q1.** In your NITCbase, run the file [s8test.txt](/roadmap_files/stage8/script.txt) to test your implementation. Place the files [products.csv](/roadmap_files/stage8/products.txt) and [stores.csv](/roadmap_files/stage8/stores.txt) in the `Files/Input_Files` directory. Place [s8test.txt](/roadmap_files/stage8/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#batch-execution) command in your NITCbase as below.
+**Q1.** In your NITCbase, run the file [s8test.txt](/roadmap_files/stage8/script.txt) to test your implementation. Place the files [products.csv](/roadmap_files/stage8/products.txt) and [stores.csv](/roadmap_files/stage8/stores.txt) in the `Files/Input_Files` directory. Place [s8test.txt](/roadmap_files/stage8/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command in your NITCbase as below.
 
 ```
 run s8test.txt
@@ -329,7 +329,7 @@ run s8test.txt
 
 Read through the output and confirm that everything is working as intended.
 
-**Q2.** Use the **XFS Interface** to print the contents of the relation catalog (using [dump relcat](../User%20Interface%20Commands/efs.md#dump-relation-catalog) command), attribute catalog(using [dump attrcat](../User%20Interface%20Commands/efs.md#dump-attribute-catalog) command) and the relation `Stores` (using [print table](../User%20Interface%20Commands/efs.md#print-relation) command) that was created in the previous question.
+**Q2.** Use the **XFS Interface** to print the contents of the relation catalog (using [dump relcat](../User%20Interface%20Commands/efs.md#dump-relation-catalog) command), attribute catalog (using [dump attrcat](../User%20Interface%20Commands/efs.md#dump-attribute-catalog) command) and the relation `Stores` (using [print table](../User%20Interface%20Commands/efs.md#print-relation) command) that was created in the previous question.
 
 > NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
 

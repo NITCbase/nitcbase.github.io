@@ -258,7 +258,7 @@ price            NUM  no
 lender           STR  no
 ```
 
-**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+**Q2.** In this exercise, we will test the error conditions of the _rename_ functionality. Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
 
 ```sql
 alter table rename LibBooks to Books            # Error: Relation does not exist

@@ -29,7 +29,7 @@ This command is used to exit the system.
 exit
 ```
 
-### Batch Execution
+### Run (Batch Execution Command)
 
 #### Description
 

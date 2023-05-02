@@ -402,7 +402,7 @@ You can use the [`print B+ tree`](../User%20Interface%20Commands/efs.md#print-b-
 
 ## Exercises
 
-**Q1.** In your NITCbase, run the file [s11test.txt](/roadmap_files/stage11/script.txt) (using the [run](../User%20Interface%20Commands/utility.md#batch-execution) command) to test your implementation. Place the file [s11students.csv](/roadmap_files/stage11/students.csv) in the `Files/Input_Files` directory and [s11test.txt](/roadmap_files/stage11/script.txt) in the `Files/Batch_Execution_Files` directory before running the script. The script should result in the creation of the following relations
+**Q1.** In your NITCbase, run the file [s11test.txt](/roadmap_files/stage11/script.txt) (using the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command) to test your implementation. Place the file [s11students.csv](/roadmap_files/stage11/students.csv) in the `Files/Input_Files` directory and [s11test.txt](/roadmap_files/stage11/script.txt) in the `Files/Batch_Execution_Files` directory before running the script. The script should result in the creation of the following relations
 
 - `S11_Students(name STR, cgpa NUM)`: Stores the name and CGPA of all students
 - `S11_c_Students(name STR)`: Stores the name of all students that have their name beginning with the letter c
