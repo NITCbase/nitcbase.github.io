@@ -155,18 +155,19 @@ Implement the following functions looking at their respective design docs
 
 ## Exercises
 
-**Q1.** Create a relation `Toys(id NUM, name STR, colour STR, stock NUM)` and insert the values from the file [toys.csv](/roadmap_files/s9toys.csv) into the relation (using the [INSERT FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command). Then, run the following commands in your NITCbase.
+**Q1.** Create a relation `Toys(id NUM, name STR, colour STR, stock NUM)` and insert the values from the file [toys.csv](/roadmap_files/stage9/toys.csv) into the relation (using the [INSERT FROM FILE](../User%20Interface%20Commands/dml.md#insert-into-table-from-file) command). Then, run the following commands in your NITCbase.
 
 ```sql
 SELECT name,colour FROM Toys INTO ToyColours;
-SELECT * FROM Toys INTO ToysForSale WHERE stock > 10;
+SELECT * FROM Toys INTO ToysForSale WHERE stock > 3000;
+SELECT * FROM Toys INTO ToysToReorder WHERE stock <= 1000;
 SELECT * FROM Toys INTO ToysCopy;
 SELECT id,name FROM Toys INTO BlueToys WHERE colour = blue;
 ```
 
 Verify the contents of the new relations in the XFS Interface using either the [PRINT TABLE](../User%20Interface%20Commands/efs.md#print-relation) command or [EXPORT](../User%20Interface%20Commands/efs.md#export-relation) command.
 
-**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+**Q2.** This exercise will test the error conditions for the _select_ command. Run the following **in your NITCbase** and ensure that you get the corresponding output.
 
 ```sql
 SELECT * FROM Toys INTO ToysForSale WHERE stock > ten;  # Error: Mismatch in attribute type
@@ -174,4 +175,4 @@ SELECT * FROM Toys INTO Toys WHERE stock > 10;          # Error: Relation alread
 SELECT id,name,size FROM Toys INTO ToySizes;            # Error: Attribute does not exist
 ```
 
-**Q3.** Consider a relation `QuizMarks(rollNo NUM, name STR, cgpa NUM, quizMarks NUM, location STR)` which stores the data of the results of a scholarship quiz in a college. All students who have a CGPA greater than 8 and scored more than 85 marks for the quiz are eligible for the scholarship. The organisers need the roll number and name of all the eligible students separated by location. Write queries to fetch this data for the locations `Kerala`, `Delhi` and `Telengana`.
+**Q3.** Create a relation `QuizMarks(rollNo STR, name STR, cgpa NUM, quizMarks NUM, location STR)` which stores the data of the results of a scholarship quiz in a college. Insert the records from the file [quizmarks.csv](/roadmap_files/stage9/quizmarks.csv) into it. All students who have a CGPA greater than 8 and scored more than 85 marks for the quiz are eligible for the scholarship. The organisers need the roll number and name of all the eligible students separated by location. Write the required queries and fetch this data for the locations `Kerala`, `Gujarat` and `Telangana`.
