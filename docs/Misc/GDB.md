@@ -9,7 +9,7 @@ import TabItem from '@theme/TabItem';
 
 A debugger is a program that runs other programs, allowing the user to exercise control over these programs, and to examine variables when problems arise. GDB allows you to run the program up to a certain point, then stop and print out the values of certain variables at that point, or step through the program one line at a time and print out the values of each variable after executing each line.
 
-Errors like segmentation faults may be easier to find with the help of gdb.
+Errors like segmentation faults may be easier to find with the help of GDB.
 
 GDB allows you to:-
 
@@ -20,14 +20,19 @@ GDB allows you to:-
 
 ## Installation
 
-Before you install GDB, check whether you have already installed it.
+### Docker Based Setup
+
+If you followed the Docker-based setup, GDB should have already been included in the docker image you built and will be available in the container. You can proceed to the section on [using GDB](#using-gdb).
+
+### Manual Setup
+
+If you followed the manual setup process, you might have to install GDB. Before you do, check whether it is already present in your system by running the following command.
 
 ```bash
 gdb -help
 ```
 
-If you have already installed GDB, then it will display all the available options within your GDB,
-Else if the terminal says "command not found", then you can proceed with the installation process.
+If you have already installed GDB, then it will display all the available options within your GDB, else if the terminal says "command not found", then you can proceed with the installation process.
 
 <Tabs>
 <TabItem value="ubuntu" label="Ubuntu / Debian" default>
@@ -41,14 +46,14 @@ sudo apt-get install -y gdb
 <TabItem value="fedora" label="Fedora / Red Hat">
 
 ```bash
-yum install gdb
+sudo yum install gdb
 ```
 
 </TabItem>
 <TabItem value="arch" label="Arch Linux">
 
 ```bash
-pacman -Sy gdb
+sudo pacman -Sy gdb
 ```
 
 </TabItem>
@@ -58,7 +63,7 @@ Now you can confirm the installation of GDB by executing the command `gdb -help`
 
 ## Using GDB
 
-You have to tell your compiler to compile your code with symbolic debugging information included. Here's how to do it with gcc, with the -g switch:
+You have to tell your compiler to compile your code with symbolic debugging information included. Here's how to do it with gcc, using the -g flag.
 
 ```bash
 g++ -g nitcbase.cpp -o nitcbase
@@ -76,7 +81,7 @@ This will create the `nitcbase-debug` executable.
 
 :::
 
-Once you've done that, you should be able to view program listings in the debugger.
+Once you've done that, you should be able to debug your program in the debugger.
 
 Your text editor/IDE might already come with debug functionality built-in. You can find below config for various text editors and IDEs to take advantage of their frontends.
 
@@ -104,7 +109,7 @@ Your text editor/IDE might already come with debug functionality built-in. You c
           "ignoreFailures": true
         }
       ],
-      "preLaunchTask": "${defaultBuildTask}",
+      "preLaunchTask": "Build debug nitcbase",
       "miDebuggerPath": "/usr/bin/gdb"
     }
   ]
@@ -138,7 +143,7 @@ If you prefer to keep it within the terminal itself, you can use gdb with the `-
 
 ```bash
 gdb -tui nitcbase-debug
-# nitcbase is the executable here
+# nitcbase-debug is the executable here
 ```
 
 </TabItem>
@@ -153,8 +158,16 @@ looking for contributions
 
 ---
 
-There's also the possibility of using the gdb prompt (i.e `dumb terminal mode`) which might be harder to use than the earlier mentioned options.
+There's also the possibility of using the gdb prompt (that is, the "dumb terminal mode") which might be harder to use than the earlier mentioned options.
 
-You can most definitely find online documentation for how to use the debugger in your editor of choice, or just jump right into it and figure it out as you go.
+You could find online documentation for how to use the debugger in your editor of choice, or just jump right into it and figure it out as you go.
 
-If you feel you need a general overview of the usage of GDB, I'd recommend reading [Beej's Quick Guide to GDB](https://beej.us/guide/bggdb/).
+If you feel you need a general overview of the usage of GDB, [Beej's Quick Guide to GDB](https://beej.us/guide/bggdb/) will be helpful.
+
+### Using GDB in a Docker Container
+
+This section explains how to use GDB from within a docker container. If you followed the Docker-based setup, it is recommended to keep reading.
+
+For working with the VSCode frontend for GDB, you will need to [attach to the nitcbase container](https://code.visualstudio.com/docs/devcontainers/attach-container) and then launch the debugger from [within the container](https://code.visualstudio.com/docs/devcontainers/containers#_debugging-in-a-container). You might be prompted to install the [C/C++ VSCode extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode.cpptools) the first time you run the debugger.
+
+For terminal-based usage, gdb can be accessed from [a shell in the container](./Installation%20Guidelines#connecting-to-the-container).
