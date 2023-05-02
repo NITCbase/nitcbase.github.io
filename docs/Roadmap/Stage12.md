@@ -255,9 +255,9 @@ Now, moving on to the exercises.
 
 **Q1**. In a previous stage, you created relations `Events(id NUM, title STR, location STR)`, `Locations(name STR, capacity NUM)` and `Participants(regNo NUM, event STR)`. Populate these relations with the data from the files [events.csv](/roadmap_files/stage12/events.csv), [locations.csv](/roadmap_files/stage12/locations.csv) and [participants.csv](/roadmap_files/stage12/participants.csv) respectively. Write commands to obtain the following relations.
 
-- `EventLocations(name STR)`: Stores the name of all the locations that have an event happening in it.
-- `AudiPeople(regNo NUM, eventName STR)`: Stores the registration number and event of all the participants taking part in an event that is happening at the location 'Audi'
-- `MiniEventPeople(regNo STR, eventName NUM)`: Stores the registration number and event of all the participants taking part in an event that is happening at a location with capacity between 100 and 200.
+1. `EventLocations(name STR)`: Stores the name of all the locations that have an event happening in it. (duplicate entries are allowed)
+2. `AudiPeople(regNo NUM, eventName STR)`: Stores the registration number and event of all the participants taking part in an event that is happening at the location 'Audi'
+3. `MiniEventPeople(regNo STR, eventName NUM)`: Stores the registration number and event of all the participants taking part in an event that is happening at a location with capacity between 100 and 200.
 
 **Q2.** This exercise will test the error conditions of the _join_ functionality. Run the following **in your NITCbase** and ensure that you get the corresponding output.
 
@@ -270,6 +270,11 @@ SELECT * FROM Events JOIN EventRating INTO LocRating WHERE Events.id = EventRati
 SELECT * FROM Events JOIN EventRating INTO LocRating WHERE Events.id = EventRating.title;
                                                           # Error: Attribute does not exist
 ```
+
+**Q3.** Create a relation `Organizers(name STR, eventId NUM)` which will store the names of the organizers and the id of the event they are responsible for. Populate the relation with the values in the file [organizers.csv](/roadmap_files/stage12/organizers.csv). Write commands to obtain the required data for the following situations.
+
+1. Every participant needs to be informed the location to report to as well as the organizer to contact for the event they registered for.
+2. The organizer `Thomas` wants a list of all the participants of the events he is organizing. Since he is organising multiple events, he wants the regNo and the event name for all the participants he is responsible for.
 
 ---
 
