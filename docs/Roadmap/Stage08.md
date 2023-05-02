@@ -331,7 +331,7 @@ Read through the output and confirm that everything is working as intended.
 
 **Q2.** Use the **XFS Interface** to print the contents of the relation catalog (using [dump relcat](../User%20Interface%20Commands/efs.md#dump-relation-catalog) command), attribute catalog (using [dump attrcat](../User%20Interface%20Commands/efs.md#dump-attribute-catalog) command) and the relation `Stores` (using [print table](../User%20Interface%20Commands/efs.md#print-relation) command) that was created in the previous question.
 
-> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer to the [WARNING](Stage01.md#runtime-disk) in the documentation of runtime disk).
 
 ```
 dump relcat

@@ -318,6 +318,6 @@ The attribute catalog can span across multiple disk blocks. We are only reading 
 
 **Q1**. Modify this program to **read across multiple blocks of the attribute catalog**. Create the relations `Events(id NUM, title STR, location STR)`, `Locations(name STR, capacity NUM)` and `Participants(regNo NUM, event STR)` into the database using the XFS Interface. Print the details using NITCbase. (Hint: the `rblock` field in the header of the attribute catalog block gives the next block).
 
-> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer to the [WARNING](Stage01.md#runtime-disk) in the documentation of runtime disk).
 
 **Q2**. Modify the `main` function to update the schema of the `Student` relation. Change the name of the `Class` attribute to `Batch` and confirm that the change has been made by printing the relation again.

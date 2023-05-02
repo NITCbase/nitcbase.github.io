@@ -410,7 +410,7 @@ You can use the [`print B+ tree`](../User%20Interface%20Commands/efs.md#print-b-
 
 Now, verify the contents of the above relations by running the following commands in the XFS Interface.
 
-> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+> NOTE: Don't forget to exit NITCbase before running commands in the XFS Interface (refer to the [WARNING](Stage01.md#runtime-disk) in the documentation of runtime disk).
 
 ```
 schema S11_Students
@@ -448,7 +448,7 @@ ato,9.010000
 
 ---
 
-**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+**Q2.** This exercise will test the error conditions of the index creation and deletion functionality. Run the following **in your NITCbase** and ensure that you get the corresponding output.
 
 ```sql
 create index on RELATIONCAT.RelName;  # Error: This operation is not permitted

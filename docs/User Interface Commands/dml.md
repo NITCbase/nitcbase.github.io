@@ -73,7 +73,7 @@ INSERT INTO tablename VALUES FROM filename
 :::
 
 :::note Example
-Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students`:
+Here is an example of a CSV file, `students.csv` containing the records for insertion into an already existing relation `Students` which may or may not have any tuples:
 
 ```c title="/Files/Input_Files/students.csv"
 3,Sunny,8

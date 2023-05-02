@@ -259,7 +259,7 @@ Now, moving on to the exercises.
 - `AudiPeople(regNo NUM, eventName STR)`: Stores the registration number and event of all the participants taking part in an event that is happening at the location 'Audi'
 - `MiniEventPeople(regNo STR, eventName NUM)`: Stores the registration number and event of all the participants taking part in an event that is happening at a location with capacity between 100 and 200.
 
-**Q2.** Run the following commands **in your NITCbase** and ensure that you get the corresponding output.
+**Q2.** This exercise will test the error conditions of the _join_ functionality. Run the following **in your NITCbase** and ensure that you get the corresponding output.
 
 ```sql
 CREATE TABLE EventRating(id NUM, title STR, rating NUM);  # Relation EventRating created successfully

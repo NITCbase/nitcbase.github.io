@@ -38,7 +38,15 @@ Now, we finally begin working on NITCbase. At the lowest level, our database wil
 
 **Read the section on [Disk Class](../Design/Physical%20Layer.md#disk-class) before proceeding further.**
 
-An important thing to note about NITCbase is it's runtime disk. _While NITCbase is running, all the disk operations are done on a copy of the disk. All the updates to the disk are only copied to the actual disk on successful termination of the program. This helps us to avoid issues where the actual disk is an indeterminate state due to runtime errors in the program._
+<a id="runtime-disk"></a>
+
+:::caution WARNING
+
+When the NITCbase program is running, all disk operations are done on a temporary **run copy** of the disk and not on the **actual disk**. Updates to the run copy are commited back to the actual disk **only on successful termination** of the NITCbase program. Hence, if you use the XFS Interface to modify the actual disk while NITCbase is running, there will be inconsistencies between the run copy and the actual disk. Therefore, whenever your NITCbase program is making changes to the (run copy of the) disk, you must never use the XFS Interface and make changes to the actual disk before NITCbase exit.
+
+Similarly, before you make any changes to the actual disk using the XFS Interface, you must exit NITCbase and synchronize the run copy with the actual disk, and only then run XFS Interface commands. After making updates to the actual disk using the XFS Inteface, if you run NITCbase again, the run copy will be synchronized with the contents of the actual disk.
+
+:::
 
 The [Disk class](../Design/Physical%20Layer.md#disk-class) has a _constructor_ and _destructor_ that is meant to be run on beginning and end of execution of the program respectively. These functions are responsible for copying to and from the runtime disk as mentioned earlier. We will be declaring a single instance of the disk at the very top of our program. The `readBlock` and `writeBlock` methods are static and can be accessed as `Disk::readBlock()`.
 

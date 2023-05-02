@@ -40,6 +40,13 @@ The CSV file **must follow** the following format:
 - Only **one record is allowed per line.**
 - The CSV file must be stored in the path `Files/Input_Files`.
 
+:::caution
+This command will create a relation and insert records into it. The information required to create the relation (metadata) is obtained from the first line of the csv file. The information for the record values (actual data) are found in the subsequent lines of the csv file.
+
+There is also a DML command [INSERT INTO TABLE FROM FILE](dml.md#insert-into-table-from-file) which is used to insert records into a relation from a csv file. This command is used to insert records into an existing relation and hence only expects the record values (actual data) in the csv file. That is, unlike the csv file here, the other file does not have its first line describing the attributes of the relation (metadata).
+
+:::
+
 #### Syntax
 
 ```bash
@@ -65,19 +72,19 @@ import filename
 
 Consider the sample `Students.csv` file:
 
-`Files/Input_Files/Students.csv"
+```plain title="Files/Input_Files/Students.csv"
 No,Name,Cgpa
 3,Sunny,8.2
 5,Sania,6.0
 7,Ralph,7.5
 
 ```
+
 `import Students.csv` command will import relation `Students` into the disk
 
 The first line in the CSV file represents the list of attributes in the relation which in this case are No, Name, Cgpa.
 The datatypes of the attributes are determined from the values of the attributes in the second line.
 An attribute can be an a number or a string. In this example the datatypes will be number, string and number respectively.
-```
 
 :::
 

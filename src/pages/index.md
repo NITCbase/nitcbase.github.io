@@ -79,7 +79,7 @@ To begin with the project, continue to the [Roadmap](/docs/Roadmap).
 
 We provide here a quick technical overview of the work involved in various layers of the NITCbase design. This section assumes that the reader is familiar with the theory of RDBMS, and hence is primarily written for the teacher to quickly find out what is done in the project. Please note that, although the NITCbase design organizes it into several layers, the roadmap does not ask the student to implement the project in a layer-by-layer manner. For a discussion of pedagogical principles on which the roadmap has been designed, we refer you to the writeup [here](/AboutUs#nitcbase-philosophy).
 
-A brief functional description of the layers
+A brief functional description of the layers:
 
 1. **Frontend User Interface Sub-layer**: This layer interacts with the user, and translates high level SQL queries /DDL commands from the user into calls to appropriate C++ functions in the Frontend Programming Interface Sub-layer.
 

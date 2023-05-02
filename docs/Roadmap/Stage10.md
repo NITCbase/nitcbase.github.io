@@ -373,7 +373,7 @@ Create an index for this relation using the [CREATE INDEX](../User%20Interface%2
 
 > **NOTE:**
 >
-> - Don't forget to exit NITCbase before running commands in the XFS Interface (refer [runtime disk](Stage01.md#the-disk-class)).
+> - Don't forget to exit NITCbase before running commands in the XFS Interface (refer to the [WARNING](Stage01.md#runtime-disk) in the documentation of runtime disk).
 > - The file [numbers.csv](/roadmap_files/s10nums.csv) contains values for 166,464 records. As such, operations on the relation might take some time to complete.
 
-**Q2.** Modify your implementation to print the number of comparisons to do both of the above select queries.
+**Q2.** Modify your implementation to print the number of comparisons to do both of the above SELECT queries.
