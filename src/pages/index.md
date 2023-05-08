@@ -6,7 +6,7 @@
 
 ## Introduction
 
-NITCbase is a Relational Database Management System Implementation (RDBMS) project that is intended to help an undergraduate student understand the design and data structures of an elementary RDBMS by implementing one herself.
+NITCbase is a Relational Database Management System (RDBMS) implementation project that is intended to help an undergraduate student understand the design and data structures of an elementary RDBMS by implementing one herself.
 
 A step-by-step implementation roadmap of the project guides you through various stages of implementation of the RDBMS. The documentation of the project includes tutorials that help you to assimilate the concepts as well as the data structures and design details that you need to understand at each phase of the project. The complete design and specification of the RDBMS and its various component subsystems are also documented and made available.
 
@@ -81,7 +81,7 @@ We provide here a quick technical overview of the work involved in various layer
 
 A brief functional description of the layers:
 
-1. **Frontend User Interface Sub-layer**: This layer interacts with the user, and translates high level SQL queries /DDL commands from the user into calls to appropriate C++ functions in the Frontend Programming Interface Sub-layer.
+1. **Frontend User Interface Sub-layer**: This layer interacts with the user, and translates high level SQL-like queries from the user into calls to appropriate C++ functions in the Frontend Programming Interface Sub-layer.
 
    1. The student is given the complete code for this layer (around 650 lines of C++ code) in the [`FrontendInterface` folder](https://github.com/NITCbase/nitcbase/tree/master/FrontendInterface).<br/><br/>
 
