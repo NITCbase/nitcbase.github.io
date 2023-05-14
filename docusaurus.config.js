@@ -126,22 +126,7 @@ const config = {
       },
       footer: {
         style: "dark",
-        links: [
-          {
-            title: "More",
-            items: [
-              {
-                label: "About Us",
-                to: "AboutUs",
-              },
-              {
-                label: "GitHub",
-                href: "https://github.com/NITCbase",
-              },
-            ],
-          },
-        ],
-        copyright: `Copyright © ${new Date().getFullYear()} National Institute of Technology Calicut. Built with Docusaurus.`,
+        copyright: `<img src="https://licensebuttons.net/l/by-nc/4.0/80x15.png" href="https://creativecommons.org/licenses/by-nc/4.0/"><br>Copyright © ${new Date().getFullYear()} National Institute of Technology Calicut. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,

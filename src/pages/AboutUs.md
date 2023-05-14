@@ -59,3 +59,9 @@ The content in the website and the documentation has been authored in the [Depar
 |           👤 Team Members            |
 | :----------------------------------: |
 | [Cliford Joshy](https://cliford.net) |
+
+## License
+
+[![Creative Commons License](https://licensebuttons.net/l/by-nc/4.0/88x31.png)](https://creativecommons.org/licenses/by-nc/4.0/)
+
+All the content on this website is licensed under a [Creative Commons Attribution-NonCommercial 4.0 International License](https://creativecommons.org/licenses/by-nc/4.0/).
