@@ -126,7 +126,7 @@ const config = {
       },
       footer: {
         style: "dark",
-        copyright: `<img src="https://licensebuttons.net/l/by-nc/4.0/80x15.png" href="https://creativecommons.org/licenses/by-nc/4.0/"><br>Copyright © ${new Date().getFullYear()} National Institute of Technology Calicut. Built with Docusaurus.`,
+        copyright: `<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons Licence" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/80x15.png" /></a><br>Copyright © ${new Date().getFullYear()} National Institute of Technology Calicut. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
