@@ -130,3 +130,7 @@ A brief functional description of the layers:
 8. **Physical Layer**: This is the lowest layer of the NITCbase design and mainly contains two low level disk access routines. The disk read function allows a disk block to be written into a memory buffer. The disk write function transfers data in a memory buffer into a specified disk block.
    1. The student is given the complete code for this layer (around 70 lines of C++ code) in the [`Disk.cpp`](https://github.com/NITCbase/nitcbase/blob/master/Disk_Class/Disk.cpp) file.
    2. The header file [`Disk.h`](https://github.com/NITCbase/nitcbase/blob/master/Disk/Disk.h) must be included.
+
+### Slides
+
+A supplementary presentation which may aid the teacher in introducing the NITCbase project to students can be found [here](/slides.pdf).
