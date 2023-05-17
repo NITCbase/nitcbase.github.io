@@ -10,7 +10,7 @@ NITCbase is a Relational Database Management System (RDBMS) implementation proje
 
 A step-by-step implementation roadmap of the project guides you through various stages of implementation of the RDBMS. The documentation of the project includes tutorials that help you to assimilate the concepts as well as the data structures and design details that you need to understand at each phase of the project. The complete design and specification of the RDBMS and its various component subsystems are also documented and made available.
 
-NITCbase follows an eight layer design, with the basic capabilities of a standard relational database management system which includes, creation and deletion of tables, inserting records, selection queries and indexing using B+ Tree. The final RDBMS implemented by you will support elementary SQL queries such as create, drop, alter, insert, select, project, equi-join and also the queries for B+ Tree based indexing such as "create index" and "drop index". Currently, NITCbase does not support concurrency.
+NITCbase follows an eight layer design, with the basic capabilities of a standard relational database management system which includes, creation and deletion of tables, inserting records, selection queries and indexing using B+ Tree. The final RDBMS implemented by you will support elementary SQL queries such as create, drop, alter, insert, select, project, equi-join and also the queries for B+ Tree based indexing such as _create index_ and _drop index_. Currently, NITCbase does not support concurrency.
 
 ## What are you building
 
@@ -39,7 +39,7 @@ Since NITCbase is a relational database, it supports execution of SQL-like queri
 
 ## What are you given
 
-This project assumes that you are working on a Unix/Linux system. The documentation specifies how the NITCbase RDBMS system can be implemented in C++ Language. The following are provided to you to get started on the project:
+This project assumes that you are working on a Unix/Linux system. The documentation specifies how the NITCbase RDBMS system can be implemented in the C++ programming language. The following are provided to you to get started on the project:
 
 1. **A complete implementation of a command line user interface called XFS Interface** that allows a user to _access the system’s simulated disk from the host_ (Linux/Unix environment) and allows operations such as
 
@@ -49,7 +49,7 @@ This project assumes that you are working on a Unix/Linux system. The documentat
 
    <br/>
 
-2. **A complete implementation of the Disk class**, implemented in `Disk.cpp`, that provides a bare minimum C++ programming interface to the NITCbase disk. The methods `readBlock()` and `writeBlock()` in this class allow for the transfer of one block of data between a C++ program and the XFS disk.
+2. **A complete implementation of the Disk class**, implemented in `Disk.cpp`, that provides a bare minimum C++ programming interface to the NITCbase disk. The methods `readBlock()` and `writeBlock()` in this class allow for the transfer of one block of data from and to the XFS disk.
 
 3. **Class definitions for various intermediate layers** of the database system are provided. These are
 
@@ -64,12 +64,12 @@ This project assumes that you are working on a Unix/Linux system. The documentat
 
 4. **A partial implementation of the top-most layer of NITCbase - the Frontend Interface**. The Frontend Interface of NITCbase is divided into two sub-modules: (a) Frontend User Interface (`FrontendInterface.cpp`) and (b) Frontend Programming Interface (`Frontend.cpp`). The frontend user interface code is completely given to you. **However, only the class declaration and functional specification of the frontend programming interface sub-module is provided**.
 
-5. [Documentation](/docs/Design/Architecture) containing detailed specification and design of each of the above modules, specification of the database disk organization, specification of the system’s high-level user-interface, descriptions of the algorithms used in various modules, and a detailed tutorial on B+tree implementation are provided. _You will be required to refer to appropriate parts of the documentation while implementing various components of the RDBMS._
+5. [Documentation](/docs/Design/Architecture) containing detailed specification and design of each of the above modules, specification of the database disk organization, specification of the system’s high-level user interface, descriptions of the algorithms used in various modules, and a detailed tutorial on B+ tree operations are provided. _You will be required to refer to appropriate parts of the documentation while implementing various components of the RDBMS._
 
 6. A [roadmap](/docs/Roadmap) that guides you in implementing the system through a sequence of stages. The stages are of roughly ascending complexity. Each stage builds on the previous stages and guides you to relevant parts of the documentation which you need to read and understand for the implementation of the stage. You will have built a fully functional implementation of the RDBMS at the end of all the stages.
 
 The project assumes that you have adequate background in programming in C/C++ and data structures.
-At the end of the project, your code(approximately 3000 lines of C++ code) will allow the user to execute all NITCbase commands through the front-end interface.
+At the end of the project, your code(approximately 3000 lines of C++ code) will allow the user to execute all NITCbase commands through the Frontend Interface.
 
 Though not required to be read to get started on the project, a detailed design of the NITCbase system that will eventually be built at the end of all the stages is given in the design documentation linked [here](/docs/Design/Architecture).
 
@@ -131,6 +131,6 @@ A brief functional description of the layers:
    1. The student is given the complete code for this layer (around 70 lines of C++ code) in the [`Disk.cpp`](https://github.com/NITCbase/nitcbase/blob/master/Disk_Class/Disk.cpp) file.
    2. The header file [`Disk.h`](https://github.com/NITCbase/nitcbase/blob/master/Disk/Disk.h) must be included.
 
-### Slides
+## Presentation Slides
 
 A supplementary presentation which may aid the teacher in introducing the NITCbase project to students can be found [here](/slides.pdf).
