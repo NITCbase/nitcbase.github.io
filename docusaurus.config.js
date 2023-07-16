@@ -118,9 +118,15 @@ const config = {
             position: "right",
           },
           {
-            href: "https://github.com/nitcbase",
-            label: "GitHub",
+            href: "https://groups.google.com/g/nitcbase-users",
+            label: "Forum",
             position: "right",
+          },
+          {
+            href: "https://github.com/nitcbase",
+            className: "header-github-link",
+            position: "right",
+            title: "The GitHub repository of the project",
           },
         ],
       },
