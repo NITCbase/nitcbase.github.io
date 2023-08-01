@@ -10,9 +10,9 @@ The recommended way to work on NITCbase is using a dedicated docker container. D
 
 A [manual setup](./ManualSetup.md) guide is also provided, but it is not officially supported and can be followed at your own discretion.
 
-## Install and setup Docker on host machine
+## Install and setup Docker on the host machine
 
-Follow the instructions available [here](https://docs.docker.com/get-docker/) to install docker on your machine. You could also go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker .
+Follow the instructions available [here](https://docs.docker.com/get-docker/) to install docker on your machine. You could also go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker.
 
 :::caution WARNING
 The following has **not** been tested on _Windows_.
@@ -71,6 +71,11 @@ We'll now build the container image using the `Dockerfile`
 ```bash
 docker build -t nitcbase:ubuntu20.04 .
 ```
+If it's showing an error like "Got permission denied while trying to connect to the Docker daemon socket at unix", use 
+```bash
+sudo docker build -t nitcbase:ubuntu20.04 .
+```
+do the same for upcoming commands also
 
 ### Start the container instance
 
@@ -80,7 +85,7 @@ We'll start an instance of the container and map the local folder `NITCbase` int
 <TabItem value='unix/linux' label="Unix/Linux" default>
 
 ```bash
-docker run -v $PWD/NITCbase:/home/nitcbase/NITCbase -d --name nitcbase -i nitcbase:ubuntu20.04
+ docker run -v $PWD/NITCbase:/home/nitcbase/NITCbase -d --name nitcbase -i nitcbase:ubuntu20.04
 ```
 
 </TabItem>
