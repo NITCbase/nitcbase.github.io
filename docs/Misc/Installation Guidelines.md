@@ -1,5 +1,5 @@
 ---
-title: 'Installation Guidelines'
+title: "Installation Guidelines"
 ---
 
 import Tabs from "@theme/Tabs";
@@ -69,8 +69,7 @@ The given `Dockerfile` will setup the NITCbase environment.
 We'll now build the container image using the `Dockerfile`
 
 ```bash
-docker build --build-arg HOST_UID=$(id -u) --build-arg HOST_GID=$(id -g) -t nitcbase:20.04 .
-
+docker build -t nitcbase:ubuntu20.04 .
 ```
 
 ### Start the container instance
@@ -81,8 +80,7 @@ We'll start an instance of the container and map the local folder `NITCbase` int
 <TabItem value='unix/linux' label="Unix/Linux" default>
 
 ```bash
-docker run -v $PWD/NITCbase:/home/nitcbase/NITCbase -d --user $(id -u):$(id -g) --name nitcbase -i nitcbase:ubuntu20.04
-
+docker run -v $PWD/NITCbase:/home/nitcbase/NITCbase -d --name nitcbase -i nitcbase:ubuntu20.04
 ```
 
 </TabItem>
