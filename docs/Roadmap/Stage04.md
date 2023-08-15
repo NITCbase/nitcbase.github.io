@@ -23,7 +23,7 @@ We discussed the relation and attribute cache in the previous stage. Your implem
 
 ## The Search Operation
 
-A search operation involves fetching all records that satisfy some condition. This is also known as a selection operation in [relational algebra](https://en.wikipedia.org/wiki/Relational_algebra). NITCbase supports selection with the following operators: `=`, `!=`, `>`, `>=`, `<` `>=`. We'll implement a function that will do the appropriate search and return to us a record that satisfies our condition each time it's called. Higher levels can call this function repeatedly until there are no more records to be found.
+A search operation involves fetching all records that satisfy some condition. This is also known as a selection operation in [relational algebra](https://en.wikipedia.org/wiki/Relational_algebra). NITCbase supports selection with the following operators: `=`, `!=`, `>`, `>=`, `<` `<=`. We'll implement a function that will do the appropriate search and return to us a record that satisfies our condition each time it's called. Higher levels can call this function repeatedly until there are no more records to be found.
 
 You might've realized that the above function would require some global state to work as intended. We'll need to keep track of the previously found record so that we can fetch the next record that satisfies the condition. And that is exactly what the `searchIndex` field in the relation cache does. `searchIndex` in a relation cache entry stores the `rec-id = {block, slot}` of the last hit during linear search on that relation. A value of `rec-id = {-1, -1}` indicates that the search should start over from the beginning again.
 
@@ -518,5 +518,5 @@ SELECT * FROM Students INTO null WHERE Marks>=90;
 ```plain
 SELECT * FROM RELATIONCAT INTO null WHERE #Records > five;  # Error: Mismatch in attribute type
 SELECT * FROM RELATIONCAT INTO null WHERE Name = Students;  # Error: Attribute does not exist
-SELECT * FROM Students INTO null WHERE Batch=J;             # Error: Relation is not open
+SELECT * FROM Participants INTO null WHERE regNo>0;         # Error: Relation is not open
 ```
