@@ -1,4 +1,4 @@
----
+/---
 sidebar_position: 4
 title: "Schema Layer"
 ---
@@ -166,7 +166,7 @@ int Schema::deleteRel(char *relName) {
     // if the relation to delete is either Relation Catalog or Attribute Catalog,
     //     return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // get the rel-id using appropriate method of OpenRelTable class by
     // passing relation name as argument
@@ -218,7 +218,7 @@ int createIndex(char relName[ATTR_SIZE],char attrName[ATTR_SIZE]){
     // if the relName is either Relation Catalog or Attribute Catalog,
         // return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // get the relation's rel-id using OpenRelTable::getRelId() method
 
@@ -262,7 +262,7 @@ int Schema::dropIndex(char *relName, char *attrName) {
     // if the relName is either Relation Catalog or Attribute Catalog,
         // return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // get the rel-id using OpenRelTable::getRelId()
 
@@ -322,7 +322,7 @@ int renameRel(char oldRelName[ATTR_SIZE], char newRelName[ATTR_SIZE]) {
     // if the oldRelName or newRelName is either Relation Catalog or Attribute Catalog,
         // return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // if the relation is open
     //    (check if OpenRelTable::getRelId() returns E_RELNOTOPEN)
@@ -367,7 +367,7 @@ int Schema::renameAttr(char *relName, char *oldAttrName, char *newAttrName) {
     // if the relName is either Relation Catalog or Attribute Catalog,
         // return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // if the relation is open
         //    (check if OpenRelTable::getRelId() returns E_RELNOTOPEN)
@@ -442,7 +442,7 @@ int closeRel(char relName[ATTR_SIZE]) {
     // if the relName is either Relation Catalog or Attribute Catalog,
         // return E_NOTPERMITTED
         // (check if the relation names are either "RELATIONCAT" and "ATTRIBUTECAT".
-        // you may use the following constants: RELCAT_NAME and ATTRCAT_NAME)
+        // you may use the following constants: RELCAT_RELNAME and ATTRCAT_RELNAME)
 
     // get the relation's rel-id using OpenRelTable::getRelationId() method
 
