@@ -223,7 +223,7 @@ int main(int argc, char *argv[]) {
 
 </details>
 
-Now, let us implement the functions that we invoked from the `main()` function. Open the `BlockAccess.cpp` file in the `Buffer` folder and complete the following.
+Now, let us implement the functions that we invoked from the `main()` function. Open the `BlockBuffer.cpp` file in the `Buffer` folder and complete the following.
 
 <details>
 <summary>Buffer/BlockBuffer.cpp</summary>
