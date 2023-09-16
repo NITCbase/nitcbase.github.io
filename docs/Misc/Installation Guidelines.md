@@ -12,7 +12,7 @@ A [manual setup](./ManualSetup.md) guide is also provided, but it is not officia
 
 ## Install and setup Docker on host machine
 
-Follow the instructions available [here](https://docs.docker.com/get-docker/) to install docker on your machine. You could also go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker .
+Follow the instructions available [here](https://docs.docker.com/engine/install/ubuntu/) to install docker on your machine. You could also go through the [Docker quick start quide](https://docs.docker.com/get-started/) to know more about Docker. It would also be wise to refer to the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/) for Linux installations.
 
 :::caution WARNING
 The following has **not** been tested on _Windows_.
@@ -71,6 +71,11 @@ We'll now build the container image using the `Dockerfile`
 ```bash
 docker build -t nitcbase:ubuntu20.04 .
 ```
+
+:::caution
+If you run into permission errors, refer to the [post-installation steps](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user) linked above.
+
+:::
 
 ### Start the container instance
 
