@@ -387,7 +387,7 @@ This function creates a copy of the source relation in the target relation. **Ev
 #### Algorithm
 
 ```cpp
-int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE], int tar_nAttrs, char tar_Attrs[][ATTR_SIZE]) {
+int Algebra::project(char srcRel[ATTR_SIZE], char targetRel[ATTR_SIZE]) {
 
     int srcRelId = /*srcRel's rel-id (use OpenRelTable::getRelId() function)*/
 
