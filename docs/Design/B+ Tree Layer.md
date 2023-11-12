@@ -109,6 +109,9 @@ int BPlusTree::bPlusCreate(int relId, char attrName[ATTR_SIZE]) {
         return E_DISKFULL;
     }
 
+      // update the rootBlock of attribute catalog cache entry to rootBlock using
+     // AttrCacheTable::setAttrCatEntry().
+
     RelCatEntry relCatEntry;
 
     // load the relation catalog entry into relCatEntry
