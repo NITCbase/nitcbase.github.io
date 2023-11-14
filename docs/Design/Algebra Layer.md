@@ -496,7 +496,7 @@ An example for the join operation can be seen [here](../User%20Interface%20Comma
 #### Algorithm
 
 ```cpp
-int join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char targetRelation[ATTR_SIZE], char attribute1[ATTR_SIZE], char attribute2[ATTR_SIZE]) {
+int Algebra::join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], char targetRelation[ATTR_SIZE], char attribute1[ATTR_SIZE], char attribute2[ATTR_SIZE]) {
 
     // get the srcRelation1's rel-id using OpenRelTable::getRelId() method
 
