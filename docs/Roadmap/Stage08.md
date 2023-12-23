@@ -321,7 +321,7 @@ Your NITCbase now supports the creation of relations. With that, we have now imp
 
 ## Exercises
 
-**Q1.** In your NITCbase, run the file [s8test.txt](/roadmap_files/stage8/script.txt) to test your implementation. Place the files [products.csv](/roadmap_files/stage8/products.txt) and [stores.csv](/roadmap_files/stage8/stores.txt) in the `Files/Input_Files` directory. Place [s8test.txt](/roadmap_files/stage8/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command in your NITCbase as below.
+**Q1.** In your NITCbase, run the file [s8test.txt](/roadmap_files/stage8/script.txt) to test your implementation. Place the files [s8products.csv](/roadmap_files/stage8/products.txt) and [s8stores.csv](/roadmap_files/stage8/stores.txt) in the `Files/Input_Files` directory. Place [s8test.txt](/roadmap_files/stage8/script.txt) in the `Files/Batch_Execution_Files` directory. Once you have placed the files, execute the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command in your NITCbase as below.
 
 ```
 run s8test.txt

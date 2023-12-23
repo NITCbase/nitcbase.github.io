@@ -52,7 +52,7 @@ The [Disk class](../Design/Physical%20Layer.md#disk-class) has a _constructor_ a
 
 ## Reading and Writing
 
-In this stage, we will try to use the provided Disk functions to do I/O operations on the disk. In your `mynitcbase` folder, you will find a `main.c` file. We will be editing this file to read and write from a random block on the disk. In the very first line of the `main` function, you will find a declaration of an instance of `Disk` class for reasons we mentioned earlier. The commented-out lines following this declaration are relevant only in later stages and will be covered in due time.
+In this stage, we will try to use the provided Disk functions to do I/O operations on the disk. In your `mynitcbase` folder, you will find a `main.cpp` file. We will be editing this file to read and write from a random block on the disk. In the very first line of the `main` function, you will find a declaration of an instance of `Disk` class for reasons we mentioned earlier. The commented-out lines following this declaration are relevant only in later stages and will be covered in due time.
 
 As you read in [Disk model](../Design/Physical%20Layer.md#disk-model), each block of the disk is 2048 bytes. The disk functions expect two arguments: a buffer of size 2048 bytes and the block number that we want to work with.
 
@@ -93,7 +93,7 @@ Additionally comment out the call to the `handleFrontend` function for now. We w
 
 So, in summary, your main function should look like so.
 
-```cpp title="the modified main.c file"
+```cpp title="the modified main.cpp file"
 int main(int argc, char *argv[]) {
   Disk disk_run;
 

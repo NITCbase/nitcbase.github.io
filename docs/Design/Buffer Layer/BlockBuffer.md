@@ -233,7 +233,7 @@ int BlockBuffer::setHeader(struct HeadInfo *head){
 
 #### Description
 
-The block number to which this instance of `BlockBuffer` is associated (given by the `blockNum` member field) is freed from the buffer and the disk. The `blockNum` field of the object is invalidated (set to `INVALID_BLOCK` (-1)).
+The block number to which this instance of `BlockBuffer` is associated (given by the `blockNum` member field) is freed from the buffer and the disk. The `blockNum` field of the object is invalidated (set to `INVALID_BLOCKNUM` (-1)).
 
 #### Arguments
 
@@ -245,7 +245,7 @@ Nil
 
 :::caution note
 
-- The `BlockBuffer` class is a higher level abstraction to the disk blocks. It makes use of the `StaticBuffer` to access/modify the values in the disk block. When `releaseBlock()` is called, the corresponding disk block is freed from the buffer(if present) and set as an unused block in the disk. However, the `BlockBuffer` object itself remains as is with its `blockNum` set to `INVALID_BLOCK`. This object is only deallocated at the end of it's lifetime.
+- The `BlockBuffer` class is a higher level abstraction to the disk blocks. It makes use of the `StaticBuffer` to access/modify the values in the disk block. When `releaseBlock()` is called, the corresponding disk block is freed from the buffer(if present) and set as an unused block in the disk. However, the `BlockBuffer` object itself remains as is with its `blockNum` set to `INVALID_BLOCKNUM`. This object is only deallocated at the end of it's lifetime.
 - If `releaseBlock()` method is called again after having successfully released for the first time (or if the `blockNum` field is invalid), then this method will not perform any operation.
 
 :::
@@ -255,7 +255,7 @@ Nil
 ```cpp
 void BlockBuffer::releaseBlock(){
 
-    // if blockNum is INVALID_BLOCK (-1), or it is invalidated already, do nothing
+    // if blockNum is INVALID_BLOCKNUM (-1), or it is invalidated already, do nothing
 
     // else
         /* get the buffer number of the buffer assigned to the block

@@ -316,7 +316,7 @@ Selected successfully into null
 Selected successfully into null
 ```
 
-**Q3.** In this exercise, we will test the error conditions of the _open_ functionality. Run the following **in your NITCbase** to create some test relations. (You could make use of the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command to run multiple commands easily.)
+**Q3.** In this exercise, we will test the error conditions of the _open_ functionality. Run the following **in your XFS interface** to create some test relations. (You could make use of the [run](../User%20Interface%20Commands/utility.md#run-batch-execution-command) command to run multiple commands easily.)
 
 ```sql
 create table a(id NUM);

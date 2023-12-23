@@ -981,7 +981,6 @@ int BPlusTree::splitInternal(int intBlockNum, InternalEntry internalEntries[]) {
 
     // set leftBlkHeader with the following values
     // - number of entries = (MAX_KEYS_INTERNAL)/2 = 50
-    // - rblock = rightBlkNum
     // and update the header using BlockBuffer::setHeader()
 
     /*
