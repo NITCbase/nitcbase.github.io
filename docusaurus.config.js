@@ -34,6 +34,7 @@ const config = {
           showReadingTime: false,
           path: "feedback",
           routeBasePath: "feedback",
+          blogTitle: "Feedback",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
