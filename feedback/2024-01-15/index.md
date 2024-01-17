@@ -23,10 +23,20 @@ Major phases of the project (Each stage subsumes the previous stages):
 
 ### Q2. Time Management: How many hours of work did you put into the project per week on an average to complete up to what you have done?
 
+![](./graphs/q2.png)
+
 ### Q3. Effectiveness of road map and Documentation: Was the documentation provided in the roadmap and the Expos site sufficient for doing the project?
+
+![](./graphs/q3.png)
 
 ### Q4. Contribution to the understanding of theory: How much did the lab help to improve your understanding of Operating Systems theory?
 
+![](./graphs/q4.png)
+
 ### Q5. Contribution to Coding/Software development skills: How far did this lab contribute to the improvement of your coding, debugging and software development skills?
 
+![](./graphs/q5.png)
+
 ### Q6: Student background: Was your background sufficient for doing the lab? If not did you feel that your knowledge in any of the following subjects was inadequate for you?
+
+![](./graphs/q6.png)
