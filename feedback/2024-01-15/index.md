@@ -12,10 +12,10 @@ A feedback questionnaire was circulated to all the students who credited the cou
 
 Major phases of the project (Each stage subsumes the previous stages):
 
-- Phase 1(Stage 1 to 3): Preliminary Stages - Buffering
-- Phase 2(Stage 4 to 6): Linear Search, Catalog Operations and Catalog Cache
-- Phase 3(Stage 7 to 9): Record Insertion, SELECT and PROJECT operations
-- Phase 4(Stage 10 to 12): Indexing with B+Trees, JOIN operation
+- Phase 1 (Stage 1 to 3): Preliminary Stages - Disk Buffer Implementation
+- Phase 2 (Stage 4 to 6): Linear Search, Catalog Operations and Catalog Cache
+- Phase 3 (Stage 7 to 9): Record Insertion, SELECT and PROJECT operations
+- Phase 4 (Stage 10 to 12): Indexing with B+Trees, JOIN operation
 
 ### Q1. Student Performance: How many phases of the project did you complete?
 
