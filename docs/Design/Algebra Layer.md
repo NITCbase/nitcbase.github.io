@@ -563,6 +563,9 @@ int Algebra::join(char srcRelation1[ATTR_SIZE], char srcRelation2[ATTR_SIZE], ch
     Attribute record2[numOfAttributes2];
     Attribute targetRecord[numOfAttributesInTarget];
 
+    // reset the search index of `srcRelation1` in the relation cache
+    // using RelCacheTable::resetSearchIndex()
+
     // this loop is to get every record of the srcRelation1 one by one
     while (BlockAccess::project(srcRelId1, record1) == SUCCESS) {
 
