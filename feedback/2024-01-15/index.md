@@ -29,7 +29,7 @@ Major phases of the project (Each stage subsumes the previous stages):
 
 ![](./graphs/q3.png)
 
-### Q4. Contribution to the understanding of theory: How much did the lab help to improve your understanding of Operating Systems theory?
+### Q4. Contribution to the understanding of theory: How much did the lab help to improve your understanding of DBMS theory?
 
 ![](./graphs/q4.png)
 
