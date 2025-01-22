@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[5762],{4160:e=>{e.exports=JSON.parse('{"permalink":"/feedback","page":1,"postsPerPage":10,"totalPages":1,"totalCount":2,"blogDescription":"Blog","blogTitle":"Feedback"}')}}]);

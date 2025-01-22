@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunknitcbase=self.webpackChunknitcbase||[]).push([[2535],{5641:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Monsoon 2023","permalink":"/feedback/2023"}]}')}}]);
