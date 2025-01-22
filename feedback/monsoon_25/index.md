@@ -4,7 +4,7 @@ title: Monsoon 2025
 ---
 
 **Monsoon 2025, Database Management Systems Laboratory, NIT Calicut**<br/>
-**Number of respondents: 28**<br/>
+**Number of respondents: 30**<br/>
 **Duration of the course: One semester (13 weeks)**<br/>
 **Type of course: Elective**
 
