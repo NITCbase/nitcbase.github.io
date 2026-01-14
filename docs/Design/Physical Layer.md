@@ -308,7 +308,7 @@ Relation Catalog is used for storing meta-information of the relations in a data
 
 :::note
 The name strings for the relation catalog attributes and attribute catalog attributes are defined in the [global constants page](/docs/constants).
-For example to do linear search on the relation catalog where relation name matches a particular relaiton name, you must provide the attribute name argument as "RelName" / `RELCAT_ATTR_RELNAME` constant.
+For example to do linear search on the relation catalog where relation name matches a particular relation name, you must provide the attribute name argument as "RelName" / `RELCAT_ATTR_RELNAME` constant.
 :::
 
 `RelName` (bytes 0-15) stores the name of the relation, `#Attributes` (bytes 16-31) stores the number of attributes of that relation, and `#Records` (bytes 32-47) stores the number of records currently stored in that relation. The record blocks of a relation are arranged as a linked list.
